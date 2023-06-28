@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <img :src="imageURL" width="300" height="200" alt="Image">
-        <div>
+    <div style="background:white;">
+        <img :src="imageURL" width="300" height="auto" alt="Image">
+        <div >
             <v-file-input accept="image/*" label="File input" v-model="fileToUpload" @change="upload()"></v-file-input>
         </div>
         <div>
@@ -28,10 +28,11 @@ export default {
     methods: {
         getImageURL() {
             const storage = firebase.storage();
-            const imageRef = storage.ref('95176.jpg');
+            const imageRef = storage.ref('images/image.jpg');
             imageRef.getDownloadURL()
                 .then((url) => {
                     this.imageURL = url; // กำหนด URL ของรูปภาพให้กับตัวแปรในเทมเพลต
+                    console.log(this.imageURL);
                 })
                 .catch((error) => {
                     console.log(error);

@@ -4,14 +4,21 @@ import { normalizeURL, decode } from 'ufo'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _4d59b95f = () => interopDefault(import('..\\pages\\admin\\index.vue' /* webpackChunkName: "pages/admin/index" */))
-const _49fbf4ce = () => interopDefault(import('..\\pages\\inspire.vue' /* webpackChunkName: "pages/inspire" */))
-const _5db5f8dd = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages/login" */))
-const _5944cc9d = () => interopDefault(import('..\\pages\\testbase64.vue' /* webpackChunkName: "pages/testbase64" */))
-const _c5dd8cd4 = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
-const _0b901b7d = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
-const _20cc39e0 = () => interopDefault(import('..\\pages\\admin\\candidate.vue' /* webpackChunkName: "pages/admin/candidate" */))
-const _d7e35474 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
+const _7f3e90f0 = () => interopDefault(import('..\\pages\\admin\\index.vue' /* webpackChunkName: "pages/admin/index" */))
+const _2394ce6e = () => interopDefault(import('..\\pages\\candidate.vue' /* webpackChunkName: "pages/candidate" */))
+const _1fd70105 = () => interopDefault(import('..\\pages\\inspire.vue' /* webpackChunkName: "pages/inspire" */))
+const _a6f6b258 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages/login" */))
+const _11d17df4 = () => interopDefault(import('..\\pages\\testbase64.vue' /* webpackChunkName: "pages/testbase64" */))
+const _101837bf = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
+const _524e1418 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
+const _9953a6fc = () => interopDefault(import('..\\pages\\admin\\basket\\index.vue' /* webpackChunkName: "pages/admin/basket/index" */))
+const _1cea1bbe = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
+const _2e5f9cd2 = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
+const _9c8b1c7a = () => interopDefault(import('..\\pages\\admin\\edit_shop\\additem.vue' /* webpackChunkName: "pages/admin/edit_shop/additem" */))
+const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\testter.vue' /* webpackChunkName: "pages/admin/edit_shop/testter" */))
+const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
+const _41973950 = () => interopDefault(import('..\\pages\\admin\\shop\\title.vue' /* webpackChunkName: "pages/admin/shop/title" */))
+const _3a45f886 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
 
@@ -26,35 +33,63 @@ export const routerOptions = {
 
   routes: [{
     path: "/admin",
-    component: _4d59b95f,
+    component: _7f3e90f0,
     name: "admin"
   }, {
+    path: "/candidate",
+    component: _2394ce6e,
+    name: "candidate"
+  }, {
     path: "/inspire",
-    component: _49fbf4ce,
+    component: _1fd70105,
     name: "inspire"
   }, {
     path: "/login",
-    component: _5db5f8dd,
+    component: _a6f6b258,
     name: "login"
   }, {
     path: "/testbase64",
-    component: _5944cc9d,
+    component: _11d17df4,
     name: "testbase64"
   }, {
     path: "/testdatareal",
-    component: _c5dd8cd4,
+    component: _101837bf,
     name: "testdatareal"
   }, {
     path: "/testimage",
-    component: _0b901b7d,
+    component: _524e1418,
     name: "testimage"
   }, {
-    path: "/admin/candidate",
-    component: _20cc39e0,
-    name: "admin-candidate"
+    path: "/admin/basket",
+    component: _9953a6fc,
+    name: "admin-basket"
+  }, {
+    path: "/admin/edit_shop",
+    component: _1cea1bbe,
+    name: "admin-edit_shop"
+  }, {
+    path: "/admin/shop",
+    component: _2e5f9cd2,
+    name: "admin-shop"
+  }, {
+    path: "/admin/edit_shop/additem",
+    component: _9c8b1c7a,
+    name: "admin-edit_shop-additem"
+  }, {
+    path: "/admin/edit_shop/testter",
+    component: _4c19e944,
+    name: "admin-edit_shop-testter"
+  }, {
+    path: "/admin/shop/item",
+    component: _179f04c3,
+    name: "admin-shop-item"
+  }, {
+    path: "/admin/shop/title",
+    component: _41973950,
+    name: "admin-shop-title"
   }, {
     path: "/",
-    component: _d7e35474,
+    component: _3a45f886,
     name: "index"
   }],
 
