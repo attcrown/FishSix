@@ -110,7 +110,7 @@
                                                 item?</v-card-title>
                                             <v-card-actions>
                                                 <v-spacer></v-spacer>
-                                                <v-btn color="blue darken-1" text @click="closeSave">Cancel</v-btn>
+                                                <v-btn color="blue darken-1" text @click="closeSave ,dialogSave = false">Cancel</v-btn>
                                                 <v-btn color="blue darken-1" text @click="submit">OK</v-btn>
                                                 <v-spacer></v-spacer>
                                             </v-card-actions>
@@ -300,7 +300,8 @@ export default {
                     .then(() => {
                         this.save_submit();
                         this.clear();
-                        console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว')
+                        console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
+                        this.dialogSave = false;
                     })
                     .catch((error) => {
                         console.error('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ:', error)
