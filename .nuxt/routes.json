@@ -1,0 +1,58 @@
+[
+  {
+    "name": "admin",
+    "path": "/admin",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\admin\\\\index.vue",
+    "chunkName": "pages/admin/index",
+    "_name": "_4248d186"
+  },
+  {
+    "name": "inspire",
+    "path": "/inspire",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\inspire.vue",
+    "chunkName": "pages/inspire",
+    "_name": "_79626430"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_0d564e82"
+  },
+  {
+    "name": "testbase64",
+    "path": "/testbase64",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\testbase64.vue",
+    "chunkName": "pages/testbase64",
+    "_name": "_5ac089fb"
+  },
+  {
+    "name": "testdatareal",
+    "path": "/testdatareal",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\testdatareal.vue",
+    "chunkName": "pages/testdatareal",
+    "_name": "_2e931774"
+  },
+  {
+    "name": "testimage",
+    "path": "/testimage",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\testimage.vue",
+    "chunkName": "pages/testimage",
+    "_name": "_09cf8b42"
+  },
+  {
+    "name": "admin-candidate",
+    "path": "/admin/candidate",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\admin\\\\candidate.vue",
+    "chunkName": "pages/admin/candidate",
+    "_name": "_0f1da1ee"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Webnuxt2\\\\test\\\\DefaultFirebaseNuxtjs\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_2fad35a8"
+  }
+]
