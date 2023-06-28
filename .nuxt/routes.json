@@ -1,58 +1,23 @@
 [
   {
-    "name": "admin",
-    "path": "/admin",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\index.vue",
-    "chunkName": "pages/admin/index",
-    "_name": "_7f3e90f0"
-  },
-  {
     "name": "inspire",
     "path": "/inspire",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\inspire.vue",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\inspire.vue",
     "chunkName": "pages/inspire",
-    "_name": "_1fd70105"
-  },
-  {
-    "name": "login",
-    "path": "/login",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\login.vue",
-    "chunkName": "pages/login",
-    "_name": "_a6f6b258"
-  },
-  {
-    "name": "testbase64",
-    "path": "/testbase64",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testbase64.vue",
-    "chunkName": "pages/testbase64",
-    "_name": "_11d17df4"
+    "_name": "_49fbf4ce"
   },
   {
     "name": "testdatareal",
     "path": "/testdatareal",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testdatareal.vue",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\testdatareal.vue",
     "chunkName": "pages/testdatareal",
-    "_name": "_101837bf"
-  },
-  {
-    "name": "testimage",
-    "path": "/testimage",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testimage.vue",
-    "chunkName": "pages/testimage",
-    "_name": "_524e1418"
-  },
-  {
-    "name": "admin-candidate",
-    "path": "/admin/candidate",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\candidate.vue",
-    "chunkName": "pages/admin/candidate",
-    "_name": "_6d33a4b9"
+    "_name": "_c5dd8cd4"
   },
   {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\index.vue",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\index.vue",
     "chunkName": "pages/index",
-    "_name": "_3a45f886"
+    "_name": "_d7e35474"
   }
 ]

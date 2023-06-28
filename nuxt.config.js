@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '',
-    title: 'Know are learning',
+    titleTemplate: '%s - Fish-six',
+    title: 'Fish-six',
     htmlAttrs: {
       lang: 'en',
     },
@@ -14,14 +14,11 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/jpeg', href: '/logo-know.jpeg' }],
-    // link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-    '@/assets/css/bootstrap.css'
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -31,6 +28,8 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    // https://go.nuxtjs.dev/eslint
+    '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
@@ -45,6 +44,7 @@ export default {
         config: {
           apiKey: "AIzaSyC9TgnMnzX0-2Z5gN5UqcGueRJSscccD48",
           authDomain: "fishsix-f41a8.firebaseapp.com",
+          databaseURL: "https://fishsix-f41a8-default-rtdb.asia-southeast1.firebasedatabase.app",
           projectId: "fishsix-f41a8",
           storageBucket: "fishsix-f41a8.appspot.com",
           messagingSenderId: "814600327192",
@@ -52,7 +52,6 @@ export default {
           measurementId: "G-DDENZ16EJD"
         },
         services: {
-           // Just as example. Can be any other service.
           auth: true,
           firestore: true,
           functions: true,
@@ -78,7 +77,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

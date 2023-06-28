@@ -4,14 +4,9 @@ import { normalizeURL, decode } from 'ufo'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _7f3e90f0 = () => interopDefault(import('..\\pages\\admin\\index.vue' /* webpackChunkName: "pages/admin/index" */))
-const _1fd70105 = () => interopDefault(import('..\\pages\\inspire.vue' /* webpackChunkName: "pages/inspire" */))
-const _a6f6b258 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages/login" */))
-const _11d17df4 = () => interopDefault(import('..\\pages\\testbase64.vue' /* webpackChunkName: "pages/testbase64" */))
-const _101837bf = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
-const _524e1418 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
-const _6d33a4b9 = () => interopDefault(import('..\\pages\\admin\\candidate.vue' /* webpackChunkName: "pages/admin/candidate" */))
-const _3a45f886 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
+const _49fbf4ce = () => interopDefault(import('..\\pages\\inspire.vue' /* webpackChunkName: "pages/inspire" */))
+const _c5dd8cd4 = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
+const _d7e35474 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
 
@@ -25,36 +20,16 @@ export const routerOptions = {
   scrollBehavior,
 
   routes: [{
-    path: "/admin",
-    component: _7f3e90f0,
-    name: "admin"
-  }, {
     path: "/inspire",
-    component: _1fd70105,
+    component: _49fbf4ce,
     name: "inspire"
   }, {
-    path: "/login",
-    component: _a6f6b258,
-    name: "login"
-  }, {
-    path: "/testbase64",
-    component: _11d17df4,
-    name: "testbase64"
-  }, {
     path: "/testdatareal",
-    component: _101837bf,
+    component: _c5dd8cd4,
     name: "testdatareal"
   }, {
-    path: "/testimage",
-    component: _524e1418,
-    name: "testimage"
-  }, {
-    path: "/admin/candidate",
-    component: _6d33a4b9,
-    name: "admin-candidate"
-  }, {
     path: "/",
-    component: _3a45f886,
+    component: _d7e35474,
     name: "index"
   }],
 
