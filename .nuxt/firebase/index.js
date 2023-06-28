@@ -11,7 +11,7 @@ import analyticsService from './service.analytics.js'
 import remoteConfigService from './service.remoteConfig.js'
 import appCheckService from './service.appCheck.js'
 
-const appConfig = {"apiKey":"AIzaSyA0kukqU7jh-qJIRhYLDOBhT3ZlE_iMSTQ","authDomain":"webbank-e7c54.firebaseapp.com","databaseURL":"https:\u002F\u002Fwebbank-e7c54-default-rtdb.asia-southeast1.firebasedatabase.app","projectId":"webbank-e7c54","storageBucket":"webbank-e7c54.appspot.com","messagingSenderId":"182977191806","appId":"1:182977191806:web:0b76e1d72ec484ae0e9d2f","measurementId":"G-N5G90QMSLQ"}
+const appConfig = {"apiKey":"AIzaSyC9TgnMnzX0-2Z5gN5UqcGueRJSscccD48","authDomain":"fishsix-f41a8.firebaseapp.com","projectId":"fishsix-f41a8","storageBucket":"fishsix-f41a8.appspot.com","messagingSenderId":"814600327192","appId":"1:814600327192:web:6543815e1b2df159c4336d","measurementId":"G-DDENZ16EJD"}
 
 export default async (ctx, inject) => {
   const { firebase, session } = await createApp(appConfig, ctx)

@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Webbank',
-    title: 'Webbank',
+    titleTemplate: '',
+    title: 'Know are learning',
     htmlAttrs: {
       lang: 'en',
     },
@@ -14,7 +14,8 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/jpeg', href: '/logo-know.jpeg' }],
+    // link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -42,14 +43,13 @@ export default {
       '@nuxtjs/firebase',
       {
         config: {
-          apiKey: "AIzaSyA0kukqU7jh-qJIRhYLDOBhT3ZlE_iMSTQ",
-          authDomain: "webbank-e7c54.firebaseapp.com",
-          databaseURL: "https://webbank-e7c54-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "webbank-e7c54",
-          storageBucket: "webbank-e7c54.appspot.com",
-          messagingSenderId: "182977191806",
-          appId: "1:182977191806:web:0b76e1d72ec484ae0e9d2f",
-          measurementId: "G-N5G90QMSLQ"
+          apiKey: "AIzaSyC9TgnMnzX0-2Z5gN5UqcGueRJSscccD48",
+          authDomain: "fishsix-f41a8.firebaseapp.com",
+          projectId: "fishsix-f41a8",
+          storageBucket: "fishsix-f41a8.appspot.com",
+          messagingSenderId: "814600327192",
+          appId: "1:814600327192:web:6543815e1b2df159c4336d",
+          measurementId: "G-DDENZ16EJD"
         },
         services: {
            // Just as example. Can be any other service.

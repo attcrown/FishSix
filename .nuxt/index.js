@@ -13,10 +13,10 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_5dde2e77 from 'nuxt_plugin_plugin_5dde2e77' // Source: .\\components\\plugin.js (mode: 'all')
-import nuxt_plugin_plugin_81cc0e46 from 'nuxt_plugin_plugin_81cc0e46' // Source: .\\vuetify\\plugin.js (mode: 'all')
-import nuxt_plugin_index_c3470a3e from 'nuxt_plugin_index_c3470a3e' // Source: .\\firebase\\index.js (mode: 'all')
-import nuxt_plugin_axios_1e7345cc from 'nuxt_plugin_axios_1e7345cc' // Source: .\\axios.js (mode: 'all')
+import nuxt_plugin_plugin_7ab79288 from 'nuxt_plugin_plugin_7ab79288' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_plugin_797d4290 from 'nuxt_plugin_plugin_797d4290' // Source: .\\vuetify\\plugin.js (mode: 'all')
+import nuxt_plugin_index_baf83e88 from 'nuxt_plugin_index_baf83e88' // Source: .\\firebase\\index.js (mode: 'all')
+import nuxt_plugin_axios_4f6a3642 from 'nuxt_plugin_axios_4f6a3642' // Source: .\\axios.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -84,7 +84,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"titleTemplate":"%s - Webbank","title":"Webbank","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":""},{"name":"format-detection","content":"telephone=no"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Roboto:100,300,400,500,700,900&display=swap"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002F@mdi\u002Ffont@latest\u002Fcss\u002Fmaterialdesignicons.min.css"}],"style":[],"script":[]},
+    head: {"titleTemplate":"","title":"Know are learning","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":""},{"name":"format-detection","content":"telephone=no"}],"link":[{"rel":"icon","type":"image\u002Fjpeg","href":"\u002Flogo-know.jpeg"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Roboto:100,300,400,500,700,900&display=swap"},{"rel":"stylesheet","type":"text\u002Fcss","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002F@mdi\u002Ffont@latest\u002Fcss\u002Fmaterialdesignicons.min.css"}],"style":[],"script":[]},
 
     store,
     router,
@@ -214,20 +214,20 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_5dde2e77 === 'function') {
-    await nuxt_plugin_plugin_5dde2e77(app.context, inject)
+  if (typeof nuxt_plugin_plugin_7ab79288 === 'function') {
+    await nuxt_plugin_plugin_7ab79288(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_plugin_81cc0e46 === 'function') {
-    await nuxt_plugin_plugin_81cc0e46(app.context, inject)
+  if (typeof nuxt_plugin_plugin_797d4290 === 'function') {
+    await nuxt_plugin_plugin_797d4290(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_index_c3470a3e === 'function') {
-    await nuxt_plugin_index_c3470a3e(app.context, inject)
+  if (typeof nuxt_plugin_index_baf83e88 === 'function') {
+    await nuxt_plugin_index_baf83e88(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_axios_1e7345cc === 'function') {
-    await nuxt_plugin_axios_1e7345cc(app.context, inject)
+  if (typeof nuxt_plugin_axios_4f6a3642 === 'function') {
+    await nuxt_plugin_axios_4f6a3642(app.context, inject)
   }
 
   // Lock enablePreview in context
