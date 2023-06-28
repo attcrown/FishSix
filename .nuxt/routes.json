@@ -1,5 +1,12 @@
 [
   {
+    "name": "admin",
+    "path": "/admin",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\admin\\\\index.vue",
+    "chunkName": "pages/admin/index",
+    "_name": "_4d59b95f"
+  },
+  {
     "name": "inspire",
     "path": "/inspire",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\inspire.vue",
@@ -7,11 +14,39 @@
     "_name": "_49fbf4ce"
   },
   {
+    "name": "login",
+    "path": "/login",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_5db5f8dd"
+  },
+  {
+    "name": "testbase64",
+    "path": "/testbase64",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\testbase64.vue",
+    "chunkName": "pages/testbase64",
+    "_name": "_5944cc9d"
+  },
+  {
     "name": "testdatareal",
     "path": "/testdatareal",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\testdatareal.vue",
     "chunkName": "pages/testdatareal",
     "_name": "_c5dd8cd4"
+  },
+  {
+    "name": "testimage",
+    "path": "/testimage",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\testimage.vue",
+    "chunkName": "pages/testimage",
+    "_name": "_0b901b7d"
+  },
+  {
+    "name": "admin-candidate",
+    "path": "/admin/candidate",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\Fish-six\\\\pages\\\\admin\\\\candidate.vue",
+    "chunkName": "pages/admin/candidate",
+    "_name": "_20cc39e0"
   },
   {
     "name": "index",
