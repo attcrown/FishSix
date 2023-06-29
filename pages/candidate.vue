@@ -5,11 +5,10 @@
         <nuxt-link to="/login">Go to About Page</nuxt-link>
       </v-alert>
     </v-col>
-
     <div class="d-flex justify-center align-center">
-      <v-sheet class="pa-4 text-center rounded-5 m-5" style="background: rgb(156, 154, 154) ;width: 500px;" elevation="16"
+      <v-sheet class="pa-1 text-center rounded-5 m-2" style="background: rgba(156, 154, 154, 0.719) ;width: 500px;" elevation="16"
         v-show="login_go === 'off'">
-        <v-sheet style="background: rgb(255, 255, 255)" class="rounded-5 p-4 m-3" elevation="16">
+        <v-sheet style="background: rgba(255, 255, 255, 0.918)" class="rounded-5 p-4 m-3" elevation="16">
           <form class="">
             <v-text-field v-model="name" :error-messages="nameErrors" :counter="10" label="Username" required
               @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>

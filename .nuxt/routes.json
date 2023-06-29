@@ -3,90 +3,105 @@
     "name": "admin",
     "path": "/admin",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\index.vue",
-    "chunkName": "pages/admin/index"
+    "chunkName": "pages/admin/index",
+    "_name": "_7f3e90f0"
   },
   {
     "name": "candidate",
     "path": "/candidate",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\candidate.vue",
-    "chunkName": "pages/candidate"
+    "chunkName": "pages/candidate",
+    "_name": "_2394ce6e"
   },
   {
     "name": "inspire",
     "path": "/inspire",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\inspire.vue",
-    "chunkName": "pages/inspire"
+    "chunkName": "pages/inspire",
+    "_name": "_1fd70105"
   },
   {
     "name": "login",
     "path": "/login",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\login.vue",
-    "chunkName": "pages/login"
+    "chunkName": "pages/login",
+    "_name": "_a6f6b258"
   },
   {
     "name": "testbase64",
     "path": "/testbase64",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testbase64.vue",
-    "chunkName": "pages/testbase64"
+    "chunkName": "pages/testbase64",
+    "_name": "_11d17df4"
   },
   {
     "name": "testdatareal",
     "path": "/testdatareal",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testdatareal.vue",
-    "chunkName": "pages/testdatareal"
+    "chunkName": "pages/testdatareal",
+    "_name": "_101837bf"
   },
   {
     "name": "testimage",
     "path": "/testimage",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\testimage.vue",
-    "chunkName": "pages/testimage"
+    "chunkName": "pages/testimage",
+    "_name": "_524e1418"
   },
   {
     "name": "admin-basket",
     "path": "/admin/basket",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\basket\\\\index.vue",
-    "chunkName": "pages/admin/basket/index"
+    "chunkName": "pages/admin/basket/index",
+    "_name": "_9953a6fc"
   },
   {
     "name": "admin-edit_shop",
     "path": "/admin/edit_shop",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\edit_shop\\\\index.vue",
-    "chunkName": "pages/admin/edit_shop/index"
+    "chunkName": "pages/admin/edit_shop/index",
+    "_name": "_1cea1bbe"
   },
   {
     "name": "admin-shop",
     "path": "/admin/shop",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\index.vue",
-    "chunkName": "pages/admin/shop/index"
+    "chunkName": "pages/admin/shop/index",
+    "_name": "_2e5f9cd2"
   },
   {
     "name": "admin-edit_shop-additem",
     "path": "/admin/edit_shop/additem",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\edit_shop\\\\additem.vue",
-    "chunkName": "pages/admin/edit_shop/additem"
+    "chunkName": "pages/admin/edit_shop/additem",
+    "_name": "_9c8b1c7a"
   },
   {
     "name": "admin-edit_shop-testter",
     "path": "/admin/edit_shop/testter",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\edit_shop\\\\testter.vue",
-    "chunkName": "pages/admin/edit_shop/testter"
+    "chunkName": "pages/admin/edit_shop/testter",
+    "_name": "_4c19e944"
   },
   {
     "name": "admin-shop-item",
     "path": "/admin/shop/item",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\item.vue",
-    "chunkName": "pages/admin/shop/item"
+    "chunkName": "pages/admin/shop/item",
+    "_name": "_179f04c3"
   },
   {
     "name": "admin-shop-title",
     "path": "/admin/shop/title",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\title.vue",
-    "chunkName": "pages/admin/shop/title"
+    "chunkName": "pages/admin/shop/title",
+    "_name": "_41973950"
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "chunkName": "pages/index",
+    "_name": "_3a45f886"
   }
 ]

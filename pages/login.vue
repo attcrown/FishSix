@@ -3,7 +3,7 @@
     <v-sheet
       width="400"
       class="mx-auto p-5 rounded-5"
-      style="background : rgb(253, 253, 253);"
+      style="background-color:rgba(245, 245, 245, 0.918);"
     >
       <v-form ref="form" @submit.prevent="submitForm">
         <div class="input-container" >
@@ -38,7 +38,6 @@
         <nuxt-link to="/candidate">Go to Sigin Page</nuxt-link>
       </v-form>
     </v-sheet>
-
     <div class="text-center">
       <v-dialog
         v-model="dialog"
