@@ -1,5 +1,5 @@
 export default async function (session) {
-  await import(/* webpackChunkName: 'firebase-database' */'firebase/compat/database')
+  await import('firebase/compat/database')
 
   const databaseService = session.database()
 
