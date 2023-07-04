@@ -5,15 +5,22 @@ import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
 const _7f3e90f0 = () => interopDefault(import('..\\pages\\admin\\index.vue' /* webpackChunkName: "pages/admin/index" */))
-const _2394ce6e = () => interopDefault(import('..\\pages\\candidate.vue' /* webpackChunkName: "pages/candidate" */))
 const _1fd70105 = () => interopDefault(import('..\\pages\\inspire.vue' /* webpackChunkName: "pages/inspire" */))
 const _a6f6b258 = () => interopDefault(import('..\\pages\\login.vue' /* webpackChunkName: "pages/login" */))
+const _422d84b4 = () => interopDefault(import('..\\pages\\reset_pass.vue' /* webpackChunkName: "pages/reset_pass" */))
+const _309445d5 = () => interopDefault(import('..\\pages\\teacher\\index.vue' /* webpackChunkName: "pages/teacher/index" */))
 const _11d17df4 = () => interopDefault(import('..\\pages\\testbase64.vue' /* webpackChunkName: "pages/testbase64" */))
 const _101837bf = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
 const _524e1418 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
+const _10be955c = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _9953a6fc = () => interopDefault(import('..\\pages\\admin\\basket\\index.vue' /* webpackChunkName: "pages/admin/basket/index" */))
+const _38379da9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
 const _1cea1bbe = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
 const _2e5f9cd2 = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
+const _b7c6e2d4 = () => interopDefault(import('..\\pages\\teacher\\profile\\index.vue' /* webpackChunkName: "pages/teacher/profile/index" */))
+const _337b3c91 = () => interopDefault(import('..\\pages\\teacher\\table\\index.vue' /* webpackChunkName: "pages/teacher/table/index" */))
+const _2a793bb9 = () => interopDefault(import('..\\pages\\user\\profile\\index.vue' /* webpackChunkName: "pages/user/profile/index" */))
+const _0256d674 = () => interopDefault(import('..\\pages\\user\\table\\index.vue' /* webpackChunkName: "pages/user/table/index" */))
 const _9c8b1c7a = () => interopDefault(import('..\\pages\\admin\\edit_shop\\additem.vue' /* webpackChunkName: "pages/admin/edit_shop/additem" */))
 const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\testter.vue' /* webpackChunkName: "pages/admin/edit_shop/testter" */))
 const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
@@ -36,10 +43,6 @@ export const routerOptions = {
     component: _7f3e90f0,
     name: "admin"
   }, {
-    path: "/candidate",
-    component: _2394ce6e,
-    name: "candidate"
-  }, {
     path: "/inspire",
     component: _1fd70105,
     name: "inspire"
@@ -47,6 +50,14 @@ export const routerOptions = {
     path: "/login",
     component: _a6f6b258,
     name: "login"
+  }, {
+    path: "/reset_pass",
+    component: _422d84b4,
+    name: "reset_pass"
+  }, {
+    path: "/teacher",
+    component: _309445d5,
+    name: "teacher"
   }, {
     path: "/testbase64",
     component: _11d17df4,
@@ -60,9 +71,17 @@ export const routerOptions = {
     component: _524e1418,
     name: "testimage"
   }, {
+    path: "/user",
+    component: _10be955c,
+    name: "user"
+  }, {
     path: "/admin/basket",
     component: _9953a6fc,
     name: "admin-basket"
+  }, {
+    path: "/admin/candidate",
+    component: _38379da9,
+    name: "admin-candidate"
   }, {
     path: "/admin/edit_shop",
     component: _1cea1bbe,
@@ -71,6 +90,22 @@ export const routerOptions = {
     path: "/admin/shop",
     component: _2e5f9cd2,
     name: "admin-shop"
+  }, {
+    path: "/teacher/profile",
+    component: _b7c6e2d4,
+    name: "teacher-profile"
+  }, {
+    path: "/teacher/table",
+    component: _337b3c91,
+    name: "teacher-table"
+  }, {
+    path: "/user/profile",
+    component: _2a793bb9,
+    name: "user-profile"
+  }, {
+    path: "/user/table",
+    component: _0256d674,
+    name: "user-table"
   }, {
     path: "/admin/edit_shop/additem",
     component: _9c8b1c7a,

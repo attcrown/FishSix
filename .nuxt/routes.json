@@ -7,13 +7,6 @@
     "_name": "_7f3e90f0"
   },
   {
-    "name": "candidate",
-    "path": "/candidate",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\candidate.vue",
-    "chunkName": "pages/candidate",
-    "_name": "_2394ce6e"
-  },
-  {
     "name": "inspire",
     "path": "/inspire",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\inspire.vue",
@@ -26,6 +19,20 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\login.vue",
     "chunkName": "pages/login",
     "_name": "_a6f6b258"
+  },
+  {
+    "name": "reset_pass",
+    "path": "/reset_pass",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\reset_pass.vue",
+    "chunkName": "pages/reset_pass",
+    "_name": "_422d84b4"
+  },
+  {
+    "name": "teacher",
+    "path": "/teacher",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\teacher\\\\index.vue",
+    "chunkName": "pages/teacher/index",
+    "_name": "_309445d5"
   },
   {
     "name": "testbase64",
@@ -49,11 +56,25 @@
     "_name": "_524e1418"
   },
   {
+    "name": "user",
+    "path": "/user",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\user\\\\index.vue",
+    "chunkName": "pages/user/index",
+    "_name": "_10be955c"
+  },
+  {
     "name": "admin-basket",
     "path": "/admin/basket",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\basket\\\\index.vue",
     "chunkName": "pages/admin/basket/index",
     "_name": "_9953a6fc"
+  },
+  {
+    "name": "admin-candidate",
+    "path": "/admin/candidate",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\candidate\\\\index.vue",
+    "chunkName": "pages/admin/candidate/index",
+    "_name": "_38379da9"
   },
   {
     "name": "admin-edit_shop",
@@ -68,6 +89,34 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\index.vue",
     "chunkName": "pages/admin/shop/index",
     "_name": "_2e5f9cd2"
+  },
+  {
+    "name": "teacher-profile",
+    "path": "/teacher/profile",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\teacher\\\\profile\\\\index.vue",
+    "chunkName": "pages/teacher/profile/index",
+    "_name": "_b7c6e2d4"
+  },
+  {
+    "name": "teacher-table",
+    "path": "/teacher/table",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\teacher\\\\table\\\\index.vue",
+    "chunkName": "pages/teacher/table/index",
+    "_name": "_337b3c91"
+  },
+  {
+    "name": "user-profile",
+    "path": "/user/profile",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\user\\\\profile\\\\index.vue",
+    "chunkName": "pages/user/profile/index",
+    "_name": "_2a793bb9"
+  },
+  {
+    "name": "user-table",
+    "path": "/user/table",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\user\\\\table\\\\index.vue",
+    "chunkName": "pages/user/table/index",
+    "_name": "_0256d674"
   },
   {
     "name": "admin-edit_shop-additem",

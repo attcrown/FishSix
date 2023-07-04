@@ -35,7 +35,7 @@
           ></v-checkbox>
         </div>
         <v-btn type="submit" block class="mt-3 mb-3" color="success" @click="validate()">LOGIN</v-btn>
-        <nuxt-link to="/candidate">Go to Sigin Page</nuxt-link>
+        <nuxt-link to="/reset_pass">Go to Reset Password</nuxt-link>
       </v-form>
     </v-sheet>
     <div class="text-center">
@@ -111,19 +111,28 @@ export default {
               if(this.ex4){
                 localStorage.setItem('firstName', childData.name);
                 localStorage.setItem('lastName', this.encode(this.firstName));
+                localStorage.setItem('status', childData.status);
+                this.$router.push(`/${localStorage.getItem('status')}`);
               }else{          
                 sessionStorage.setItem('firstName', childData.name);
                 sessionStorage.setItem('lastName', this.encode(this.firstName));
+                sessionStorage.setItem('status', childData.status);
+                this.$router.push(`/${sessionStorage.getItem('status')}`);
               }
-              this.$router.push("/admin");
             }else{this.dialog = true;}
         })
       }
     },
 
     checkuser(){
-      if(localStorage.getItem('firstName') !== null || sessionStorage.getItem('firstName') !== null){
+      if(localStorage.getItem('status') == 'admin' || sessionStorage.getItem('status') == 'admin'){
         this.$router.push("/admin");
+      }
+      if(localStorage.getItem('status') == 'user' || sessionStorage.getItem('status') == 'user'){
+        this.$router.push("/user");
+      }
+      if(localStorage.getItem('status') == 'teacher' || sessionStorage.getItem('status') == 'teacher'){
+        this.$router.push("/teacher");
       }
     },
 
