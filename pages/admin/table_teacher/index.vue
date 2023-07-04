@@ -62,12 +62,12 @@ export default {
             db.ref("user/").on("value", (snapshot) => {
                 const childData = snapshot.val();
                 for(const key in childData){
-                    for(const status in childData[key]){
+                    // for(const status in childData[key]){
                         if(childData[key].status == 'teacher'){
                             console.log(childData[key].name);
                             item.push(childData[key].name);
                         }                        
-                    }
+                    // }
                 }
                 this.items = item;
             })

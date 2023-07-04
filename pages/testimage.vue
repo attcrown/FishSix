@@ -15,7 +15,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 
 export default {
-    layout:'session',
+    layout:'login',
     data() {
         return {
             imageURL: '', // เก็บ URL ของรูปภาพ
