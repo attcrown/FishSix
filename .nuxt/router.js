@@ -17,6 +17,8 @@ const _9953a6fc = () => interopDefault(import('..\\pages\\admin\\basket\\index.v
 const _38379da9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
 const _1cea1bbe = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
 const _2e5f9cd2 = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
+const _211bd0fb = () => interopDefault(import('..\\pages\\admin\\table_teacher\\index.vue' /* webpackChunkName: "pages/admin/table_teacher/index" */))
+const _90492828 = () => interopDefault(import('..\\pages\\admin\\table_user\\index.vue' /* webpackChunkName: "pages/admin/table_user/index" */))
 const _b7c6e2d4 = () => interopDefault(import('..\\pages\\teacher\\profile\\index.vue' /* webpackChunkName: "pages/teacher/profile/index" */))
 const _337b3c91 = () => interopDefault(import('..\\pages\\teacher\\table\\index.vue' /* webpackChunkName: "pages/teacher/table/index" */))
 const _2a793bb9 = () => interopDefault(import('..\\pages\\user\\profile\\index.vue' /* webpackChunkName: "pages/user/profile/index" */))
@@ -90,6 +92,14 @@ export const routerOptions = {
     path: "/admin/shop",
     component: _2e5f9cd2,
     name: "admin-shop"
+  }, {
+    path: "/admin/table_teacher",
+    component: _211bd0fb,
+    name: "admin-table_teacher"
+  }, {
+    path: "/admin/table_user",
+    component: _90492828,
+    name: "admin-table_user"
   }, {
     path: "/teacher/profile",
     component: _b7c6e2d4,
