@@ -84,12 +84,12 @@ export default {
       items: [
         {
           icon: 'mdi-monitor-dashboard',
-          title: 'DashBoard',
+          title: 'หน้าหลัก',
           to: '/user',
         },
         {
-          icon: 'mdi-store',
-          title: 'Shop',
+          icon: 'mdi-account-circle ',
+          title: 'ข้อมูลส่วนตัว',
           to: '/user/profile',
         },
         {
