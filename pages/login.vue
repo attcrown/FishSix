@@ -73,7 +73,7 @@
 import { exit } from 'process'
 
 export default {
-  layout: 'session',
+  layout: 'login',
   data: () => ({
     dialog: false,
     ex4: false,
