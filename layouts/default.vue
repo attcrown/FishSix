@@ -91,6 +91,16 @@ export default {
           to: '/admin',
         },
         {
+          icon: 'mdi-account-school',
+          title: 'Teacher',
+          to: '/admin/table_teacher',
+        },
+        {
+          icon: 'mdi-account',
+          title: 'Student',
+          to: '/admin/table_user',
+        },
+        {
           icon: 'mdi-store',
           title: 'Shop',
           to: '/admin/shop',
