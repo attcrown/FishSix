@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isMobile">
+        <div >
             <calendar></calendar>
         </div>
         
@@ -243,9 +243,6 @@ export default {
         // allowedMinutes() {
         //     return v => v > this.min_tea;
         // },
-        isMobile() {
-            return window.innerWidth <= 768; // กำหนดขนาดความกว้างที่ต้องการ
-        },
     },
     watch: {
         dialog(val) {
