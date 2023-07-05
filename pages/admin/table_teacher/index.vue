@@ -3,21 +3,29 @@
         <div class="container text-center">
             <v-card>
                 <v-container fluid>
-                    <v-row align="center">
-                        <center><div style="max-width: 500px;">                            
-                            <v-autocomplete  v-model="value" :items="items" dense filled
-                            label="Search teacher"></v-autocomplete>                            
-                        </div></center>
-
+                    <v-row align="center">                        
                         <v-col cols="12">
                             <div>
                                 <div class="subheading">
-                                    <h3>ตารางผู้สอน</h3>
+                                    <h3>Teacher</h3>
                                 </div>
                                 <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates"
-                                    show-adjacent-months event-color="green lighten-1" @input="dialog_detail = true"
-                                    ></v-date-picker>
+                                    show-adjacent-months event-color="green lighten-1"
+                                    @input="dialog_detail = true ,mode = 'save'"></v-date-picker>
                             </div>
+                        </v-col>
+
+                        <v-col cols="8">
+                            <v-autocomplete v-model="search_value" :items="items" dense filled
+                                label="Search teacher" 
+                                @change="search_date_teacher()"
+                                item-text="name" item-value="key"></v-autocomplete>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-autocomplete v-model="search_style_sub" :items="style_subject" 
+                                @change="search_date_teacher()"
+                                dense filled
+                                label="Search Subject"></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12">
@@ -43,18 +51,18 @@
                                 </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                                 <template v-slot:item.actions="{ item }">
-                                    <v-icon small class="mr-2" @click="editItem(item), dialog_detail=true">
+                                    <v-icon small class="mr-2" @click="editItem(item), dialog_detail = true ,mode = 'edit'">
                                         mdi-pencil
                                     </v-icon>
                                     <v-icon small @click="deleteItem(item)">
                                         mdi-delete
                                     </v-icon>
                                 </template>
-                                <template v-slot:no-data>
-                                    <v-btn color="primary" @click="initialize">
+                                <!-- <template v-slot:no-data>
+                                    <v-btn color="primary" @click="search_date_teacher()">
                                         Reset
                                     </v-btn>
-                                </template>
+                                </template> -->
                             </v-data-table>
                         </v-col>
                     </v-row>
@@ -63,8 +71,8 @@
         </div>
 
         <template>
-            <v-row justify="center" >
-                <v-dialog v-model="dialog_detail" persistent max-width="600px" >
+            <v-row justify="center">
+                <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
                         <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
                             <span class="text-h8"><b>ADD Teach [{{ date1 }}]</b></span>
@@ -74,24 +82,25 @@
                                 <v-row>
                                     <v-col cols="12" class="mt-5">
                                         <v-autocomplete v-model="value" :items="items" dense filled
-                                            label="Search teacher"></v-autocomplete>
+                                            label="Search teacher" item-text="name" item-value="key" @change="check_time_start();"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="7">
                                         <v-text-field label="ชื่อวิชา" hint="ระบุชื่อวิชาที่สอน" persistent-hint
                                             v-model="save_detail.subject"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="5">
-                                        <v-select :items="['Online', 'On-site']" label="รูปแบบการสอน"
+                                        <v-select :items="style_subject" label="รูปแบบการสอน"
                                             v-model="save_detail.style"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-select :items="['0-17', '18-29', '30-54', '54+']" label="เริ่มสอน"
-                                            v-model="save_detail.start_time"></v-select>
+                                        <v-text-field label="เริ่มสอน"
+                                            v-model="picker_start"
+                                            @click="dialog_time = true"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-autocomplete
-                                            :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                                            label="หยุดสอน" v-model="save_detail.stop_time"></v-autocomplete>
+                                        <v-text-field label="หยุดสอน"
+                                            v-model="picker_stop"
+                                            @click="dialog_time_stop = true"></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -111,15 +120,76 @@
             </v-row>
         </template>
 
+        <template>
+            <v-row justify="center">
+                <v-dialog v-model="dialog_time" persistent max-width="400px">
+                    <v-card class="rounded-xl">
+                        <v-card-title>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row justify="space-around" align="center">
+                                    <v-time-picker v-model="picker_start"
+                                        :allowed-hours ="allowedHours"                                                                               
+                                        format="24hr" :max="picker_stop"></v-time-picker>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="dialog_time = false">
+                                Close
+                            </v-btn>                            
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-row>
+        </template>
+
+        <template>
+            <v-row justify="center">
+                <v-dialog v-model="dialog_time_stop" persistent max-width="400px">
+                    <v-card class="rounded-xl">
+                        <v-card-title>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row justify="space-around" align="center">
+                                    <v-time-picker v-model="picker_stop" 
+                                        format="24hr" :min="picker_start"></v-time-picker>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="dialog_time_stop = false">
+                                Close
+                            </v-btn>                            
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-row>
+        </template>
+
     </div>
 </template>
 <script>
 export default {
     data: () => ({
+        mode: '',
+        delday:'',
         save_detail: [],
         dialog_detail: false,
+        dialog_time: false,
+        dialog_time_stop: false,
         items: [],
+        style_subject: ['Online', 'On-site', 'Private'],
+        picker_start: null,
+        picker_stop: null,
+        search_value: null,
+        search_style_sub: null,
         value: null,
+        style_sub: null,
         arrayEvents: null,
         date1: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
 
@@ -127,40 +197,36 @@ export default {
         dialogDelete: false,
         headers: [
             {
-                text: 'Dessert (100g serving)',
+                text: 'Name Teacher',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Calories', value: 'calories' },
-            { text: 'Fat (g)', value: 'fat' },
-            { text: 'Carbs (g)', value: 'carbs' },
-            { text: 'Protein (g)', value: 'protein' },
+            { text: 'Date', value: 'date' },
+            { text: 'Start', value: 'time_s'},
+            { text: 'End', value: 'time_e'},
+            { text: 'Style', value: 'style' },
+            { text: 'Subject', value: 'subject' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
         editedIndex: -1,
-        editedItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            protein: 0,
-        },
-        defaultItem: {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            protein: 0,
-        },
-
+ 
+        hour_tea: 0,
+        min_tea: 0,
+        
     }),
 
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
+        allowedHours() {
+            return v => v > this.hour_tea;
+        },
+        // allowedMinutes() {
+        //     return v => v > this.min_tea;
+        // },
     },
     watch: {
         dialog(val) {
@@ -171,7 +237,7 @@ export default {
         },
     },
     created() {
-        this.initialize()
+        // this.search_date_teacher();
     },
 
     mounted() {
@@ -183,14 +249,39 @@ export default {
         //     return d.toISOString().substr(0, 10)
         // });
         this.search_teacher();
-
+        this.search_date_teacher();
     },
 
-    methods: {
+    methods: { 
         save_detail_data() {
-            console.log(this.value);
-            console.log(this.date1);
-            console.log(this.save_detail);
+            console.log(this.mode);            
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
+                subject : this.save_detail.subject,
+                style_subject : this.save_detail.style,
+                start : this.picker_start,
+                stop : this.picker_stop,
+            });
+            
+            if(this.mode == 'edit'){
+                console.log(this.delday);
+                console.log('ลบๆ');
+                if(this.delday != this.picker_stop){
+                    db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
+                }                
+            }
+            this.clear_item();
+        },
+        clear_item(){
+            this.date1 = null;
+            this.value = null;
+            this.hour_tea = 0;
+            this.min_tea = 0;
+            this.save_detail = [];
+            this.picker_start = null;
+            this.picker_stop = null;
+            this.desserts = [];
+            this.search_date_teacher();
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -203,112 +294,128 @@ export default {
             db.ref("user/").on("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    // for(const status in childData[key]){
                     if (childData[key].status == 'teacher') {
-                        console.log(childData[key].name);
-                        item.push(childData[key].name);
+                        item.push({key: key , name: childData[key].name});
                     }
-                    // }
                 }
                 this.items = item;
             })
         },
-
-        initialize() {
-            this.desserts = [
-                {
-                    name: 'Frozen Yogurt',
-                    calories: 159,
-                    fat: 6.0,
-                    carbs: 24,
-                    protein: 4.0,
-                },
-                {
-                    name: 'Ice cream sandwich',
-                    calories: 237,
-                    fat: 9.0,
-                    carbs: 37,
-                    protein: 4.3,
-                },
-                {
-                    name: 'Eclair',
-                    calories: 262,
-                    fat: 16.0,
-                    carbs: 23,
-                    protein: 6.0,
-                },
-                {
-                    name: 'Cupcake',
-                    calories: 305,
-                    fat: 3.7,
-                    carbs: 67,
-                    protein: 4.3,
-                },
-                {
-                    name: 'Gingerbread',
-                    calories: 356,
-                    fat: 16.0,
-                    carbs: 49,
-                    protein: 3.9,
-                },
-                {
-                    name: 'Jelly bean',
-                    calories: 375,
-                    fat: 0.0,
-                    carbs: 94,
-                    protein: 0.0,
-                },
-                {
-                    name: 'Lollipop',
-                    calories: 392,
-                    fat: 0.2,
-                    carbs: 98,
-                    protein: 0,
-                },
-                {
-                    name: 'Honeycomb',
-                    calories: 408,
-                    fat: 3.2,
-                    carbs: 87,
-                    protein: 6.5,
-                },
-                {
-                    name: 'Donut',
-                    calories: 452,
-                    fat: 25.0,
-                    carbs: 51,
-                    protein: 4.9,
-                },
-                {
-                    name: 'KitKat',
-                    calories: 518,
-                    fat: 26.0,
-                    carbs: 65,
-                    protein: 7,
-                },
-            ]
+        search_date_teacher() {
+            this.desserts=[];
+            console.log('search');
+            let item = [];
+            let nametea = '';
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    db.ref(`user/${key}`).on("value", (snapshot) => {
+                        const childData = snapshot.val();
+                        nametea = childData.name;
+                    })                    
+                    for(const date in keydata){
+                        const datedata = keydata[date];
+                        for(const time in datedata){
+                            const timedata = datedata[time];
+                            if(this.search_value == key && this.search_style_sub == timedata.style_subject){
+                                console.log('หาทั้งสอง');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == key && this.search_style_sub == null){
+                                console.log('หาครู');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == null && this.search_style_sub == timedata.style_subject){
+                                console.log('หารูปแบบ');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == null && this.search_style_sub == null){
+                                console.log('หาหมด');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else{console.log('ไม่มี');}
+                            
+                        }
+                    }
+                }
+                this.desserts = item;
+            })
         },
+        check_time_start(){
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/${this.value}/${this.date1}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                if(childData == null){
+                    this.hour_tea = 0;
+                    this.min_tea = 0;
+                }
+                for(const key in childData){
+                    console.log(key);
+                    this.hour_tea = key.substring(0, 2);
+                    this.min_tea = key.substring(3, 5);
+                }                
+            })
+        },
+
         editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
+            this.delday = item.time_e;
+            this.editedIndex = this.desserts.indexOf(item);    
+            console.log(item);        
+            this.value = item.key;
+            this.date1 = item.date;
+            this.save_detail.subject = item.subject;
+            this.save_detail.style = item.style;
+            this.picker_start = item.time_s;
+            this.picker_stop = item.time_e;
+            this.dialog_detail = true;            
         },
 
         deleteItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
+            this.delcon = item;
             this.dialogDelete = true
         },
 
-        deleteItemConfirm() {
-            this.desserts.splice(this.editedIndex, 1)
+        deleteItemConfirm() {            
+            console.log(this.delcon);
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_e}`).remove();
             this.closeDelete()
         },
 
         close() {
-            this.dialog = false
+            this.dialog_detail = false
             this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedItem = Object.assign({}, this.clear_item())
                 this.editedIndex = -1
             })
         },
@@ -316,19 +423,20 @@ export default {
         closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedItem = Object.assign({}, this.clear_item())
                 this.editedIndex = -1
             })
         },
 
-        save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.desserts[this.editedIndex], this.editedItem)
-            } else {
-                this.desserts.push(this.editedItem)
-            }
-            this.close()
-        },
+        // save() {
+        //     const db = this.$fireModule.database();
+        //     db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
+        //         subject : this.save_detail.subject,
+        //         style_subject : this.save_detail.style,
+        //         start : this.picker_start,
+        //         stop : this.picker_stop,
+        //     });
+        // },
 
     },
 }
