@@ -16,11 +16,15 @@
                         </v-col>
 
                         <v-col cols="8">
-                            <v-autocomplete v-model="value" :items="items" dense filled
-                                label="Search teacher" item-text="name" item-value="key"></v-autocomplete>
+                            <v-autocomplete v-model="search_value" :items="items" dense filled
+                                label="Search teacher" 
+                                @change="search_date_teacher()"
+                                item-text="name" item-value="key"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
-                            <v-autocomplete v-model="style_sub" :items="style_subject" dense filled
+                            <v-autocomplete v-model="search_style_sub" :items="style_subject" 
+                                @change="search_date_teacher()"
+                                dense filled
                                 label="Search Subject"></v-autocomplete>
                         </v-col>
 
@@ -182,6 +186,8 @@ export default {
         style_subject: ['Online', 'On-site', 'Private'],
         picker_start: null,
         picker_stop: null,
+        search_value: null,
+        search_style_sub: null,
         value: null,
         style_sub: null,
         arrayEvents: null,
@@ -296,6 +302,8 @@ export default {
             })
         },
         search_date_teacher() {
+            this.desserts=[];
+            console.log('search');
             let item = [];
             let nametea = '';
             const db = this.$fireModule.database();
@@ -311,15 +319,52 @@ export default {
                         const datedata = keydata[date];
                         for(const time in datedata){
                             const timedata = datedata[time];
-                            item.push({
-                                name: nametea,
-                                date: date,
-                                time_s: timedata.start,
-                                time_e: timedata.stop,
-                                style: timedata.style_subject,
-                                subject: timedata.subject,
-                                key: key,
-                            });
+                            if(this.search_value == key && this.search_style_sub == timedata.style_subject){
+                                console.log('หาทั้งสอง');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == key && this.search_style_sub == null){
+                                console.log('หาครู');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == null && this.search_style_sub == timedata.style_subject){
+                                console.log('หารูปแบบ');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else if(this.search_value == null && this.search_style_sub == null){
+                                console.log('หาหมด');
+                                    item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                            }else{console.log('ไม่มี');}
+                            
                         }
                     }
                 }
