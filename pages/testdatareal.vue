@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-    layout:'session',
+    layout:'login',
     data() {
         return {
             item:[],

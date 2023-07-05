@@ -8,7 +8,7 @@
 // btoa encode
 // atob decode
 export default {
-    layout:'session',
+    layout:'login',
     data() {
         return {
             
