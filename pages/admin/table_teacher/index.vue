@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div >
+            <calendar></calendar>
+        </div>
+        
         <div class="container text-center">
             <v-card>
                 <v-container fluid>
@@ -181,6 +185,7 @@
     </div>
 </template>
 <script>
+import calendar from '@/pages/admin/table_teacher/calendar.vue';
 export default {
     data: () => ({
         mode: '',
@@ -224,6 +229,9 @@ export default {
         min_tea: 0,
 
     }),
+    components:{
+        calendar,
+    },
 
     computed: {
         formTitle() {

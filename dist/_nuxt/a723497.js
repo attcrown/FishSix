@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[24],{694:function(n,t,e){"use strict";e.r(t);var l=e(56),component=Object(l.a)({},(function(){this._self._c;return this._m(0)}),[function(){var n=this._self._c;return n("div",[n("h1",[this._v("table user")])])}],!1,null,null,null);t.default=component.exports}}]);
