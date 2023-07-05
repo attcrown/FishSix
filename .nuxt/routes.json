@@ -161,6 +161,13 @@
     "_name": "_41973950"
   },
   {
+    "name": "admin-table_teacher-calendar",
+    "path": "/admin/table_teacher/calendar",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_teacher\\\\calendar.vue",
+    "chunkName": "pages/admin/table_teacher/calendar",
+    "_name": "_83934ab6"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\index.vue",
