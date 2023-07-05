@@ -16,3 +16,8 @@ yarn-error.log*
 # Local development environment
 /.env.local
 /.env.*.local
+
+
+.nuxt/index.js
+.nuxt/router.js
+.nuxt/routes.json
