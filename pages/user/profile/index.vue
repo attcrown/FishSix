@@ -1,42 +1,93 @@
 <template>
     <div class="container-fluid">
         <div class="col d-flex justify-content-center">
-            <v-row align="center">
+            <v-row>
                 <center>
                     <div style="max-width: 500px;">
                         <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
                     </div>
                 </center>
-                <div class="text-center">
-                    <v-col cols="12">
+
+                <v-col cols="12">
+                    <div class="text-center">
                         <div>
                             <v-avatar :size=iconSize>
                                 <img :src=profilePics alt="John">
                             </v-avatar>
                         </div>
-                    </v-col>
-                </div>
-                <div class="text-center">
-                    <v-col cols="12">
-                        <strong class="header">&nbsp;นาย อริน สลับสี{{ firstName }} {{ keyuser }}
+                    </div>
+                </v-col>
+
+                <v-col cols="12">
+                    <div class="text-center">
+                        <strong class="header">&nbsp;นาย {{ firstName }} {{ keyuser }}
                         </strong> <br>
                         <span class="userSpan">ผู้เรียน</span>
-                    </v-col>
-                </div>
-                <v-col cols="12">
-                    <v-card>
-                        <v-card-title class="font-weight-bold header justify-center">ชั่วโมงเรียนเหลือ</v-card-title>
+                    </div>
+                </v-col>
+
+                <v-col cols="6">
+                    <v-card class="mt-2">
+                        <v-card-title class="font-weight-bold header justify-center">ชั่วโมงเรียนที่เหลือ</v-card-title>
+                        <v-divider></v-divider>
                         <v-card-text>
-                            <v-row align="center">
+                            <v-row>
                                 <v-col class="text-h2 text-center" cols="4">
-                                    23&deg;C
-                                    <p>Fliped class</p>
+                                    <span class=" font-weight-black text-black">0</span>
+                                    <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                                    <div class="text-h6 font-semibold text-black">Flipclass online</div>
                                 </v-col>
                                 <v-col class="text-h2 text-center" cols="4">
-                                    23&deg;C
+                                    <span class=" font-weight-black text-black">0</span>
+                                    <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                                    <div class="text-h6 font-semibold text-black">Flipclass สาขา</div>
                                 </v-col>
                                 <v-col class="text-h2 text-center" cols="4">
-                                    23&deg;C
+                                    <span class=" font-weight-black text-black">0</span>
+                                    <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                                    <div class="text-h6 font-semibold text-black">Active class</div>
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+                <v-col cols="6">
+                    <v-card class="mt-2">
+                        <v-card-title class="font-weight-bold header justify-center">แก้ไขข้อมูลผู้ใช้</v-card-title>
+                        <v-divider></v-divider>
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-text-field label="ชื่อ - นามสกุล" name="firstName"
+                                        v-model="detail.firstName"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="ชื่อเล่น" name="nickname" v-model="detail.nickname"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="โรงเรียน" name="school" v-model="detail.school"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="เพศ" name="gender" v-model="detail.gender"></v-text-field>
+
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field type="date" label="วันเกิด" name="birthDate"
+                                        v-model="detail.birthDate"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-select label="ระดับชั้น" name="education" v-model="detail.education"
+                                        :items="educationLevel" item-text="educationName"></v-select>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <v-textarea name="address" label="ที่อยู่" v-model="detail.address"  rows="2"></v-textarea>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="เบอร์โทรศัพท์" name="studentMobile" v-model="detail.studentMobile"></v-text-field>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-text-field label="เบอร์โทรศัพท์ผู้ปกครอง" name="parentMobile" v-model="detail.parentMobile"></v-text-field>
                                 </v-col>
                             </v-row>
                         </v-card-text>
@@ -56,6 +107,26 @@ export default {
         return {
             profilePics: "https://cdn.vuetifyjs.com/images/john.jpg",
             iconSize: 120,
+            detail:
+            {
+                firstName: "อริน",
+                lastname: "สลับสี",
+                nickname: "ออโต้",
+                gender: "ชาย",
+                school: "Knoware",
+                education: "ม.3",
+                address: "สะพานลอย",
+                studentMobile: "084311131",
+                parentMobile: "122545455"
+
+            },
+            educationLevel:
+                [
+                    { id: 1, educationName: "ม.3" },
+                    { id: 2, educationName: "ม.4" },
+                    { id: 3, educationName: "ม.5" },
+                    { id: 4, educationName: "ม.6" },
+                ]
         }
     },
 
