@@ -12,9 +12,9 @@
                     <div class="text-center">
                         <div>
                             <v-avatar :size=iconSize>
-                                <v-progress-circular v-if ="isLoading " :size="64" :width="6" color="primary"
+                                <v-progress-circular v-if="isLoading" :size="64" :width="6" color="primary"
                                     indeterminate></v-progress-circular>
-                                <img  v-if ="!isLoading " :src=profilePic alt="รูปโปรไฟล์">
+                                <img v-if="!isLoading" :src=profilePic alt="รูปโปรไฟล์">
 
                             </v-avatar>
                         </div>
@@ -86,13 +86,15 @@
                                     </v-col>
                                     <v-col cols="6">
                                         <div>
-                                            <v-menu ref="dateMenu" v-model="menu" :close-on-content-click="false"
+
+                                            <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                                 transition="scale-transition" offset-y min-width="auto">
                                                 <template v-slot:activator="{ on, attrs }">
-                                                    <v-text-field v-model="date" label="วันเกิด" prepend-icon="mdi-calendar"
-                                                        readonly v-bind="attrs" v-on="on"></v-text-field>
+                                                    <v-text-field v-model="birthDate" label="วันเกิด" name="birthDate"
+                                                        prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                        v-on="on"></v-text-field>
                                                 </template>
-                                                <v-date-picker v-model="date" :active-picker.sync="activePicker" color="indigo lighten-1"
+                                                <v-date-picker v-model="birthDate" :active-picker.sync="activePicker"
                                                     :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substring(0, 10)"
                                                     min="1950-01-01" @change="save"></v-date-picker>
                                             </v-menu>
@@ -104,7 +106,8 @@
                                     </v-col>
 
                                     <v-col cols="12">
-                                        <v-textarea name="address" label="ที่อยู่" v-model="address" counter rows="2"></v-textarea>
+                                        <v-textarea name="address" label="ที่อยู่" v-model="address" counter
+                                            rows="2"></v-textarea>
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field label="เบอร์โทรศัพท์" name="studentMobile" v-model="studentMobile"
@@ -226,10 +229,10 @@ export default {
             snackbarMessage: '',
             snackbarColor: '',
             loading: false,
-            activePicker: 'YEAR',
+            activePicker: null,
             date: null,
             menu: false,
-            isFormChange :false,
+            isFormChange: false,
 
             //User data
             profilePic: null,
@@ -293,10 +296,9 @@ export default {
         this.readdata();
     },
     watch: {
-      menu (val) {
-        val && setTimeout(() => (this.activePicker = 'YEAR'))
-      },
-      
+        menu(val) {
+            val && setTimeout(() => (this.activePicker = 'YEAR'))
+        },
     },
     methods: {
         getout() {
@@ -337,9 +339,9 @@ export default {
         validate() {
             return this.$refs.detailForm.validate()
         },
-    
-        menu(val) {
-            val && setTimeout(() => (this.activePicker = 'YEAR'))
+
+        save(date) {
+            this.$refs.menu.save(date)
         },
 
         async saveDetail() {
