@@ -123,7 +123,7 @@
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
-                                            <template v-slot:activator="{ }">
+                                            <template v-slot:activator="{}">
                                                 <v-btn color="primary" dark class="mb-2" @click="dialog_select_date = true">
                                                     จองคิวนอกตาราง
                                                 </v-btn>
@@ -173,15 +173,22 @@
                                         </v-dialog>
                                     </v-toolbar>
                                 </template>
+                                <template v-slot:item.status="{ item }">
+                                    <v-chip
+                                        :color="getColor(item.status)"
+                                        dark
+                                    >
+                                        {{ item.status }}
+                                    </v-chip>
+                                </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
-                                <!-- <template v-slot:item.actions="{ item }">
-                                    <v-icon small class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
-                                        mdi-pencil
-                                    </v-icon>
-                                    <v-icon small @click="deleteItem(item)">
-                                        mdi-delete
-                                    </v-icon>
-                                </template> -->
+                                <template v-slot:item.actions="{ item }">
+                                    <v-btn x-small color="secondary" @click="detail_match(item)"><v-icon small class="mr-2">
+                                            mdi-account-details
+                                        </v-icon>
+                                        DETAIL
+                                    </v-btn>
+                                </template>
                             </v-data-table>
                         </v-col>
 
@@ -277,9 +284,8 @@
                         <v-card-text>
                             <v-container>
                                 <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_stop" format="24hr" 
-                                    :allowed-hours="allowedHours"
-                                    :min="picker_start"></v-time-picker>
+                                    <v-time-picker v-model="picker_stop" format="24hr" :allowed-hours="allowedHours"
+                                        :min="picker_start"></v-time-picker>
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -364,15 +370,21 @@ export default {
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date' ,align: 'center'},
-            { text: 'Start', value: 'time_s' ,align: 'start'},
-            { text: 'End', value: 'time_e' ,align: 'start'},
-            { text: 'Style', value: 'style' ,align: 'start'},
-            { text: 'Subject', value: 'subject' ,align: 'start'},
-            { text: 'Actions', value: 'actions', sortable: false ,align: 'center'},
+            { text: 'Date', value: 'date', align: 'center' },
+            { text: 'Start', value: 'time_s', align: 'start' },
+            { text: 'End', value: 'time_e', align: 'start' },
+            { text: 'Style', value: 'style', align: 'start' },
+            { text: 'Subject', value: 'subject', align: 'start' },
+            { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
 
         headers_student: [
+            {
+                text: 'Name Student',
+                align: 'start',
+                sortable: false,
+                value: 'name_student',
+            },
             {
                 text: 'Name Teacher',
                 align: 'start',
@@ -384,7 +396,8 @@ export default {
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
             { text: 'Subject', value: 'subject' },
-            // { text: 'Actions', value: 'actions', sortable: false },
+            { text: 'Status', value: 'status' },
+            { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
         desserts_student: [],
@@ -414,12 +427,12 @@ export default {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
         allowedHours() {
-            if(this.mode == 'edit'){
-                return v => v >= parseInt(this.picker_start_tea.substring(0,3))
-                && v<= parseInt(this.picker_stop_tea.substring(0,3));
-            }else{
+            if (this.mode == 'edit') {
+                return v => v >= parseInt(this.picker_start_tea.substring(0, 3))
+                    && v <= parseInt(this.picker_stop_tea.substring(0, 3));
+            } else {
                 return v => v >= this.hour_tea;
-            }            
+            }
         },
         // allowedMinutes() {
         //     return v => v > this.min_tea;
@@ -441,10 +454,19 @@ export default {
         this.search_teacher();
         this.search_student();
         this.search_date_teacher();
+        this.search_date_student();
         this.$refs.calendar.checkChange();
     },
 
     methods: {
+        getColor (stutus) {
+            if (stutus == 'active') return 'success'
+            else if (stutus == 'Not active') return 'orange'
+            else return 'red'
+        },
+        detail_match(item){
+            console.log(item);
+        },
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
             const randomColor = this.colors[randomIndex]
@@ -515,9 +537,10 @@ export default {
             // }
             this.clear_item();
             this.search_date_teacher();
+            this.search_date_student();
             this.dialog_detail = false;
         },
-        clear_item() {            
+        clear_item() {
             this.value = null;
             this.hour_tea = 0;
             this.min_tea = 0;
@@ -563,23 +586,40 @@ export default {
         search_date_student() {
             this.desserts_student = [];
             let item = [];
+            let nametea = '';
+            let namestu = '';
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const keydata = childData[key];
-                    db.ref(`user/${key}`).on("value", (snapshot) => {
-                        const childData = snapshot.val();
-                        nametea = childData.name;
-                    })
-                    for(const date in keydata){
+                    for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            console.log(timedata);
+                            db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+                                const childData = snapshot.val();
+                                nametea = childData.name;
+                            })
+                            db.ref(`user/${key}`).on("value", (snapshot) => {
+                                const childData = snapshot.val();
+                                namestu = childData.name;
+                            })
+                            item.push({
+                                name_student: namestu,
+                                name: nametea,
+                                subject: timedata.subject,
+                                date: date,
+                                time_s: timedata.start,
+                                time_e: timedata.stop,
+                                style: timedata.style_subject,
+                                status: timedata.status,
+                                key_student: key,
+                                key_teacher: timedata.teacher,
+                            });
                         }
                     }
- 
+
                 }
                 this.desserts_student = item;
             })
