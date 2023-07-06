@@ -10,6 +10,8 @@ import '..\\assets\\css\\bootstrap.css'
 
 import '..\\node_modules\\vuetify\\dist\\vuetify.css'
 
+import '..\\node_modules\\vuetify\\dist\\vuetify.css'
+
 import _6f6c098b from '..\\layouts\\default.vue'
 import _77a66d33 from '..\\layouts\\login.vue'
 import _44525b52 from '..\\layouts\\teacherNav.vue'

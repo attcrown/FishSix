@@ -459,7 +459,7 @@ export default {
                 }
             }
             this.clear_item();
-            this.search_date_teacher();
+            // this.search_date_teacher();
             this.dialog_detail = false;
         },
         clear_item() {
@@ -508,7 +508,7 @@ export default {
             let nametea = '';
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
-                const childData = snapshot.val();
+                const childData = snapshot.val();                
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
