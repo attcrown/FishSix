@@ -83,7 +83,7 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-monitor-dashboard',
+          icon: 'mdi-home',
           title: 'หน้าหลัก',
           to: '/user',
         },
