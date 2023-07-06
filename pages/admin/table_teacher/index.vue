@@ -471,7 +471,6 @@ export default {
             this.picker_start = null;
             this.picker_stop = null;
             this.desserts = [];
-            this.search_date_teacher();
         },
         clear_item() {
             this.value = null;
@@ -666,7 +665,6 @@ export default {
             // console.log(this.delcon);
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_e}`).remove();
-            this.search_date_teacher();
             this.delcon = [];
             this.closeDelete()
         },
