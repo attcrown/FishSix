@@ -38,10 +38,10 @@
           <v-icon>mdi-minus</v-icon>
         </v-btn> -->
       <v-avatar class="ms-10">
-        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+        <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
       <v-toolbar-title class="ms-3 white--text">
-        {{ title }}
+        คุณ {{ firstName }} {{ lastName }} 
       </v-toolbar-title>
       <v-spacer />
       <v-btn icon to="/admin/basket" router exact>
@@ -78,6 +78,9 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      profilePic: null,
+      firstName:null,
+      lastName:null,
       clipped: true,
       drawer: false,
       fixed: false,
@@ -112,6 +115,7 @@ export default {
   },
   mounted() {
     this.check();
+    this.readdata();
   },
   methods: {
     check() {
@@ -124,12 +128,25 @@ export default {
         if (localStorage.getItem('firstName') == null) {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
+          this.keyuser = sessionStorage.getItem('lastName');
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
+          this.keyuser = localStorage.getItem('lastName') || '';
         }
       }
     },
+
+    async readdata() {
+            const db = this.$fireModule.database();
+            await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.profilePic = childData.profilePic || null;
+                this.firstName = childData.firstName || null;
+                this.lastName = childData.lastName || null;
+            })
+        },
+
     getout() {
       localStorage.clear();
       sessionStorage.clear();
