@@ -73,6 +73,15 @@ export default {
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
         },
+        save() {
+            const db = this.$fireModule.database();
+            db.ref(`user/${this.keyuser}`).update({
+                // subject : this.save_detail.subject,
+                // style_subject : this.save_detail.style,
+                // start : this.picker_start,
+                // stop : this.picker_stop,
+            });
+        },
     },
 }
 </script>

@@ -28,6 +28,7 @@ const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\test
 const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
 const _41973950 = () => interopDefault(import('..\\pages\\admin\\shop\\title.vue' /* webpackChunkName: "pages/admin/shop/title" */))
 const _83934ab6 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\calendar.vue' /* webpackChunkName: "pages/admin/table_teacher/calendar" */))
+const _1198368c = () => interopDefault(import('..\\pages\\user\\table\\calendar.vue' /* webpackChunkName: "pages/user/table/calendar" */))
 const _3a45f886 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
 const emptyFn = () => {}
@@ -137,6 +138,10 @@ export const routerOptions = {
     path: "/admin/table_teacher/calendar",
     component: _83934ab6,
     name: "admin-table_teacher-calendar"
+  }, {
+    path: "/user/table/calendar",
+    component: _1198368c,
+    name: "user-table-calendar"
   }, {
     path: "/",
     component: _3a45f886,

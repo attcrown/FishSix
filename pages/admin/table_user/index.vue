@@ -1,6 +1,92 @@
 <template>
     <div>
-        <div class="container text-center">
+        <div class="container text-center mb-3" style="background-color:rgba(189, 186, 186, 0.521)">
+            <div class="mb-3 hide-on-mobile">
+                <v-row class="fill-height">
+                    <v-col>
+                        <v-sheet height="64">
+                            <v-toolbar flat>
+                                <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                                    Today
+                                </v-btn>
+                                <v-btn fab text small color="grey darken-2" @click="prev">
+                                    <v-icon small>
+                                        mdi-chevron-left
+                                    </v-icon>
+                                </v-btn>
+                                <v-btn fab text small color="grey darken-2" @click="next">
+                                    <v-icon small>
+                                        mdi-chevron-right
+                                    </v-icon>
+                                </v-btn>
+
+                                <v-toolbar-title v-if="$refs.calendar">
+                                    {{ $refs.calendar.title }}
+                                </v-toolbar-title>
+
+                                <v-spacer></v-spacer>
+                                <v-menu bottom right>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                                            <span>{{ typeToLabel[type] }}</span>
+                                            <v-icon right>
+                                                mdi-menu-down
+                                            </v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-list>
+                                        <v-list-item @click="type = 'day'">
+                                            <v-list-item-title>Day</v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="type = 'week'">
+                                            <v-list-item-title>Week</v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="type = 'month'">
+                                            <v-list-item-title>Month</v-list-item-title>
+                                        </v-list-item>
+                                        <!-- <v-list-item @click="type = '4day'">
+                                <v-list-item-title>4 days</v-list-item-title>
+                            </v-list-item> -->
+                                    </v-list>
+                                </v-menu>
+                            </v-toolbar>
+                        </v-sheet>
+                        <v-sheet height="600">
+                            <v-calendar ref="calendar" v-model="focus" color="primary" :events="events"
+                                :event-color="getEventColor" :type="type" @click:event="showEvent" @click:more="viewDay"
+                                @click:date="viewDay"></v-calendar>
+                            <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
+                                offset-x>
+                                <v-card color="grey lighten-4" min-width="350px" flat>
+                                    <v-toolbar :color="selectedEvent.color" dark>
+                                        <v-btn icon>
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+                                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                                        <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                        <v-spacer></v-spacer>
+                                        <v-btn icon>
+                                            <v-icon>mdi-heart</v-icon>
+                                        </v-btn>
+                                        <v-btn icon>
+                                            <v-icon>mdi-dots-vertical</v-icon>
+                                        </v-btn>
+                                    </v-toolbar>
+                                    <v-card-text>
+                                        <span v-html="selectedEvent.details"></span>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-btn text color="secondary" @click="selectedOpen = false">
+                                            Cancel
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-menu>
+                        </v-sheet>
+                    </v-col>
+                </v-row>
+            </div>
+
             <v-card>
                 <v-container fluid>
                     <v-row align="center">
@@ -9,8 +95,8 @@
                                 <div class="subheading">
                                     <h3>Student</h3>
                                 </div>
-                                <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates"
-                                    show-adjacent-months event-color="green lighten-1"
+                                <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
+                                    :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
                                     @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                             </div>
                         </v-col>
@@ -32,10 +118,16 @@
                             <v-data-table :headers="headers" :items="desserts" sort-by="date" class="elevation-1">
                                 <template v-slot:top>
                                     <v-toolbar flat>
-                                        <v-toolbar-title  style="background-color:rgba(37, 110, 8, 0.425);">Table Teacher</v-toolbar-title>
+                                        <v-toolbar-title
+                                            style="background-color:rgba(37, 110, 8, 0.425);">ตารางที่สามารถจองคิวได้เลย</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
+                                            <template v-slot:activator="{ }">
+                                                <v-btn color="primary" dark class="mb-2" @click="dialog_select_date = true">
+                                                    จองคิวนอกตาราง
+                                                </v-btn>
+                                            </template>
                                             <v-card>
                                                 <v-card-title class="text-h5">Are you sure you want to delete this
                                                     item?</v-card-title>
@@ -53,16 +145,18 @@
                                 <template v-slot:item.actions="{ item }">
                                     <v-icon xl class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
                                         mdi-plus-box-multiple
-                                    </v-icon>                                    
+                                    </v-icon>
                                 </template>
                             </v-data-table>
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" class="elevation-1">
+                            <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
+                                class="elevation-1">
                                 <template v-slot:top>
                                     <v-toolbar flat>
-                                        <v-toolbar-title style="background-color:rgba(173, 28, 28, 0.425);">Table Student</v-toolbar-title>
+                                        <v-toolbar-title
+                                            style="background-color:rgba(173, 28, 28, 0.425);">สถานะการจองของนักเรียน</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
@@ -89,7 +183,7 @@
                                     </v-icon>
                                 </template> -->
                             </v-data-table>
-                        </v-col>                        
+                        </v-col>
 
                     </v-row>
                 </v-container>
@@ -108,20 +202,20 @@
                                 <v-row>
                                     <v-col cols="12" class="mt-5">
                                         <v-autocomplete v-model="value" :items="items" dense filled label="Search teacher"
-                                            item-text="name" item-value="key"
-                                            @change="check_time_start();" :disabled="mode === 'edit'"></v-autocomplete>
+                                            item-text="name" item-value="key" @change="check_time_start();"
+                                            :disabled="mode === 'edit'"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" class="mt-5">
-                                        <v-autocomplete v-model="value_student" :items="items_student" dense filled label="Search student"
-                                            item-text="name" item-value="key"></v-autocomplete>
+                                        <v-autocomplete v-model="value_student" :items="items_student" dense filled
+                                            label="Search student" item-text="name" item-value="key"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="7">
                                         <v-text-field label="ชื่อวิชา" hint="ระบุชื่อวิชาที่สอน" persistent-hint
                                             v-model="save_detail.subject" :disabled="mode === 'edit'"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="5">
-                                        <v-select :items="style_subject" label="รูปแบบการสอน"
-                                            v-model="save_detail.style" :disabled="mode === 'edit'"></v-select>
+                                        <v-select :items="style_subject" label="รูปแบบการสอน" v-model="save_detail.style"
+                                            :disabled="mode === 'edit'"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field label="เริ่มเรียน" v-model="picker_start"
@@ -183,7 +277,9 @@
                         <v-card-text>
                             <v-container>
                                 <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_stop" format="24hr" :min="picker_start"></v-time-picker>
+                                    <v-time-picker v-model="picker_stop" format="24hr" 
+                                    :allowed-hours="allowedHours"
+                                    :min="picker_start"></v-time-picker>
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -212,6 +308,23 @@
             </v-dialog>
         </template>
 
+        <template>
+            <v-dialog v-model="dialog_select_date" max-width="350px">
+                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.842)">
+                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> <b>เพิ่มตารางสอน</b></v-card-title>
+                    <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
+                        event-color="green lighten-1"
+                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
+
     </div>
 </template>
 <script>
@@ -224,10 +337,11 @@ export default {
         dialog_time: false,
         dialog_time_stop: false,
         dialog_save_error: false,
+        dialog_select_date: false,
         items: [],
         items_student: [],
         style_subject: ['Online', 'On-site', 'Private'],
-        style_subject_learn:[],
+        style_subject_learn: [],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -241,8 +355,8 @@ export default {
 
         dialog: false,
         dialogDelete: false,
-        
-        arrayEvents:[],
+
+        arrayEvents: [],
         headers: [
             {
                 text: 'Name Teacher',
@@ -250,12 +364,12 @@ export default {
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date' },
-            { text: 'Start', value: 'time_s' },
-            { text: 'End', value: 'time_e' },
-            { text: 'Style', value: 'style' },
-            { text: 'Subject', value: 'subject' },
-            { text: 'Actions', value: 'actions', sortable: false },
+            { text: 'Date', value: 'date' ,align: 'center'},
+            { text: 'Start', value: 'time_s' ,align: 'start'},
+            { text: 'End', value: 'time_e' ,align: 'start'},
+            { text: 'Style', value: 'style' ,align: 'start'},
+            { text: 'Subject', value: 'subject' ,align: 'start'},
+            { text: 'Actions', value: 'actions', sortable: false ,align: 'center'},
         ],
 
         headers_student: [
@@ -279,6 +393,20 @@ export default {
         hour_tea: 0,
         min_tea: 0,
 
+        focus: '',
+        type: 'month',
+        typeToLabel: {
+            month: 'Month',
+            week: 'Week',
+            day: 'Day', '4day': '4 Days',
+        },
+        selectedEvent: {},
+        selectedElement: null,
+        selectedOpen: false,
+        events: [],
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+
     }),
 
     computed: {
@@ -286,7 +414,12 @@ export default {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
         allowedHours() {
-            return v => v > this.hour_tea;
+            if(this.mode == 'edit'){
+                return v => v >= parseInt(this.picker_start_tea.substring(0,3))
+                && v<= parseInt(this.picker_stop_tea.substring(0,3));
+            }else{
+                return v => v >= this.hour_tea;
+            }            
         },
         // allowedMinutes() {
         //     return v => v > this.min_tea;
@@ -308,55 +441,93 @@ export default {
         this.search_teacher();
         this.search_student();
         this.search_date_teacher();
+        this.$refs.calendar.checkChange();
     },
 
     methods: {
+        getRandomColor() {
+            const randomIndex = Math.floor(Math.random() * this.colors.length)
+            const randomColor = this.colors[randomIndex]
+            // Remove the color from the array so it won't be used again
+            return randomColor
+        },
+        viewDay({ date }) {
+            this.focus = date
+            this.type = 'day'
+            console.log(this.focus);
+        },
+        getEventColor(event) {
+            return event.color
+        },
+        setToday() {
+            this.focus = ''
+        },
+        prev() {
+            this.$refs.calendar.prev()
+        },
+        next() {
+            this.$refs.calendar.next()
+        },
+        showEvent({ nativeEvent, event }) {
+            const open = () => {
+                this.selectedEvent = event
+                this.selectedElement = nativeEvent.target
+                console.log(this.selectedEvent);
+                console.log(this.selectedElement);
+                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+            }
+
+            if (this.selectedOpen) {
+                this.selectedOpen = false
+                requestAnimationFrame(() => requestAnimationFrame(() => open()))
+            } else {
+                open()
+            }
+
+            nativeEvent.stopPropagation()
+        },
+
         save_detail_data() {
             if (this.save_detail.subject == null ||
                 this.save_detail.style == null ||
                 this.picker_start == null ||
                 this.picker_stop == null ||
                 this.value == null ||
+                this.value_student == null ||
                 this.date1 == null) {
-                // console.log('ไม่บันทึก');
                 this.dialog_save_error = true;
                 return;
             }
             const db = this.$fireModule.database();
-            db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
+            db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                teacher: this.value,
                 subject: this.save_detail.subject,
                 style_subject: this.save_detail.style,
                 start: this.picker_start,
                 stop: this.picker_stop,
+                status: 'active',
             });
 
-            if (this.mode == 'edit') {
-                if (this.delday != this.picker_stop) {
-                    db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
-                }
-            }
+            // if (this.mode == 'edit') {
+            //     if (this.delday != this.picker_stop) {
+            //         db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
+            //     }
+            // }
             this.clear_item();
             this.search_date_teacher();
             this.dialog_detail = false;
         },
-        clear_item() {
-            this.date1 = null;
+        clear_item() {            
             this.value = null;
             this.hour_tea = 0;
             this.min_tea = 0;
             this.save_detail = [];
+            this.picker_start_tea = null;
+            this.picker_stop_tea = null;
             this.picker_start = null;
             this.picker_stop = null;
             this.desserts = [];
             this.search_date_teacher();
-        },
-        clear_item() {
-            this.value = null;
-            this.hour_tea = 0;
-            this.min_tea = 0;
-            this.save_detail = [];
-            this.picker_start = null;
-            this.picker_stop = null;
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -389,9 +560,33 @@ export default {
                 this.items_student = item;
             })
         },
+        search_date_student() {
+            this.desserts_student = [];
+            let item = [];
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    db.ref(`user/${key}`).on("value", (snapshot) => {
+                        const childData = snapshot.val();
+                        nametea = childData.name;
+                    })
+                    for(const date in keydata){
+                        const datedata = keydata[date];
+                        for (const time in datedata) {
+                            const timedata = datedata[time];
+                            console.log(timedata);
+                        }
+                    }
+ 
+                }
+                this.desserts_student = item;
+            })
+        },
         search_date_teacher() {
             this.desserts = [];
-            // console.log('search');
+            this.events = [];
             let item = [];
             let nametea = '';
             const db = this.$fireModule.database();
@@ -406,10 +601,10 @@ export default {
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         this.arrayEvents.push(date);
-                        for (const time in datedata) {                            
+                        for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.search_value == key && 
-                                this.search_style_sub == timedata.style_subject && 
+                            if (this.search_value == key &&
+                                this.search_style_sub == timedata.style_subject &&
                                 this.search_style_learn == timedata.subject) {
                                 // console.log('หาทั้งสอง');
                                 item.push({
@@ -422,9 +617,22 @@ export default {
                                     key: key,
                                 });
                                 this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (
-                                this.search_value == key && 
-                                this.search_style_sub == null && 
+                                this.search_value == key &&
+                                this.search_style_sub == null &&
                                 this.search_style_learn == null) {
                                 // console.log('หาครู');
                                 item.push({
@@ -437,9 +645,22 @@ export default {
                                     key: key,
                                 });
                                 this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (
-                                this.search_value == null && 
-                                this.search_style_sub == timedata.style_subject && 
+                                this.search_value == null &&
+                                this.search_style_sub == timedata.style_subject &&
                                 this.search_style_learn == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
@@ -452,84 +673,50 @@ export default {
                                     key: key,
                                 });
                                 this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (
-                                this.search_value == null && 
-                                this.search_style_sub == null && 
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                            } else if (
-                                this.search_value == key && 
-                                this.search_style_sub == timedata.style_subject && 
-                                this.search_style_learn == null) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                            }else if (
-                                this.search_value == key && 
-                                this.search_style_sub == timedata.style_subject && 
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                            }else if (
-                                this.search_value == key && 
-                                this.search_style_sub == null && 
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                            }else if (
-                                this.search_value == null && 
-                                this.search_style_sub == timedata.style_subject && 
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                            }else if (
                                 this.search_value == null &&
-                                this.search_style_sub == null && 
+                                this.search_style_sub == null &&
+                                this.search_style_learn == timedata.subject) {
+                                // console.log('หาหมด');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                                this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else if (
+                                this.search_value == key &&
+                                this.search_style_sub == timedata.style_subject &&
                                 this.search_style_learn == null) {
                                 // console.log('หาหมด');
                                 item.push({
@@ -542,7 +729,132 @@ export default {
                                     key: key,
                                 });
                                 this.style_subject_learn.push(timedata.subject);
-                            }else { }
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else if (
+                                this.search_value == key &&
+                                this.search_style_sub == timedata.style_subject &&
+                                this.search_style_learn == timedata.subject) {
+                                // console.log('หาหมด');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                                this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else if (
+                                this.search_value == key &&
+                                this.search_style_sub == null &&
+                                this.search_style_learn == timedata.subject) {
+                                // console.log('หาหมด');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                                this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else if (
+                                this.search_value == null &&
+                                this.search_style_sub == timedata.style_subject &&
+                                this.search_style_learn == timedata.subject) {
+                                // console.log('หาหมด');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                                this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else if (
+                                this.search_value == null &&
+                                this.search_style_sub == null &&
+                                this.search_style_learn == null) {
+                                // console.log('หาหมด');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.subject,
+                                    key: key,
+                                });
+                                this.style_subject_learn.push(timedata.subject);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
+                            } else { }
 
                         }
                     }
@@ -574,8 +886,8 @@ export default {
             this.date1 = item.date;
             this.save_detail.subject = item.subject;
             this.save_detail.style = item.style;
-            this.picker_start = item.time_s;
-            this.picker_stop = item.time_e;
+            this.picker_start_tea = item.time_s;
+            this.picker_stop_tea = item.time_e;
             this.dialog_detail = true;
         },
 
@@ -621,3 +933,21 @@ export default {
     },
 }
 </script>
+
+<style>
+@media only screen and (max-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-desktop {
+        display: none;
+    }
+}
+</style>

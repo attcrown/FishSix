@@ -302,7 +302,7 @@ export default {
         dialog_save_error: false,
         dialog_select_date: false,
         items: [],
-        style_subject: ['Online', 'On-site', 'Private'],
+        style_subject: ['Online', 'On-site'],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -625,7 +625,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                console.log(this.events);
+                // console.log(this.events);
             })
         },
         check_time_start() {
@@ -667,6 +667,7 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_e}`).remove();
             this.search_date_teacher();
+            this.delcon = [];
             this.closeDelete()
         },
 
