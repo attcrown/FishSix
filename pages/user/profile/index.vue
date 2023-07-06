@@ -293,7 +293,7 @@ export default {
         this.readdata();
     },
     watch: {
-      dateMenu (val) {
+      menu (val) {
         val && setTimeout(() => (this.activePicker = 'YEAR'))
       },
       
