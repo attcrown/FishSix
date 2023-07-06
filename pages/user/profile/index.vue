@@ -371,7 +371,7 @@ export default {
             try {
                 const db = this.$fireModule.database();
                 this.loading = true;
-                if (this.validate()&&this.isFormChange) {
+                if (this.validate()) {
                     await db.ref(`user/${this.keyuser}`).update({
                         firstName: this.firstName,
                         lastName: this.lastName,
