@@ -128,7 +128,7 @@
                                                     จองคิวนอกตาราง
                                                 </v-btn>
                                             </template>
-                                            <v-card>
+                                            <!-- <v-card>
                                                 <v-card-title class="text-h5">Are you sure you want to delete this
                                                     item?</v-card-title>
                                                 <v-card-actions>
@@ -137,7 +137,7 @@
                                                     <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                                                     <v-spacer></v-spacer>
                                                 </v-card-actions>
-                                            </v-card>
+                                            </v-card> -->
                                         </v-dialog>
                                     </v-toolbar>
                                 </template>
@@ -158,32 +158,19 @@
                                         <v-toolbar-title
                                             style="background-color:rgba(173, 28, 28, 0.425);">สถานะการจองของนักเรียน</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
-                                        <v-spacer></v-spacer>
-                                        <v-dialog v-model="dialogDelete" max-width="500px">
-                                            <v-card>
-                                                <v-card-title class="text-h5">Are you sure you want to delete this
-                                                    item?</v-card-title>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
+                                        <v-spacer></v-spacer>                                        
                                     </v-toolbar>
                                 </template>
+                                <!-- eslint-disable-next-line vue/valid-v-slot -->
                                 <template v-slot:item.status="{ item }">
-                                    <v-chip
-                                        :color="getColor(item.status)"
-                                        dark
-                                    >
+                                    <v-chip :color="getColor(item.status)" dark>
                                         {{ item.status }}
                                     </v-chip>
                                 </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                                 <template v-slot:item.actions="{ item }">
-                                    <v-btn x-small color="secondary" @click="detail_match(item)"><v-icon small class="mr-2">
+                                    <v-btn x-small color="secondary" @click="detail_match(item)">
+                                        <v-icon small class="mr-2">
                                             mdi-account-details
                                         </v-icon>
                                         DETAIL
@@ -396,8 +383,8 @@ export default {
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
             { text: 'Subject', value: 'subject' },
-            { text: 'Status', value: 'status' },
-            { text: 'Actions', value: 'actions', sortable: false },
+            { text: 'Status', value: 'status', align: 'start' },
+            { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts: [],
         desserts_student: [],
@@ -434,6 +421,9 @@ export default {
                 return v => v >= this.hour_tea;
             }
         },
+        // search_check(){
+        //     this.search_date_teacher();
+        // },
         // allowedMinutes() {
         //     return v => v > this.min_tea;
         // },
@@ -446,9 +436,6 @@ export default {
             val || this.closeDelete()
         },
     },
-    created() {
-        // this.search_date_teacher();
-    },
 
     mounted() {
         this.search_teacher();
@@ -459,12 +446,12 @@ export default {
     },
 
     methods: {
-        getColor (stutus) {
+        getColor(stutus) {
             if (stutus == 'active') return 'success'
             else if (stutus == 'Not active') return 'orange'
             else return 'red'
         },
-        detail_match(item){
+        detail_match(item) {
             console.log(item);
         },
         getRandomColor() {
@@ -508,6 +495,14 @@ export default {
 
             nativeEvent.stopPropagation()
         },
+        check_status() {
+            if (this.mode == 'edit') {
+                return 'active';
+            }
+            if (this.mode == 'save') {
+                return 'Not active';
+            } else { return 'error'; }
+        },
 
         save_detail_data() {
             if (this.save_detail.subject == null ||
@@ -527,7 +522,7 @@ export default {
                 style_subject: this.save_detail.style,
                 start: this.picker_start,
                 stop: this.picker_stop,
-                status: 'active',
+                status: this.check_status(),
             });
 
             // if (this.mode == 'edit') {
@@ -536,8 +531,6 @@ export default {
             //     }
             // }
             this.clear_item();
-            this.search_date_teacher();
-            this.search_date_student();
             this.dialog_detail = false;
         },
         clear_item() {
@@ -549,8 +542,6 @@ export default {
             this.picker_stop_tea = null;
             this.picker_start = null;
             this.picker_stop = null;
-            this.desserts = [];
-            this.search_date_teacher();
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -558,10 +549,10 @@ export default {
             return selectedDate >= currentDate;
         },
         search_teacher() {
-            let item = [];
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
                 const childData = snapshot.val();
+                let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
                         item.push({ key: key, name: childData[key].name });
@@ -571,10 +562,10 @@ export default {
             })
         },
         search_student() {
-            let item = [];
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
                 const childData = snapshot.val();
+                let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
                         item.push({ key: key, name: childData[key].name });
@@ -584,13 +575,13 @@ export default {
             })
         },
         search_date_student() {
-            this.desserts_student = [];
-            let item = [];
-            let nametea = '';
-            let namestu = '';
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
+                this.desserts_student = [];
+                let item = [];
+                let nametea = '';
+                let namestu = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -625,13 +616,14 @@ export default {
             })
         },
         search_date_teacher() {
-            this.desserts = [];
-            this.events = [];
-            let item = [];
-            let nametea = '';
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
-                const childData = snapshot.val();
+                const childData = snapshot.val(); 
+                const now = new Date();   
+                let item = [];
+                this.desserts = [];
+                this.events = [];
+                let nametea = '';            
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
@@ -639,264 +631,268 @@ export default {
                         nametea = childData.name;
                     })
                     for (const date in keydata) {
-                        const datedata = keydata[date];
-                        this.arrayEvents.push(date);
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            if (this.search_value == key &&
-                                this.search_style_sub == timedata.style_subject &&
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาทั้งสอง');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == key &&
-                                this.search_style_sub == null &&
-                                this.search_style_learn == null) {
-                                // console.log('หาครู');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == null &&
-                                this.search_style_sub == timedata.style_subject &&
-                                this.search_style_learn == null) {
-                                // console.log('หารูปแบบ');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == null &&
-                                this.search_style_sub == null &&
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == key &&
-                                this.search_style_sub == timedata.style_subject &&
-                                this.search_style_learn == null) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == key &&
-                                this.search_style_sub == timedata.style_subject &&
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == key &&
-                                this.search_style_sub == null &&
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == null &&
-                                this.search_style_sub == timedata.style_subject &&
-                                this.search_style_learn == timedata.subject) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else if (
-                                this.search_value == null &&
-                                this.search_style_sub == null &&
-                                this.search_style_learn == null) {
-                                // console.log('หาหมด');
-                                item.push({
-                                    name: nametea,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    subject: timedata.subject,
-                                    key: key,
-                                });
-                                this.style_subject_learn.push(timedata.subject);
-                                this.events.push(
-                                    {
-                                        name: timedata.subject,
-                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                            timedata.start.substring(3, 5)),
-                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                            timedata.stop.substring(3, 5)),
-                                        color: this.getRandomColor(),
-                                        timed: true,
-                                    },
-                                );
-                            } else { }
-
-                        }
+                        console.log(now.getTime().toString().substring(0,5)  ,new Date(date).getTime().toString().substring(0,5));
+                        if (new Date(date).getTime().toString().substring(0,5) >= now.getTime().toString().substring(0,5) ) {
+                            console.log('New day');
+                            const datedata = keydata[date];
+                            this.arrayEvents.push(date);
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                if (this.search_value == key &&
+                                    this.search_style_sub == timedata.style_subject &&
+                                    this.search_style_learn == timedata.subject) {
+                                    // console.log('หาทั้งสอง');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == key &&
+                                    this.search_style_sub == null &&
+                                    this.search_style_learn == null) {
+                                    // console.log('หาครู');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == null &&
+                                    this.search_style_sub == timedata.style_subject &&
+                                    this.search_style_learn == null) {
+                                    // console.log('หารูปแบบ');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == null &&
+                                    this.search_style_sub == null &&
+                                    this.search_style_learn == timedata.subject) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == key &&
+                                    this.search_style_sub == timedata.style_subject &&
+                                    this.search_style_learn == null) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == key &&
+                                    this.search_style_sub == timedata.style_subject &&
+                                    this.search_style_learn == timedata.subject) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == key &&
+                                    this.search_style_sub == null &&
+                                    this.search_style_learn == timedata.subject) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == null &&
+                                    this.search_style_sub == timedata.style_subject &&
+                                    this.search_style_learn == timedata.subject) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else if (
+                                    this.search_value == null &&
+                                    this.search_style_sub == null &&
+                                    this.search_style_learn == null) {
+                                    // console.log('หาหมด');
+                                    item.push({
+                                        name: nametea,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        subject: timedata.subject,
+                                        key: key,
+                                    });
+                                    console.log(item);
+                                    this.style_subject_learn.push(timedata.subject);
+                                    this.events.push(
+                                        {
+                                            name: timedata.subject,
+                                            start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.start.substring(0, 2),
+                                                timedata.start.substring(3, 5)),
+                                            end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                timedata.stop.substring(3, 5)),
+                                            color: this.getRandomColor(),
+                                            timed: true,
+                                        },
+                                    );
+                                } else { }
+                            }
+                        }else{console.log('Old day');}
                     }
                 }
                 this.desserts = item;
@@ -940,8 +936,7 @@ export default {
             // console.log(this.delcon);
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_e}`).remove();
-            this.search_date_teacher();
-            this.closeDelete()
+            this.closeDelete();
         },
 
         close() {
