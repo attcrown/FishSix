@@ -16,9 +16,11 @@
                             mdi-chevron-right
                         </v-icon>
                     </v-btn>
+
                     <v-toolbar-title v-if="$refs.calendar">
                         {{ $refs.calendar.title }}
                     </v-toolbar-title>
+                    
                     <v-spacer></v-spacer>
                     <v-menu bottom right>
                         <template v-slot:activator="{ on, attrs }">
@@ -39,9 +41,9 @@
                             <v-list-item @click="type = 'month'">
                                 <v-list-item-title>Month</v-list-item-title>
                             </v-list-item>
-                            <v-list-item @click="type = '4day'">
+                            <!-- <v-list-item @click="type = '4day'">
                                 <v-list-item-title>4 days</v-list-item-title>
-                            </v-list-item>
+                            </v-list-item> -->
                         </v-list>
                     </v-menu>
                 </v-toolbar>
@@ -55,7 +57,8 @@
                         <v-toolbar :color="selectedEvent.color" dark>
                             <v-btn icon>
                                 <v-icon>mdi-pencil</v-icon>
-                            </v-btn>                           
+                            </v-btn>   
+                            <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn icon>
@@ -88,8 +91,7 @@ export default {
         typeToLabel: {
             month: 'Month',
             week: 'Week',
-            day: 'Day',
-            '4day': '4 Days',
+            day: 'Day','4day': '4 Days',
         },
         selectedEvent: {},
         selectedElement: null,
@@ -106,6 +108,7 @@ export default {
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
+            console.log(this.focus);
         },
         getEventColor(event) {
             return event.color
@@ -123,6 +126,8 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
+                console.log(this.selectedEvent);
+                console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -135,35 +140,33 @@ export default {
 
             nativeEvent.stopPropagation()
         },
-        updateRange({ start, end }) {
-            const events = []
-
-            const min = new Date(`${start.date}T00:00:00`)
-            const max = new Date(`${end.date}T23:59:59`)
-            const days = (max.getTime() - min.getTime()) / 86400000
-            const eventCount = this.rnd(days, days + 20)
-
-            for (let i = 0; i < eventCount; i++) {
-                const allDay = this.rnd(0, 3) === 0
-                const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-                const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-                const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-                const second = new Date(first.getTime() + secondTimestamp)
-
-                events.push({
-                    name: this.names[this.rnd(0, this.names.length - 1)],
-                    start: first,
-                    end: second,
-                    color: this.colors[this.rnd(0, this.colors.length - 1)],
-                    timed: !allDay,
-                })
-            }
-
-            this.events = events
-        },
-        rnd(a, b) {
-            return Math.floor((b - a + 1) * Math.random()) + a
-        },
+        updateRange({ start, end }) {            
+            this.events = [
+                {
+                    name: 'Event Name',
+                    start: new Date(2023, 6, 8 ,12,30),
+                    end: new Date(2023, 6, 8 ,14,30),
+                    color: 'red',
+                    timed: true,
+                },
+                {
+                    name: 'Event Name',
+                    start: new Date(2023, 6, 8 ,15,30),
+                    end: new Date(2023, 6, 8 ,16,30),
+                    color: 'red',
+                    timed: true,
+                },
+                {
+                    name: 'Event Name',
+                    start: new Date(2023, 6, 8 ,17,30),
+                    end: new Date(2023, 6, 8 ,18,30),
+                    color: 'red',
+                    timed: true,
+                }
+            ];
+            // this.events = events
+            console.log(this.events);
+        },        
     },
 }
 </script>

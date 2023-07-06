@@ -1,10 +1,92 @@
 <template>
     <div>
-        <div >
-            <calendar></calendar>
-        </div>
-        
-        <div class="container text-center">
+        <div class="container text-center mb-3" style="background-color:rgba(189, 186, 186, 0.521)">
+            <div class="hide-on-mobile mb-3">
+                <v-row class="fill-height">
+                    <v-col>
+                        <v-sheet height="64">
+                            <v-toolbar flat>
+                                <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                                    Today
+                                </v-btn>
+                                <v-btn fab text small color="grey darken-2" @click="prev">
+                                    <v-icon small>
+                                        mdi-chevron-left
+                                    </v-icon>
+                                </v-btn>
+                                <v-btn fab text small color="grey darken-2" @click="next">
+                                    <v-icon small>
+                                        mdi-chevron-right
+                                    </v-icon>
+                                </v-btn>
+
+                                <v-toolbar-title v-if="$refs.calendar">
+                                    {{ $refs.calendar.title }}
+                                </v-toolbar-title>
+
+                                <v-spacer></v-spacer>
+                                <v-menu bottom right>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                                            <span>{{ typeToLabel[type] }}</span>
+                                            <v-icon right>
+                                                mdi-menu-down
+                                            </v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-list>
+                                        <v-list-item @click="type = 'day'">
+                                            <v-list-item-title>Day</v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="type = 'week'">
+                                            <v-list-item-title>Week</v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="type = 'month'">
+                                            <v-list-item-title>Month</v-list-item-title>
+                                        </v-list-item>
+                                        <!-- <v-list-item @click="type = '4day'">
+                                <v-list-item-title>4 days</v-list-item-title>
+                            </v-list-item> -->
+                                    </v-list>
+                                </v-menu>
+                            </v-toolbar>
+                        </v-sheet>
+                        <v-sheet height="600">
+                            <v-calendar ref="calendar" v-model="focus" color="primary" :events="events"
+                                :event-color="getEventColor" :type="type" @click:event="showEvent" @click:more="viewDay"
+                                @click:date="viewDay"></v-calendar>
+                            <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
+                                offset-x>
+                                <v-card color="grey lighten-4" min-width="350px" flat>
+                                    <v-toolbar :color="selectedEvent.color" dark>
+                                        <v-btn icon>
+                                            <v-icon>mdi-pencil</v-icon>
+                                        </v-btn>
+                                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                                        <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                        <v-spacer></v-spacer>
+                                        <v-btn icon>
+                                            <v-icon>mdi-heart</v-icon>
+                                        </v-btn>
+                                        <v-btn icon>
+                                            <v-icon>mdi-dots-vertical</v-icon>
+                                        </v-btn>
+                                    </v-toolbar>
+                                    <v-card-text>
+                                        <span v-html="selectedEvent.details"></span>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-btn text color="secondary" @click="selectedOpen = false">
+                                            Cancel
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-menu>
+                        </v-sheet>
+                    </v-col>
+                </v-row>
+            </div>
+
             <v-card>
                 <v-container fluid>
                     <v-row align="center">
@@ -13,8 +95,8 @@
                                 <div class="subheading">
                                     <h3>Teacher</h3>
                                 </div>
-                                <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates"
-                                    show-adjacent-months event-color="green lighten-1"
+                                <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
+                                    :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
                                     @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                             </div>
                         </v-col>
@@ -36,6 +118,12 @@
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
+                                            <template v-slot:activator="{}">
+                                                <v-btn color="primary" dark class="mb-2 hide-on-mobile"
+                                                    @click="dialog_select_date = true">
+                                                    ADD Subject
+                                                </v-btn>
+                                            </template>
                                             <v-card>
                                                 <v-card-title class="text-h5">Are you sure you want to delete this
                                                     item?</v-card-title>
@@ -182,6 +270,23 @@
             </v-dialog>
         </template>
 
+        <template>
+            <v-dialog v-model="dialog_select_date" max-width="350px">
+                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.842)">
+                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> <b>เพิ่มตารางสอน</b></v-card-title>
+                    <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
+                        event-color="green lighten-1"
+                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template>
+
     </div>
 </template>
 <script>
@@ -195,6 +300,7 @@ export default {
         dialog_time: false,
         dialog_time_stop: false,
         dialog_save_error: false,
+        dialog_select_date: false,
         items: [],
         style_subject: ['Online', 'On-site', 'Private'],
         picker_start: null,
@@ -203,7 +309,7 @@ export default {
         search_style_sub: null,
         value: null,
         style_sub: null,
-        arrayEvents: null,
+        arrayEvents: [],
         date1: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
 
         dialog: false,
@@ -228,8 +334,22 @@ export default {
         hour_tea: 0,
         min_tea: 0,
 
+        focus: '',
+        type: 'month',
+        typeToLabel: {
+            month: 'Month',
+            week: 'Week',
+            day: 'Day', '4day': '4 Days',
+        },
+        selectedEvent: {},
+        selectedElement: null,
+        selectedOpen: false,
+        events: [],
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+
     }),
-    components:{
+    components: {
         calendar,
     },
 
@@ -266,9 +386,54 @@ export default {
         // });
         this.search_teacher();
         this.search_date_teacher();
+        this.$refs.calendar.checkChange();
     },
 
     methods: {
+
+        getRandomColor() {
+            const randomIndex = Math.floor(Math.random() * this.colors.length)
+            const randomColor = this.colors[randomIndex]
+            // Remove the color from the array so it won't be used again
+            return randomColor
+        },
+
+        viewDay({ date }) {
+            this.focus = date
+            this.type = 'day'
+            console.log(this.focus);
+        },
+        getEventColor(event) {
+            return event.color
+        },
+        setToday() {
+            this.focus = ''
+        },
+        prev() {
+            this.$refs.calendar.prev()
+        },
+        next() {
+            this.$refs.calendar.next()
+        },
+        showEvent({ nativeEvent, event }) {
+            const open = () => {
+                this.selectedEvent = event
+                this.selectedElement = nativeEvent.target
+                console.log(this.selectedEvent);
+                console.log(this.selectedElement);
+                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+            }
+
+            if (this.selectedOpen) {
+                this.selectedOpen = false
+                requestAnimationFrame(() => requestAnimationFrame(() => open()))
+            } else {
+                open()
+            }
+
+            nativeEvent.stopPropagation()
+        },
+
         save_detail_data() {
             if (this.save_detail.subject == null ||
                 this.save_detail.style == null ||
@@ -336,6 +501,8 @@ export default {
         },
         search_date_teacher() {
             this.desserts = [];
+            this.arrayEvents = [];
+            this.events = [];
             // console.log('search');
             let item = [];
             let nametea = '';
@@ -363,6 +530,20 @@ export default {
                                     subject: timedata.subject,
                                     key: key,
                                 });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (this.search_value == key && this.search_style_sub == null) {
                                 // console.log('หาครู');
                                 item.push({
@@ -374,6 +555,20 @@ export default {
                                     subject: timedata.subject,
                                     key: key,
                                 });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject) {
                                 // console.log('หารูปแบบ');
                                 item.push({
@@ -385,6 +580,20 @@ export default {
                                     subject: timedata.subject,
                                     key: key,
                                 });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else if (this.search_value == null && this.search_style_sub == null) {
                                 // console.log('หาหมด');
                                 item.push({
@@ -396,12 +605,27 @@ export default {
                                     subject: timedata.subject,
                                     key: key,
                                 });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.subject,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );
                             } else { }
 
                         }
                     }
                 }
                 this.desserts = item;
+                console.log(this.events);
             })
         },
         check_time_start() {
@@ -475,3 +699,20 @@ export default {
     },
 }
 </script>
+<style>
+@media only screen and (max-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-desktop {
+        display: none;
+    }
+}
+</style>
