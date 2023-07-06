@@ -87,7 +87,7 @@
                 <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
                     :event-margin-bottom="3" :now="today" :type="type" @click:event="showEvent" @click:more="viewDay"
                     @click:date="setDialogDate" @change="updateRange"></v-calendar>
-                <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" full-width
+                <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
                     offset-x>
                     <v-card color="grey lighten-4" :width="350" flat>
                         <v-toolbar :color="selectedEvent.color" dark>
