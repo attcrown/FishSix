@@ -14,9 +14,13 @@ const _101837bf = () => interopDefault(import('..\\pages\\testdatareal.vue' /* w
 const _524e1418 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
 const _10be955c = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _9953a6fc = () => interopDefault(import('..\\pages\\admin\\basket\\index.vue' /* webpackChunkName: "pages/admin/basket/index" */))
+const _113fccf8 = () => interopDefault(import('..\\pages\\admin\\calendar.vue' /* webpackChunkName: "pages/admin/calendar" */))
 const _38379da9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
+const _7aaa094a = () => interopDefault(import('..\\pages\\admin\\dashboard.vue' /* webpackChunkName: "pages/admin/dashboard" */))
 const _1cea1bbe = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
 const _2e5f9cd2 = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
+const _2baf98d1 = () => interopDefault(import('..\\pages\\admin\\table_active.vue' /* webpackChunkName: "pages/admin/table_active" */))
+const _e543956c = () => interopDefault(import('..\\pages\\admin\\table_match.vue' /* webpackChunkName: "pages/admin/table_match" */))
 const _211bd0fb = () => interopDefault(import('..\\pages\\admin\\table_teacher\\index.vue' /* webpackChunkName: "pages/admin/table_teacher/index" */))
 const _90492828 = () => interopDefault(import('..\\pages\\admin\\table_user\\index.vue' /* webpackChunkName: "pages/admin/table_user/index" */))
 const _b7c6e2d4 = () => interopDefault(import('..\\pages\\teacher\\profile\\index.vue' /* webpackChunkName: "pages/teacher/profile/index" */))
@@ -27,7 +31,6 @@ const _9c8b1c7a = () => interopDefault(import('..\\pages\\admin\\edit_shop\\addi
 const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\testter.vue' /* webpackChunkName: "pages/admin/edit_shop/testter" */))
 const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
 const _41973950 = () => interopDefault(import('..\\pages\\admin\\shop\\title.vue' /* webpackChunkName: "pages/admin/shop/title" */))
-const _83934ab6 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\calendar.vue' /* webpackChunkName: "pages/admin/table_teacher/calendar" */))
 const _1198368c = () => interopDefault(import('..\\pages\\user\\table\\calendar.vue' /* webpackChunkName: "pages/user/table/calendar" */))
 const _3a45f886 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -83,9 +86,17 @@ export const routerOptions = {
     component: _9953a6fc,
     name: "admin-basket"
   }, {
+    path: "/admin/calendar",
+    component: _113fccf8,
+    name: "admin-calendar"
+  }, {
     path: "/admin/candidate",
     component: _38379da9,
     name: "admin-candidate"
+  }, {
+    path: "/admin/dashboard",
+    component: _7aaa094a,
+    name: "admin-dashboard"
   }, {
     path: "/admin/edit_shop",
     component: _1cea1bbe,
@@ -94,6 +105,14 @@ export const routerOptions = {
     path: "/admin/shop",
     component: _2e5f9cd2,
     name: "admin-shop"
+  }, {
+    path: "/admin/table_active",
+    component: _2baf98d1,
+    name: "admin-table_active"
+  }, {
+    path: "/admin/table_match",
+    component: _e543956c,
+    name: "admin-table_match"
   }, {
     path: "/admin/table_teacher",
     component: _211bd0fb,
@@ -134,10 +153,6 @@ export const routerOptions = {
     path: "/admin/shop/title",
     component: _41973950,
     name: "admin-shop-title"
-  }, {
-    path: "/admin/table_teacher/calendar",
-    component: _83934ab6,
-    name: "admin-table_teacher-calendar"
   }, {
     path: "/user/table/calendar",
     component: _1198368c,

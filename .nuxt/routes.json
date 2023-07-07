@@ -70,11 +70,25 @@
     "_name": "_9953a6fc"
   },
   {
+    "name": "admin-calendar",
+    "path": "/admin/calendar",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\calendar.vue",
+    "chunkName": "pages/admin/calendar",
+    "_name": "_113fccf8"
+  },
+  {
     "name": "admin-candidate",
     "path": "/admin/candidate",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\candidate\\\\index.vue",
     "chunkName": "pages/admin/candidate/index",
     "_name": "_38379da9"
+  },
+  {
+    "name": "admin-dashboard",
+    "path": "/admin/dashboard",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\dashboard.vue",
+    "chunkName": "pages/admin/dashboard",
+    "_name": "_7aaa094a"
   },
   {
     "name": "admin-edit_shop",
@@ -89,6 +103,20 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\index.vue",
     "chunkName": "pages/admin/shop/index",
     "_name": "_2e5f9cd2"
+  },
+  {
+    "name": "admin-table_active",
+    "path": "/admin/table_active",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_active.vue",
+    "chunkName": "pages/admin/table_active",
+    "_name": "_2baf98d1"
+  },
+  {
+    "name": "admin-table_match",
+    "path": "/admin/table_match",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_match.vue",
+    "chunkName": "pages/admin/table_match",
+    "_name": "_e543956c"
   },
   {
     "name": "admin-table_teacher",
@@ -159,13 +187,6 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\title.vue",
     "chunkName": "pages/admin/shop/title",
     "_name": "_41973950"
-  },
-  {
-    "name": "admin-table_teacher-calendar",
-    "path": "/admin/table_teacher/calendar",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_teacher\\\\calendar.vue",
-    "chunkName": "pages/admin/table_teacher/calendar",
-    "_name": "_83934ab6"
   },
   {
     "name": "user-table-calendar",

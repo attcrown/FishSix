@@ -115,13 +115,15 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts" sort-by="date" class="elevation-1">
+                            <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date" class="elevation-1">
                                 <template v-slot:top>
                                     <v-toolbar flat>
                                         <v-toolbar-title
                                             style="background-color:rgba(37, 110, 8, 0.425);">ตารางที่สามารถจองคิวได้เลย</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
+                                        <v-text-field class="me-10" v-model="search_table_teacher" append-icon="mdi-magnify" label="Search" single-line
+                                            hide-details></v-text-field>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
                                             <template v-slot:activator="{}">
                                                 <v-btn color="primary" dark class="mb-2" @click="dialog_select_date = true">
@@ -151,14 +153,16 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
+                            <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :search="search_table_student"
                                 class="elevation-1">
                                 <template v-slot:top>
                                     <v-toolbar flat>
                                         <v-toolbar-title
                                             style="background-color:rgba(173, 28, 28, 0.425);">สถานะการจองของนักเรียน</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
-                                        <v-spacer></v-spacer>                                        
+                                        <v-spacer></v-spacer> 
+                                        <v-text-field class="me-10" v-model="search_table_student" append-icon="mdi-magnify" label="Search" single-line
+                                            hide-details></v-text-field>                                       
                                     </v-toolbar>
                                 </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -323,6 +327,8 @@
 <script>
 export default {
     data: () => ({
+        search_table_teacher: '',
+        search_table_student: '',
         mode: '',
         delday: '',
         save_detail: [],

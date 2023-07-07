@@ -111,12 +111,15 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+                            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="calories" class="elevation-1">
                                 <template v-slot:top>
                                     <v-toolbar flat>
                                         <v-toolbar-title>My CRUD</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
+                                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
+                                            hide-details></v-text-field>
+
                                         <v-dialog v-model="dialogDelete" max-width="500px">
                                             <template v-slot:activator="{}">
                                                 <v-btn color="primary" dark class="mb-2 hide-on-mobile"
@@ -290,9 +293,9 @@
     </div>
 </template>
 <script>
-import calendar from '@/pages/admin/table_teacher/calendar.vue';
 export default {
     data: () => ({
+        search: '',
         mode: '',
         delday: '',
         save_detail: [],
@@ -350,7 +353,7 @@ export default {
 
     }),
     components: {
-        calendar,
+
     },
 
     computed: {
@@ -459,7 +462,6 @@ export default {
                 }
             }
             this.clear_item();
-            // this.search_date_teacher();
             this.dialog_detail = false;
         },
         clear_item() {
@@ -499,15 +501,14 @@ export default {
             })
         },
         search_date_teacher() {
-            this.desserts = [];
-            this.arrayEvents = [];
-            this.events = [];
-            // console.log('search');
-            let item = [];
-            let nametea = '';
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
-                const childData = snapshot.val();                
+                const childData = snapshot.val();
+                this.desserts = [];
+                this.arrayEvents = [];
+                this.events = [];
+                let item = [];
+                let nametea = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
@@ -646,7 +647,6 @@ export default {
         editItem(item) {
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
-            // console.log(item);
             this.value = item.key;
             this.date1 = item.date;
             this.save_detail.subject = item.subject;

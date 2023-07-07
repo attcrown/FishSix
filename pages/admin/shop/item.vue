@@ -1,7 +1,8 @@
 <template>
     <div style="background-color:rgb(172, 169, 169);">
         <v-sheet class="row d-flex justify-space-around" style="background-color:rgb(172, 169, 169);">
-            <v-sheet class="col-md-3" style="background-color:rgb(172, 169, 169);" v-for="(item, index) in items" :key="index">
+            <v-sheet class="col-md-3" style="background-color:rgb(172, 169, 169);" v-for="(item, index) in items"
+                :key="index">
                 <v-hover>
                     <template v-slot:default="{ hover }">
                         <v-card :elevation="hover ? 24 : 6" class="mx-auto pa-3">
@@ -74,7 +75,7 @@ export default {
 
         show(item) {
             console.log(this.selection);
-            console.log(item.bath ,item.title);
+            console.log(item.bath, item.title);
         },
 
     },
