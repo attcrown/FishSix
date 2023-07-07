@@ -174,14 +174,57 @@ export default {
     },
 
     methods: {
+        // initialize() {
+        //     const db = this.$fireModule.database();
+        //     db.ref(`date_match/`).on("value", (snapshot) => {
+        //         const childData = snapshot.val();
+        //         this.desserts_student = [];
+        //         let item = [];
+        //         let nametea = '';
+        //         let namestu = '';
+        //         for (const key in childData) {
+        //             const keydata = childData[key];
+        //             for (const date in keydata) {
+        //                 const datedata = keydata[date];
+        //                 for (const time in datedata) {
+        //                     const timedata = datedata[time];
+        //                     if (timedata.status == 'active') {
+        //                         db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+        //                             const childData = snapshot.val();
+        //                             nametea = childData.name;
+        //                         })
+        //                         db.ref(`user/${key}`).on("value", (snapshot) => {
+        //                             const childData = snapshot.val();
+        //                             namestu = childData.name;
+        //                         })
+        //                         item.push({
+        //                             name_student: namestu,
+        //                             name: nametea,
+        //                             subject: timedata.subject,
+        //                             date: date,
+        //                             time_s: timedata.start,
+        //                             time_e: timedata.stop,
+        //                             style: timedata.style_subject,
+        //                             status: timedata.status,
+        //                             key_student: key,
+        //                             key_teacher: timedata.teacher,
+        //                         });
+        //                     }
+        //                 }
+        //             }
+
+        //         }
+        //         this.desserts = item;
+        //     })
+        // },
+
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let nametea = '';
-                let namestu = '';
+                let promises = []; // เพิ่มตัวแปร promises
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -189,33 +232,48 @@ export default {
                         for (const time in datedata) {
                             const timedata = datedata[time];
                             if (timedata.status == 'active') {
-                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    nametea = childData.name;
-                                })
-                                db.ref(`user/${key}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    namestu = childData.name;
-                                })
-                                item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
+                                // สร้าง Promise สำหรับดึงข้อมูล nametea
+                                const promiseTeacher = new Promise((resolve) => {
+                                    db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+                                        const childData = snapshot.val();
+                                        const nametea = childData.name;
+                                        resolve(nametea);
+                                    });
                                 });
+
+                                // สร้าง Promise สำหรับดึงข้อมูล namestu
+                                const promiseStudent = new Promise((resolve) => {
+                                    db.ref(`user/${key}`).on("value", (snapshot) => {
+                                        const childData = snapshot.val();
+                                        const namestu = childData.name;
+                                        resolve(namestu);
+                                    });
+                                });
+
+                                // เก็บ Promise ลงในอาร์เรย์ promises
+                                promises.push(Promise.all([promiseTeacher, promiseStudent]).then(([nametea, namestu]) => {
+                                    item.push({
+                                        name_student: namestu,
+                                        name: nametea,
+                                        subject: timedata.subject,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        status: timedata.status,
+                                        key_student: key,
+                                        key_teacher: timedata.teacher,
+                                    });
+                                }));
                             }
                         }
                     }
-
                 }
-                this.desserts = item;
-            })
+                // รอให้ทุก Promise เสร็จสมบูรณ์แล้วค่อยทำการ item.push()
+                Promise.all(promises).then(() => {
+                    this.desserts = item;
+                });
+            });
         },
 
         editItem(item) {
