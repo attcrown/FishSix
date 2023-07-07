@@ -1,5 +1,6 @@
 <template>
     <div>
+        <pageLoader v-if="isLoading"></pageLoader>
         <v-row>
             <v-col cols="12">
                 <p class="text-h3 font-weight-bold">สวัสดี คุณ {{ firstName }} !</p>
@@ -32,7 +33,6 @@
             <v-col cols="12"><v-spacer></v-spacer></v-col>
 
             <v-col cols="12">
-          
                 <calendar></calendar>
             </v-col>
         </v-row>
@@ -47,6 +47,7 @@ export default {
         return {
             firstName: '',
             keyuser: '',
+            isLoading: true,
         }
     },
     computed: {
@@ -57,6 +58,7 @@ export default {
     },
     mounted() {
         this.fullName();
+       
     },
     methods: {
         getout() {
@@ -72,6 +74,7 @@ export default {
                 this.firstName = localStorage.getItem('firstName') || '';
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
+           
         },
         save() {
             const db = this.$fireModule.database();

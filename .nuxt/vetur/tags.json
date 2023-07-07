@@ -1,4 +1,7 @@
 {
+  "Loader": {
+    "description": "Auto imported from components/loader.vue"
+  },
   "NuxtLogo": {
     "description": "Auto imported from components/NuxtLogo.vue"
   },
