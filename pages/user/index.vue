@@ -1,7 +1,7 @@
 <template>
     <div>
         <pageLoader v-if="isLoading"></pageLoader>
-        <v-row>
+        <v-row  v-if="!isLoading">
             <v-col cols="12">
                 <p class="text-h3 font-weight-bold">สวัสดี คุณ {{ firstName }} !</p>
             </v-col>
@@ -41,11 +41,13 @@
 
 <script>
 import calendar from '@/pages/user/table/calendar.vue';
+import pageLoader from '@/components/loader.vue';
 export default {
     layout: 'userNav',
     data() {
         return {
             firstName: '',
+            username: '',
             keyuser: '',
             isLoading: true,
         }
@@ -55,9 +57,11 @@ export default {
     },
     components: {
         calendar,
+        pageLoader
     },
     mounted() {
         this.fullName();
+        this.readdata();
        
     },
     methods: {
@@ -66,25 +70,42 @@ export default {
             sessionStorage.clear();
             this.$router.push("/login");
         },
+
+        async readdata() {
+            console.log('ทำงาน');
+            const db = this.$fireModule.database();
+            await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.profilePic = childData.profilePic || null;
+                this.firstName = childData.firstName || null;
+                this.lastName = childData.lastName || null;
+                this.firstNameDisplay = childData.firstName || null;
+                this.lastNameDisplay = childData.lastName || null;
+                this.nicknameDisplay = childData.nickname || null;
+                this.nickname = childData.nickname || null;
+                this.school = childData.school || null;
+                this.gender = childData.gender || null;
+                this.birthDate = childData.birthDate || null;
+                this.address = childData.address || null;
+                this.education = childData.education || null;
+                this.studentMobile = childData.studentMobile || null;
+                this.parentMobile = childData.parentMobile || null;
+                this.isLoading = false;
+
+            })
+
+        },
         fullName() {
             if (localStorage.getItem('firstName') == null) {
-                this.firstName = sessionStorage.getItem('firstName') || '';
+                this.username = sessionStorage.getItem('firstName') || '';
                 this.keyuser = sessionStorage.getItem('lastName') || '';
             } else {
-                this.firstName = localStorage.getItem('firstName') || '';
+                this.username = localStorage.getItem('firstName') || '';
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
            
         },
-        save() {
-            const db = this.$fireModule.database();
-            db.ref(`user/${this.keyuser}`).update({
-                // subject : this.save_detail.subject,
-                // style_subject : this.save_detail.style,
-                // start : this.picker_start,
-                // stop : this.picker_stop,
-            });
-        },
+    
     },
 }
 </script>

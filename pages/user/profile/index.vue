@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid ">
+    <div class="container-fluid " >
         <pageLoader v-if="isLoading"></pageLoader>
         <div v-if="!isLoading" class="col d-flex justify-content-center">
             <v-row>
@@ -91,7 +91,12 @@
                                     <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ studentMobile }} </p>
                                 </div>
                             </v-col>
-
+                            <v-col cols="3" sm="3" class=" py-2">
+                                <div>
+                                    <p class=" text-break">เบอร์โทรศัพท์ผู้ปกครอง  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ parentMobile }} </p>
+                                </div>
+                            </v-col>
                         </v-row>
                     </v-card>
                 </v-col>
