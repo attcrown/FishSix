@@ -1,34 +1,100 @@
 <template>
-    <div class="container-fluid">
-        <div class="col d-flex justify-content-center">
+    <div class="container-fluid ">
+        <pageLoader v-if="isLoading"></pageLoader>
+        <div v-if="!isLoading" class="col d-flex justify-content-center">
             <v-row>
-                <center>
-                    <div style="max-width: 500px;">
-                        <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                    </div>
-                </center>
+
+                <div style="max-width: 500px;">
+                    <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
+                </div>
 
                 <v-col cols="12">
-                    <div class="text-center">
-                        <div>
-                            <v-avatar :size=iconSize>
-                                <v-progress-circular v-if="isLoading" :size="64" :width="6" color="primary"
-                                    indeterminate></v-progress-circular>
-                                <img v-if="!isLoading" :src=profilePic alt="รูปโปรไฟล์">
+                    <v-card style="border-radius: 32px; background: #F5F5F5;">
+                        <v-row class="text-right p-3 pb-0 justify-space-between">
 
-                            </v-avatar>
-                        </div>
-                    </div>
+                            <div>
+                                <v-btn class="editButton elevation-0">
+                                    <span style="color: #C3CAD9;">Edit</span>
+                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-row>
+                        <v-row class="mt-0" align="center">
+                            <v-col cols="2" sm="2" class="pl-10">
+                                <div>
+                                    <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
+                                        
+                                        <img :src="profilePic" alt="รูปโปรไฟล์">
+                                    </v-avatar>
+                                </div>
+                            </v-col>
+                            <v-col cols="9" sm="9">
+                                <div>
+                                    <strong class="header text-break">&nbsp;คุณ {{ firstNameDisplay }} {{ lastNameDisplay
+                                    }}</strong>
+                                    <br>
+                                    <span class="userSpan text-break">{{ nicknameDisplay }}</span>
+                                </div>
+                            </v-col>
+
+                        </v-row>
+                    </v-card>
                 </v-col>
+
 
                 <v-col cols="12">
-                    <div class="text-center">
-                        <strong class="header">&nbsp;คุณ {{ firstNameDisplay }} {{ lastNameDisplay }}
-                        </strong> <br>
-                        <span class="userSpan">ผู้เรียน</span>
-                    </div>
-                </v-col>
+                    <v-card style="border-radius: 32px;background: #F5F5F5;">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div class="pl-2">ข้อมูลทั่วไป</div>
+                            <div>
+                                <v-btn class="editButton elevation-0">
+                                    <span style="color: #C3CAD9;">Edit</span>
+                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-card-title>
 
+                        <v-row align="center">
+                            <v-col cols="4" sm="4" class="pl-10 py-2">
+                                <div>
+                                    <p class=" text-break">สถานศึกษา  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ school }} </p>
+                                </div>
+                            </v-col>
+                            <v-col cols="3" sm="3" class=" py-2">
+                                <div>
+                                    <p class=" text-break">ระดับชั้น  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ education }} </p>
+                                </div>
+                            </v-col>
+                            <v-col cols="5" sm="5" class=" py-2">
+                               
+                            </v-col>
+                              <v-col cols="4" sm="4" class="pl-10 py-2">
+                                <div>
+                                    <p class=" text-break">วันเกิด  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ birthDate }} </p>
+                                </div>
+                            </v-col>
+                            <v-col cols="3" sm="3" class="py-2">
+                                <div>
+                                    <p class=" text-break">เพศ  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ gender }} </p>
+                                </div>
+                            </v-col>
+                            <v-col cols="5" sm="5" class=" py-2">
+                               
+                            </v-col>
+                            <v-col cols="4" sm="4" class="pl-10 py-2">
+                                <div>
+                                    <p class=" text-break">เบอร์โทรศัพท์  </p>
+                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ studentMobile }} </p>
+                                </div>
+                            </v-col>
+
+                        </v-row>
+                    </v-card>
+                </v-col>
                 <v-col cols="6">
                     <v-card class="mt-2">
                         <v-card-title class="font-weight-bold header justify-center">ชั่วโมงเรียนที่เหลือ</v-card-title>
@@ -62,8 +128,7 @@
                         <v-divider></v-divider>
                         <v-card-text>
                             <v-card-text v-if="isLoading" class="text-center">
-                                <v-progress-circular :size="64" :width="6" color="primary"
-                                    indeterminate></v-progress-circular>
+
                             </v-card-text>
                             <v-form ref="detailForm" v-if="!isLoading" @submit.prevent="saveDetail">
                                 <v-row>
@@ -218,6 +283,7 @@
 
 
 <script>
+import pageLoader from '@/components/loader.vue';
 export default {
     layout: 'userNav',
     data() {
@@ -240,6 +306,7 @@ export default {
             iconSize: 120,
             firstNameDisplay: null,
             lastNameDisplay: null,
+            nicknameDisplay: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -295,6 +362,11 @@ export default {
         this.fullName();
         this.readdata();
     },
+    components: {
+
+        pageLoader
+    },
+
     watch: {
         menu(val) {
             val && setTimeout(() => (this.activePicker = 'YEAR'))
@@ -322,6 +394,7 @@ export default {
                 this.lastName = childData.lastName || null;
                 this.firstNameDisplay = childData.firstName || null;
                 this.lastNameDisplay = childData.lastName || null;
+                this.nicknameDisplay = childData.nickname || null;
                 this.nickname = childData.nickname || null;
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;
@@ -423,6 +496,29 @@ export default {
     padding: 4px 10px 4px 10px;
 
 }
+
+.editButton {
+    border-radius: 32px;
+    border: 1px solid #000;
+    background: #FFF;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 20px;
+}
+
+.editButton span,
+.editButton v-icon {
+    color: #C3CAD9;
+    text-transform: none;
+}
+
+.editButton:hover span {
+    color: #000000;
+    text-transform: none;
+}
+
 
 .header {
     font-size: 25px;

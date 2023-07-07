@@ -92,7 +92,7 @@ export default {
         },
         {
           icon: 'mdi-account-circle ',
-          title: 'ข้อมูลส่วนตัว',
+          title: 'ข้อมูลนักเรียน',
           to: '/user/profile',
         },
         {
@@ -103,7 +103,7 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'Inspire',
-          to: '/user/table',
+          to: '/user/inspire',
         },
       ],
       miniVariant: false,
