@@ -1,14 +1,16 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app
-      src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg">
+    <v-navigation-drawer v-model="drawer"  :width="drawerWidth" :max-width="drawerMaxWidth" 
+    :mini-variant="miniVariant" :clipped-left="clipped"  fixed app color="#7C7C7C">
+      <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
+      
       <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact color="white">
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon class="text-dark">{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="text-dark">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -16,38 +18,32 @@
       <template v-slot:append>
         <v-list-item to="/" router exact @click="getout()">
           <v-list-item-action>
-            <v-icon class="white--text">mdi-login</v-icon>
+            <v-icon >mdi-login</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title class="white--text">Logout</v-list-item-title>
+            <v-list-item-title>ออกจากระบบ</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
-
     </v-navigation-drawer>
-
-    <v-app-bar :clipped-left="clipped" fixed app src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="white--text" />
-      <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
-          <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-        </v-btn> -->
-      <!-- <v-btn icon @click.stop="clipped = !clipped">
-          <v-icon>mdi-application</v-icon>
-        </v-btn> -->
-      <!-- <v-btn icon @click.stop="fixed = !fixed">
-          <v-icon>mdi-minus</v-icon>
-        </v-btn> -->
+    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
+    
+      <v-spacer />
+      <p class="ms-3 dark">
+        คุณ {{ firstName }} {{ lastName }}
+      </p>
       <v-avatar class="ms-10">
         <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
-      <v-toolbar-title class="ms-3 white--text">
-        คุณ {{ firstName }} {{ lastName }} 
-      </v-toolbar-title>
-      <v-spacer />
+
       <v-btn icon to="/admin/basket" router exact>
-        <v-icon class="white--text">mdi-basket-fill</v-icon>
+        <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
+ 
+
+
 
     <v-main>
       <v-container>
@@ -66,9 +62,7 @@
         </v-list>
       </v-navigation-drawer> -->
 
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+
 
   </v-app>
 </template>
@@ -78,9 +72,12 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      drawerWidth: 200, // Change this value as desired for the default width
+    drawerMaxWidth: 350,
+
       profilePic: null,
-      firstName:null,
-      lastName:null,
+      firstName: null,
+      lastName: null,
       clipped: true,
       drawer: false,
       fixed: false,
@@ -95,16 +92,7 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/user/profile',
         },
-        {
-          icon: 'mdi-store-settings',
-          title: 'Edit-Shop',
-          to: '/user/table',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/user/inspire',
-        },
+       
       ],
       miniVariant: false,
       right: true,
@@ -138,14 +126,14 @@ export default {
     },
 
     async readdata() {
-            const db = this.$fireModule.database();
-            await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
-                const childData = snapshot.val();
-                this.profilePic = childData.profilePic || null;
-                this.firstName = childData.firstName || null;
-                this.lastName = childData.lastName || null;
-            })
-        },
+      const db = this.$fireModule.database();
+      await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
+        const childData = snapshot.val();
+        this.profilePic = childData.profilePic || null;
+        this.firstName = childData.firstName || null;
+        this.lastName = childData.lastName || null;
+      })
+    },
 
     getout() {
       localStorage.clear();
@@ -174,6 +162,12 @@ export default {
   position: relative;
   top: 50%;
   transform: translateY(0%);
+}
+@media (max-width: 600px) {
+  .drawer-responsive {
+    --mini-variant-width: 56px;
+    --mini-variant-max-width: 56px;
+  }
 }
 </style>
   
