@@ -30,10 +30,10 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
     
       <v-spacer />
-      <p class="ms-3 dark">
-        คุณ {{ firstName }} {{ lastName }}
+      <p class=" dark">
+        {{email}}
       </p>
-      <v-avatar class="ms-10">
+      <v-avatar class="ms-2">
         <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
 
@@ -132,6 +132,7 @@ export default {
         this.profilePic = childData.profilePic || null;
         this.firstName = childData.firstName || null;
         this.lastName = childData.lastName || null;
+        this.email = childData.email || null;
       })
     },
 
