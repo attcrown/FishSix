@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="hide-on-mobile mb-3">
-            <v-row class="fill-height">
+        <div class="mb-3" hidden>
+            <v-row class="fill-height" style="max-width:1000px">
                 <v-col>
                     <v-sheet height="64">
                         <v-toolbar flat>

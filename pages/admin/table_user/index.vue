@@ -93,7 +93,7 @@
                         <v-col cols="12">
                             <div>
                                 <div class="subheading">
-                                    <h3>Student</h3>
+                                    <!-- <h3>Student</h3> -->
                                 </div>
                                 <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
                                     :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
@@ -107,7 +107,7 @@
                         </v-col>
                         <v-col cols="4">
                             <v-autocomplete v-model="search_style_learn" :items="style_subject_learn"
-                                @change="search_date_teacher()" dense filled label="Search Subject"></v-autocomplete>
+                                @change="search_date_teacher()" dense filled label="Search Class"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
                             <v-autocomplete v-model="search_style_sub" :items="style_subject"
@@ -340,7 +340,7 @@ export default {
         items: [],
         items_student: [],
         style_subject: ['Online', 'On-site', 'Private'],
-        style_subject_learn: [],
+        style_subject_learn: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -367,7 +367,7 @@ export default {
             { text: 'Start', value: 'time_s', align: 'start' },
             { text: 'End', value: 'time_e', align: 'start' },
             { text: 'Style', value: 'style', align: 'start' },
-            { text: 'Subject', value: 'subject', align: 'start' },
+            { text: 'class', value: 'class', align: 'start' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
 
@@ -388,7 +388,7 @@ export default {
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
-            { text: 'Subject', value: 'subject' },
+            { text: 'subject', value: 'subject' },
             { text: 'Status', value: 'status', align: 'start' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
@@ -561,7 +561,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].name });
+                        item.push({ key: key, name: childData[key].firstName+" "+childData[key].lastName });
                     }
                 }
                 this.items = item;
@@ -574,7 +574,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-                        item.push({ key: key, name: childData[key].name });
+                        item.push({ key: key, name: childData[key].firstName+" "+childData[key].lastName });
                     }
                 }
                 this.items_student = item;
@@ -596,15 +596,15 @@ export default {
                             const timedata = datedata[time];
                             db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
                                 const childData = snapshot.val();
-                                nametea = childData.name;
+                                nametea = "คุณครู "+childData.firstName+"  "+childData.lastName;
                             })
                             db.ref(`user/${key}`).on("value", (snapshot) => {
                                 const childData = snapshot.val();
-                                namestu = childData.name;
+                                namestu = childData.firstName+"  "+childData.lastName;
                             })
                             item.push({
                                 name_student: namestu,
-                                name: nametea,
+                                name: nametea,                                
                                 subject: timedata.subject,
                                 date: date,
                                 time_s: timedata.start,
@@ -634,7 +634,7 @@ export default {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
-                        nametea = childData.name;
+                        nametea = "คุณครู "+childData.firstName+"  "+childData.lastName;
                     })
                     for (const date in keydata) {
                         console.log(now.getTime().toString().substring(0,5)  ,new Date(date).getTime().toString().substring(0,5));
@@ -651,13 +651,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -679,13 +679,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -707,13 +707,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -735,13 +735,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -763,13 +763,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -791,13 +791,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -819,13 +819,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -847,13 +847,13 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
                                         key: key,
                                     });
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -875,6 +875,7 @@ export default {
                                     item.push({
                                         name: nametea,
                                         date: date,
+                                        class: timedata.class,
                                         time_s: timedata.start,
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
@@ -882,7 +883,6 @@ export default {
                                         key: key,
                                     });
                                     console.log(item);
-                                    this.style_subject_learn.push(timedata.subject);
                                     this.events.push(
                                         {
                                             name: timedata.subject,

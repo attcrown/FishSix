@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container text-center mb-3" style="background-color:rgba(189, 186, 186, 0.521)">
-            <div class="hide-on-mobile mb-3">
+            <div class="hide-on-mobile mb-3 m-5">
                 <v-row class="fill-height">
                     <v-col>
                         <v-sheet height="64">
@@ -87,13 +87,13 @@
                 </v-row>
             </div>
 
-            <v-card>
+            <v-card class="m-5">
                 <v-container fluid>
                     <v-row align="center">
                         <v-col cols="12">
                             <div>
                                 <div class="subheading">
-                                    <h3>Teacher</h3>
+                                    <!-- <h3>Teacher</h3> -->
                                 </div>
                                 <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
                                     :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
@@ -101,9 +101,13 @@
                             </div>
                         </v-col>
 
-                        <v-col cols="8">
+                        <v-col cols="4">
                             <v-autocomplete v-model="search_value" :items="items" dense filled label="Search teacher"
                                 @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
+                        </v-col>
+                        <v-col cols="4">
+                            <v-autocomplete v-model="search_class" :items="class_flip" dense filled label="Search class"
+                                @change="search_date_teacher()"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
                             <v-autocomplete v-model="search_style_sub" :items="style_subject"
@@ -111,14 +115,14 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="calories" class="elevation-1">
+                            <v-data-table :headers="headers" :items="desserts"  sort-by="calories" class="elevation-1"> <!--:search="search"-->
                                 <template v-slot:top>
                                     <v-toolbar flat>
-                                        <v-toolbar-title>My CRUD</v-toolbar-title>
+                                        <v-toolbar-title>ตารางสอนครู</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
-                                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                                            hide-details></v-text-field>
+                                        <!-- <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
+                                            hide-details></v-text-field> -->
 
                                         <v-dialog v-model="dialogDelete" max-width="500px">
                                             <template v-slot:activator="{}">
@@ -175,12 +179,12 @@
                                         <v-autocomplete v-model="value" :items="items" dense filled label="Search teacher"
                                             item-text="name" item-value="key"
                                             @change="check_time_start();"></v-autocomplete>
+                                    </v-col>                                    
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="class_flip" label="ประเภท"
+                                            v-model="save_detail.class"></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="7">
-                                        <v-text-field label="ชื่อวิชา" hint="ระบุชื่อวิชาที่สอน" persistent-hint
-                                            v-model="save_detail.subject"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="5">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="style_subject" label="รูปแบบการสอน"
                                             v-model="save_detail.style"></v-select>
                                     </v-col>
@@ -306,10 +310,12 @@ export default {
         dialog_select_date: false,
         items: [],
         style_subject: ['Online', 'On-site'],
+        class_flip: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
         picker_start: null,
         picker_stop: null,
         search_value: null,
         search_style_sub: null,
+        search_class: null,
         value: null,
         style_sub: null,
         arrayEvents: [],
@@ -328,7 +334,7 @@ export default {
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
-            { text: 'Subject', value: 'subject' },
+            { text: 'Class', value: 'subject' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
@@ -438,7 +444,7 @@ export default {
         },
 
         save_detail_data() {
-            if (this.save_detail.subject == null ||
+            if (this.save_detail.class == null ||
                 this.save_detail.style == null ||
                 this.picker_start == null ||
                 this.picker_stop == null ||
@@ -450,7 +456,7 @@ export default {
             }
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-                subject: this.save_detail.subject,
+                class: this.save_detail.class,
                 style_subject: this.save_detail.style,
                 start: this.picker_start,
                 stop: this.picker_stop,
@@ -494,12 +500,13 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].name });
+                        item.push({ key: key, name: childData[key].firstName+' '+childData[key].lastName });
                     }
                 }
                 this.items = item;
             })
         },
+        
         search_date_teacher() {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
@@ -508,18 +515,18 @@ export default {
                 this.arrayEvents = [];
                 this.events = [];
                 let item = [];
-                let nametea = '';
+                let nametea ='';
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
-                        nametea = childData.name;
+                        nametea = childData.firstName+" "+childData.lastName;
                     })
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.search_value == key && this.search_style_sub == timedata.style_subject) {
+                            if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 // console.log('หาทั้งสอง');
                                 item.push({
                                     name: nametea,
@@ -527,13 +534,13 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.subject,
+                                    subject: timedata.class,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
                                 this.events.push(
                                     {
-                                        name: timedata.subject,
+                                        name: timedata.class,
                                         start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                             date.substring(8, 10), timedata.start.substring(0, 2),
                                             timedata.start.substring(3, 5)),
@@ -544,7 +551,7 @@ export default {
                                         timed: true,
                                     },
                                 );
-                            } else if (this.search_value == key && this.search_style_sub == null) {
+                            } else if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หาครู');
                                 item.push({
                                     name: nametea,
@@ -552,13 +559,13 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.subject,
+                                    subject: timedata.class,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
                                 this.events.push(
                                     {
-                                        name: timedata.subject,
+                                        name: timedata.class,
                                         start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                             date.substring(8, 10), timedata.start.substring(0, 2),
                                             timedata.start.substring(3, 5)),
@@ -569,7 +576,7 @@ export default {
                                         timed: true,
                                     },
                                 );
-                            } else if (this.search_value == null && this.search_style_sub == timedata.style_subject) {
+                            } else if (this.search_value == key && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
                                     name: nametea,
@@ -577,13 +584,13 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.subject,
+                                    subject: timedata.class,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
                                 this.events.push(
                                     {
-                                        name: timedata.subject,
+                                        name: timedata.class,
                                         start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                             date.substring(8, 10), timedata.start.substring(0, 2),
                                             timedata.start.substring(3, 5)),
@@ -594,7 +601,107 @@ export default {
                                         timed: true,
                                     },
                                 );
-                            } else if (this.search_value == null && this.search_style_sub == null) {
+                            } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
+                                // console.log('หารูปแบบ');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.class,
+                                    key: key,
+                                });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.class,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );                                
+                            }else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
+                                // console.log('หารูปแบบ');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.class,
+                                    key: key,
+                                });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.class,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );                                
+                            } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
+                                // console.log('หารูปแบบ');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.class,
+                                    key: key,
+                                });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.class,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );                                
+                            } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
+                                // console.log('หารูปแบบ');
+                                item.push({
+                                    name: nametea,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    subject: timedata.class,
+                                    key: key,
+                                });
+                                this.arrayEvents.push(date);
+                                this.events.push(
+                                    {
+                                        name: timedata.class,
+                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                            timedata.start.substring(3, 5)),
+                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                            timedata.stop.substring(3, 5)),
+                                        color: this.getRandomColor(),
+                                        timed: true,
+                                    },
+                                );                                
+                            }else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
                                 // console.log('หาหมด');
                                 item.push({
                                     name: nametea,
@@ -602,13 +709,13 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.subject,
+                                    subject: timedata.class,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
                                 this.events.push(
                                     {
-                                        name: timedata.subject,
+                                        name: timedata.class,
                                         start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                             date.substring(8, 10), timedata.start.substring(0, 2),
                                             timedata.start.substring(3, 5)),

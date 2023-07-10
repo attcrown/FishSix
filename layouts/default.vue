@@ -68,6 +68,11 @@ export default {
           to: '/admin',
         },
         {
+          icon: 'mdi-alert-box',
+          title: 'Ticket',
+          to: '/admin/matching',
+        },
+        {
           icon: 'mdi-account-school',
           title: 'Teacher',
           to: '/admin/table_teacher',
@@ -77,16 +82,16 @@ export default {
           title: 'Student',
           to: '/admin/table_user',
         },
-        {
-          icon: 'mdi-store',
-          title: 'Shop',
-          to: '/admin/shop',
-        },
-        {
-          icon: 'mdi-store-settings',
-          title: 'Edit-Shop',
-          to: '/admin/edit_shop',
-        },
+        // {
+        //   icon: 'mdi-store',
+        //   title: 'Shop',
+        //   to: '/admin/shop',
+        // },
+        // {
+        //   icon: 'mdi-store-settings',
+        //   title: 'Edit-Shop',
+        //   to: '/admin/edit_shop',
+        // },
         {
           icon: 'mdi-chart-bubble',
           title: 'Candidate',

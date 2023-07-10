@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-5">
         <template>
             <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" class="elevation-1 mt-5">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -10,7 +10,7 @@
                 </template>
                 <template v-slot:top>
                     <v-toolbar flat color="red lighten-5">
-                        <v-toolbar-title>Not Active</v-toolbar-title>
+                        <v-toolbar-title>Ticket คำร้องขอจองเวลาเรียน</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
@@ -173,49 +173,49 @@ export default {
         this.initialize();
     },
 
-    methods: {     
-        async initialize() {
+    methods: {
+        initialize() {
             const db = this.$fireModule.database();
-            const snapshot = await db.ref(`date_match/`).once("value");
-            const childData = snapshot.val();
-            this.desserts_student = [];
-            let item = [];
-
-            for (const key in childData) {
-                const keydata = childData[key];
-                for (const date in keydata) {
-                    const datedata = keydata[date];
-                    for (const time in datedata) {
-                        const timedata = datedata[time];
-                        if (timedata.status == 'Not active') {
-                            const nameteaSnapshot = await db.ref(`user/${timedata.teacher}`).once("value");
-                            const nameteaChildData = nameteaSnapshot.val();
-                            const nametea = nameteaChildData.name;
-
-                            const namestuSnapshot = await db.ref(`user/${key}`).once("value");
-                            const namestuChildData = namestuSnapshot.val();
-                            const namestu = namestuChildData.name;
-
-                            item.push({
-                                name_student: namestu,
-                                name: nametea,
-                                subject: timedata.subject,
-                                date: date,
-                                time_s: timedata.start,
-                                time_e: timedata.stop,
-                                style: timedata.style_subject,
-                                status: timedata.status,
-                                key_student: key,
-                                key_teacher: timedata.teacher,
-                            });
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.desserts_student = [];
+                let item = [];
+                let nametea = '';
+                let namestu = '';
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    for (const date in keydata) {
+                        const datedata = keydata[date];
+                        for (const time in datedata) {
+                            const timedata = datedata[time];
+                            if (timedata.status == 'Not active') {
+                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+                                    const childData = snapshot.val();
+                                    nametea = "คุณครู "+childData.firstName+' '+childData.lastName;
+                                })
+                                db.ref(`user/${key}`).on("value", (snapshot) => {
+                                    const childData = snapshot.val();
+                                    namestu = childData.firstName+' '+childData.lastName;
+                                })
+                                item.push({
+                                    name_student: namestu,
+                                    name: nametea,
+                                    subject: timedata.subject,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    status: timedata.status,
+                                    key_student: key,
+                                    key_teacher: timedata.teacher,
+                                });
+                            }
                         }
                     }
                 }
-            }
-            this.desserts = item;
+                this.desserts = item;
+            })
         },
-
-
 
         editItem(item) {
             // console.log('item>>',item);

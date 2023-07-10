@@ -70,13 +70,6 @@
     "_name": "_9953a6fc"
   },
   {
-    "name": "admin-calendar",
-    "path": "/admin/calendar",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\calendar.vue",
-    "chunkName": "pages/admin/calendar",
-    "_name": "_113fccf8"
-  },
-  {
     "name": "admin-candidate",
     "path": "/admin/candidate",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\candidate\\\\index.vue",
@@ -98,25 +91,18 @@
     "_name": "_1cea1bbe"
   },
   {
+    "name": "admin-matching",
+    "path": "/admin/matching",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\matching\\\\index.vue",
+    "chunkName": "pages/admin/matching/index",
+    "_name": "_61bd9b2a"
+  },
+  {
     "name": "admin-shop",
     "path": "/admin/shop",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\index.vue",
     "chunkName": "pages/admin/shop/index",
     "_name": "_2e5f9cd2"
-  },
-  {
-    "name": "admin-table_active",
-    "path": "/admin/table_active",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_active.vue",
-    "chunkName": "pages/admin/table_active",
-    "_name": "_2baf98d1"
-  },
-  {
-    "name": "admin-table_match",
-    "path": "/admin/table_match",
-    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_match.vue",
-    "chunkName": "pages/admin/table_match",
-    "_name": "_e543956c"
   },
   {
     "name": "admin-table_teacher",
@@ -173,6 +159,27 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\edit_shop\\\\testter.vue",
     "chunkName": "pages/admin/edit_shop/testter",
     "_name": "_4c19e944"
+  },
+  {
+    "name": "admin-matching-calendar",
+    "path": "/admin/matching/calendar",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\matching\\\\calendar.vue",
+    "chunkName": "pages/admin/matching/calendar",
+    "_name": "_7b477996"
+  },
+  {
+    "name": "admin-matching-table_active",
+    "path": "/admin/matching/table_active",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\matching\\\\table_active.vue",
+    "chunkName": "pages/admin/matching/table_active",
+    "_name": "_70fca88e"
+  },
+  {
+    "name": "admin-matching-table_match",
+    "path": "/admin/matching/table_match",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\matching\\\\table_match.vue",
+    "chunkName": "pages/admin/matching/table_match",
+    "_name": "_2c81b9ed"
   },
   {
     "name": "admin-shop-item",

@@ -1,19 +1,13 @@
 <template>
   <div>
-    <!-- <calendar></calendar> -->
     <dashboard></dashboard>
-    <tablematch></tablematch>
-    <tableactive></tableactive>
   </div>
 </template>
   
 <script>
 import dashboard from './dashboard.vue';
-import tablematch from './table_match.vue';
-import calendar from './calendar.vue';
-import tableactive from './table_active.vue';
+
 export default {
-  components: { dashboard },
   data() {
     return {
       
@@ -22,9 +16,6 @@ export default {
 
   components: {
     dashboard,
-    tablematch,
-    calendar,
-    tableactive
   },
   mounted() {
     this.fullName();
