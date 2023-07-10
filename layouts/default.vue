@@ -77,20 +77,21 @@ export default {
           title: 'Student',
           to: '/admin/table_user',
         },
-        {
-          icon: 'mdi-store',
-          title: 'Shop',
-          to: '/admin/shop',
-        },
-        {
-          icon: 'mdi-store-settings',
-          title: 'Edit-Shop',
-          to: '/admin/edit_shop',
-        },
+      
         {
           icon: 'mdi-chart-bubble',
           title: 'Candidate',
           to: '/admin/candidate',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'ข้อมูลนักเรียน',
+          to: '/admin/register-student',
+        },
+        {
+          icon: 'mdi-chart-bubble',
+          title: 'ข้อมูลผู้สอน',
+          to: '/admin/register-teacher',
         },
       ],
       miniVariant: false,

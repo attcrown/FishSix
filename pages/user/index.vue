@@ -32,9 +32,9 @@
             </v-col>
             <v-col cols="12"><v-spacer></v-spacer></v-col>
 
-            <v-col cols="12">
+            <!-- <v-col cols="12">
                 <calendar></calendar>
-            </v-col>
+            </v-col> -->
         </v-row>
     </div>
 </template>
