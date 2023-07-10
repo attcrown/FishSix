@@ -8,7 +8,7 @@
   
 <style>
 .image-container {
-  background-image: url("~/assets/518775.jpg");
+  background-image: url("~/assets/loginBG.png");
   background-size: cover;
   background-position: center;
   width: 100%;

@@ -1,14 +1,16 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app
-      src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg">
+    <v-navigation-drawer v-model="drawer"  :width="drawerWidth" :max-width="drawerMaxWidth" 
+    :mini-variant="miniVariant" :clipped-left="clipped"  fixed app color="#7C7C7C">
+      <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
+      
       <v-list>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact color="white">
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon class="text-dark">{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="text-dark">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -16,62 +18,36 @@
       <template v-slot:append>
         <v-list-item to="/" router exact @click="getout()">
           <v-list-item-action>
-            <v-icon class="white--text">mdi-login</v-icon>
+            <v-icon >mdi-login</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title class="white--text">Logout</v-list-item-title>
+            <v-list-item-title>ออกจากระบบ</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
-
     </v-navigation-drawer>
-
-    <v-app-bar :clipped-left="clipped" fixed app src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="white--text" />
-      <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn> -->
-      <!-- <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn> -->
-      <!-- <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn> -->
-      <v-avatar class="ms-10">
-        <img
-          src="https://cdn.vuetifyjs.com/images/john.jpg"
-          alt="John"
-        >
-      </v-avatar>
-      <v-toolbar-title class="ms-3 white--text">
-        {{ title }}
-      </v-toolbar-title>
+    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
+    
       <v-spacer />
+      <p class=" dark">
+        {{email}}
+      </p>  
+      <v-avatar class="ms-2">
+        <img :src=profilePic alt="โปรไฟล์">
+      </v-avatar>
+
       <v-btn icon to="/admin/basket" router exact>
-        <v-icon class="white--text">mdi-basket-fill</v-icon>
+        <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
+
 
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
-
-    <!-- <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light> mdi-repeat </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer> -->
-
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
 
   </v-app>
 </template>
