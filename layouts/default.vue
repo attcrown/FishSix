@@ -82,16 +82,16 @@ export default {
           title: 'Student',
           to: '/admin/table_user',
         },
-        {
-          icon: 'mdi-store',
-          title: 'Shop',
-          to: '/admin/shop',
-        },
-        {
-          icon: 'mdi-store-settings',
-          title: 'Edit-Shop',
-          to: '/admin/edit_shop',
-        },
+        // {
+        //   icon: 'mdi-store',
+        //   title: 'Shop',
+        //   to: '/admin/shop',
+        // },
+        // {
+        //   icon: 'mdi-store-settings',
+        //   title: 'Edit-Shop',
+        //   to: '/admin/edit_shop',
+        // },
         {
           icon: 'mdi-chart-bubble',
           title: 'ข้อมูลผู้สอน',
