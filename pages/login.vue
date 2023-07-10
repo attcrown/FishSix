@@ -1,5 +1,5 @@
 <template>
-  <div class="container input-container" style="height: 100%">
+  <div class="container input-container" style="height: 100%;">
     <v-sheet width="400" class="mx-auto p-5 rounded-5" style="background-color:#F5F6F7; border-radius: 15px;">
       <div class="text-h5 text-center">เข้าสู่ระบบ</div>
       <v-form ref="form" @submit.prevent="submitForm">
@@ -116,7 +116,7 @@ export default {
     },
 
     encode(a) {
-      const encodedData = btoa(a);
+      const encodedData = btoa(encodeURIComponent(a));
       return encodedData;
     },
   },
@@ -128,6 +128,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 
 .input-container .mdi {
   margin-right: 8px;

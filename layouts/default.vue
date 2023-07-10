@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer"  :width="drawerWidth" :max-width="drawerMaxWidth" 
-    :mini-variant="miniVariant" :clipped-left="clipped"  fixed app color="#7C7C7C">
+    <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
+      :clipped-left="clipped" fixed app color="#7C7C7C">
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
-      
+
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
@@ -18,7 +18,7 @@
       <template v-slot:append>
         <v-list-item to="/" router exact @click="getout()">
           <v-list-item-action>
-            <v-icon >mdi-login</v-icon>
+            <v-icon>mdi-login</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>ออกจากระบบ</v-list-item-title>
@@ -26,18 +26,13 @@
         </v-list-item>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
+    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
-    
       <v-spacer />
-      <p class=" dark">
-        {{email}}
-      </p>  
-      <v-avatar class="ms-2">
-        <img :src=profilePic alt="โปรไฟล์">
-      </v-avatar>
-
-      <v-btn icon to="/admin/basket" router exact>
+      <p class="dark">
+        Admin
+      </p>
+      <v-btn icon to="/admin/" router exact @click="getout()">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
@@ -57,9 +52,15 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      drawerWidth: 200,
+      drawerMaxWidth: 350,
       clipped: true,
       drawer: false,
       fixed: false,
+
+
+      email: null,
+
       items: [
         {
           icon: 'mdi-monitor-dashboard',
@@ -96,7 +97,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: "",
-      status:"",
+      status: "",
     }
   },
   mounted() {
@@ -107,15 +108,17 @@ export default {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      if(sessionStorage.getItem('status') != 'admin'){
+      if (sessionStorage.getItem('status') != 'admin') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
+
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
+
         }
       }
     },

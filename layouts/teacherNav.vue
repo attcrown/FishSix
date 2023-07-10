@@ -60,10 +60,7 @@ export default {
       drawerWidth: 200, // Change this value as desired for the default width
       drawerMaxWidth: 350,
 
-      profilePic: null,
-      firstName: null,
-      lastName: null,
-      email: null,
+   
       clipped: true,
       drawer: false,
       fixed: false,
@@ -85,6 +82,8 @@ export default {
       rightDrawer: false,
       title: "",
       status: "",
+      profilePic: null,
+      email: null,
     }
   },
   mounted() {
@@ -103,12 +102,11 @@ export default {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
           this.keyuser = sessionStorage.getItem('lastName');
-          console.log(this.keyuser)
+      
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
           this.keyuser = sessionStorage.getItem('lastName');
-          console.log(this.keyuser)
         }
       }
     },
@@ -120,8 +118,6 @@ export default {
       await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
         const childData = snapshot.val();
         this.profilePic = childData.profilePic || null;
-        this.firstName = childData.firstName || null;
-        this.lastName = childData.lastName || null;
         this.email = childData.email || null;
       })
     },

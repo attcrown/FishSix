@@ -32,7 +32,7 @@
       <v-spacer />
       <p class=" dark">
         {{email}}
-      </p>
+      </p>  
       <v-avatar class="ms-2">
         <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
@@ -73,11 +73,10 @@ export default {
   data() {
     return {
       drawerWidth: 200, // Change this value as desired for the default width
-    drawerMaxWidth: 350,
+      drawerMaxWidth: 350,
 
-      profilePic: null,
-      firstName: null,
-      lastName: null,
+
+
       clipped: true,
       drawer: false,
       fixed: false,
@@ -99,6 +98,9 @@ export default {
       rightDrawer: false,
       title: "",
       status: "",
+      keyuser:null,
+      profilePic: null,
+      email:null,
     }
   },
   mounted() {
@@ -130,8 +132,6 @@ export default {
       await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
         const childData = snapshot.val();
         this.profilePic = childData.profilePic || null;
-        this.firstName = childData.firstName || null;
-        this.lastName = childData.lastName || null;
         this.email = childData.email || null;
       })
     },
