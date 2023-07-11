@@ -16,6 +16,18 @@
                     </v-col>
                 </v-row>
             </v-container>
+            <!-- <v-container fluid>
+                <h3>เพิ่มระดับการศึกษา /ลบระดับการศึกษา</h3>
+                <v-row align="center">
+                    <v-col cols="12" sm="3">
+                        <v-text-field label="ตัวย่อระดับการศึกษา" placeholder="" v-model="name_level" @input="check_level()"></v-text-field>
+                    </v-col>                    
+                    <v-col cols="12" sm="3">
+                        <v-btn elevation="10" outline-success large :loading="loading_level" @click="save_submit_level()">SAVE</v-btn>
+                        <v-btn elevation="10" outline-success large :loading="loading_level" @click="del_level()">DELETE</v-btn>
+                    </v-col>
+                </v-row>
+            </v-container> -->
         </v-card>
 
     </div>
@@ -26,7 +38,9 @@ export default {
     data() {
         return {
             loading: false,
+            loading_level: false,
             name_sub: '',
+            name_level: '',
             level_sub: [],
             level: [
                 { key: 1, value: 'ป.1' },
@@ -46,6 +60,7 @@ export default {
     },
     created(){
         this.check();
+        this.check_level();
     },
     methods:{
         submit_click(){
@@ -56,6 +71,11 @@ export default {
                 this.loading =  true;
             }else{this.loading =  false;}
         },
+        check_level(){
+            if(this.name_level == ''){
+                this.loading_level =  true;
+            }else{this.loading_level =  false;}
+        },
         save_submit(){
             let key_items = new Date().getTime()
             const db = this.$fireModule.database();
@@ -64,6 +84,12 @@ export default {
                 level: this.level_sub,
             });
         },
+        // save_submit_level(){
+        //     const db = this.$fireModule.database();
+        //     db.ref(`subject_level/`).update({
+        //         0 : this.name_level,
+        //     });
+        // },
     },
     
 }

@@ -3,11 +3,10 @@
         <v-row>
             <v-col cols="12">
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
-                    :search="search_table_student" class="elevation-1">
+                    :search="search_table_student" class="elevation-1" >
                     <template v-slot:top>
-                        <v-toolbar flat>
-                            <v-toolbar-title
-                                style="background-color:rgba(173, 28, 28, 0.425);">สถานะการจองของนักเรียน</v-toolbar-title>
+                        <v-toolbar flat style="background-color:rgba(173, 28, 28, 0.425);">
+                            <v-toolbar-title>Date Now</v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-text-field class="me-10" v-model="search_table_student" append-icon="mdi-magnify"
@@ -38,7 +37,7 @@
 <script>
 export default {
     data: () => ({
-        search_table_student:'',
+        search_table_student: '',
         headers_student: [
             {
                 text: 'Name Student',
@@ -95,40 +94,44 @@ export default {
         search_date_student() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
-                const childData = snapshot.val();                
+                const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
                 let nametea = '';
                 let namestu = '';
+                const now = new Date();
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {                        
-                        const datedata = keydata[date];
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
-                            })
-                            db.ref(`user/${key}`).on("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                namestu = childData.firstName + "  " + childData.lastName;
-                            })
-                            setTimeout(() => {
-                                item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
-                                });
-                            }, 100);
+                    for (const date in keydata) {
+                        if (now.getTime().toString().substring(0, 5) == new Date(date).getTime().toString().substring(0, 5)) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+                                    const childData = snapshot.val();
+                                    nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
+                                })
+                                db.ref(`user/${key}`).on("value", (snapshot) => {
+                                    const childData = snapshot.val();
+                                    namestu = childData.firstName + "  " + childData.lastName;
+                                })
+                                setTimeout(() => {
+                                    item.push({
+                                        name_student: namestu,
+                                        name: nametea,
+                                        subject: timedata.subject,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        status: timedata.status,
+                                        key_student: key,
+                                        key_teacher: timedata.teacher,
+                                    });
+                                }, 100);
+                            }
                         }
+
                     }
 
                 }

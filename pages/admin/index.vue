@@ -1,11 +1,14 @@
 <template>
   <div>
     <dashboard></dashboard>
+    <table_now></table_now>
   </div>
 </template>
   
 <script>
 import dashboard from './dashboard.vue';
+import Table_now from './table_now.vue';
+import table_now from './table_now.vue';
 
 export default {
   data() {
@@ -16,6 +19,7 @@ export default {
 
   components: {
     dashboard,
+    Table_now,
   },
   mounted() {
     this.fullName();

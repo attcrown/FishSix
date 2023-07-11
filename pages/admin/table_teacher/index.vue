@@ -3,7 +3,7 @@
         <div class="container text-center mb-3" style="background-color:rgba(189, 186, 186, 0.521)">
             <div class="hide-on-mobile mb-3 m-5">
                 <v-row class="fill-height">
-                    <v-col>
+                    <v-col cols="12" sm="12">
                         <v-sheet height="64">
                             <v-toolbar flat>
                                 <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
@@ -102,16 +102,16 @@
                         </v-col>
 
                         <v-col cols="4">
-                            <v-autocomplete v-model="search_value" :items="items" dense filled label="Search teacher"
+                            <v-autocomplete v-model="search_value" :items="items"  label="Search teacher"
                                 @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
-                            <v-autocomplete v-model="search_class" :items="class_flip" dense filled label="Search class"
+                            <v-autocomplete v-model="search_class" :items="class_flip" label="Search class"
                                 @change="search_date_teacher()"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
                             <v-autocomplete v-model="search_style_sub" :items="style_subject"
-                                @change="search_date_teacher()" dense filled label="Search Subject"></v-autocomplete>
+                                @change="search_date_teacher()" label="Search Subject"></v-autocomplete>
                         </v-col>
 
                         <v-col cols="12">
@@ -177,9 +177,10 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12" class="mt-5">
-                                        <v-autocomplete v-model="value" :items="items" dense filled label="Search teacher"
+                                        <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key"
-                                            @change="check_time_start();"></v-autocomplete>
+                                            @change="check_time_start() ,search_subject_tea(value)"
+                                            @input="check_tea=false"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-select :items="class_flip" label="ประเภท" v-model="save_detail.class"></v-select>
@@ -192,7 +193,7 @@
                                         <v-text-field label="จำนวนคนเปิดรับ"
                                             v-model="save_detail.sum_people"></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
+                                    <v-col cols="12" sm="4" v-if="value != null">
                                         <v-select :items="subject" label="วิชาเปิดสอน"
                                             v-model="save_detail.subject"></v-select>
                                     </v-col>
@@ -307,6 +308,7 @@
 <script>
 export default {
     data: () => ({
+        check_tea: true,
         search: '',
         mode: '',
         delday: '',
@@ -319,7 +321,7 @@ export default {
         items: [],
         style_subject: ['Online', 'On-site'],
         class_flip: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
-        subject: ['คณิต (ป.1)', 'วิทย์ (ป.2)', 'ทุกวิชา'],
+        subject: [],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -345,7 +347,7 @@ export default {
             { text: 'Style', value: 'style' },
             { text: 'subject', value: 'subject' },
             { text: 'class', value: 'class' },
-            { text: 'จำนวนคน', value: 'sum_people' },
+            { text: 'จำนวนคน', value: 'sum_people' ,align: 'center'},
             { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
@@ -421,7 +423,7 @@ export default {
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
-            console.log(this.focus);
+            // console.log(this.focus);
         },
         getEventColor(event) {
             return event.color
@@ -439,8 +441,8 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
-                console.log(this.selectedEvent);
-                console.log(this.selectedElement);
+                // console.log(this.selectedEvent);
+                // console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -457,12 +459,13 @@ export default {
         save_detail_data() {
             if (this.save_detail.class == null ||
                 this.save_detail.style == null ||
+                this.save_detail.subject == null ||
                 this.picker_start == null ||
                 this.picker_stop == null ||
                 this.value == null ||
                 this.date1 == null ||
-                this.save_detail.sum_people == null) {
-                // console.log('ไม่บันทึก');
+                this.save_detail.sum_people == null) 
+            {
                 this.dialog_save_error = true;
                 return;
             }
@@ -471,6 +474,7 @@ export default {
                 class: this.save_detail.class,
                 style_subject: this.save_detail.style,
                 sum_people: this.save_detail.sum_people,
+                subject: this.save_detail.subject,
                 start: this.picker_start,
                 stop: this.picker_stop,
             });
@@ -483,16 +487,7 @@ export default {
             this.clear_item();
             this.dialog_detail = false;
         },
-        clear_item() {
-            this.date1 = null;
-            this.value = null;
-            this.hour_tea = 0;
-            this.min_tea = 0;
-            this.save_detail = [];
-            this.picker_start = null;
-            this.picker_stop = null;
-            this.desserts = [];
-        },
+
         clear_item() {
             this.value = null;
             this.hour_tea = 0;
@@ -517,6 +512,20 @@ export default {
                     }
                 }
                 this.items = item;
+            })
+        },
+
+        search_subject_tea(item){
+            // console.log('tea>>',item);
+            const db = this.$fireModule.database();
+            db.ref(`user/${item}`).on("value", (snapshot) => {
+                this.subject = [];
+                const childData = snapshot.val();
+                for(const details in childData.subject_all){ 
+                    const sub = childData.subject_all[details];                   
+                    this.subject.push(sub.name);
+                }
+                this.subject.push('ทุกวิชา');
             })
         },
 
@@ -548,7 +557,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -575,7 +584,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -602,7 +611,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -629,7 +638,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -656,7 +665,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -683,7 +692,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -710,7 +719,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -736,7 +745,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    subject: timedata.subject,
                                     sum_people: timedata.sum_people,
                                     key: key,
                                 });
@@ -786,7 +795,7 @@ export default {
             this.value = item.key; 
             this.date1 = item.date;
             this.save_detail.subject = item.subject;
-            this.save_detail.class_flip = item.class;
+            this.save_detail.class = item.class;
             this.save_detail.sum_people = item.sum_people;
             this.save_detail.style = item.style;
             this.picker_start = item.time_s;

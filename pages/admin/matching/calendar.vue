@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mb-3" hidden>
+        <div class="mb-3">
             <v-row class="fill-height" style="max-width:1000px">
                 <v-col>
                     <v-sheet height="64">
