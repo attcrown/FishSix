@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid ">
         <pageLoader v-if="isLoading"></pageLoader>
-        <div v-if="!isLoading" class="col d-flex justify-content-center">
+        <div v-if="!isLoading" class="col mx-3 d-flex justify-content-center">
             <v-row>
 
                 <div style="max-width: 500px;">
@@ -518,7 +518,7 @@ export default {
                 'อุตรดิตถ์',
                 'อุทัยธานี',
                 'อุบลราชธานี',
-                'อ่างขาง'
+                'อ่างทอง'
             ],
 
             //rules
