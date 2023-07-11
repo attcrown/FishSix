@@ -118,7 +118,7 @@
                             <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
                                 <!--:search="search"-->
                                 <template v-slot:top>
-                                    <v-toolbar flat>
+                                    <v-toolbar flat style="background-color:rgba(37, 110, 8, 0.425);">
                                         <v-toolbar-title>ตารางสอนครู</v-toolbar-title>
                                         <v-divider class="mx-4" inset vertical></v-divider>
                                         <v-spacer></v-spacer>
@@ -474,6 +474,7 @@ export default {
                 class: this.save_detail.class,
                 style_subject: this.save_detail.style,
                 sum_people: this.save_detail.sum_people,
+                invite: '0',
                 subject: this.save_detail.subject,
                 start: this.picker_start,
                 stop: this.picker_stop,
@@ -790,6 +791,7 @@ export default {
         },
 
         editItem(item) {
+            console.log(item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             this.value = item.key; 

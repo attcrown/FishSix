@@ -105,7 +105,7 @@
                             @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
                     </v-col>
                     <v-col cols="4">
-                        <v-autocomplete v-model="search_style_learn" :items="style_subject_learn"
+                        <v-autocomplete v-model="search_class" :items="style_class"
                             @change="search_date_teacher()" dense filled label="Search Class"></v-autocomplete>
                     </v-col>
                     <v-col cols="4">
@@ -117,9 +117,8 @@
                         <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
                             class="elevation-1">
                             <template v-slot:top>
-                                <v-toolbar flat>
-                                    <v-toolbar-title
-                                        style="background-color:rgba(37, 110, 8, 0.425);">ตารางที่สามารถจองคิวได้เลย</v-toolbar-title>
+                                <v-toolbar flat style="background-color:rgba(37, 110, 8, 0.425);">
+                                    <v-toolbar-title>ตารางที่สามารถจองคิวได้เลย</v-toolbar-title>
                                     <v-divider class="mx-4" inset vertical></v-divider>
                                     <v-spacer></v-spacer>
                                     <v-text-field class="me-10" v-model="search_table_teacher" append-icon="mdi-magnify"
@@ -305,13 +304,13 @@ export default {
         dialog_select_date: false,
         items: [],
         items_student: [],
-        style_subject: ['Online', 'On-site', 'Private'],
-        style_subject_learn: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
+        style_subject: ['Online', 'On-site'],
+        style_class: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
         picker_start: null,
         picker_stop: null,
         search_value: null,
         search_style_sub: null,
-        search_style_learn: null,
+        search_class: null,
         value: null,
         value_student: null,
         style_sub: null,
@@ -334,6 +333,7 @@ export default {
             { text: 'End', value: 'time_e', align: 'start' },
             { text: 'Style', value: 'style', align: 'start' },
             { text: 'class', value: 'class', align: 'start' },
+            { text: 'จำนวนเปิดรับ', value: 'sum_people', align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
 
@@ -548,7 +548,7 @@ export default {
                                 const timedata = datedata[time];
                                 if (this.search_value == key &&
                                     this.search_style_sub == timedata.style_subject &&
-                                    this.search_style_learn == timedata.subject) {
+                                    this.search_class == timedata.class) {
                                     // console.log('หาทั้งสอง');
                                     item.push({
                                         name: nametea,
@@ -558,6 +558,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -576,7 +577,7 @@ export default {
                                 } else if (
                                     this.search_value == key &&
                                     this.search_style_sub == null &&
-                                    this.search_style_learn == null) {
+                                    this.search_class == null) {
                                     // console.log('หาครู');
                                     item.push({
                                         name: nametea,
@@ -586,6 +587,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -604,7 +606,7 @@ export default {
                                 } else if (
                                     this.search_value == null &&
                                     this.search_style_sub == timedata.style_subject &&
-                                    this.search_style_learn == null) {
+                                    this.search_class == null) {
                                     // console.log('หารูปแบบ');
                                     item.push({
                                         name: nametea,
@@ -614,6 +616,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -632,7 +635,7 @@ export default {
                                 } else if (
                                     this.search_value == null &&
                                     this.search_style_sub == null &&
-                                    this.search_style_learn == timedata.subject) {
+                                    this.search_class == timedata.class) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -642,6 +645,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -660,7 +664,7 @@ export default {
                                 } else if (
                                     this.search_value == key &&
                                     this.search_style_sub == timedata.style_subject &&
-                                    this.search_style_learn == null) {
+                                    this.search_class == null) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -670,6 +674,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -688,7 +693,7 @@ export default {
                                 } else if (
                                     this.search_value == key &&
                                     this.search_style_sub == timedata.style_subject &&
-                                    this.search_style_learn == timedata.subject) {
+                                    this.search_class == timedata.class) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -698,6 +703,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -716,7 +722,7 @@ export default {
                                 } else if (
                                     this.search_value == key &&
                                     this.search_style_sub == null &&
-                                    this.search_style_learn == timedata.subject) {
+                                    this.search_class == timedata.class) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -726,6 +732,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -744,7 +751,7 @@ export default {
                                 } else if (
                                     this.search_value == null &&
                                     this.search_style_sub == timedata.style_subject &&
-                                    this.search_style_learn == timedata.subject) {
+                                    this.search_class == timedata.class) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -754,6 +761,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -772,7 +780,7 @@ export default {
                                 } else if (
                                     this.search_value == null &&
                                     this.search_style_sub == null &&
-                                    this.search_style_learn == null) {
+                                    this.search_class == null) {
                                     // console.log('หาหมด');
                                     item.push({
                                         name: nametea,
@@ -782,6 +790,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
+                                        sum_people: timedata.invite+'/'+timedata.sum_people,
                                         key: key,
                                     });
                                     console.log(item);

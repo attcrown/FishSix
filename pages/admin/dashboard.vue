@@ -3,24 +3,17 @@
         <v-row>
             <v-col cols="12" sm="6" md="6">
                 <div class="text-center">
-                    <v-progress-circular xl :rotate="360" :max-size="250" :width="15" :value="value" color="teal">
-                        {{ value }}
+                    <v-progress-circular xl :rotate="270" :size="200" :width="15" :value="value" color="teal">
+                        {{ value }} Active
                     </v-progress-circular>
 
-                    <v-progress-circular :rotate="-90" :size="100" :width="15" :value="value" color="primary">
-                        {{ value }}
+                    <v-progress-circular :rotate="270" :size="200" :width="15" :value="value" color="red">
+                        {{ value }} Not Active
                     </v-progress-circular>
 
-                    <v-progress-circular :rotate="90" :size="100" :width="15" :value="value" color="red">
-                        {{ value }}
-                    </v-progress-circular>
-
-                    <v-progress-circular :rotate="180" :size="100" :width="15" :value="value" color="pink">
-                        {{ value }}
-                    </v-progress-circular>
                 </div>
             </v-col>
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="12" sm="6" md="6" hidden>
                 <v-card class="mx-auto text-center" color="green" dark max-width="600">
                     <v-card-text>
                         <v-sheet color="rgba(0, 0, 0, .12)">

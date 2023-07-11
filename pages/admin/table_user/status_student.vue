@@ -5,9 +5,8 @@
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
                     :search="search_table_student" class="elevation-1">
                     <template v-slot:top>
-                        <v-toolbar flat>
-                            <v-toolbar-title
-                                style="background-color:rgba(173, 28, 28, 0.425);">สถานะการจองของนักเรียน</v-toolbar-title>
+                        <v-toolbar flat style="background-color:rgba(173, 28, 28, 0.425);">
+                            <v-toolbar-title>สถานะการจองของนักเรียน</v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-text-field class="me-10" v-model="search_table_student" append-icon="mdi-magnify"

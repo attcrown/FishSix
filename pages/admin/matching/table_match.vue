@@ -30,20 +30,23 @@
                                     <v-container>
                                         <v-row>
                                             <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                                <v-text-field v-model="editedItem.name" label="ครูผู้สอน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.date" label="Calories"></v-text-field>
+                                                <v-text-field v-model="editedItem.date" label="วันที่"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.style" label="Fat (g)"></v-text-field>
+                                                <v-text-field v-model="editedItem.style" label="รูปแบบการสอน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.status" label="Carbs (g)"></v-text-field>
+                                                <v-text-field v-model="editedItem.time_s" label="เริ่มเรียน"></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-text-field v-model="editedItem.time_e" label="เลิกเรียน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.subject"
-                                                    label="Protein (g)"></v-text-field>
+                                                    label="วิชาที่ต้องการเรียน"></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -57,7 +60,7 @@
                                     <v-container>
                                         <v-row>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" v-model="editedItem.name"
+                                                <v-text-field style="font-weight: bold;" v-model="editedItem.phone_teacher"
                                                     label="Phone number teacher" disabled></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
@@ -66,7 +69,7 @@
                                             </v-col>
 
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" v-model="editedItem.name_student"
+                                                <v-text-field style="font-weight: bold;" v-model="editedItem.phone_student"
                                                     label="Phone number student" disabled></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
@@ -182,6 +185,8 @@ export default {
                 let item = [];
                 let nametea = '';
                 let namestu = '';
+                let phone_tea = '';
+                let phone_stu = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -192,10 +197,12 @@ export default {
                                 db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     nametea = "คุณครู "+childData.firstName+' '+childData.lastName;
+                                    phone_tea = childData.mobile;
                                 })
                                 db.ref(`user/${key}`).on("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     namestu = childData.firstName+' '+childData.lastName;
+                                    phone_stu = childData.studentMobile;
                                 })
                                 setTimeout(() => {
                                     item.push({
@@ -209,6 +216,8 @@ export default {
                                     status: timedata.status,
                                     key_student: key,
                                     key_teacher: timedata.teacher,
+                                    phone_teacher : phone_tea,
+                                    phone_student : phone_stu,
                                 });
                                 }, 100);                                
                             }
