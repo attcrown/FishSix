@@ -115,7 +115,8 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts"  sort-by="calories" class="elevation-1"> <!--:search="search"-->
+                            <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+                                <!--:search="search"-->
                                 <template v-slot:top>
                                     <v-toolbar flat>
                                         <v-toolbar-title>ตารางสอนครู</v-toolbar-title>
@@ -179,20 +180,27 @@
                                         <v-autocomplete v-model="value" :items="items" dense filled label="Search teacher"
                                             item-text="name" item-value="key"
                                             @change="check_time_start();"></v-autocomplete>
-                                    </v-col>                                    
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="class_flip" label="ประเภท"
-                                            v-model="save_detail.class"></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="class_flip" label="ประเภท" v-model="save_detail.class"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
                                         <v-select :items="style_subject" label="รูปแบบการสอน"
                                             v-model="save_detail.style"></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="4">
+                                        <v-text-field label="จำนวนคนเปิดรับ"
+                                            v-model="save_detail.sum_people"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="subject" label="วิชาเปิดสอน"
+                                            v-model="save_detail.subject"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
                                         <v-text-field label="เริ่มสอน" v-model="picker_start"
                                             @click="dialog_time = true"></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="4">
                                         <v-text-field label="หยุดสอน" v-model="picker_stop"
                                             @click="dialog_time_stop = true"></v-text-field>
                                     </v-col>
@@ -311,6 +319,7 @@ export default {
         items: [],
         style_subject: ['Online', 'On-site'],
         class_flip: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
+        subject: ['คณิต (ป.1)', 'วิทย์ (ป.2)', 'ทุกวิชา'],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -334,7 +343,9 @@ export default {
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
-            { text: 'Class', value: 'subject' },
+            { text: 'subject', value: 'subject' },
+            { text: 'class', value: 'class' },
+            { text: 'จำนวนคน', value: 'sum_people' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
@@ -449,7 +460,8 @@ export default {
                 this.picker_start == null ||
                 this.picker_stop == null ||
                 this.value == null ||
-                this.date1 == null) {
+                this.date1 == null ||
+                this.save_detail.sum_people == null) {
                 // console.log('ไม่บันทึก');
                 this.dialog_save_error = true;
                 return;
@@ -458,6 +470,7 @@ export default {
             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
                 class: this.save_detail.class,
                 style_subject: this.save_detail.style,
+                sum_people: this.save_detail.sum_people,
                 start: this.picker_start,
                 stop: this.picker_stop,
             });
@@ -494,19 +507,19 @@ export default {
             return selectedDate >= currentDate;
         },
         search_teacher() {
-            let item = [];
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
+                let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].firstName+' '+childData[key].lastName });
+                        item.push({ key: key, name: childData[key].firstName + ' ' + childData[key].lastName });
                     }
                 }
                 this.items = item;
             })
         },
-        
+
         search_date_teacher() {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
@@ -515,12 +528,12 @@ export default {
                 this.arrayEvents = [];
                 this.events = [];
                 let item = [];
-                let nametea ='';
+                let nametea = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
-                        nametea = childData.firstName+" "+childData.lastName;
+                        nametea = childData.firstName + " " + childData.lastName;
                     })
                     for (const date in keydata) {
                         const datedata = keydata[date];
@@ -534,7 +547,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -559,7 +574,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -584,7 +601,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -609,7 +628,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -625,8 +646,8 @@ export default {
                                         color: this.getRandomColor(),
                                         timed: true,
                                     },
-                                );                                
-                            }else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
+                                );
+                            } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
                                     name: nametea,
@@ -634,7 +655,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -650,7 +673,7 @@ export default {
                                         color: this.getRandomColor(),
                                         timed: true,
                                     },
-                                );                                
+                                );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
@@ -659,7 +682,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -675,7 +700,7 @@ export default {
                                         color: this.getRandomColor(),
                                         timed: true,
                                     },
-                                );                                
+                                );
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
@@ -684,7 +709,9 @@ export default {
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -700,16 +727,17 @@ export default {
                                         color: this.getRandomColor(),
                                         timed: true,
                                     },
-                                );                                
-                            }else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
-                                // console.log('หาหมด');
+                                );
+                            } else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
                                 item.push({
                                     name: nametea,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
-                                    subject: timedata.class,
+                                    class: timedata.class,
+                                    subject: timedata.subject || 'ไม่กำหนดวิชา',
+                                    sum_people: timedata.sum_people,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -742,11 +770,12 @@ export default {
                 if (childData == null) {
                     this.hour_tea = 0;
                     this.min_tea = 0;
-                }
-                for (const key in childData) {
-                    // console.log(key);
-                    this.hour_tea = key.substring(0, 2);
-                    this.min_tea = key.substring(3, 5);
+                } else {
+                    for (const key in childData) {
+                        // console.log(key);
+                        this.hour_tea = key.substring(0, 2);
+                        this.min_tea = key.substring(3, 5);
+                    }
                 }
             })
         },
@@ -754,9 +783,11 @@ export default {
         editItem(item) {
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
-            this.value = item.key;
+            this.value = item.key; 
             this.date1 = item.date;
             this.save_detail.subject = item.subject;
+            this.save_detail.class_flip = item.class;
+            this.save_detail.sum_people = item.sum_people;
             this.save_detail.style = item.style;
             this.picker_start = item.time_s;
             this.picker_stop = item.time_e;

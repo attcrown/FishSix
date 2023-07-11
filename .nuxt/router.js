@@ -18,7 +18,10 @@ const _38379da9 = () => interopDefault(import('..\\pages\\admin\\candidate\\inde
 const _7aaa094a = () => interopDefault(import('..\\pages\\admin\\dashboard.vue' /* webpackChunkName: "pages/admin/dashboard" */))
 const _1cea1bbe = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
 const _61bd9b2a = () => interopDefault(import('..\\pages\\admin\\matching\\index.vue' /* webpackChunkName: "pages/admin/matching/index" */))
+const _21322a52 = () => interopDefault(import('..\\pages\\admin\\register-student\\index.vue' /* webpackChunkName: "pages/admin/register-student/index" */))
+const _345ee2d0 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\index.vue' /* webpackChunkName: "pages/admin/register-teacher/index" */))
 const _2e5f9cd2 = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
+const _10284ae0 = () => interopDefault(import('..\\pages\\admin\\subject\\index.vue' /* webpackChunkName: "pages/admin/subject/index" */))
 const _211bd0fb = () => interopDefault(import('..\\pages\\admin\\table_teacher\\index.vue' /* webpackChunkName: "pages/admin/table_teacher/index" */))
 const _90492828 = () => interopDefault(import('..\\pages\\admin\\table_user\\index.vue' /* webpackChunkName: "pages/admin/table_user/index" */))
 const _b7c6e2d4 = () => interopDefault(import('..\\pages\\teacher\\profile\\index.vue' /* webpackChunkName: "pages/teacher/profile/index" */))
@@ -30,8 +33,14 @@ const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\test
 const _7b477996 = () => interopDefault(import('..\\pages\\admin\\matching\\calendar.vue' /* webpackChunkName: "pages/admin/matching/calendar" */))
 const _70fca88e = () => interopDefault(import('..\\pages\\admin\\matching\\table_active.vue' /* webpackChunkName: "pages/admin/matching/table_active" */))
 const _2c81b9ed = () => interopDefault(import('..\\pages\\admin\\matching\\table_match.vue' /* webpackChunkName: "pages/admin/matching/table_match" */))
+const _407501e0 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\list.vue' /* webpackChunkName: "pages/admin/register-teacher/list" */))
+const _112d14d6 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\register.vue' /* webpackChunkName: "pages/admin/register-teacher/register" */))
 const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
 const _41973950 = () => interopDefault(import('..\\pages\\admin\\shop\\title.vue' /* webpackChunkName: "pages/admin/shop/title" */))
+const _2b661ece = () => interopDefault(import('..\\pages\\admin\\subject\\sub.vue' /* webpackChunkName: "pages/admin/subject/sub" */))
+const _7d5b82dd = () => interopDefault(import('..\\pages\\admin\\subject\\table_sub.vue' /* webpackChunkName: "pages/admin/subject/table_sub" */))
+const _16dabb44 = () => interopDefault(import('..\\pages\\admin\\table_user\\status_student.vue' /* webpackChunkName: "pages/admin/table_user/status_student" */))
+const _026c508e = () => interopDefault(import('..\\pages\\admin\\table_user\\table_tea.vue' /* webpackChunkName: "pages/admin/table_user/table_tea" */))
 const _1198368c = () => interopDefault(import('..\\pages\\user\\table\\calendar.vue' /* webpackChunkName: "pages/user/table/calendar" */))
 const _3a45f886 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -103,9 +112,21 @@ export const routerOptions = {
     component: _61bd9b2a,
     name: "admin-matching"
   }, {
+    path: "/admin/register-student",
+    component: _21322a52,
+    name: "admin-register-student"
+  }, {
+    path: "/admin/register-teacher",
+    component: _345ee2d0,
+    name: "admin-register-teacher"
+  }, {
     path: "/admin/shop",
     component: _2e5f9cd2,
     name: "admin-shop"
+  }, {
+    path: "/admin/subject",
+    component: _10284ae0,
+    name: "admin-subject"
   }, {
     path: "/admin/table_teacher",
     component: _211bd0fb,
@@ -151,6 +172,14 @@ export const routerOptions = {
     component: _2c81b9ed,
     name: "admin-matching-table_match"
   }, {
+    path: "/admin/register-teacher/list",
+    component: _407501e0,
+    name: "admin-register-teacher-list"
+  }, {
+    path: "/admin/register-teacher/register",
+    component: _112d14d6,
+    name: "admin-register-teacher-register"
+  }, {
     path: "/admin/shop/item",
     component: _179f04c3,
     name: "admin-shop-item"
@@ -158,6 +187,22 @@ export const routerOptions = {
     path: "/admin/shop/title",
     component: _41973950,
     name: "admin-shop-title"
+  }, {
+    path: "/admin/subject/sub",
+    component: _2b661ece,
+    name: "admin-subject-sub"
+  }, {
+    path: "/admin/subject/table_sub",
+    component: _7d5b82dd,
+    name: "admin-subject-table_sub"
+  }, {
+    path: "/admin/table_user/status_student",
+    component: _16dabb44,
+    name: "admin-table_user-status_student"
+  }, {
+    path: "/admin/table_user/table_tea",
+    component: _026c508e,
+    name: "admin-table_user-table_tea"
   }, {
     path: "/user/table/calendar",
     component: _1198368c,

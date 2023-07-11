@@ -97,6 +97,11 @@ export default {
           title: 'ข้อมูลผู้สอน',
           to: '/admin/register-teacher',
         },
+        {
+          icon: 'mdi-ab-testing',
+          title: 'เพิ่มวิชาเรียน',
+          to: '/admin/subject',
+        },
       ],
       miniVariant: false,
       right: true,

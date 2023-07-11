@@ -98,11 +98,32 @@
     "_name": "_61bd9b2a"
   },
   {
+    "name": "admin-register-student",
+    "path": "/admin/register-student",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\register-student\\\\index.vue",
+    "chunkName": "pages/admin/register-student/index",
+    "_name": "_21322a52"
+  },
+  {
+    "name": "admin-register-teacher",
+    "path": "/admin/register-teacher",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\register-teacher\\\\index.vue",
+    "chunkName": "pages/admin/register-teacher/index",
+    "_name": "_345ee2d0"
+  },
+  {
     "name": "admin-shop",
     "path": "/admin/shop",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\index.vue",
     "chunkName": "pages/admin/shop/index",
     "_name": "_2e5f9cd2"
+  },
+  {
+    "name": "admin-subject",
+    "path": "/admin/subject",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\subject\\\\index.vue",
+    "chunkName": "pages/admin/subject/index",
+    "_name": "_10284ae0"
   },
   {
     "name": "admin-table_teacher",
@@ -182,6 +203,20 @@
     "_name": "_2c81b9ed"
   },
   {
+    "name": "admin-register-teacher-list",
+    "path": "/admin/register-teacher/list",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\register-teacher\\\\list.vue",
+    "chunkName": "pages/admin/register-teacher/list",
+    "_name": "_407501e0"
+  },
+  {
+    "name": "admin-register-teacher-register",
+    "path": "/admin/register-teacher/register",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\register-teacher\\\\register.vue",
+    "chunkName": "pages/admin/register-teacher/register",
+    "_name": "_112d14d6"
+  },
+  {
     "name": "admin-shop-item",
     "path": "/admin/shop/item",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\item.vue",
@@ -194,6 +229,34 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\shop\\\\title.vue",
     "chunkName": "pages/admin/shop/title",
     "_name": "_41973950"
+  },
+  {
+    "name": "admin-subject-sub",
+    "path": "/admin/subject/sub",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\subject\\\\sub.vue",
+    "chunkName": "pages/admin/subject/sub",
+    "_name": "_2b661ece"
+  },
+  {
+    "name": "admin-subject-table_sub",
+    "path": "/admin/subject/table_sub",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\subject\\\\table_sub.vue",
+    "chunkName": "pages/admin/subject/table_sub",
+    "_name": "_7d5b82dd"
+  },
+  {
+    "name": "admin-table_user-status_student",
+    "path": "/admin/table_user/status_student",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_user\\\\status_student.vue",
+    "chunkName": "pages/admin/table_user/status_student",
+    "_name": "_16dabb44"
+  },
+  {
+    "name": "admin-table_user-table_tea",
+    "path": "/admin/table_user/table_tea",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\FishSix\\\\pages\\\\admin\\\\table_user\\\\table_tea.vue",
+    "chunkName": "pages/admin/table_user/table_tea",
+    "_name": "_026c508e"
   },
   {
     "name": "user-table-calendar",

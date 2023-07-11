@@ -197,7 +197,8 @@ export default {
                                     const childData = snapshot.val();
                                     namestu = childData.firstName+' '+childData.lastName;
                                 })
-                                item.push({
+                                setTimeout(() => {
+                                    item.push({
                                     name_student: namestu,
                                     name: nametea,
                                     subject: timedata.subject,
@@ -209,6 +210,7 @@ export default {
                                     key_student: key,
                                     key_teacher: timedata.teacher,
                                 });
+                                }, 100);                                
                             }
                         }
                     }
