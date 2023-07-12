@@ -224,7 +224,7 @@
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
-                                            label="ชื่อวิชา" item-text="name" item-value="name"
+                                            label="ชื่อวิชา" item-text="name" item-value="key"
                                             style="font-weight: bold;" @input="search_level_select2()"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
