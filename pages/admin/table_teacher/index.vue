@@ -115,7 +115,7 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+                            <v-data-table :headers="headers" :items="desserts" sort-by="date" class="elevation-1">
                                 <!--:search="search"-->
                                 <template v-slot:top>
                                     <v-toolbar flat style="background-color:rgba(37, 110, 8, 0.425);">

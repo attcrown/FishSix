@@ -101,16 +101,16 @@
                     </v-col>
 
                     <v-col cols="4">
-                        <v-autocomplete v-model="search_value" :items="items" dense filled label="Search teacher"
+                        <v-autocomplete v-model="search_value" :items="items" label="Search teacher"
                             @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
                     </v-col>
                     <v-col cols="4">
-                        <v-autocomplete v-model="search_class" :items="style_class"
-                            @change="search_date_teacher()" dense filled label="Search Class"></v-autocomplete>
+                        <v-autocomplete v-model="search_class" :items="style_class" @change="search_date_teacher()"
+                            label="Search Class"></v-autocomplete>
                     </v-col>
                     <v-col cols="4">
                         <v-autocomplete v-model="search_style_sub" :items="style_subject" @change="search_date_teacher()"
-                            dense filled label="Search Style"></v-autocomplete>
+                            label="Search Style"></v-autocomplete>
                     </v-col>
 
                     <v-col cols="12">
@@ -163,35 +163,110 @@
                         </v-card-title>
                         <v-card-text>
                             <v-container>
-                                <v-row>
-                                    <v-col cols="12" class="mt-5">
-                                        <v-autocomplete v-model="value" :items="items" dense filled label="Search teacher"
-                                            item-text="name" item-value="key" @change="check_time_start();"
-                                            :disabled="mode === 'edit'"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" class="mt-5">
-                                        <v-autocomplete v-model="value_student" :items="items_student" dense filled
-                                            label="Search student" item-text="name" item-value="key"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" sm="7">
-                                        <v-text-field label="ชื่อวิชา" hint="ระบุชื่อวิชาที่สอน" persistent-hint
-                                            v-model="save_detail.subject" :disabled="mode === 'edit'"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="5">
-                                        <v-select :items="style_subject" label="รูปแบบการสอน" v-model="save_detail.style"
-                                            :disabled="mode === 'edit'"></v-select>
+                                <v-row :hidden="mode === 'edit'">
+                                    <v-col cols="12" sm="6">
+                                        <v-autocomplete v-model="save_detail.subject" :items="subject_select"
+                                            label="ชื่อวิชา*" item-text="name" item-value="key"
+                                            style="font-weight: bold;" @input="search_level_select()"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field label="เริ่มเรียน" v-model="picker_start"
-                                            @click="dialog_time = true"></v-text-field>
+                                        <v-autocomplete v-model="save_detail.level" :items="level_select"
+                                            label="ระดับการศักษา*" :disabled="save_detail.subject === undefined"
+                                            style="font-weight: bold;" @input="search_teacher()"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-autocomplete v-model="value" :items="items_select_tea" label="Search teacher"
+                                            item-text="name" item-value="key" @change="check_time_start();"
+                                            :disabled="mode === 'edit' || save_detail.level === undefined"
+                                            style="font-weight: bold;"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-autocomplete v-model="value_student" :items="items_student"
+                                            label="Search student" item-text="name" item-value="key"
+                                            style="font-weight: bold;"></v-autocomplete>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
+                                            :disabled="mode === 'edit'" style="font-weight: bold;"></v-select>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6" :hidden="mode === 'save'">
+                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
+                                            style="font-weight: bold;" disabled></v-select>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6" :hidden="mode === 'edit'">
+                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
+                                            style="font-weight: bold;"></v-select>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6">
+                                        <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
+                                            style="font-weight: bold;"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field label="เลิกเรียน" v-model="picker_stop"
-                                            @click="dialog_time_stop = true"></v-text-field>
+                                            @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="12">
+                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
+                                            style="font-weight: bold;"></v-text-field>
+                                    </v-col>
+                                </v-row>
+
+                                <v-row :hidden="mode === 'save'">
+                                    <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
+                                        <v-autocomplete v-model="save_detail.subject" :items="subject_select"
+                                            label="ชื่อวิชา" item-text="name" item-value="name" :disabled="save_detail.subject !== 'ทุกวิชา'"
+                                            style="font-weight: bold;"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
+                                        <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
+                                            label="ชื่อวิชา" item-text="name" item-value="name"
+                                            style="font-weight: bold;" @input="search_level_select2()"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-autocomplete v-model="save_detail.level" :items="level_select_add"
+                                            label="ระดับการศักษา" :disabled="save_detail.subject === undefined"
+                                            style="font-weight: bold;"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-autocomplete v-model="value" :items="items" label="Search teacher"
+                                            item-text="name" item-value="key"                                            
+                                            style="font-weight: bold;" disabled></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-autocomplete v-model="value_student" :items="items_student"
+                                            label="Search student" item-text="name" item-value="key"
+                                            style="font-weight: bold;"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
+                                            :disabled="mode === 'edit'" style="font-weight: bold;"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
+                                            style="font-weight: bold;" disabled></v-select>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="6">
+                                        <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
+                                            style="font-weight: bold;"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6">
+                                        <v-text-field label="เลิกเรียน" v-model="picker_stop"
+                                            @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="12" sm="12">
+                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
+                                            style="font-weight: bold;"></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
-                            <small>*การลงเวลามีผลต่อการแสดงผลฝั่งลูกค้ากรุณาใช้ความชัวในกแารลงเวลา</small>
+                            <small>*หากกดบันทึกแล้วไม่สามารถแก้ไขได้</small>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
@@ -293,6 +368,12 @@
 <script>
 export default {
     data: () => ({
+        subject_select: [],
+        subject_select_teacher: [],
+        subject_select_tea: [],
+        level_select: [],
+        level_select_add: [],
+        subject_sum: '',
         search_table_teacher: '',
         mode: '',
         delday: '',
@@ -303,6 +384,7 @@ export default {
         dialog_save_error: false,
         dialog_select_date: false,
         items: [],
+        items_select_tea: [],
         items_student: [],
         style_subject: ['Online', 'On-site'],
         style_class: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
@@ -333,6 +415,7 @@ export default {
             { text: 'End', value: 'time_e', align: 'start' },
             { text: 'Style', value: 'style', align: 'start' },
             { text: 'class', value: 'class', align: 'start' },
+            { text: 'subject', value: 'subject', align: 'start' },
             { text: 'จำนวนเปิดรับ', value: 'sum_people', align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
@@ -391,6 +474,7 @@ export default {
         this.search_teacher();
         this.search_student();
         this.search_date_teacher();
+        this.search_subject_select();
         this.$refs.calendar.checkChange();
     },
 
@@ -482,11 +566,13 @@ export default {
             this.clear_item();
             this.dialog_detail = false;
         },
-        clear_item() {
+        clear_item() {            
             this.value = null;
             this.hour_tea = 0;
             this.min_tea = 0;
             this.save_detail = [];
+            this.level_select = [];
+            this.items_select_tea = [];
             this.picker_start_tea = null;
             this.picker_stop_tea = null;
             this.picker_start = null;
@@ -502,12 +588,99 @@ export default {
             db.ref("user/").on("value", (snapshot) => {
                 const childData = snapshot.val();
                 let item = [];
+                if (this.save_detail.subject != undefined &&
+                    this.save_detail.level != undefined) {
+                    for (const key in childData) {
+                        if (childData[key].status === 'teacher' &&
+                            this.check_sub(this.save_detail.subject, key) &&
+                            this.check_level(this.save_detail.level,this.save_detail.subject,key)
+                        ) {
+                            item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                            console.log('items_select_tea', item);
+                        }
+                    }
+                    this.items_select_tea = item;
+
+                } else {
+                    for (const key in childData) {
+                        if (childData[key].status == 'teacher') {
+                            item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                        }
+                    }
+                    this.items = item;
+                }
+
+            })
+        },
+        check_sub(sub, key) {
+            let name;
+            const subject = [];
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/${sub}`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                name = childData.name;
+            })
+            db.ref(`user/${key}/subject_all`).once("value", (snapshot) => {
+                const childData = snapshot.val();
                 for (const key in childData) {
-                    if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                    const detail = childData[key];
+                    // console.log('check_sub', detail.name, name);
+                    subject.push(detail.name);
+                }
+            })
+            if (subject.includes(name)) {
+                // console.log('ถูกต้อง>>', subject);
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        check_level(level,sub,key) {
+            // console.log(level,sub,key);
+            let name;
+            let levels = [];
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/${sub}`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                name = childData.name;
+            })
+            db.ref(`user/${key}/subject_all`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const detail = childData[key];
+                    console.log('check_sub', detail.name, detail.level,name);
+                    if(detail.name === name){
+                        console.log('หยุด');
+                        levels = detail.level;
+                        console.log(levels);
+                        break;
                     }
                 }
-                this.items = item;
+            })
+            if(levels.includes(level)){
+                return true;
+            }else{
+                return false;
+            }
+        },
+        search_subject_select() {
+            const db = this.$fireModule.database();
+            db.ref("subject_all/").on("value", (snapshot) => {
+                const childData = snapshot.val();
+                let item = [];
+                for (const key in childData) {
+                    const detail = childData[key];
+                    item.push({ key: key, name: detail.name, level: detail.level });
+                }
+                this.subject_select = item;
+            })
+        },
+        search_level_select() {
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/${this.save_detail.subject}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.level_select = childData.level;
             })
         },
         search_student() {
@@ -539,9 +712,9 @@ export default {
                         nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
                     })
                     for (const date in keydata) {
-                        console.log(now.getTime().toString().substring(0, 5), new Date(date).getTime().toString().substring(0, 5));
+                        // console.log(now.getTime().toString().substring(0, 5), new Date(date).getTime().toString().substring(0, 5));
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
-                            console.log('New day');
+                            // console.log('New day');
                             const datedata = keydata[date];
                             this.arrayEvents.push(date);
                             for (const time in datedata) {
@@ -558,7 +731,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -587,7 +760,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -616,7 +789,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -645,7 +818,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -674,7 +847,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -703,7 +876,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -732,7 +905,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -761,7 +934,7 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
                                     this.events.push(
@@ -790,10 +963,10 @@ export default {
                                         time_e: timedata.stop,
                                         style: timedata.style_subject,
                                         subject: timedata.subject,
-                                        sum_people: timedata.invite+'/'+timedata.sum_people,
+                                        sum_people: timedata.invite + '/' + timedata.sum_people,
                                         key: key,
                                     });
-                                    console.log(item);
+                                    // console.log(item);
                                     this.events.push(
                                         {
                                             name: timedata.subject,
@@ -832,16 +1005,71 @@ export default {
         },
 
         editItem(item) {
+            console.log(item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             // console.log(item);
             this.value = item.key;
             this.date1 = item.date;
-            this.save_detail.subject = item.subject;
+            this.save_detail.class = item.class;
             this.save_detail.style = item.style;
+            this.save_detail.subject = item.subject;
             this.picker_start_tea = item.time_s;
             this.picker_stop_tea = item.time_e;
             this.dialog_detail = true;
+            if(item.subject != 'ทุกวิชา'){
+                this.search_level_select_edit(item);
+            }else{
+                this.search_subject_teacher(item);
+            }
+        },
+
+        search_level_select_edit(item){
+            let level = [];
+            const db = this.$fireModule.database();
+            db.ref(`user/${item.key}/subject_all`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const detail = childData[key];
+                    if(detail.name === item.subject){
+                        level = detail.level;
+                        console.log(level);
+                        break;
+                    }
+                }
+                this.level_select_add = level;
+            })
+        },
+
+        search_level_select2(){
+            let level = [];
+            const db = this.$fireModule.database();
+            db.ref(`user/${this.value}/subject_all`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const detail = childData[key];
+                    if(detail.name === this.save_detail.subject){
+                        level = detail.level;
+                        console.log(level);
+                        break;
+                    }
+                }
+                this.level_select_add = level;
+            })
+        },
+
+        search_subject_teacher(item){
+            const subject = [];
+            const db = this.$fireModule.database();
+            db.ref(`user/${item.key}/subject_all`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const detail = childData[key];
+                    // console.log('check_sub', detail.name, name);
+                    subject.push(detail.name);
+                }
+                this.subject_select_tea = subject;
+            })
         },
 
         deleteItem(item) {
