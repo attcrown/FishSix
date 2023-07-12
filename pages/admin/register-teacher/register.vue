@@ -1,8 +1,9 @@
 <template>
     <div class="container-fluid">
+        <pageLoader v-if="isLoading"></pageLoader>
         <v-btn to="/admin/register-teacher/" router exact>กลับ</v-btn>
 
-        <v-row>
+        <v-row v-if="!isLoading">
             <div class="col-sm-12">
                 <div class="d-flex justify-center align-center">
                     <v-card class="pa-1 text-center rounded-5 m-2" style="background: #F5F6F7 ;">
@@ -213,10 +214,11 @@
                             <!-- <v-checkbox v-model="checkbox" :error-messages="checkboxErrors" label="Confirm " required
                                 @change="$v.checkbox.$touch()" @blur="$v.checkbox.$touch()"></v-checkbox> -->
 
-                            <v-btn class="me-4" color="green darken-3" @click="submit">
+                            <v-btn class="me-4" color="green " outlined @click="submit" :loading="isSubmiting">
                                 <v-icon class="me-3">mdi-content-save-settings-outline</v-icon>
-                                submit
+                                บันทึก
                             </v-btn>
+
                             <!-- <v-btn color="deep-orange darken-4" @click="clear">
                                 <v-icon class="me-3">mdi-backspace-reverse</v-icon> clear
                             </v-btn> -->
@@ -227,20 +229,53 @@
 
             </div>
         </v-row>
+
+        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
+            <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
+        </v-snackbar>
+       
+        <template>
+            <div>
+                <v-dialog v-model="isAlreadySubmit" transition="dialog-bottom-transition" max-width="600" persistent>
+                    <template v-slot:default="dialog">
+                        <v-card>
+                     
+                            <v-card-text>
+                                <div class="text-center">
+
+                                    <div class="text-h5 pa-12"> <v-icon color="green" size="100"
+                                           >mdi-check-circle</v-icon><br>อัพโหลดเสร็จสิ้น</div>
+                                    <v-btn outlined color="green" @click="reload();">ปิด</v-btn>
+                                </div>
+
+                            </v-card-text>
+
+                        </v-card>
+                    </template>
+                </v-dialog>
+            </div>
+        </template>
+
     </div>
 </template>
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, email, numeric } from 'vuelidate/lib/validators'
-
+import pageLoader from '@/components/loader.vue';
 export default {
     layout: 'default',
     data() {
         return {
+            //status
             activePicker: null,
             date: null,
             menu: false,
             isLoading: true,
+            isSubmiting: false,
+            isAlreadySubmit: false,
+            showSnackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
             //register field
             status: "teacher",
             name: null,
@@ -276,10 +311,9 @@ export default {
             faculty: null,
             major: null,
             selectedSubjects: [],
-        
+
             //rules
             postalRules: [
-                value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
                 value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
             startDateRules: [
@@ -494,6 +528,9 @@ export default {
         },
 
     },
+    components: {
+        pageLoader
+    },
     mounted() {
         this.readdata();
     },
@@ -513,10 +550,10 @@ export default {
         },
         updateSelectedSubjects(level, name) {
             const index = this.selectedSubjects.findIndex(s => s.name === name);
-    
+
             if (index === -1) {
                 this.selectedSubjects.push({ name, level: [level] });
-               
+
             } else {
 
                 const subject = this.selectedSubjects[index];
@@ -534,33 +571,40 @@ export default {
                     this.selectedSubjects.splice(index, 1);
                 }
             }
-          
+
         },
 
 
         save(date) {
             this.$refs.menu.save(date)
         },
+        openSnackbar(status, message) {
+            this.showSnackbar = true;
+            this.snackbarMessage = message;
+            this.snackbarColor = status;
+        },
 
+        reload() {
+            window.location.reload();
+        },
         submit() {
             this.$v.$touch()
-       
-          
+
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0
                 && this.nameErrors.length == 0 && this.mobileErrors.length == 0
                 && this.idCardNumberErrors.length == 0 && this.contractErrors.length == 0
-                && this.workTypeErrors.length == 0 && this.rateErrors.length == 0) {
+                && this.workTypeErrors.length == 0 && this.rateErrors.length == 0 && this.selectedSubjects != 0) {
                 console.log("Save");
                 this.registerTeacher();
-            } else { console.log("errors save"); }
+            } else { this.openSnackbar("error", 'เกิดข้อผิดพลาดในการบันทึก!'); }
         },
 
         async registerTeacher() {
             const db = this.$fireModule.database();
             const keyuser = this.encode(this.name);
-       
-            
+            this.isSubmiting = true;
+
             await db.ref(`user/${this.encode(this.name)}/`).set({
                 status: this.status,
                 name: this.name,
@@ -600,20 +644,22 @@ export default {
             }
 
             for (let subject of this.selectedSubjects) {
-                let key_items =  Math.floor(Math.random() * 10000001);
+                let key_items = Math.floor(Math.random() * 10000001);
                 await db.ref(`user/${this.encode(this.name)}/subject_all/${key_items}`).set({
                     name: subject.name,
-                level: subject.level,
-                
-            })
-        }
+                    level: subject.level,
 
+                })
+            }
+            this.isSubmiting = false;
+            this.isAlreadySubmit = true;
         },
 
         encode(a) {
             const encodedData = btoa(encodeURIComponent(a))
             return encodedData;
         },
+
 
         async readdata() {
             const db = this.$fireModule.database();
@@ -642,7 +688,7 @@ export default {
                     items.push(item);
                 }
                 this.subjects = items;
-                console.log(this.subjects)
+                this.isLoading = false;
 
             })
 

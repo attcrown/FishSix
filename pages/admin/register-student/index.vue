@@ -1,28 +1,40 @@
 <template>
-    <div class="container-fluid">
-        <v-row>
-<div style="max-width: 500px;">
-    <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-</div>
-</v-row>
+    
+    <div class="container">
+        
+        
+        <div >
+            
+            <list class="mt-3"></list>
+        </div>
+        
     </div>
 </template>
 <script>
+import register from './register.vue';
+import list from './list.vue';
+
 export default {
     layout: 'default',
     data() {
         return {
-        //data here
-    }
+            //data here
+        }
+    },
+    components:
+    {
+        register,
+        list,
+        
     },
     computed: {
 
     },
     mounted() {
-        
+
     },
     methods: {
-    
+
     },
 }
 </script>
