@@ -34,6 +34,8 @@ const _4c19e944 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\test
 const _7b477996 = () => interopDefault(import('..\\pages\\admin\\matching\\calendar.vue' /* webpackChunkName: "pages/admin/matching/calendar" */))
 const _70fca88e = () => interopDefault(import('..\\pages\\admin\\matching\\table_active.vue' /* webpackChunkName: "pages/admin/matching/table_active" */))
 const _2c81b9ed = () => interopDefault(import('..\\pages\\admin\\matching\\table_match.vue' /* webpackChunkName: "pages/admin/matching/table_match" */))
+const _5128da29 = () => interopDefault(import('..\\pages\\admin\\register-student\\list.vue' /* webpackChunkName: "pages/admin/register-student/list" */))
+const _03079c2e = () => interopDefault(import('..\\pages\\admin\\register-student\\register.vue' /* webpackChunkName: "pages/admin/register-student/register" */))
 const _407501e0 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\list.vue' /* webpackChunkName: "pages/admin/register-teacher/list" */))
 const _112d14d6 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\register.vue' /* webpackChunkName: "pages/admin/register-teacher/register" */))
 const _179f04c3 = () => interopDefault(import('..\\pages\\admin\\shop\\item.vue' /* webpackChunkName: "pages/admin/shop/item" */))
@@ -176,6 +178,14 @@ export const routerOptions = {
     path: "/admin/matching/table_match",
     component: _2c81b9ed,
     name: "admin-matching-table_match"
+  }, {
+    path: "/admin/register-student/list",
+    component: _5128da29,
+    name: "admin-register-student-list"
+  }, {
+    path: "/admin/register-student/register",
+    component: _03079c2e,
+    name: "admin-register-student-register"
   }, {
     path: "/admin/register-teacher/list",
     component: _407501e0,

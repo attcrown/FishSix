@@ -173,7 +173,7 @@ export default {
         this.initialize();
     },
 
-    methods: {        
+    methods: {
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -191,14 +191,13 @@ export default {
                             if (timedata.status == 'active') {
                                 db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
                                     const childData = snapshot.val();
-                                    nametea = "คุณครู "+childData.firstName+' '+childData.lastName;
+                                    nametea = "คุณครู " + childData.firstName + ' ' + childData.lastName;
                                 })
                                 db.ref(`user/${key}`).on("value", (snapshot) => {
                                     const childData = snapshot.val();
-                                    namestu = childData.firstName+' '+childData.lastName;
+                                    namestu = childData.firstName + ' ' + childData.lastName;
                                 })
-                                setTimeout(() => {
-                                    item.push({
+                                item.push({
                                     name_student: namestu,
                                     name: nametea,
                                     subject: timedata.subject,
@@ -209,8 +208,11 @@ export default {
                                     status: timedata.status,
                                     key_student: key,
                                     key_teacher: timedata.teacher,
-                                });
-                                }, 100);                                
+                                })
+
+                                // setTimeout(() => {
+
+                                // }, 100);                                
                             }
                         }
                     }

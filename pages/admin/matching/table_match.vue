@@ -204,7 +204,7 @@ export default {
                                     namestu = childData.firstName+' '+childData.lastName;
                                     phone_stu = childData.studentMobile;
                                 })
-                                setTimeout(() => {
+                                // setTimeout(() => {
                                     item.push({
                                     name_student: namestu,
                                     name: nametea,
@@ -219,7 +219,7 @@ export default {
                                     phone_teacher : phone_tea,
                                     phone_student : phone_stu,
                                 });
-                                }, 100);                                
+                                // }, 100);                                
                             }
                         }
                     }

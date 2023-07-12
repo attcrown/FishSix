@@ -113,7 +113,7 @@ export default {
                                 const childData = snapshot.val();
                                 namestu = childData.firstName + "  " + childData.lastName;
                             })
-                            setTimeout(() => {
+                            // setTimeout(() => {
                                 item.push({
                                     name_student: namestu,
                                     name: nametea,
@@ -126,12 +126,13 @@ export default {
                                     key_student: key,
                                     key_teacher: timedata.teacher,
                                 });
-                            }, 100);
+                            // }, 100);
                         }
                     }
 
                 }
                 this.desserts_student = item;
+                console.log(this.desserts_student );
             })
         },
     },
