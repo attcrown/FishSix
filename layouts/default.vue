@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
-      :clipped-left="clipped" fixed app color="#7C7C7C">
+      :clipped-left="clipped" fixed app color="#B6A7A2">
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
 
       <v-list>

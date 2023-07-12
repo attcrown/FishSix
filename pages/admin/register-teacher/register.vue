@@ -558,20 +558,8 @@ export default {
 
         async registerTeacher() {
             const db = this.$fireModule.database();
-            if (this.idCardCopy) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.encode(this.name)}/idCardCopy.jpg`);
-                try {
-                    const snapshot = await userRef.put(this.idCardCopy);
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    await db.ref(`user/${this.keyuser}`).update({
-                        idCardCopy: downloadURL,
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
+            const keyuser = this.encode(this.name);
+       
             
             await db.ref(`user/${this.encode(this.name)}/`).set({
                 status: this.status,
@@ -596,6 +584,20 @@ export default {
                 faculty: this.faculty,
                 major: this.major,
             })
+            if (this.idCardCopy) {
+                const storageRef = this.$fireModule.storage().ref();
+                const userRef = storageRef.child(`user/${this.encode(this.name)}/idCardCopy.jpg`);
+                try {
+                    const snapshot = await userRef.put(this.idCardCopy);
+                    const downloadURL = await snapshot.ref.getDownloadURL();
+
+                    await db.ref(`user/${keyuser}`).update({
+                        idCardCopy: downloadURL
+                    });
+                } catch (error) {
+                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                }
+            }
 
             for (let subject of this.selectedSubjects) {
                 let key_items =  Math.floor(Math.random() * 10000001);
