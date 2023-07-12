@@ -74,14 +74,12 @@ export default {
     },
     mounted() {
         this.active();
-        this.not_active();
-    },
+    },    
     methods: {
         active() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
-                let item = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -94,13 +92,15 @@ export default {
                         }
                     }
                 }
+                setTimeout(() => {
+                    this.not_active();
+                }, 1000);                
             })
         },
         not_active() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
-                let item = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -113,28 +113,25 @@ export default {
                         }
                     }
                 }
+                setTimeout(() => {
+                    this.sumset();
+                }, 1000);                
             })
-            this.sumset();
         },
         sumset() {
-            let allactive = this.active_sum + this.not_active_sum
-            this.active_sum = parseInt((this.active_sum * 100 / allactive).toFixed(0)) ;
+            let allactive = this.active_sum + this.not_active_sum;
+            this.active_sum = parseInt((this.active_sum * 100 / allactive).toFixed(0));
             this.not_active_sum = parseInt((this.not_active_sum * 100 / allactive).toFixed(0));
 
-            console.log('N/A>>', this.not_active_sum);
-            console.log('A>>', this.active_sum);
-
             this.interval = setInterval(() => {
-                console.log('a>>',this.active_sum);
                 if (this.value === this.active_sum) {
-                    return //(this.value = 0)
+                    return; //(this.value = 0)
                 }
                 this.value += 1
             }, 50)
             this.interval_not = setInterval(() => {
-                console.log('n/a>>', this.not_active_sum);
                 if (this.value_not === this.not_active_sum) {
-                    return //(this.value = 0)
+                    return; //(this.value = 0)
                 }
                 this.value_not += 1
             }, 50)
