@@ -198,7 +198,7 @@
                                                 <td> {{ subject.name }}</td>
                                                 <td v-for="(level, index) in subject.level" :key="index">
                                                     <v-checkbox class="m-0"
-                                                        @click="updateSelectedSubjects(level, subject.name)"
+                                                        @click="updateSelectedSubjects(subject.key,level, subject.name)"
                                                         :label="level"></v-checkbox>
                                                 </td>
 
@@ -209,7 +209,7 @@
 
 
                                 </div>
-
+                          
                             </v-row>
                             <!-- <v-checkbox v-model="checkbox" :error-messages="checkboxErrors" label="Confirm " required
                                 @change="$v.checkbox.$touch()" @blur="$v.checkbox.$touch()"></v-checkbox> -->
@@ -233,18 +233,18 @@
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
             <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
         </v-snackbar>
-       
+
         <template>
             <div>
                 <v-dialog v-model="isAlreadySubmit" transition="dialog-bottom-transition" max-width="600" persistent>
                     <template v-slot:default="dialog">
                         <v-card>
-                     
+
                             <v-card-text>
                                 <div class="text-center">
 
-                                    <div class="text-h5 pa-12"> <v-icon color="green" size="100"
-                                           >mdi-check-circle</v-icon><br>อัพโหลดเสร็จสิ้น</div>
+                                    <div class="text-h5 pa-12"> <v-icon color="green"
+                                            size="100">mdi-check-circle</v-icon><br>อัพโหลดเสร็จสิ้น</div>
                                     <v-btn outlined color="green" @click="reload();">ปิด</v-btn>
                                 </div>
 
@@ -311,7 +311,7 @@ export default {
             faculty: null,
             major: null,
             selectedSubjects: [],
-
+        
             //rules
             postalRules: [
                 value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
@@ -548,11 +548,12 @@ export default {
                 this.currAddress = null;
             }
         },
-        updateSelectedSubjects(level, name) {
+        updateSelectedSubjects(key,level, name) {
+            
             const index = this.selectedSubjects.findIndex(s => s.name === name);
 
             if (index === -1) {
-                this.selectedSubjects.push({ name, level: [level] });
+                this.selectedSubjects.push({ name, level: [level] ,key});
 
             } else {
 
@@ -571,9 +572,9 @@ export default {
                     this.selectedSubjects.splice(index, 1);
                 }
             }
+            console.log(this.selectedSubjects);
 
         },
-
 
         save(date) {
             this.$refs.menu.save(date)
@@ -644,8 +645,8 @@ export default {
             }
 
             for (let subject of this.selectedSubjects) {
-                let key_items = Math.floor(Math.random() * 10000001);
-                await db.ref(`user/${this.encode(this.name)}/subject_all/${key_items}`).set({
+              
+                await db.ref(`user/${this.encode(this.name)}/subject_all/${subject.key}`).set({
                     name: subject.name,
                     level: subject.level,
 
@@ -669,11 +670,14 @@ export default {
                 let items = [];
                 let subjectName = '';
                 let levelData = '';
+
+                
                 for (const key in childData) {
+
                     db.ref(`subject_all/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
                         subjectName = childData.name;
-                        //console.log(subjectName)                     
+
                     })
                     db.ref(`subject_all/${key}/level`).on("value", (snapshot) => {
                         const childData = snapshot.val();
@@ -681,10 +685,11 @@ export default {
                         //console.log(levelData)
                     })
                     const item = {
+                        key : key,
                         level: levelData,
                         name: subjectName
                     };
-                    //console.log(item)
+                   
                     items.push(item);
                 }
                 this.subjects = items;
