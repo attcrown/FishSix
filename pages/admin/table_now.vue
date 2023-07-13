@@ -178,7 +178,7 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (now.getTime().toString().substring(0, 5) == new Date(date).getTime().toString().substring(0, 5)) {
+                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -192,7 +192,7 @@ export default {
                                     namestu = childData.firstName + "  " + childData.lastName;
                                     phone_stu = childData.studentMobile;
                                 })
-                                setTimeout(() => {
+                                // setTimeout(() => {
                                     item.push({
                                         name_student: namestu,
                                         name: nametea,
@@ -207,7 +207,7 @@ export default {
                                         phone_student: phone_stu,
                                         phone_teacher:phone_tea,
                                     });
-                                }, 100);
+                                // }, 100);
                             }
                         }
 

@@ -159,8 +159,7 @@
                                                 prepend-icon="mdi-calendar" readonly v-bind="attrs" :rules="startDateRules"
                                                 required v-on="on"></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
-                                            :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substring(0, 10)"
+                                        <v-date-picker v-model="startDate" :active-picker.sync="activePicker"                                            
                                             min="1950-01-01" @change="save"></v-date-picker>
                                     </v-menu>
 

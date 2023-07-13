@@ -55,6 +55,7 @@ export default {
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
             { text: 'Style', value: 'style' },
+            { text: 'class', value: 'class' },
             { text: 'subject', value: 'subject' },
             { text: 'Status', value: 'status', align: 'start' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
@@ -123,6 +124,7 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     status: timedata.status,
+                                    class: timedata.class,
                                     key_student: key,
                                     key_teacher: timedata.teacher,
                                 });

@@ -2,7 +2,7 @@
     <div>
         <v-row>
 
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="12" sm="6" md="6" hidden>
                 <div class="text-center">
                     <v-progress-circular xl :rotate="270" :size="200" :width="15" :value="value" color="teal">
                         {{ value }}% Active

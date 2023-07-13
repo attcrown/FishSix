@@ -102,7 +102,7 @@
                         </v-col>
 
                         <v-col cols="4">
-                            <v-autocomplete v-model="search_value" :items="items"  label="Search teacher"
+                            <v-autocomplete v-model="search_value" :items="items" label="Search teacher"
                                 @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
                         </v-col>
                         <v-col cols="4">
@@ -171,7 +171,7 @@
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
                         <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8"><b>ADD Teach [{{ date1 }}]</b></span>
+                            <span class="text-h8"><b>{{ mode }} Teach [{{ date1 }}]</b></span>
                         </v-card-title>
                         <v-card-text>
                             <v-container>
@@ -179,8 +179,8 @@
                                     <v-col cols="12" class="mt-5">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key"
-                                            @change="check_time_start() ,search_subject_tea(value)"
-                                            @input="check_tea=false"></v-autocomplete>
+                                            @change="check_time_start(), search_subject_tea(value)"
+                                            @input="check_tea = false"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-select :items="class_flip" label="ประเภท" v-model="save_detail.class"></v-select>
@@ -193,9 +193,13 @@
                                         <v-text-field label="จำนวนคนเปิดรับ"
                                             v-model="save_detail.sum_people"></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="4" v-if="value != null">
-                                        <v-select :items="subject" label="วิชาเปิดสอน"
+                                    <v-col cols="12" sm="4" v-if="value != null && mode != 'edit'">
+                                        <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
                                             v-model="save_detail.subject"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4" v-if="mode == 'edit'">
+                                        <v-text-field label="วิชาเปิดสอน" v-model="save_detail.subject"
+                                            disabled></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="เริ่มสอน" v-model="picker_start"
@@ -344,10 +348,11 @@ export default {
             { text: 'Date', value: 'date' },
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
-            { text: 'Style', value: 'style' },
+            { text: 'Style', value: 'style' },                                               
             { text: 'subject', value: 'subject' },
             { text: 'class', value: 'class' },
-            { text: 'จำนวนคน', value: 'sum_people' ,align: 'center'},
+            { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' }, 
+            { text: 'จำนวนคนเปิดรับ', value: 'sum_people', align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
         desserts: [],
@@ -457,6 +462,7 @@ export default {
         },
 
         save_detail_data() {
+            console.log(this.mode);
             if (this.save_detail.class == null ||
                 this.save_detail.style == null ||
                 this.save_detail.subject == null ||
@@ -464,26 +470,35 @@ export default {
                 this.picker_stop == null ||
                 this.value == null ||
                 this.date1 == null ||
-                this.save_detail.sum_people == null) 
-            {
+                this.save_detail.sum_people == null) {
                 this.dialog_save_error = true;
                 return;
             }
             const db = this.$fireModule.database();
-            db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-                class: this.save_detail.class,
-                style_subject: this.save_detail.style,
-                sum_people: this.save_detail.sum_people,
-                invite: '0',
-                subject: this.save_detail.subject,
-                start: this.picker_start,
-                stop: this.picker_stop,
-            });
-
-            if (this.mode == 'edit') {
+            if (this.mode == 'save') {
+                db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
+                    class: this.save_detail.class,
+                    style_subject: this.save_detail.style,
+                    sum_people: this.save_detail.sum_people,
+                    invite: '0',
+                    subject: this.save_detail.subject,
+                    start: this.picker_start,
+                    stop: this.picker_stop,
+                });
+            }
+            else if (this.mode == 'edit') {
                 if (this.delday != this.picker_stop) {
                     db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
                 }
+                db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
+                    class: this.save_detail.class,
+                    style_subject: this.save_detail.style,
+                    sum_people: this.save_detail.sum_people,
+                    start: this.picker_start,
+                    stop: this.picker_stop,
+                });
+            } else {
+                this.dialog_save_error = true
             }
             this.clear_item();
             this.dialog_detail = false;
@@ -516,17 +531,18 @@ export default {
             })
         },
 
-        search_subject_tea(item){
+        search_subject_tea(item) {
             // console.log('tea>>',item);
             const db = this.$fireModule.database();
             db.ref(`user/${item}`).on("value", (snapshot) => {
                 this.subject = [];
                 const childData = snapshot.val();
-                for(const details in childData.subject_all){ 
-                    const sub = childData.subject_all[details];                   
-                    this.subject.push(sub.name);
+                for (const details in childData.subject_all) {
+                    const sub = childData.subject_all[details];
+                    this.subject.push({ key: details, name: sub.name });
                 }
-                this.subject.push('ทุกวิชา');
+                this.subject.push({ key: '00000', name: 'ทุกวิชา' });
+                console.log(this.subject);
             })
         },
 
@@ -539,6 +555,7 @@ export default {
                 this.events = [];
                 let item = [];
                 let nametea = '';
+                let name_sub = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
@@ -549,8 +566,11 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
+                            db.ref(`subject_all/${timedata.subject}`).on("value", (snapshot) => {
+                                const childData = snapshot.val();
+                                name_sub = childData.name;
+                            })
                             if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
-                                // console.log('หาทั้งสอง');
                                 item.push({
                                     name: nametea,
                                     date: date,
@@ -558,8 +578,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -585,8 +606,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -612,8 +634,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -639,8 +662,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -666,8 +690,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -693,8 +718,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -720,8 +746,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -746,8 +773,9 @@ export default {
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
-                                    subject: timedata.subject,
+                                    subject: name_sub,
                                     sum_people: timedata.sum_people,
+                                    invite: timedata.invite,
                                     key: key,
                                 });
                                 this.arrayEvents.push(date);
@@ -791,10 +819,10 @@ export default {
         },
 
         editItem(item) {
-            console.log(item);
+            // console.log(item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
-            this.value = item.key; 
+            this.value = item.key;
             this.date1 = item.date;
             this.save_detail.subject = item.subject;
             this.save_detail.class = item.class;
