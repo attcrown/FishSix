@@ -4,8 +4,7 @@
         <v-row v-if="!isLoading">
             <div style="max-width: 500px;">
                 <h1 class="font-weight-bold">ข้อมูลผู้สอน</h1>
-                <v-btn color="indigo" class="text-white" to="/admin/register-teacher/register" router
-                    exact>เพิ่มผู้สอน</v-btn>
+                <v-btn color="indigo" class="text-white" to="/admin/teacher/register" router exact>เพิ่มผู้สอน</v-btn>
             </div>
             <div class="col-sm-12">
                 <v-card-title>
@@ -16,25 +15,26 @@
                     <v-data-table :headers="headers" :items="items" :search="search">
                         <template v-slot:top>
                             <v-dialog v-model="dialogDetail" max-width="500px">
-                            <v-card>
+                                <v-card>
 
-                                <v-card-title class="text-h5 green text-center"> แก้ไขข้อมูล
-                                </v-card-title>
-                                <v-card-text class=" text-center mt-2">
-                                    <div class="text-h5">ข้อมูลคุณ {{ editDetail }}
+                                    <v-card-title class="text-h5 green text-center"> แก้ไขข้อมูล
+                                    </v-card-title>
+                                    <v-card-text class=" text-center mt-2">
+                                        <div class="text-h5">ข้อมูลคุณ {{ editDetail }}
                                         </div>
-                                    <small></small>
-                                </v-card-text>
+                                        <small></small>
+                                    </v-card-text>
 
-                                <v-card-actions>
+                                    <v-card-actions>
 
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="grey " outlined @click="close">ยกเลิก</v-btn>
-                                    <v-btn color="red darken-1 text-white" disabled @click="deleteItemConfirm">ตกลง</v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="grey " outlined @click="close">ยกเลิก</v-btn>
+                                        <v-btn color="red darken-1 text-white" disabled
+                                            @click="deleteItemConfirm">ตกลง</v-btn>
+                                        <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
 
                             <v-spacer></v-spacer>
                             <!-- <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
@@ -47,14 +47,15 @@
                                     <v-card-text class=" text-center mt-2">
                                         <div class="text-h5">ต้องการลบข้อมูลของคุณ<br> {{ detailDelete }}
                                             หรือไม่?</div>
-                                            <small>*การลบข้อมูลจะลบข้อมูลครูคนนั้นทั้งหมด รวมถึงรหัสผ่านด้วย</small>
+                                        <small>*การลบข้อมูลจะลบข้อมูลครูคนนั้นทั้งหมด รวมถึงรหัสผ่านด้วย</small>
                                     </v-card-text>
-                                    
+
                                     <v-card-actions>
-                                        
+
                                         <v-spacer></v-spacer>
                                         <v-btn color="grey " outlined @click="closeDelete">ยกเลิก</v-btn>
-                                        <v-btn color="red darken-1 text-white" disabled @click="deleteItemConfirm">ตกลง</v-btn>
+                                        <v-btn color="red darken-1 text-white" disabled
+                                            @click="deleteItemConfirm">ตกลง</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -62,9 +63,14 @@
 
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <v-icon small color="black" class="mr-1" @click="editItem(item)">
-                                mdi-pencil
+
+
+                            <v-icon small color="black" class="mr-1" @click="viewItem(item)">
+                                mdi-eye
                             </v-icon>
+
+
+
                             <v-icon small color="red" @click="deleteItem(item)">
                                 mdi-delete
                             </v-icon>
@@ -88,7 +94,7 @@ export default {
             detailDelete: '',
             dialog: false,
             dialogDelete: false,
-            editDetail :'',
+            editDetail: '',
             dialogDetail: false,
             headers: [
                 { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
@@ -137,6 +143,7 @@ export default {
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
+                            //แก้ตรงนี้ให้ดึงมาแค่คอลัมที่แสดงพอ รอดีไซน์
                             address: childData[key].address || null,
                             firstName: childData[key].firstName || null,
                             lastName: childData[key].lastName || null,
@@ -148,7 +155,7 @@ export default {
                             address: childData[key].address || null,
                             currAddress: childData[key].currAddress || null,
                             idCardNumber: childData[key].idCardNumber || null,
-                            idCardCopy: childData[key].idCardCopy || null,
+
                             contract: childData[key].contract || null,
                             workType: childData[key].workType || null,
                             startDate: childData[key].startDate || null,
@@ -166,17 +173,13 @@ export default {
             })
 
         },
-
-        editItem(item) {
-            console.log(item);
-            this.editDetail = item.teacher.firstName + " " + item.teacher.lastName;
-            this.dialogDetail = true;
+        viewItem(item) {
+            this.$router.push({ path: 'teacher/detail', query: { teacherId: item.key } });
+            //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
         },
-
 
         deleteItem(item) {
             console.log(item);
-
             this.deleteConfirm = item;
             this.detailDelete = item.teacher.firstName + " " + item.teacher.lastName;
             this.dialogDelete = true

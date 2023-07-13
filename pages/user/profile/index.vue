@@ -588,7 +588,13 @@ export default {
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;
                 this.birthDate = childData.birthDate || null;
-                this.address = childData.address || null;
+               
+                this.address.houseNo = childData.address.houseNo || null;
+                this.address.tambon = childData.address.tambon || null;
+                this.address.amphoe = childData.address.amphoe || null;
+                this.address.province = childData.address.province || null;
+                this.address.postal = childData.address.postal || null;
+       
                 this.education = childData.education || null;
                 this.studentMobile = childData.studentMobile || null;
                 this.parentMobile = childData.parentMobile || null;

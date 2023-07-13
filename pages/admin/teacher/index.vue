@@ -1,10 +1,6 @@
 <template>
-    
     <div class="container">
-        
-        
         <div >
-            
             <list class="mt-3"></list>
         </div>
         
