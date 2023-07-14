@@ -4,8 +4,8 @@
         <div v-if="!isLoading" class="col mx-3 d-flex justify-content-center">
             <v-row>
                 <div style="display: flex; justify-content: space-between;">
-                    <h1 class="font-weight-bold">ข้อมูลครู</h1>
-                    <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
+                    <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
+                    <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
                 </div>
                 <v-col cols="12">
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0" class="px-10">
@@ -67,28 +67,27 @@
                                 </v-col>
                                 <v-row class="px-4">
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field label="อาชีพปัจจุบัน" name="currJob" v-model="currJob"
-                                            :readonly="!isEditingDetail"></v-text-field>
+                                    
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field label="เบอร์" name="mobile" v-model="mobile" :rules="mobileRules"
+                                        <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile" :rules="mobileRules"
                                             :readonly="!isEditingDetail" :counter="isEditingDetail" required></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
-                                            :readonly="!isEditingDetail"></v-text-field>
+                                        <!-- <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
+                                            :readonly="!isEditingDetail"></v-text-field> -->
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
+                                        <!-- <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
                                             :rules="idCardRules" :counter="isEditingDetail" :readonly="!isEditingDetail"
-                                            required></v-text-field>
+                                            required></v-text-field> -->
                                     </v-col>
                                     <v-col cols="4">
-                                        <label>สำเนาบัตรประชาชน</label><br>
+                                        <!-- <label>สำเนาบัตรประชาชน</label><br> -->
                                         <!-- <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy" disabled
                                         accept=".pdf,image/*"></v-file-input> -->
-                                        <a v-if="idCardCopy" href="" @click="downloadFile()"> View</a>
-                                        <a v-if="!idCardCopy"> ไม่มี</a>
+                                        <!-- <a v-if="idCardCopy" href="" @click="downloadFile()"> View</a>
+                                        <a v-if="!idCardCopy"> ไม่มี</a> -->
                                     </v-col>
 
                                 </v-row>
@@ -185,7 +184,7 @@
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
-                            <div class="">ข้อมูลสัญญาจ้าง</div>
+                            <div class="">ข้อมูลข้อมูลผู้ปกครอง</div>
                             <div>
                                 <button v-if="!isEditingContract" class="editButton " @click="toEditContract()">
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
@@ -199,7 +198,7 @@
                         </v-card-title>
                         <v-card-text>
                             <v-form ref="contractFrom">
-                                <v-row>
+                                <!-- <v-row>
 
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
@@ -240,7 +239,7 @@
                                     </v-col>
 
 
-                                </v-row>
+                                </v-row> -->
 
 
                             </v-form>
@@ -267,39 +266,15 @@
                                 <v-row>
 
                                     <v-col cols="4">
-                                        <v-text-field name="university" label="มหาวิทยาลัย" :readonly="!isEditingEducation"
-                                            v-model="university"></v-text-field>
+                                        <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation"
+                                            v-model="school"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field name="faculty" label="คณะ" :readonly="!isEditingEducation"
-                                            v-model="faculty"></v-text-field>
+                                        <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation"
+                                            v-model="education"></v-text-field>
                                     </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field name="major" label="สาขา" :readonly="!isEditingEducation"
-                                            v-model="major"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <label>
-                                            <span class="text-danger">*</span>
-                                            <span style="color: #000;font-size: 16px;">วิชาที่สอนได้</span>
-                                            <span v-if="isEditingEducation" class="text-danger"
-                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ</span>
-                                        </label>
-                                        <table class="table table-sm">
-                                            <tbody>
-                                                <tr v-for="subject in subjects" :key="subject.name">
-                                                    <td>{{ subject.name }}</td>
-                                                    <td v-for="(level, index) in subject.level" :key="index">
-                                                        <v-checkbox class="m-0"
-                                                            :input-value="isChecked(subject.name, level, subject.key)"
-                                                            @click="updateSelectedSubjects(subject.key, level, subject.name)"
-                                                            :label="level" disabled>
-                                                        </v-checkbox>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </v-col>
+                                 
+                                
                                 </v-row>
                             </v-form>
                         </v-card-text>
@@ -323,21 +298,26 @@ export default {
         return {
             //status
             isLoading: true,
-            teacherId: null,
+            userId: null,
             isEditingDetail: false,
             isEditingAddress: false,
             isEditingContract: false,
             isEditingEducation: false,
 
             //data
-            profilePic: 'null',
+            profilePic: null,
+            profilePicUpload: null,
+            iconSize: 120,
+            firstNameDisplay: null,
+            lastNameDisplay: null,
+            nicknameDisplay: null,
             firstName: null,
             lastName: null,
             nickname: null,
-            mobile: null,
-            email: null,
+            school: null,
             gender: null,
-            currJob: null,
+            birthDate: null,
+
             address: {
                 houseNo: null,
                 tambon: null,
@@ -352,17 +332,9 @@ export default {
                 province: null,
                 postal: null,
             },
-            idCardNumber: null,
-            idCardCopy: null,
-            contract: null,
-            workType: null,
-            startDate: null,
-            rate: null,
-            university: null,
-            faculty: null,
-            major: null,
-            subjects: [],
-            selectedSubjects: [],
+            education: null,
+            studentMobile: null,
+            parentMobile: null,
             //static
             genders: [
                 'ชาย',
@@ -513,8 +485,8 @@ export default {
         pageLoader
     },
     mounted() {
-        const value = this.$route.query.teacherId;
-        this.teacherId = value;
+        const value = this.$route.query.userId;
+        this.userId = value;
         this.readdata();
         this.fetchData();
         this.readSubject();
@@ -603,35 +575,28 @@ export default {
         async readdata() {
 
             const db = this.$fireModule.database();
-            await db.ref(`user/${this.teacherId}`).on("value", (snapshot) => {
+            await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || 'https://cdn.vuetifyjs.com/images/john.jpg';
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
+                this.firstNameDisplay = childData.firstName || null;
+                this.lastNameDisplay = childData.lastName || null;
+                this.nicknameDisplay = childData.nickname || null;
                 this.nickname = childData.nickname || null;
-                this.mobile = childData.mobile || null;
-                this.email = childData.email || null;
+                this.school = childData.school || null;
                 this.gender = childData.gender || null;
-                this.currJob = childData.currJob || null;
+                this.birthDate = childData.birthDate || null;
+               
                 this.address.houseNo = childData.address.houseNo || null;
                 this.address.tambon = childData.address.tambon || null;
                 this.address.amphoe = childData.address.amphoe || null;
                 this.address.province = childData.address.province || null;
                 this.address.postal = childData.address.postal || null;
-                this.currAddress.houseNo = childData.address.houseNo || null;
-                this.currAddress.tambon = childData.address.tambon || null;
-                this.currAddress.amphoe = childData.address.amphoe || null;
-                this.currAddress.province = childData.address.province || null;
-                this.currAddress.postal = childData.address.postal || null;
-                this.idCardNumber = childData.idCardNumber || null;
-                this.idCardCopy = childData.idCardCopy || null;
-                this.contract = childData.contract || null;
-                this.workType = childData.workType || null;
-                this.startDate = childData.startDate || null;
-                this.rate = childData.rate;
-                this.university = childData.university || null;
-                this.faculty = childData.faculty || null;
-                this.major = childData.major || null;
+       
+                this.education = childData.education || null;
+                this.studentMobile = childData.studentMobile || null;
+                this.parentMobile = childData.parentMobile || null;
                 this.isLoading = false;
 
             })

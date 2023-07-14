@@ -2,10 +2,9 @@
     <div class="container-fluid">
         <pageLoader v-if="isLoading"></pageLoader>
         <v-row v-if="!isLoading">
-            <div style="max-width: 500px;">
+            <div style="display: inline-flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                <v-btn color="indigo" class="text-white" to="/admin/register-student/register" router
-                    exact>เพิ่มนักเรียน</v-btn>
+                <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน</v-btn>
             </div>
             <div class="col-sm-12">
                 <v-card-title>
@@ -62,9 +61,9 @@
 
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-icon small color="black" class="mr-1" @click="editItem(item)">
-                            mdi-pencil
-                        </v-icon>
+                        <v-icon small color="black" class="mr-1" @click="viewItem(item)">
+                                mdi-eye
+                            </v-icon>
                         <v-icon small color="red" @click="deleteItem(item)">
                             mdi-delete
                         </v-icon>
@@ -120,6 +119,11 @@ export default {
         this.search_teacher();
     },
     methods: {
+        viewItem(item) {
+            this.$router.push({ path: 'student/detail', query: { userId: item.key } });
+           
+        },
+
         search_teacher() {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {

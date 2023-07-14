@@ -2,17 +2,18 @@
     <div class="container-fluid">
         <pageLoader v-if="isLoading"></pageLoader>
         <v-row v-if="!isLoading">
-            <div style="max-width: 500px;">
-                <h1 class="font-weight-bold">ข้อมูลผู้สอน</h1>
-                <v-btn color="indigo" class="text-white" to="/admin/teacher/register" router exact>เพิ่มผู้สอน</v-btn>
+            <div style="display: inline-flex; justify-content: space-between;">
+                <h1 class="font-weight-bold">ข้อมูลครู</h1>
+                <v-btn class="text-white" to="/admin/teacher/register" color="black" router exact>เพิ่มครู</v-btn>
             </div>
+
             <div class="col-sm-12">
                 <v-card-title>
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                         hide-details></v-text-field>
                 </v-card-title>
                 <template>
-                    <v-data-table :headers="headers" :items="items" :search="search">
+                    <v-data-table :headers="headers" :items="items" :search="search" >
                         <template v-slot:top>
                             <v-dialog v-model="dialogDetail" max-width="500px">
                                 <v-card>
@@ -63,14 +64,9 @@
 
                         </template>
                         <template v-slot:item.actions="{ item }">
-
-
                             <v-icon small color="black" class="mr-1" @click="viewItem(item)">
                                 mdi-eye
                             </v-icon>
-
-
-
                             <v-icon small color="red" @click="deleteItem(item)">
                                 mdi-delete
                             </v-icon>
@@ -97,18 +93,13 @@ export default {
             editDetail: '',
             dialogDetail: false,
             headers: [
+              
                 { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'teacher.lastName' },
                 { text: 'ชื่อเล่น', value: 'teacher.nickname' },
+                { text: 'สถานศึกษา', value: 'teacher.university' },
                 { text: 'เบอร์โทรศัพท์', value: 'teacher.mobile' },
-                { text: 'อีเมล', value: 'teacher.email' },
-                { text: 'เพศ', value: 'teacher.gender' },
-                { text: 'อาชีพ', value: 'teacher.currJob' },
-                { text: 'เลขบัตรประชาชน', value: 'teacher.idCardNumber' },
-                { text: 'สัญญาจ้าง', value: 'teacher.contract' },
-                { text: 'ประเภทการทำงาน', value: 'teacher.workType' },
-                { text: 'วันที่เริ่มทำงาน', value: 'teacher.startDate' },
-                { text: 'เรทค่าจ้าง/ชั่วโมง', value: 'teacher.rate' },
+
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
@@ -144,25 +135,14 @@ export default {
 
                         const teacher = {
                             //แก้ตรงนี้ให้ดึงมาแค่คอลัมที่แสดงพอ รอดีไซน์
-                            address: childData[key].address || null,
+            
                             firstName: childData[key].firstName || null,
                             lastName: childData[key].lastName || null,
                             nickname: childData[key].nickname || null,
                             mobile: childData[key].mobile || null,
-                            email: childData[key].email || null,
-                            gender: childData[key].gender || null,
-                            currJob: childData[key].currJob || null,
-                            address: childData[key].address || null,
-                            currAddress: childData[key].currAddress || null,
-                            idCardNumber: childData[key].idCardNumber || null,
-
-                            contract: childData[key].contract || null,
-                            workType: childData[key].workType || null,
-                            startDate: childData[key].startDate || null,
-                            rate: childData[key].rate,
+            
                             university: childData[key].university || null,
-                            faculty: childData[key].faculty || null,
-                            major: childData[key].major || null,
+
                         };
                         item.push({ key: key, teacher });
 
@@ -208,3 +188,25 @@ export default {
     },
 }
 </script>
+
+<style>
+.addButton {
+    display: flex;
+    padding: 6px 12px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+    border-radius: 10px;
+    border: 1px solid var(--brown-1, #322E2B);
+    background: var(--brown-1, #322E2B);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.addButton:hover {
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
+}
+</style>
