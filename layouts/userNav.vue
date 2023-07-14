@@ -112,7 +112,7 @@ export default {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      if (sessionStorage.getItem('status') != 'user') {
+      else if (sessionStorage.getItem('status') != 'user' && localStorage.getItem('status') != 'user') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {

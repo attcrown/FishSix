@@ -7,8 +7,8 @@
                     <template v-slot:top>
                         <v-toolbar flat style="background-color:rgba(230, 226, 12, 0.425);">
                             <v-toolbar-title>
-                                <v-select :items="items" v-model="search_date" label="Search Date" 
-                                class="mt-4" @change="search_date_student()"></v-select>
+                                <v-select :items="items" v-model="search_date" label="Search Date" class="mt-4"
+                                    @change="search_date_student()"></v-select>
                             </v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
@@ -53,40 +53,40 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="name student" v-model="detail_user.name_student" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="name student" v-model="detail_user.name_student"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_student" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="phone number" v-model="detail_user.phone_student"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="name teacher" v-model="detail_user.name" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="name teacher" v-model="detail_user.name"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_teacher" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="phone number" v-model="detail_user.phone_teacher"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="สถานที่เรียน" v-model="detail_user.style" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="สถานที่เรียน" v-model="detail_user.style"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.class" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.class"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field label="เริ่มเรียน" v-model="detail_user.time_s" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="เริ่มเรียน" v-model="detail_user.time_s"
+                                                readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field label="เลิกเรียน" v-model="detail_user.time_e" readonly
-                                                ></v-text-field>
+                                            <v-text-field label="เลิกเรียน" v-model="detail_user.time_e"
+                                                readonly></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -120,7 +120,7 @@ export default {
         detail_user: [],
         search_date: '',
         search_table_student: '',
-        items: ['Day', 'Week', 'Month' ,'All'],
+        items: ['Day', 'Week', 'Month', 'All'],
         headers_student: [
             {
                 text: 'Name Student',
@@ -180,7 +180,7 @@ export default {
 
         search_date_student() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).once("value", (snapshot) => {
+            db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
@@ -195,17 +195,17 @@ export default {
                 let edit = '';
                 if (this.search_date == 'Day') {
                     end = now;
-                } else if (this.search_date == 'Week') {                    
+                } else if (this.search_date == 'Week') {
                     edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
                     end = new Date(edit);
                 } else if (this.search_date == 'Month') {
                     // console.log(formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01');
-                    edit = formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01';
+                    edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
                     end = new Date(edit);
-                }else if (this.search_date == 'All') {
-                    edit = (parseInt(formattedDate.substring(0, 4))+5) + formattedDate.substring(4,10);
+                } else if (this.search_date == 'All') {
+                    edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
-                }else {
+                } else {
                     end = now;
                 }
                 // console.log(end);
@@ -228,23 +228,29 @@ export default {
                                     namestu = childData.firstName + "  " + childData.lastName;
                                     phone_stu = childData.studentMobile;
                                 })
-                                // setTimeout(() => {
-                                item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
-                                    phone_student: phone_stu,
-                                    phone_teacher: phone_tea,
-                                    class: timedata.class,
-                                });
-                                // }, 100);
+                                console.log(timedata);
+                                console.log(phone_tea,nametea);
+                                console.log(phone_stu,namestu);
+                                if(phone_tea,nametea == null || phone_tea,nametea == ''){
+                                    this.$router.push('/admin/matching');
+                                }
+                                if (phone_tea != '' && nametea != '' && namestu != '' && phone_stu != '') {
+                                    item.push({
+                                        name_student: namestu,
+                                        name: nametea,
+                                        subject: timedata.subject,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        status: timedata.status,
+                                        key_student: key,
+                                        key_teacher: timedata.teacher,
+                                        phone_student: phone_stu,
+                                        phone_teacher: phone_tea,
+                                        class: timedata.class,
+                                    });
+                                }
                             }
                         }
 

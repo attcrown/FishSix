@@ -95,7 +95,7 @@ export default {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      if (sessionStorage.getItem('status') != 'teacher') {
+      else if (sessionStorage.getItem('status') != 'teacher' && localStorage.getItem('status') != 'teacher') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {

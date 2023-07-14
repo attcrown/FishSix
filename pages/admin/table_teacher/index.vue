@@ -348,10 +348,10 @@ export default {
             { text: 'Date', value: 'date' },
             { text: 'Start', value: 'time_s' },
             { text: 'End', value: 'time_e' },
-            { text: 'Style', value: 'style' },                                               
+            { text: 'Style', value: 'style' },
             { text: 'subject', value: 'subject' },
             { text: 'class', value: 'class' },
-            { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' }, 
+            { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' },
             { text: 'จำนวนคนเปิดรับ', value: 'sum_people', align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
@@ -570,6 +570,9 @@ export default {
                                 const childData = snapshot.val();
                                 name_sub = childData.name;
                             })
+                            if (name_sub == null || name_sub == '') {
+                                this.$router.push('/admin');
+                            }
                             if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 item.push({
                                     name: nametea,

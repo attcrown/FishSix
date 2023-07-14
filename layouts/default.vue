@@ -117,25 +117,23 @@ export default {
     }
   },
   mounted() {
-    this.check();
+    this.check(); 
   },
   methods: {
     check() {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      if (sessionStorage.getItem('status') != 'admin') {
+      else if (sessionStorage.getItem('status') != 'admin' && localStorage.getItem('status') != 'admin') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
-
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
-
-        }
+        }              
       }
     },
     getout() {

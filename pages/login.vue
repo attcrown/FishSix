@@ -153,7 +153,7 @@ export default {
         localStorage.getItem('status') == 'admin' ||
         sessionStorage.getItem('status') == 'admin'
       ) {
-        this.$router.push('/admin')
+        this.$router.push('/admin');
       }
       if (
         localStorage.getItem('status') == 'user' ||

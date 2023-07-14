@@ -21,6 +21,9 @@ export default {
     dashboard,
     Table_now,
   },
+  created(){
+    
+  },
   mounted() {
     this.fullName();
   },

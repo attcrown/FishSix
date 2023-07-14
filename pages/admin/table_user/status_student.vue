@@ -202,6 +202,9 @@ export default {
                                 const childData = snapshot.val();
                                 namestu = childData.firstName + "  " + childData.lastName;
                             })
+                            if(nametea == null || nametea == ''){
+                                    this.$router.push('/admin');
+                                }
                             // setTimeout(() => {
                                 item.push({
                                     name_student: namestu,

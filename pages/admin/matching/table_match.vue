@@ -204,6 +204,9 @@ export default {
                                     namestu = childData.firstName+' '+childData.lastName;
                                     phone_stu = childData.studentMobile;
                                 })
+                                if(phone_tea,nametea == null || phone_tea,nametea == ''){
+                                    this.$router.push('/admin');
+                                }
                                 // setTimeout(() => {
                                     item.push({
                                     name_student: namestu,
