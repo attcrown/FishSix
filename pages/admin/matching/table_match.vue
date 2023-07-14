@@ -205,7 +205,7 @@ export default {
                                     phone_stu = childData.studentMobile;
                                 })
                                 if(phone_tea,nametea == null || phone_tea,nametea == ''){
-                                    this.$router.push('/admin');
+                                    this.$router.push('/admin/table_teacher');
                                 }
                                 // setTimeout(() => {
                                     item.push({
