@@ -101,7 +101,7 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'ข้อมูลนักเรียน',
-          to: '/admin/register-student',
+          to: '/admin/student',
         },
         {
           icon: 'mdi-ab-testing',
