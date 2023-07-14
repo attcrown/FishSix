@@ -6,11 +6,14 @@
                     :search="search_table_student" class="elevation-1">
                     <template v-slot:top>
                         <v-toolbar flat style="background-color:rgba(230, 226, 12, 0.425);">
-                            <v-toolbar-title>Date Now</v-toolbar-title>
+                            <v-toolbar-title>
+                                <v-select :items="items" v-model="search_date" label="Search Date" 
+                                class="mt-4" @change="search_date_student()"></v-select>
+                            </v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <v-text-field class="me-10" v-model="search_table_student" append-icon="mdi-magnify"
-                                label="Search" single-line hide-details></v-text-field>
+                            <v-text-field class="" v-model="search_table_student" append-icon="mdi-magnify" label="Search"
+                                single-line hide-details></v-text-field>
                         </v-toolbar>
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -50,32 +53,41 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="name student" v-model="detail_user.name_student" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="name student" v-model="detail_user.name_student" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_student" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="phone number" v-model="detail_user.phone_student" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="name teacher" v-model="detail_user.name" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="name teacher" v-model="detail_user.name" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_teacher" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="phone number" v-model="detail_user.phone_teacher" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="สถานที่เรียน" v-model="detail_user.style" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="สถานที่เรียน" v-model="detail_user.style" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="รูปแบบการเรียน"  v-model="detail_user.class" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.class" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field label="เริ่มเรียน" v-model="detail_user.time_s" disabled class="font-weight-bold"></v-text-field>
+                                            <v-text-field label="เริ่มเรียน" v-model="detail_user.time_s" readonly
+                                                ></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field label="เลิกเรียน" v-model="detail_user.time_e" disabled class="font-weight-bold"></v-text-field>
-                                        </v-col>                                        
+                                            <v-text-field label="เลิกเรียน" v-model="detail_user.time_e" readonly
+                                                ></v-text-field>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                                 <small>*รายละเอียดการจองของลูกค้าที่สำเร็จแล้ว</small>
@@ -105,8 +117,10 @@
 export default {
     data: () => ({
         dialog_detail: false,
-        detail_user:[],
+        detail_user: [],
+        search_date: '',
         search_table_student: '',
+        items: ['Day', 'Week', 'Month' ,'All'],
         headers_student: [
             {
                 text: 'Name Student',
@@ -161,12 +175,12 @@ export default {
         detail_match(item) {
             this.dialog_detail = true;
             this.detail_user = item;
-            console.log(item);
+            // console.log(item);
         },
 
         search_date_student() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
@@ -174,39 +188,62 @@ export default {
                 let namestu = '';
                 let phone_stu = '';
                 let phone_tea = '';
+                let day = '';
                 const now = new Date();
+                const formattedDate = now.toISOString().split('T')[0];
+                let end = null;
+                let edit = '';
+                if (this.search_date == 'Day') {
+                    end = now;
+                } else if (this.search_date == 'Week') {                    
+                    edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
+                    end = new Date(edit);
+                } else if (this.search_date == 'Month') {
+                    // console.log(formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01');
+                    edit = formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01';
+                    end = new Date(edit);
+                }else if (this.search_date == 'All') {
+                    edit = (parseInt(formattedDate.substring(0, 4))+5) + formattedDate.substring(4,10);
+                    end = new Date(edit);
+                }else {
+                    end = now;
+                }
+                // console.log(end);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
+                        // console.log(new Date(date).getTime().toString().substring(0, 5), now.getTime().toString().substring(0, 5));
+                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
+                            new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
+                                db.ref(`user/${timedata.teacher}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     phone_tea = childData.mobile;
                                     nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
                                 })
-                                db.ref(`user/${key}`).on("value", (snapshot) => {
+                                db.ref(`user/${key}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     namestu = childData.firstName + "  " + childData.lastName;
                                     phone_stu = childData.studentMobile;
                                 })
                                 // setTimeout(() => {
-                                    item.push({
-                                        name_student: namestu,
-                                        name: nametea,
-                                        subject: timedata.subject,
-                                        date: date,
-                                        time_s: timedata.start,
-                                        time_e: timedata.stop,
-                                        style: timedata.style_subject,
-                                        status: timedata.status,
-                                        key_student: key,
-                                        key_teacher: timedata.teacher,
-                                        phone_student: phone_stu,
-                                        phone_teacher:phone_tea,
-                                    });
+                                item.push({
+                                    name_student: namestu,
+                                    name: nametea,
+                                    subject: timedata.subject,
+                                    date: date,
+                                    time_s: timedata.start,
+                                    time_e: timedata.stop,
+                                    style: timedata.style_subject,
+                                    status: timedata.status,
+                                    key_student: key,
+                                    key_teacher: timedata.teacher,
+                                    phone_student: phone_stu,
+                                    phone_teacher: phone_tea,
+                                    class: timedata.class,
+                                });
                                 // }, 100);
                             }
                         }

@@ -60,22 +60,22 @@
                                     <v-container>
                                         <v-row>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" v-model="editedItem.phone_teacher"
-                                                    label="Phone number teacher" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.phone_teacher"
+                                                    label="Phone number teacher" readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" v-model="editedItem.name"
-                                                    label="Name teacher" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.name"
+                                                    label="Name teacher" readonly></v-text-field>
                                             </v-col>
 
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" v-model="editedItem.phone_student"
-                                                    label="Phone number student" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.phone_student"
+                                                    label="Phone number student" readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field style="font-weight: bold;" color="black"
+                                                <v-text-field color="black"
                                                     v-model="editedItem.name_student" label="Name student"
-                                                    disabled></v-text-field>
+                                                    readonly></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>

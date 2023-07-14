@@ -188,7 +188,7 @@
 
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
-                                            :disabled="mode === 'edit'" style="font-weight: bold;"></v-select>
+                                            style="font-weight: bold;"></v-select>
                                     </v-col>
 
                                     <v-col cols="12" sm="6" :hidden="mode === 'save'">
@@ -219,7 +219,7 @@
                                 <v-row :hidden="mode === 'save'">
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
                                         <v-text-field v-model="save_detail.subject"
-                                            :disabled="save_detail.subject !== 'ทุกวิชา'"
+                                            :readonly="save_detail.subject !== 'ทุกวิชา'"
                                             style="font-weight: bold;"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
@@ -235,7 +235,7 @@
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key" style="font-weight: bold;"
-                                            disabled></v-autocomplete>
+                                            readonly></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value_student" :items="items_student"
@@ -244,11 +244,11 @@
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
-                                            :disabled="mode === 'edit'" style="font-weight: bold;"></v-select>
+                                            readonly style="font-weight: bold;"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
-                                            style="font-weight: bold;" disabled></v-select>
+                                            style="font-weight: bold;" readonly></v-select>
                                     </v-col>
 
                                     <v-col cols="12" sm="6">
@@ -572,7 +572,7 @@ export default {
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
-                        console.log('save', childData.invite);
+                        // console.log('save', childData.invite);
                         db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).update({
                             invite: parseInt(childData.invite) + 1,
                         })
@@ -771,7 +771,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -800,7 +800,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -829,7 +829,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -858,7 +858,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -887,7 +887,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -916,7 +916,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -945,7 +945,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -974,7 +974,7 @@ export default {
                                         });
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),
@@ -1004,7 +1004,7 @@ export default {
                                         // console.log(item);
                                         this.events.push(
                                             {
-                                                name: timedata.subject,
+                                                name: name_sub,
                                                 start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                     date.substring(8, 10), timedata.start.substring(0, 2),
                                                     timedata.start.substring(3, 5)),

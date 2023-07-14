@@ -199,7 +199,7 @@
                                     </v-col>
                                     <v-col cols="12" sm="4" v-if="mode == 'edit'">
                                         <v-text-field label="วิชาเปิดสอน" v-model="save_detail.subject"
-                                            disabled></v-text-field>
+                                            readonly></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="เริ่มสอน" v-model="picker_start"
