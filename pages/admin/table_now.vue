@@ -214,7 +214,7 @@ export default {
                     for (const date in keydata) {
                         // console.log(new Date(date).getTime().toString().substring(0, 5), now.getTime().toString().substring(0, 5));
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
-                            new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
+                            new Date(date).getTime().toString().substring(0, 5) < end.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
