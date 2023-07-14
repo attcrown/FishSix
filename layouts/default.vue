@@ -96,7 +96,7 @@ export default {
         {
           icon: 'mdi-chart-bubble',
           title: 'ข้อมูลผู้สอน',
-          to: '/admin/register-teacher',
+          to: '/admin/teacher',
         },
         {
           icon: 'mdi-chart-bubble',
