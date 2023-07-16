@@ -189,7 +189,7 @@ export default {
                 let phone_stu = '';
                 let phone_tea = '';
                 let day = '';
-                const now = new Date('2023-07-17');
+                const now = new Date();
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
                 let edit = '';
