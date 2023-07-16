@@ -189,7 +189,7 @@ export default {
                 let phone_stu = '';
                 let phone_tea = '';
                 let day = '';
-                const now = new Date();
+                const now = new Date('2023-07-17');
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
                 let edit = '';
@@ -212,9 +212,10 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        // console.log(new Date(date).getTime().toString().substring(0, 5), now.getTime().toString().substring(0, 5));
+                        // console.log('Start',new Date(date).getTime().toString().substring(0, 5), now.getTime().toString().substring(0, 5));
+                        // console.log('End',new Date(date).getTime().toString().substring(0, 5) ,end.getTime().toString().substring(0, 5));
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
-                            new Date(date).getTime().toString().substring(0, 5) < end.getTime().toString().substring(0, 5)) {
+                            new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
