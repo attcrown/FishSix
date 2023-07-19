@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container text-center mb-3" style="background-color:rgba(189, 186, 186, 0.521)">
-            <div class="hide-on-mobile mb-3 m-5">
+            <div class="hide-on-mobile mb-3">
                 <v-row class="fill-height">
                     <v-col cols="12" sm="12">
                         <v-sheet height="64">
@@ -87,7 +87,7 @@
                 </v-row>
             </div>
 
-            <v-card class="m-5">
+            <v-card class="">
                 <v-container fluid>
                     <v-row align="center">
                         <v-col cols="12">
@@ -115,7 +115,8 @@
                         </v-col>
 
                         <v-col cols="12">
-                            <v-data-table :headers="headers" :items="desserts" sort-by="date" class="elevation-1">
+                            <v-data-table :headers="headers" :items="desserts" :search="search_table" sort-by="date"
+                                class="elevation-1">
                                 <!--:search="search"-->
                                 <template v-slot:top>
                                     <v-toolbar flat style="background-color:rgba(37, 110, 8, 0.425);">
@@ -124,7 +125,8 @@
                                         <v-spacer></v-spacer>
                                         <!-- <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
                                             hide-details></v-text-field> -->
-
+                                        <v-text-field class="me-10" v-model="search_table" append-icon="mdi-magnify"
+                                            label="Search" single-line hide-details></v-text-field>
                                         <v-dialog v-model="dialogDelete" max-width="500px">
                                             <template v-slot:activator="{}">
                                                 <v-btn color="primary" dark class="mb-2 hide-on-mobile"
@@ -313,6 +315,7 @@
 export default {
     data: () => ({
         check_tea: true,
+        search_table: '',
         search: '',
         mode: '',
         delday: '',
@@ -351,7 +354,7 @@ export default {
             { text: 'Style', value: 'style' },
             { text: 'subject', value: 'subject' },
             { text: 'class', value: 'class' },
-            { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' },
+            // { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' },
             { text: 'จำนวนคนเปิดรับ', value: 'sum_people', align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false },
         ],
@@ -558,10 +561,12 @@ export default {
                 let name_sub = '';
                 for (const key in childData) {
                     const keydata = childData[key];
+                    //ข้อมูลครู
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
                         nametea = childData;
                     })
+                    //ลูป
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
@@ -572,17 +577,17 @@ export default {
                             })
                             if (name_sub == null || name_sub == '') {
                                 this.$router.push('/admin');
-                            }                            
+                            }
                             if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -603,14 +608,14 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หาครู');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -631,14 +636,14 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -659,14 +664,14 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -687,14 +692,14 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -715,14 +720,14 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -743,14 +748,14 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });
@@ -770,14 +775,14 @@ export default {
                                 );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
                                 item.push({
-                                    name: nametea.firstName+" "+nametea.lastName,
+                                    name: nametea.firstName + " " + nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
                                     style: timedata.style_subject,
                                     class: timedata.class,
                                     subject: name_sub,
-                                    sum_people: timedata.sum_people,
+                                    sum_people: timedata.invite + "/" + timedata.sum_people,
                                     invite: timedata.invite,
                                     key: key,
                                 });

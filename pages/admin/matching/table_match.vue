@@ -1,5 +1,5 @@
 <template>
-    <div class="m-5">
+    <div class="">
         <template>
             <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" class="elevation-1 mt-5">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->

@@ -1,13 +1,9 @@
 <template>
-    
     <div class="container">
-        
-        
-        <div >
-            
+        <div>
             <list class="mt-3"></list>
         </div>
-        
+
     </div>
 </template>
 <script>
@@ -25,7 +21,7 @@ export default {
     {
         register,
         list,
-        
+
     },
     computed: {
 
