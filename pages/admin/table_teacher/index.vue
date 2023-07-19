@@ -554,13 +554,13 @@ export default {
                 this.arrayEvents = [];
                 this.events = [];
                 let item = [];
-                let nametea = '';
+                let nametea = [];
                 let name_sub = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
-                        nametea = childData.firstName + " " + childData.lastName;
+                        nametea = childData;
                     })
                     for (const date in keydata) {
                         const datedata = keydata[date];
@@ -572,10 +572,10 @@ export default {
                             })
                             if (name_sub == null || name_sub == '') {
                                 this.$router.push('/admin');
-                            }
+                            }                            
                             if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -603,7 +603,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หาครู');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -631,7 +631,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -659,7 +659,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -687,7 +687,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -715,7 +715,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -743,7 +743,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -770,7 +770,7 @@ export default {
                                 );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
                                 item.push({
-                                    name: nametea,
+                                    name: nametea.firstName+" "+nametea.lastName,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -781,6 +781,7 @@ export default {
                                     invite: timedata.invite,
                                     key: key,
                                 });
+                                console.log(item);
                                 this.arrayEvents.push(date);
                                 this.events.push(
                                     {

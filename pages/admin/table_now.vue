@@ -189,15 +189,23 @@ export default {
                 let phone_stu = '';
                 let phone_tea = '';
                 let day = '';
-                const now = new Date();
+                let now = new Date();
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
                 let edit = '';
                 if (this.search_date == 'Day') {
                     end = now;
                 } else if (this.search_date == 'Week') {
-                    edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
-                    end = new Date(edit);
+                    if((parseInt(formattedDate.substring(8, 10)) + 7) >= 30){
+                        edit = formattedDate.substring(0, 8) + 30;
+                        end = new Date(edit); 
+                    }else if((parseInt(formattedDate.substring(8, 10)) + 7) >= 31){
+                        edit = formattedDate.substring(0, 8) + 31;
+                        end = new Date(edit); 
+                    }else{
+                        edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
+                        end = new Date(edit); 
+                    }                    
                 } else if (this.search_date == 'Month') {
                     // console.log(formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01');
                     edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
@@ -205,6 +213,7 @@ export default {
                 } else if (this.search_date == 'All') {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
+                    now = new Date('2022-01-01');
                 } else {
                     end = now;
                 }

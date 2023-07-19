@@ -270,7 +270,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_detail = false">
+                            <v-btn color="blue darken-1" text @click="clear_item(), dialog_detail = false">
                                 Close
                             </v-btn>
                             <v-btn color="blue darken-1" text @click="save_detail_data()">
@@ -298,7 +298,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_time = false">
+                            <v-btn color="blue darken-1" text @click=" dialog_time = false">
                                 Close
                             </v-btn>
                         </v-card-actions>
@@ -323,7 +323,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_time_stop = false">
+                            <v-btn color="blue darken-1" text @click=" dialog_time_stop = false">
                                 Close
                             </v-btn>
                         </v-card-actions>
@@ -597,6 +597,7 @@ export default {
         },
         clear_item() {
             this.value = null;
+            this.value_student = null;
             this.hour_tea = 0;
             this.min_tea = 0;
             this.save_detail = [];
