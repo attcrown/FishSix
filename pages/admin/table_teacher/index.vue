@@ -343,7 +343,7 @@ export default {
         dialogDelete: false,
         headers: [
             {
-                text: 'Name Teacher',
+                text: 'ชื่อเล่น-รหัสครู',
                 align: 'start',
                 sortable: false,
                 value: 'name',
@@ -527,7 +527,7 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].firstName + ' ' + childData[key].lastName });
+                        item.push({ key: key, name: childData[key].nickname + ' ' + childData[key].name });
                     }
                 }
                 this.items = item;
@@ -580,7 +580,7 @@ export default {
                             }
                             if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -608,7 +608,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หาครู');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -636,7 +636,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -664,7 +664,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -692,7 +692,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -720,7 +720,7 @@ export default {
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -748,7 +748,7 @@ export default {
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
                                 // console.log('หารูปแบบ');
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,
@@ -775,7 +775,7 @@ export default {
                                 );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
                                 item.push({
-                                    name: nametea.firstName + " " + nametea.lastName,
+                                    name: nametea.nickname + " " + nametea.name,
                                     date: date,
                                     time_s: timedata.start,
                                     time_e: timedata.stop,

@@ -625,7 +625,7 @@ export default {
                             this.check_sub(this.save_detail.subject, key) &&
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
-                            item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].name });
                             console.log('items_select_tea', item);
                         }
                     }
@@ -634,7 +634,7 @@ export default {
                 } else {
                     for (const key in childData) {
                         if (childData[key].status == 'teacher') {
-                            item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].name });
                         }
                     }
                     this.items = item;
@@ -740,7 +740,7 @@ export default {
                     const keydata = childData[key];
                     db.ref(`user/${key}`).on("value", (snapshot) => {
                         const childData = snapshot.val();
-                        nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
+                        nametea = childData;
                     })
                     for (const date in keydata) {
                         // console.log(now.getTime().toString().substring(0, 5), new Date(date).getTime().toString().substring(0, 5));
@@ -760,7 +760,7 @@ export default {
                                         this.search_class == timedata.class) {
                                         // console.log('หาทั้งสอง');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -789,7 +789,7 @@ export default {
                                         this.search_class == null) {
                                         // console.log('หาครู');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -818,7 +818,7 @@ export default {
                                         this.search_class == null) {
                                         // console.log('หารูปแบบ');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -847,7 +847,7 @@ export default {
                                         this.search_class == timedata.class) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -876,7 +876,7 @@ export default {
                                         this.search_class == null) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -905,7 +905,7 @@ export default {
                                         this.search_class == timedata.class) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -934,7 +934,7 @@ export default {
                                         this.search_class == timedata.class) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -963,7 +963,7 @@ export default {
                                         this.search_class == timedata.class) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
@@ -992,7 +992,7 @@ export default {
                                         this.search_class == null) {
                                         // console.log('หาหมด');
                                         item.push({
-                                            name: nametea,
+                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
                                             date: date,
                                             class: timedata.class,
                                             time_s: timedata.start,
