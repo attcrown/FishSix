@@ -1,230 +1,311 @@
 <template>
     <div class="container-fluid">
         <pageLoader v-if="isLoading"></pageLoader>
-        <v-btn to="/admin/teacher" router exact>กลับ</v-btn>
+
 
         <v-row v-if="!isLoading">
             <div class="col-sm-12">
-                <div class="d-flex justify-center align-center">
-                    <v-card class="pa-1 text-center rounded-5 m-2" style="background: #F5F6F7 ;">
-                        <v-card-title> เพิ่มรายละเอียดของผู้สอน</v-card-title>
-                        <v-divider></v-divider>
-                        <form ref="registerForm">
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field v-model="name" :error-messages="nameErrors" counter label="Username"
-                                        required @input="$v.name.$touch()" @blur="$v.name.$touch()">
-                                        <template v-slot:append>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                <div style="display: flex; justify-content: space-between;">
+                    <h1 class="font-weight-bold">ข้อมูลครู</h1>
+                    <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
+                </div>
+                <div class="col-sm-12">
+                    <form ref="registerForms">
+
+                        <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                            class="px-10  mt-5">
+                            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                                <div class="pl-2">ข้อมูลทั่วไป</div>
+                            </v-card-title>
+
+                            <v-row class="mt-0" align="center">
+                                <v-col cols="2" sm="2" class="pl-10">
+                                    <div>
+                                        <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
+                                            <img :src="profilePic" alt="รูปโปรไฟล์">
+                                        </v-avatar>
+                                        <label class="upload-label mt-3" for="upload-file"> เพิ่มรูปโปรไฟล์
+                                            <input type="file" id="upload-file" hidden @change="uploadFile" />
+                                        </label>
+                                    </div>
+                                </v-col>
+                                <v-col cols="10">
+                                    <v-row>
+                                        <v-col cols="6">
+                                            <v-text-field v-model="name" :error-messages="nameErrors" counter
+                                                label="Username" required @input="$v.name.$touch()"
+                                                @blur="$v.name.$touch()">
+                                                <template v-slot:append>
+                                                    <v-tooltip bottom>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                        </template>
+                                                        <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
+                                                            <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                    </v-tooltip>
                                                 </template>
-                                                <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
-                                                    <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
-                                            </v-tooltip>
-                                        </template>
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field v-model="password" :error-messages="passErrors" :counter="20"
-                                        label="รหัสผ่าน" required @input="$v.password.$touch()"
-                                        @blur="$v.password.$touch()">
-                                        <template v-slot:append>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field v-model="password" :error-messages="passErrors" :counter="20"
+                                                label="รหัสผ่าน" required @input="$v.password.$touch()"
+                                                @blur="$v.password.$touch()">
+                                                <template v-slot:append>
+                                                    <v-tooltip bottom>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                        </template>
+                                                        <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
+                                                            <br>โดยเป็นตัวพิมพ์เล็กทั้งหมด</span>
+                                                    </v-tooltip>
                                                 </template>
-                                                <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
-                                                    <br>โดยเป็นตัวพิมพ์เล็กทั้งหมด</span>
-                                            </v-tooltip>
-                                        </template>
-                                    </v-text-field>
+                                            </v-text-field>
 
-                                </v-col>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-text-field name="firstName" v-model="firstName" label="ชื่อ"
+                                                :error-messages="firstNameErrors" required @input="$v.firstName.$touch()"
+                                                @blur="$v.firstName.$touch()">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-text-field name="lastName" v-model="lastName"
+                                                :error-messages="lastNameErrors" label="นามสกุล" required
+                                                @input="$v.lastName.$touch()" @blur="$v.lastName.$touch()">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
 
-                                <v-col cols="4">
-                                    <v-text-field name="firstName" v-model="firstName" label="ชื่อ"
-                                        :error-messages="firstNameErrors" required @input="$v.firstName.$touch()"
-                                        @blur="$v.firstName.$touch()">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="lastName" v-model="lastName" :error-messages="lastNameErrors"
-                                        label="นามสกุล" required @input="$v.lastName.$touch()" @blur="$v.lastName.$touch()">
-                                    </v-text-field>
-                                </v-col>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-text-field name="nickname" v-model="nickname" label="ชื่อเล่น">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="5" class="py-0">
 
-                                <v-col cols="4">
-                                    <v-text-field name="nickname" v-model="nickname" label="ชื่อเล่น">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field v-model="email" :error-messages="emailErrors" label="Email" required
-                                        @input="$v.email.$touch()" @blur="$v.email.$touch()">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4"> <v-text-field v-model="mobile" :error-messages="mobileErrors"
-                                        label="เบอร์โทรศัพท์" required @input="$v.mobile.$touch()" counter
-                                        @blur="$v.mobile.$touch()">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-select v-model="gender" :items="genders" label="เพศ"></v-select>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field v-model="currJob" label="อาชีพปัจจุบัน">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field v-model="idCardNumber" :error-messages="idCardNumberErrors" counter
-                                        label="หมายเลขบัตรประชาชน" required @input="$v.idCardNumber.$touch()"
-                                        @blur="$v.idCardNumber.$touch()">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy"
-                                        accept=".pdf,image/*"></v-file-input>
-                                </v-col>
-
-                                <v-col cols="12" class="text-left">
-                                    <v-divider></v-divider>
-                                    ที่อยู่ตามบัตรประชาชน
-
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="houseNo" label="บ้านเลขที่"
-                                        v-model="address.houseNo"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="tambon" label="ตำบล/แขวง" v-model="address.tambon"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="amphoe" label="อำเภอ/เขต" v-model="address.amphoe"></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-autocomplete name="province" v-model="address.province" :items="provinceOptions"
-                                        autocomplete label="จังหวัด"></v-autocomplete>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field name="postal" label="รหัสไปรษณีย์" required :rules="postalRules"
-                                        v-model="address.postal"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" class="text-left"><v-divider></v-divider>
-                                    ที่อยู่ปัจจุบัน
-                                    <v-checkbox label="ที่อยู่ตามบัตรประชาชน " @click="updateCurrAddress()"></v-checkbox>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="curr_houseNo" label="บ้านเลขที่"
-                                        v-model="currAddress.houseNo"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="curr_tambon" label="ตำบล/แขวง"
-                                        v-model="currAddress.tambon"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="curr_amphoe" label="อำเภอ/เขต"
-                                        v-model="currAddress.amphoe"></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-autocomplete name="curr_province" v-model="currAddress.province"
-                                        :items="provinceOptions" autocomplete label="จังหวัด"></v-autocomplete>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field name="curr_postal" label="รหัสไปรษณีย์" required :rules="postalRules"
-                                        v-model="currAddress.postal"></v-text-field>
-                                </v-col>
-
-                                <v-col cols="12" class="text-left">
-                                    <v-divider></v-divider>
-                                    ข้อมูลการจ้างงาน
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-select v-model="contract" :items="contracts" label="สัญญาจ้าง"
-                                        :error-messages="contractErrors" @change="$v.contract.$touch()"
-                                        @blur="$v.contract.$touch()" required></v-select>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-select v-model="workType" :items="workTypes" label="ประเภทการทำงาน"
-                                        :error-messages="workTypeErrors" @change="$v.workType.$touch()"
-                                        @blur="$v.workType.$touch()" required></v-select>
-                                </v-col>
-                                <v-col cols="4">
-
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
-                                        transition="scale-transition" offset-y min-width="auto">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
-                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" :rules="startDateRules"
-                                                required v-on="on"></v-text-field>
-                                        </template>
-                                        <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
-                                            min="1950-01-01" @change="save"></v-date-picker>
-                                    </v-menu>
-
-                                </v-col>
-                                <v-col cols="3">
-                                    <v-text-field name="rate" type="number" label="เรทค่าสอน/ชั่วโมง" min="0" max="99999"
-                                        maxlength="5" oninput="validity.valid||(value='');" :error-messages="rateErrors"
-                                        @change="$v.rate.$touch()" @blur="$v.rate.$touch()" v-model="rate"></v-text-field>
-                                </v-col>
-
-                                <v-col cols="12" class="text-left">
-                                    <v-divider></v-divider>
-                                    ข้อมูลการศึกษา
-                                </v-col>
-                                <v-col cols="3">
-                                    <v-text-field name="university" label="มหาวิทยาลัย" v-model="university"></v-text-field>
-                                </v-col>
-
-                                <v-col cols="3">
-                                    <v-text-field name="faculty" label="คณะ" v-model="faculty"></v-text-field>
-                                </v-col>
-
-                                <v-col cols="3">
-                                    <v-text-field name="major" label="สาขา" v-model="major"></v-text-field>
-                                </v-col>
-
-                                <div class="col-md-12">
-                                    <label>
-                                        <span class="text-danger">*</span>
-                                        <span>วิชาที่สอนได้</span>
-                                    </label>
-                                    <table class="table table-sm">
-                                        <tbody>
-                                            <tr v-for="subject in subjects">
-                                                <td> {{ subject.name }}</td>
-                                                <td v-for="(level, index) in subject.level" :key="index">
-                                                    <v-checkbox class="m-0"
-                                                        @click="updateSelectedSubjects(subject.key, level, subject.name)"
-                                                        :label="level"></v-checkbox>
-                                                </td>
-
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-select v-model="gender" :items="genders" label="เพศ"></v-select>
+                                        </v-col>
 
 
-                                </div>
+                                    </v-row>
+                                </v-col>
+                                <v-col cols="12">
+                                    <div class="text-center px-4 py-0">
+                                        <hr class=" solid">
+                                    </div>
+
+                                </v-col>
+                                <v-row class="px-4">
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field v-model="mobile" :error-messages="mobileErrors" label="เบอร์โทรศัพท์"
+                                            required @input="$v.mobile.$touch()" counter @blur="$v.mobile.$touch()">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field v-model="email" :error-messages="emailErrors" label="Email" required
+                                            @input="$v.email.$touch()" @blur="$v.email.$touch()">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+
+                                    </v-col>
+                                    <v-col cols="4" class="py-0 pb-5">
+                                        <v-text-field v-model="idCardNumber" :error-messages="idCardNumberErrors" counter
+                                            label="หมายเลขบัตรประชาชน" required @input="$v.idCardNumber.$touch()"
+                                            @blur="$v.idCardNumber.$touch()">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy"
+                                            accept=".pdf,image/*"></v-file-input>
+                                    </v-col>
+
+                                </v-row>
 
                             </v-row>
-                            <!-- <v-checkbox v-model="checkbox" :error-messages="checkboxErrors" label="Confirm " required
-                                @change="$v.checkbox.$touch()" @blur="$v.checkbox.$touch()"></v-checkbox> -->
 
-                            <v-btn class="me-4" color="green " outlined @click="submit" :loading="isSubmiting">
+                        </v-card>
+
+
+                        <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                            class="px-10 mt-7">
+                            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                                <div class="">ข้อมูลที่อยู่</div>
+
+                            </v-card-title>
+                            <v-card-text>
+                                <v-row>
+                                    <p>&#x2022; ที่อยู่ตามบัตรประชาชน</p>
+                                    <v-col cols="4">
+                                        <v-text-field class="black-label" name="houseNo" label="บ้านเลขที่"
+                                            v-model="address.houseNo"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field class="black-label" name="tambon" label="ตำบล/แขวง"
+                                            v-model="address.tambon"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field class="black-label" name="amphoe" label="อำเภอ/เขต"
+                                            v-model="address.amphoe"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-autocomplete class="black-label" name="province" v-model="address.province"
+                                            :items="provinceOptions" autocomplete label="จังหวัด"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field class="black-label" name="postal" label="รหัสไปรษณีย์" required
+                                            :rules="postalRules" v-model="address.postal"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <div class="text-center ">
+                                            <hr class=" solid">
+                                        </div>
+
+                                    </v-col>
+                                    <v-row class="px-4">
+                                        <v-col cols="12" class="text-left">
+                                            ที่อยู่ปัจจุบัน
+                                            <v-checkbox label="ที่อยู่ตามบัตรประชาชน "
+                                                @click="updateCurrAddress()"></v-checkbox>
+                                        </v-col>
+
+                                        <v-col cols="4">
+                                            <v-text-field class="black-label" name="curr_houseNo" label="บ้านเลขที่"
+                                                v-model="currAddress.houseNo"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field class="black-label" name="curr_tambon" label="ตำบล/แขวง"
+                                                v-model="currAddress.tambon"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field class="black-label" name="curr_amphoe" label="อำเภอ/เขต"
+                                                v-model="currAddress.amphoe"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+
+                                            <v-autocomplete class="black-label" name="curr_province"
+                                                v-model="currAddress.province" :items="provinceOptions" autocomplete
+                                                label="จังหวัด"></v-autocomplete>
+
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field class="black-label" name="curr_postal" label="รหัสไปรษณีย์"
+                                                :rules="postalRules" v-model="currAddress.postal"></v-text-field>
+                                        </v-col>
+
+                                    </v-row>
+                                </v-row>
+
+
+
+                            </v-card-text>
+
+                        </v-card>
+
+                        <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                            class="px-10 mt-5">
+                            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                                <div class="">ข้อมูลสัญญาจ้าง</div>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-row>
+                                    <v-col cols="4">
+                                        <v-select v-model="contract" :items="contracts" label="สัญญาจ้าง" multiple
+                                            :error-messages="contractErrors" @change="$v.contract.$touch()"
+                                            @blur="$v.contract.$touch()" required></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="workType" :items="workTypes" label="ประเภทการทำงาน"
+                                            :error-messages="workTypeErrors" @change="$v.workType.$touch()"
+                                            @blur="$v.workType.$touch()" required></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="classType" :items="classTypes" label="ประเภทคลาส" multiple
+                                            :error-messages="classTypeErrors" @change="$v.classType.$touch()"
+                                            @blur="$v.classType.$touch()" required></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                                            transition="scale-transition" offset-y min-width="auto">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
+                                                    prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                    :rules="startDateRules" required v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
+                                                min="1950-01-01" @change="save"></v-date-picker>
+                                        </v-menu>
+
+                                    </v-col>
+                                    <v-col cols="3">
+                                        <v-text-field name="rate" type="number" label="เรทค่าสอน/ชั่วโมง" min="0"
+                                            max="99999" maxlength="5" oninput="validity.valid||(value='');"
+                                            :error-messages="rateErrors" @change="$v.rate.$touch()" @blur="$v.rate.$touch()"
+                                            v-model="rate"></v-text-field>
+                                    </v-col>
+
+                                </v-row>
+                            </v-card-text>
+                        </v-card>
+
+
+                        <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                            class="px-10 mt-5">
+                            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                                <div class="">ข้อมูลการศึกษา</div>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-row>
+                                    <v-col cols="3">
+                                        <v-text-field name="university" label="มหาวิทยาลัย"
+                                            v-model="university"></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="3">
+                                        <v-text-field name="faculty" label="คณะ" v-model="faculty"></v-text-field>
+                                    </v-col>
+
+                                    <v-col cols="3">
+                                        <v-text-field name="major" label="สาขา" v-model="major"></v-text-field>
+                                    </v-col>
+
+                                    <div class="col-md-12">
+                                        <label>
+                                            <span class="text-danger">*</span>
+                                            <span>วิชาที่สอนได้</span>
+                                        </label>
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                <tr v-for="subject in subjects">
+                                                    <td> {{ subject.name }}</td>
+                                                    <td v-for="(level, index) in subject.level" :key="index">
+                                                        <v-checkbox class="m-0"
+                                                            @click="updateSelectedSubjects(subject.key, level, subject.name)"
+                                                            :label="level"></v-checkbox>
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+
+                                </v-row>
+                            </v-card-text>
+                        </v-card>
+                        <div class="d-flex justify-center align-center mt-5"> <v-btn class="me-4" color="green " outlined
+                                @click="submit" :loading="isSubmitting">
                                 <v-icon class="me-3">mdi-content-save-settings-outline</v-icon>
                                 บันทึก
-                            </v-btn>
+                            </v-btn></div>
 
-                            <!-- <v-btn color="deep-orange darken-4" @click="clear">
-                                <v-icon class="me-3">mdi-backspace-reverse</v-icon> clear
-                            </v-btn> -->
-                        </form>
-
-                    </v-card>
+                    </form>
                 </div>
+
 
             </div>
         </v-row>
@@ -270,13 +351,14 @@ export default {
             date: null,
             menu: false,
             isLoading: true,
-            isSubmiting: false,
+            isSubmitting: false,
             isAlreadySubmit: false,
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
             //register field
             status: "teacher",
+            profilePic: 'https://cdn.vuetifyjs.com/images/john.jpg',
             name: null,
             password: null,
             firstName: null,
@@ -304,6 +386,7 @@ export default {
             idCardCopy: null,
             contract: null,
             workType: null,
+            classType: null,
             startDate: null,
             rate: null,
             university: null,
@@ -336,6 +419,11 @@ export default {
             workTypes: [
                 'Full Time',
                 'Part Time',
+            ],
+
+            classTypes: [
+                'Flip class',
+                'Private',
             ],
 
             subjects: [],
@@ -434,6 +522,7 @@ export default {
         postal: { required, numeric },
         contract: { required },
         workType: { required },
+        classType: { required },
         startDate: { required },
         rate: { required },
 
@@ -519,6 +608,13 @@ export default {
             !this.$v.workType.required && errors.push('กรุณาเลือกประเภทการทำงาน')
             return errors
         },
+
+        classTypeErrors() {
+            const errors = []
+            if (!this.$v.classType.$dirty) return errors
+            !this.$v.classType.required && errors.push('กรุณาเลือกประเภทคลาส')
+            return errors
+        },
         rateErrors() {
             const errors = []
             if (!this.$v.rate.$dirty) return errors
@@ -571,10 +667,18 @@ export default {
                     this.selectedSubjects.splice(index, 1);
                 }
             }
-            console.log(this.selectedSubjects);
+            // console.log(this.selectedSubjects);
 
         },
+        handleFileUpload() {
+            this.$refs.fileInput.click();
 
+        },
+        uploadFile(e) {
+           this.profilePic = e.target.files[0];
+    
+         
+        },
         save(date) {
             this.$refs.menu.save(date)
         },
@@ -603,12 +707,13 @@ export default {
         async registerTeacher() {
             const db = this.$fireModule.database();
             const keyuser = this.encode(this.name);
-            this.isSubmiting = true;
+            this.isSubmitting = true;
 
             await db.ref(`user/${this.encode(this.name)}/`).set({
                 status: this.status,
                 name: this.name,
                 password: this.password,
+                profilePic: this.profilePic,
                 firstName: this.firstName,
                 lastName: this.lastName,
                 nickname: this.nickname,
@@ -642,6 +747,30 @@ export default {
                     this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
                 }
             }
+            if (this.profilePic) {
+                this.isSubmitting = true;
+
+                const storageRef = this.$fireModule.storage().ref();
+                const uploadTask = storageRef.child(`user/${this.encode(this.name)}/profilePic.jpg`).put(this.profilePic);
+
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                  
+                    },
+                    (error) => {
+                        console.error('Error uploading file:', error);
+                        this.isSubmitting = false;
+                    },
+                    () => {
+                       
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            this.profilePic = downloadURL; 
+                            this.isSubmitting = false;
+                        });
+                    }
+                );
+            }
 
             for (let subject of this.selectedSubjects) {
 
@@ -651,7 +780,7 @@ export default {
 
                 })
             }
-            this.isSubmiting = false;
+            this.isSubmitting = false;
             this.isAlreadySubmit = true;
         },
 
@@ -701,3 +830,17 @@ export default {
     },
 }
 </script>
+
+<style>
+.upload-label {
+    border-radius: 10px;
+border: 1px solid var(--brown-brown-1, #322E2B);
+color: var(--write-1, #F8F9FB);
+background: var(--brown-brown-1, #322E2B);
+display: flex;
+padding: 6px 12px;
+justify-content: center;
+align-items: center;
+gap: 12px;
+align-self: stretch;
+  }</style>
