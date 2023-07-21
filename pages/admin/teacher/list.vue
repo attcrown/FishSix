@@ -93,13 +93,12 @@ export default {
             editDetail: '',
             dialogDetail: false,
             headers: [
-              
+            { text: 'รหัสครู', value: 'teacher.teacherId', filterable: true, },
+            { text: 'ชื่อเล่น', value: 'teacher.nickname', filterable: true, },
                 { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'teacher.lastName' },
-                { text: 'ชื่อเล่น', value: 'teacher.nickname' },
                 { text: 'สถานศึกษา', value: 'teacher.university' },
                 { text: 'เบอร์โทรศัพท์', value: 'teacher.mobile' },
-
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
@@ -134,8 +133,8 @@ export default {
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
-                            //แก้ตรงนี้ให้ดึงมาแค่คอลัมที่แสดงพอ รอดีไซน์
-            
+        
+                            teacherId: childData[key].teacherId || null,
                             firstName: childData[key].firstName || null,
                             lastName: childData[key].lastName || null,
                             nickname: childData[key].nickname || null,

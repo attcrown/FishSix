@@ -777,4 +777,5 @@ export default {
     color: rgb(0, 0, 0);
     opacity: 1;
     font-weight: 500;
-}</style>
+}
+</style>

@@ -24,22 +24,42 @@
                         </v-card-title>
                         <form ref="detailForm">
                             <v-row class="mt-0" align="center">
-                                <v-col cols="2" sm="2" class="pl-10">
+                                <v-col cols="3" sm="3" class="pl-10">
                                     <div>
-                                        <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
-                                            <img :src="profilePic" alt="รูปโปรไฟล์">
+                                        <v-avatar style="max-width: 350px; width: 100%; height: 100%;max-height: 350px;">
+                                            <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์">
+                                            <v-icon style=" font-size: 100px;" v-if="!profilePic" dark>
+                                                mdi-account-circle
+                                            </v-icon>
                                         </v-avatar>
+
+
                                     </div>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="9">
                                     <v-row>
+                                        <v-col cols="3">
+                                            <v-text-field v-model="teacherId" counter label="รหัสครู (ไม่จำเป็นต้องกรอก)">
+                                                <template v-slot:append>
+                                                    <v-tooltip bottom>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                        </template>
+                                                        <span>FS ตามด้วยเลข 4 หลัก
+                                                            <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                    </v-tooltip>
+                                                </template>
+
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="9"></v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
                                                 required></v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName"
+                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName"
                                                 :readonly="!isEditingDetail" :rules="lastnameRules" required></v-text-field>
                                         </v-col>
                                         <v-col cols="4" class="py-0">
@@ -81,7 +101,7 @@
                                     <v-col cols="4">
                                         <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
                                             :rules="idCardRules" :counter="isEditingDetail" :readonly="!isEditingDetail"
-                                            required></v-text-field>
+                                            ></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
                                         <label>สำเนาบัตรประชาชน</label><br>
@@ -200,12 +220,11 @@
                         <v-card-text>
                             <v-form ref="contractFrom">
                                 <v-row>
-
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
                                             :readonly="!isEditingContract" v-model="contract"></v-text-field>
-                                        <v-select v-if="isEditingContract" v-model="contract" :items="contracts"
-                                            label="สัญญาจ้าง" required></v-select>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="contract"
+                                            :items="contracts" label="สัญญาจ้าง" multiple></v-select>
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="workType" label="ประเภทการทำงาน"
@@ -214,7 +233,10 @@
                                             label="ประเภทการทำงาน" required></v-select>
                                     </v-col>
                                     <v-col cols="4">
-
+                                        <v-text-field v-if="!isEditingContract" name="classType" label="ประเภทคลาส"
+                                            :readonly="!isEditingContract" v-model="classType"></v-text-field>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classType" :items="classTypes"
+                                            label="ประเภทคลาส" multiple ></v-select>
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
@@ -238,7 +260,12 @@
                                             label="เรทค่าสอน/ชั่วโมง" min="0" max="99999" maxlength="5" :rules="rateRules"
                                             oninput="validity.valid||(value='');" v-model="rate"></v-text-field>
                                     </v-col>
-
+                                    <v-col cols="4">
+                                        <v-text-field v-if="!isEditingContract" name="classLocation" v-model="classLocation"
+                                            :readonly="!isEditingContract" label="สาขาที่สามารถสอนได้"></v-text-field>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation" :items="classLocations"
+                                            label="สาขาที่สามารถสอนได้" multiple></v-select>
+                                    </v-col>
 
                                 </v-row>
 
@@ -323,6 +350,7 @@ export default {
         return {
             //status
             isLoading: true,
+            userId: null,
             teacherId: null,
             isEditingDetail: false,
             isEditingAddress: false,
@@ -330,7 +358,7 @@ export default {
             isEditingEducation: false,
 
             //data
-            profilePic: 'null',
+            profilePic: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -356,6 +384,8 @@ export default {
             idCardCopy: null,
             contract: null,
             workType: null,
+            classType:null,
+            classLocation:null, 
             startDate: null,
             rate: null,
             university: null,
@@ -377,9 +407,26 @@ export default {
                 'ครูออนไลน์',
 
             ],
+
             workTypes: [
                 'Full Time',
                 'Part Time',
+            ],
+            classTypes: [
+                'Flip class',
+                'Private',
+            ],
+            classLocations: [
+                'งามวงศ์วาน',
+                'บางกะปิ',
+                'สยาม',
+                'พระราม 2',
+                'ศาลายา',
+                'ปิ่นเกล้า',
+                'ชลบุรี',
+                'รามอินทรา',
+                'บางนา',
+                'รังสิต',
             ],
 
             provinceOptions: [
@@ -514,7 +561,7 @@ export default {
     },
     mounted() {
         const value = this.$route.query.teacherId;
-        this.teacherId = value;
+        this.userId = value;
         this.readdata();
         this.fetchData();
         this.readSubject();
@@ -603,9 +650,10 @@ export default {
         async readdata() {
 
             const db = this.$fireModule.database();
-            await db.ref(`user/${this.teacherId}`).on("value", (snapshot) => {
+            await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
-                this.profilePic = childData.profilePic || 'https://cdn.vuetifyjs.com/images/john.jpg';
+                this.profilePic = childData.profilePic || null;
+                this.teacherId = childData.teacherId || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.nickname = childData.nickname || null;
@@ -613,6 +661,18 @@ export default {
                 this.email = childData.email || null;
                 this.gender = childData.gender || null;
                 this.currJob = childData.currJob || null;
+                this.idCardNumber = childData.idCardNumber || null;
+                this.idCardCopy = childData.idCardCopy || null;
+                this.contract = childData.contract || null;
+                this.workType = childData.workType || null;
+                this.classtype = childData.classtype || null;
+                this.classLocation = childData.classLocation || null;
+                this.startDate = childData.startDate || null;
+                this.rate = childData.rate;
+                this.university = childData.university || null;
+                this.faculty = childData.faculty || null;
+                this.major = childData.major || null;
+              
                 this.address.houseNo = childData.address.houseNo || null;
                 this.address.tambon = childData.address.tambon || null;
                 this.address.amphoe = childData.address.amphoe || null;
@@ -623,15 +683,6 @@ export default {
                 this.currAddress.amphoe = childData.address.amphoe || null;
                 this.currAddress.province = childData.address.province || null;
                 this.currAddress.postal = childData.address.postal || null;
-                this.idCardNumber = childData.idCardNumber || null;
-                this.idCardCopy = childData.idCardCopy || null;
-                this.contract = childData.contract || null;
-                this.workType = childData.workType || null;
-                this.startDate = childData.startDate || null;
-                this.rate = childData.rate;
-                this.university = childData.university || null;
-                this.faculty = childData.faculty || null;
-                this.major = childData.major || null;
                 this.isLoading = false;
 
             })
@@ -640,13 +691,13 @@ export default {
 
         async fetchData() {
             const db = this.$fireModule.database();
-            const snapshot = await db.ref(`user/${this.teacherId}/subject_all`).once("value");
+            const snapshot = await db.ref(`user/${this.userId}/subject_all`).once("value");
             const childData = snapshot.val();
             const selectedItems = [];
 
             for (const key in childData) {
-                const snapshotName = await db.ref(`user/${this.teacherId}/subject_all/${key}`).once("value");
-                const snapshotLevel = await db.ref(`user/${this.teacherId}/subject_all/${key}/level`).once("value");
+                const snapshotName = await db.ref(`user/${this.userId}/subject_all/${key}`).once("value");
+                const snapshotLevel = await db.ref(`user/${this.userId}/subject_all/${key}/level`).once("value");
 
                 const childDataName = snapshotName.val();
                 const childDataLevel = snapshotLevel.val();
