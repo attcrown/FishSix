@@ -91,9 +91,11 @@ export default {
 
 
             headers: [
+            { text: 'รหัสนักเรียน', value: 'stu.studenId' },
+            { text: 'ชื่อเล่น', value: 'stu.nickname' },
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'stu.lastName' },
-                { text: 'ชื่อเล่น', value: 'stu.nickname' },
+                
                 { text: 'เบอร์โทรศัพท์นักเรียน', value: 'stu.studentMobile' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
                 { text: 'Actions', value: 'actions', sortable: false },
@@ -131,7 +133,7 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-                        console.log(childData[key]);
+        
                         const stu = {
                             status: childData[key].status,
                             name: childData[key].name,
