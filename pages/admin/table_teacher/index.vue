@@ -59,18 +59,18 @@
                                 offset-x>
                                 <v-card color="grey lighten-4" min-width="350px" flat>
                                     <v-toolbar :color="selectedEvent.color" dark>
-                                        <v-btn icon>
+                                        <!-- <v-btn icon>
                                             <v-icon>mdi-pencil</v-icon>
-                                        </v-btn>
+                                        </v-btn> -->
                                         <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
                                         <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                                         <v-spacer></v-spacer>
-                                        <v-btn icon>
+                                        <!-- <v-btn icon>
                                             <v-icon>mdi-heart</v-icon>
                                         </v-btn>
                                         <v-btn icon>
                                             <v-icon>mdi-dots-vertical</v-icon>
-                                        </v-btn>
+                                        </v-btn> -->
                                     </v-toolbar>
                                     <v-card-text>
                                         <span v-html="selectedEvent.details"></span>
@@ -603,6 +603,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == null) {
@@ -631,6 +632,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == timedata.class) {
@@ -659,6 +661,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
@@ -687,6 +690,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == null && this.search_style_sub == timedata.style_subject && this.search_class == null) {
@@ -715,6 +719,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == timedata.class) {
@@ -743,6 +748,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == key && this.search_style_sub == null && this.search_class == null) {
@@ -771,6 +777,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else if (this.search_value == null && this.search_style_sub == null && this.search_class == null) {
@@ -799,6 +806,7 @@ export default {
                                             timedata.stop.substring(3, 5)),
                                         color: this.getRandomColor(),
                                         timed: true,
+                                        details:"ครู"+nametea.nickname + " " + nametea.name,
                                     },
                                 );
                             } else { }
