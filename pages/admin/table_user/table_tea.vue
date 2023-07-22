@@ -585,6 +585,8 @@ export default {
                             start: this.picker_start,
                             stop: this.picker_stop,
                             because: this.save_detail.because,
+                            start_tea: this.picker_start_tea,
+                            stop_tea: this.picker_stop_tea,
                             status: this.check_status(),
                         });
                     } else { alert('error'); }

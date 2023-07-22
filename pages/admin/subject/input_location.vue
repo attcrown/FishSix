@@ -9,9 +9,9 @@
             <v-form ref="form" @submit.prevent="submit">
                 <v-container fluid>
                     <v-row>
-                        <v-col cols="12" sm="6">
-                            <v-text-field v-model="form.first" :rules="rules.name" color="purple darken-2"
-                                label="ชื่อสถานที่" required></v-text-field>
+                        <v-col cols="12" sm="4">
+                            <v-text-field v-model="form.first" :rules="rules.name" color="teal" label="ชื่อสถานที่"
+                                required></v-text-field>
                         </v-col>
                         <!-- <v-col cols="12" sm="6">
                         <v-select v-model="form.favoriteAnimal" :items="animals" :rules="rules.animal" color="pink"
@@ -21,13 +21,18 @@
                         <v-text-field v-model="form.last" :rules="rules.name" color="blue darken-2" label="Last name"
                             required></v-text-field>
                     </v-col> -->
-                        <v-col cols="12" sm="12">
-                            <v-textarea v-model="form.bio" color="teal" :rules="rules.name" required>
+                        <v-col cols="12" sm="6">
+                            <v-text-field v-model="form.bio" color="teal" :rules="rules.name" label="ตำแหน่งที่ตั้ง"
+                                required>
                                 <template v-slot:label>
                                     <div>ตำแหน่งที่ตั้ง <small>(ระบุรายละเอียด)</small></div>
                                 </template>
-                            </v-textarea>
+                            </v-text-field>
                         </v-col>
+                        <v-col cols="12" sm="2">
+                            <v-btn elevation="10" outline-success large :disabled="!formIsValid" type="submit">SAVE</v-btn>
+                        </v-col>
+
                         <!-- <v-col cols="12" sm="6">
                         <v-slider v-model="form.age" :rules="rules.age" color="orange" label="Age" hint="Be honest" min="1"
                             max="100" thumb-label></v-slider>
@@ -47,9 +52,9 @@
                     </v-row>
                 </v-container>
                 <v-card-actions>
-                    <v-btn :disabled="!formIsValid" text color="primary" type="submit">
+                    <!-- <v-btn :disabled="!formIsValid" text color="primary" type="submit">
                         Add
-                    </v-btn>
+                    </v-btn> -->
                     <!-- <v-btn text @click="resetForm"> Cancel </v-btn> -->
                     <v-spacer></v-spacer>
 

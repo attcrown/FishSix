@@ -108,8 +108,8 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)">
-                        mdi-pencil
+                    <v-icon small class="mr-2" @click="editItem(item)" style="font-size:24px" color="red">
+                        mdi-delete-alert
                     </v-icon>
                 </template>
                 <template v-slot:no-data>
@@ -204,6 +204,8 @@ export default {
                                             date: date,
                                             time_s: timedata.start,
                                             time_e: timedata.stop,
+                                            time_s_tea: timedata.start_tea,
+                                            time_e_tea: timedata.stop_tea,
                                             style: timedata.style_subject,
                                             status: timedata.status,
                                             key_student: key,
@@ -215,7 +217,7 @@ export default {
                                     })
                                     .catch((error) => {
                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-                                    });                          
+                                    });
                             }
                         }
                     }
@@ -230,7 +232,7 @@ export default {
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             // console.log('editedItem>>',this.editedItem);
-            this.dialogDelete = true
+            this.dialogDelete = true;
         },
 
 
@@ -261,8 +263,30 @@ export default {
         },
 
         delete_match() {
-            console.log('del>>', this.editedItem);
+            if (!this.editedItem) {
+                alert("No data to delete");
+                return;
+            }
+            console.log(this.editedItem);
+            const db = this.$fireModule.database();
+            let sum = 0;
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                sum = childData - 1;
+            })
+
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
+                invite: sum,
+            }).then(() => {
+                console.log("success invite");
+            });
+
+            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove()
+                .then(() => {
+                    console.log("success del");
+                });
         },
+
 
         getColor(stutus) {
             if (stutus == 'active') return 'success'

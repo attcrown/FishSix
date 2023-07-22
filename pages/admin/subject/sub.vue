@@ -12,7 +12,7 @@
                             multiple @input="check()"></v-select>
                     </v-col>
                     <v-col cols="12" sm="4">
-                        <v-btn elevation="10" outline-success large :loading="loading" @click="submit_click(),save_submit()">SAVE</v-btn>
+                        <v-btn elevation="10" outline-success large :disabled="loading" @click="submit_click(),save_submit()">SAVE</v-btn>
                     </v-col>
                 </v-row>
             </v-container>

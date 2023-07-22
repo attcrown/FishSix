@@ -33,6 +33,11 @@
                                             placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!" multiple>
                                         </v-select>
                                     </v-col>
+                                    <v-col cols="12" sm="12">
+                                        <div style="height:200px">
+
+                                        </div>
+                                    </v-col>
 
                                 </v-row>
                             </v-container>

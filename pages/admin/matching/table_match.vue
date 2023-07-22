@@ -269,6 +269,12 @@ export default {
 
         delete_match() {
             console.log('del>>', this.editedItem);
+            const db = this.$fireModule.database();
+            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove()
+                .then(() => {
+                    console.log("success del");
+                    this.close();
+                });
         },
 
         getColor(stutus) {
