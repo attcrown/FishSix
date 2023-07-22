@@ -7,7 +7,7 @@
     </div>
 </template>
 <script>
-    import status_student from './status_student.vue';
+    // import status_student from './status_student.vue';
     import table_tea from './table_tea.vue';
    export default {
         data() {
@@ -16,7 +16,7 @@
             }
         },
         components:{
-            status_student,
+            // status_student,
             table_tea
         }
    }

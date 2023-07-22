@@ -36,7 +36,8 @@
                                                 <v-text-field v-model="editedItem.date" label="วันที่"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.style" label="รูปแบบการสอน"></v-text-field>
+                                                <v-text-field v-model="editedItem.style"
+                                                    label="รูปแบบการสอน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.time_s" label="เริ่มเรียน"></v-text-field>
@@ -64,8 +65,8 @@
                                                     label="Phone number teacher" readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.name"
-                                                    label="Name teacher" readonly></v-text-field>
+                                                <v-text-field v-model="editedItem.name" label="Name teacher"
+                                                    readonly></v-text-field>
                                             </v-col>
 
                                             <v-col cols="12" sm="6" md="6">
@@ -73,9 +74,8 @@
                                                     label="Phone number student" readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field color="black"
-                                                    v-model="editedItem.name_student" label="Name student"
-                                                    readonly></v-text-field>
+                                                <v-text-field color="black" v-model="editedItem.name_student"
+                                                    label="Name student" readonly></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -183,10 +183,6 @@ export default {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let nametea = '';
-                let namestu = '';
-                let phone_tea = '';
-                let phone_stu = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -194,40 +190,41 @@ export default {
                         for (const time in datedata) {
                             const timedata = datedata[time];
                             if (timedata.status == 'Not active') {
-                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    nametea = "คุณครู "+childData.firstName+' '+childData.lastName;
-                                    phone_tea = childData.mobile;
-                                })
-                                db.ref(`user/${key}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    namestu = childData.firstName+' '+childData.lastName;
-                                    phone_stu = childData.studentMobile;
-                                })
-                                if(phone_tea,nametea == null || phone_tea,nametea == ''){
-                                    this.$router.push('/admin/table_teacher');
-                                }
-                                // setTimeout(() => {
-                                    item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
-                                    phone_teacher : phone_tea,
-                                    phone_student : phone_stu,
-                                });
-                                // }, 100);                                
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise])
+                                    .then(([teacherSnapshot, studentSnapshot]) => {
+                                        const teacherData = teacherSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const phone_tea = teacherData.mobile;
+                                        const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                        const namestu = studentData.firstName + " " + studentData.lastName;
+                                        const phone_stu = studentData.studentMobile;
+                                        item.push({
+                                            name_student: namestu,
+                                            name: nametea,
+                                            subject: timedata.subject,
+                                            date: date,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            status: timedata.status,
+                                            key_student: key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: phone_stu,
+                                            phone_teacher: phone_tea,
+                                            class: timedata.class,
+                                        });                                        
+                                    })
+                                    .catch((error) => {
+                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                    });
                             }
                         }
                     }
                 }
                 this.desserts = item;
+                console.log(this.desserts);
             })
         },
 

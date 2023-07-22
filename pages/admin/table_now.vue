@@ -184,11 +184,6 @@ export default {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let nametea = '';
-                let namestu = '';
-                let phone_stu = '';
-                let phone_tea = '';
-                let day = '';
                 let now = new Date();
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
@@ -196,18 +191,17 @@ export default {
                 if (this.search_date == 'Day') {
                     end = now;
                 } else if (this.search_date == 'Week') {
-                    if((parseInt(formattedDate.substring(8, 10)) + 7) >= 30){
+                    if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
                         edit = formattedDate.substring(0, 8) + 30;
-                        end = new Date(edit); 
-                    }else if((parseInt(formattedDate.substring(8, 10)) + 7) >= 31){
+                        end = new Date(edit);
+                    } else if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 31) {
                         edit = formattedDate.substring(0, 8) + 31;
-                        end = new Date(edit); 
-                    }else{
+                        end = new Date(edit);
+                    } else {
                         edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
-                        end = new Date(edit); 
-                    }                    
+                        end = new Date(edit);
+                    }
                 } else if (this.search_date == 'Month') {
-                    // console.log(formattedDate.substring(0, 5)+(parseInt(formattedDate.substring(6, 8)) + 1)+'-01');
                     edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
                     end = new Date(edit);
                 } else if (this.search_date == 'All') {
@@ -217,59 +211,62 @@ export default {
                 } else {
                     end = now;
                 }
-                // console.log(end);
+
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        // console.log('Start',new Date(date).getTime().toString().substring(0, 5), now.getTime().toString().substring(0, 5));
-                        // console.log('End',new Date(date).getTime().toString().substring(0, 5) ,end.getTime().toString().substring(0, 5));
-                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
-                            new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
-                            const datedata = keydata[date];
-                            for (const time in datedata) {
-                                const timedata = datedata[time];
-                                db.ref(`user/${timedata.teacher}`).once("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    phone_tea = childData.mobile;
-                                    nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
-                                })
-                                db.ref(`user/${key}`).once("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    namestu = childData.firstName + "  " + childData.lastName;
-                                    phone_stu = childData.studentMobile;
-                                })
-                                console.log(timedata);
-                                console.log(phone_tea,nametea);
-                                console.log(phone_stu,namestu);
-                                if(phone_tea,nametea == null || phone_tea,nametea == ''){
-                                    this.$router.push('/admin/matching');
-                                }
-                                if (phone_tea != '' && nametea != '' && namestu != '' && phone_stu != '') {
-                                    item.push({
-                                        name_student: namestu,
-                                        name: nametea,
-                                        subject: timedata.subject,
-                                        date: date,
-                                        time_s: timedata.start,
-                                        time_e: timedata.stop,
-                                        style: timedata.style_subject,
-                                        status: timedata.status,
-                                        key_student: key,
-                                        key_teacher: timedata.teacher,
-                                        phone_student: phone_stu,
-                                        phone_teacher: phone_tea,
-                                        class: timedata.class,
-                                    });
+                        // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
+                        const datedata = keydata[date];
+                        if (datedata) {
+                            if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
+                                new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
+                                for (const time in datedata) {
+                                    const timedata = datedata[time];
+                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
+
+                                    Promise.all([getTeacherPromise, getStudentPromise])
+                                        .then(([teacherSnapshot, studentSnapshot]) => {
+                                            const teacherData = teacherSnapshot.val();
+                                            const studentData = studentSnapshot.val();
+                                            const phone_tea = teacherData.mobile;
+                                            const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                            const namestu = studentData.firstName + " " + studentData.lastName;
+                                            const phone_stu = studentData.studentMobile;
+                                            item.push({
+                                                name_student: namestu,
+                                                name: nametea,
+                                                subject: timedata.subject,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: timedata.style_subject,
+                                                status: timedata.status,
+                                                key_student: key,
+                                                key_teacher: timedata.teacher,
+                                                phone_student: phone_stu,
+                                                phone_teacher: phone_tea,
+                                                class: timedata.class,
+                                            });
+                                            // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                            if (item.length === Object.keys(datedata).length) {
+                                                this.desserts_student = item;
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                        });
                                 }
                             }
                         }
-
                     }
-
                 }
+
                 this.desserts_student = item;
-            })
-        },
+            });
+        }
+
+
     },
 }
 </script>

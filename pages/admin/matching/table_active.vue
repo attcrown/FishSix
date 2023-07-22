@@ -180,8 +180,6 @@ export default {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let nametea = '';
-                let namestu = '';
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -189,35 +187,41 @@ export default {
                         for (const time in datedata) {
                             const timedata = datedata[time];
                             if (timedata.status == 'active') {
-                                db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    nametea = "คุณครู " + childData.firstName + ' ' + childData.lastName;
-                                })
-                                db.ref(`user/${key}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    namestu = childData.firstName + ' ' + childData.lastName;
-                                })
-                                item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
-                                })
-
-                                // setTimeout(() => {
-
-                                // }, 100);                                
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise])
+                                    .then(([teacherSnapshot, studentSnapshot]) => {
+                                        const teacherData = teacherSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const phone_tea = teacherData.mobile;
+                                        const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                        const namestu = studentData.firstName + " " + studentData.lastName;
+                                        const phone_stu = studentData.studentMobile;
+                                        item.push({
+                                            name_student: namestu,
+                                            name: nametea,
+                                            subject: timedata.subject,
+                                            date: date,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            status: timedata.status,
+                                            key_student: key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: phone_stu,
+                                            phone_teacher: phone_tea,
+                                            class: timedata.class,
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                    });                          
                             }
                         }
                     }
                 }
                 this.desserts = item;
+                console.log(this.desserts);
             })
         },
 

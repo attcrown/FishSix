@@ -734,294 +734,296 @@ export default {
                 let item = [];
                 this.desserts = [];
                 this.events = [];
-                let nametea = '';
-                let name_sub = '';
                 for (const key in childData) {
                     const keydata = childData[key];
-                    db.ref(`user/${key}`).on("value", (snapshot) => {
-                        const childData = snapshot.val();
-                        nametea = childData;
-                    })
                     for (const date in keydata) {
-                        // console.log(now.getTime().toString().substring(0, 5), new Date(date).getTime().toString().substring(0, 5));
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
-                            // console.log('New day');
                             const datedata = keydata[date];
                             this.arrayEvents.push(date);
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                db.ref(`subject_all/${timedata.subject}`).on("value", (snapshot) => {
-                                    const childData = snapshot.val();
-                                    name_sub = childData.name;
-                                })
-                                if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
-                                    if (this.search_value == key &&
-                                        this.search_style_sub == timedata.style_subject &&
-                                        this.search_class == timedata.class) {
-                                        // console.log('หาทั้งสอง');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == key &&
-                                        this.search_style_sub == null &&
-                                        this.search_class == null) {
-                                        // console.log('หาครู');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == null &&
-                                        this.search_style_sub == timedata.style_subject &&
-                                        this.search_class == null) {
-                                        // console.log('หารูปแบบ');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == null &&
-                                        this.search_style_sub == null &&
-                                        this.search_class == timedata.class) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == key &&
-                                        this.search_style_sub == timedata.style_subject &&
-                                        this.search_class == null) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == key &&
-                                        this.search_style_sub == timedata.style_subject &&
-                                        this.search_class == timedata.class) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == key &&
-                                        this.search_style_sub == null &&
-                                        this.search_class == timedata.class) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == null &&
-                                        this.search_style_sub == timedata.style_subject &&
-                                        this.search_class == timedata.class) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else if (
-                                        this.search_value == null &&
-                                        this.search_style_sub == null &&
-                                        this.search_class == null) {
-                                        // console.log('หาหมด');
-                                        item.push({
-                                            name: "คุณครู " + nametea.nickname + "  " + nametea.name,
-                                            date: date,
-                                            class: timedata.class,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: timedata.style_subject,
-                                            subject: name_sub,
-                                            sum_people: timedata.invite + '/' + timedata.sum_people,
-                                            key: key,
-                                        });
-                                        // console.log(item);
-                                        this.events.push(
-                                            {
-                                                name: name_sub,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
-                                    } else {
-                                        console.log('Error');
-                                    }
-                                }
+                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise])
+                                    .then((snapshots) => {
+                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                        const namesub = subjectData.name;
+                                        if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
+                                            // console.log('New');
+                                            if (this.search_value == key &&
+                                                this.search_style_sub == timedata.style_subject &&
+                                                this.search_class == timedata.class) {
+                                                // console.log('หาทั้งสอง');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == key &&
+                                                this.search_style_sub == null &&
+                                                this.search_class == null) {
+                                                // console.log('หาครู');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == null &&
+                                                this.search_style_sub == timedata.style_subject &&
+                                                this.search_class == null) {
+                                                // console.log('หารูปแบบ');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == null &&
+                                                this.search_style_sub == null &&
+                                                this.search_class == timedata.class) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == key &&
+                                                this.search_style_sub == timedata.style_subject &&
+                                                this.search_class == null) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == key &&
+                                                this.search_style_sub == timedata.style_subject &&
+                                                this.search_class == timedata.class) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == key &&
+                                                this.search_style_sub == null &&
+                                                this.search_class == timedata.class) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == null &&
+                                                this.search_style_sub == timedata.style_subject &&
+                                                this.search_class == timedata.class) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else if (
+                                                this.search_value == null &&
+                                                this.search_style_sub == null &&
+                                                this.search_class == null) {
+                                                // console.log('หาหมด');
+                                                item.push({
+                                                    name: nametea,
+                                                    date: date,
+                                                    class: timedata.class,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    subject: namesub,
+                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
+                                                    key: key,
+                                                });
+                                                // console.log(item);
+                                                this.events.push(
+                                                    {
+                                                        name: namesub,
+                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.start.substring(0, 2),
+                                                            timedata.start.substring(3, 5)),
+                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                            timedata.stop.substring(3, 5)),
+                                                        color: this.getRandomColor(),
+                                                        timed: true,
+                                                    },
+                                                );
+                                            } else {
+                                                console.log('Error');
+                                            }
+                                        }
+                                    })
                             }
-                        } else { console.log('Old day'); }
+                        } else { 
+                            // console.log('Old day'); 
+                        }
                     }
                 }
                 this.desserts = item;

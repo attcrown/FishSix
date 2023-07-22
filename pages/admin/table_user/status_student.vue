@@ -55,7 +55,7 @@
                                             readonly></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field label="Search teacher" v-model="detail_student.name_tea"                                        
+                                        <v-text-field label="Search teacher" v-model="detail_student.name_tea"
                                             readonly></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
@@ -79,16 +79,16 @@
                                             readonly></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-text-field label="เลิกเรียน" v-model="detail_student.time_e"                                            
+                                        <v-text-field label="เลิกเรียน" v-model="detail_student.time_e"
                                             readonly></v-text-field>
                                     </v-col>
 
                                     <v-col cols="12" sm="12">
-                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="detail_student.because"
-                                            readonly></v-text-field>
+                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
+                                            v-model="detail_student.because" readonly></v-text-field>
                                     </v-col>
                                 </v-row>
-                                
+
                             </v-container>
                             <small>*รายละเอียดการจอง</small>
                         </v-card-text>
@@ -108,9 +108,9 @@
 <script>
 export default {
     data: () => ({
-        detail_student:[],
+        detail_student: [],
         dialog_detail: false,
-        search_table_student:'',
+        search_table_student: '',
         headers_student: [
             {
                 text: 'Name Student',
@@ -176,58 +176,52 @@ export default {
             this.detail_student.level = item.level;
             this.dialog_detail = true;
         },
-        clear(){
+        clear() {
             this.detail_student = [];
             this.dialog_detail = false;
         },
         search_date_student() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
-                const childData = snapshot.val();                
+                const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let nametea = '';
-                let namestu = '';
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {                        
+                    for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            db.ref(`user/${timedata.teacher}`).on("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                nametea = "คุณครู " + childData.firstName + "  " + childData.lastName;
-                            })
-                            db.ref(`user/${key}`).on("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                namestu = childData.firstName + "  " + childData.lastName;
-                            })
-                            if(nametea == null || nametea == ''){
-                                    this.$router.push('/admin');
-                                }
-                            // setTimeout(() => {
-                                item.push({
-                                    name_student: namestu,
-                                    name: nametea,
-                                    subject: timedata.subject,
-                                    date: date,
-                                    time_s: timedata.start,
-                                    time_e: timedata.stop,
-                                    style: timedata.style_subject,
-                                    status: timedata.status,
-                                    class: timedata.class,
-                                    because: timedata.because,
-                                    key_student: key,
-                                    key_teacher: timedata.teacher,
-                                    level:timedata.level,
-                                });
-                            // }, 100);
+                            const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                            const getStudentPromise = db.ref(`user/${key}`).once("value");
+                            Promise.all([getTeacherPromise, getStudentPromise, timedata])
+                                .then(([teacherSnapshot, studentSnapshot]) => {
+                                    const teacherData = teacherSnapshot.val();
+                                    const studentData = studentSnapshot.val();
+                                    const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                    const namestu = studentData.firstName + " " + studentData.lastName;
+                                    item.push({
+                                        name_student: namestu,
+                                        name: nametea,
+                                        subject: timedata.subject,
+                                        date: date,
+                                        time_s: timedata.start,
+                                        time_e: timedata.stop,
+                                        style: timedata.style_subject,
+                                        status: timedata.status,
+                                        class: timedata.class,
+                                        because: timedata.because,
+                                        key_student: key,
+                                        key_teacher: timedata.teacher,
+                                        level: timedata.level,
+                                    });
+                                })                            
                         }
                     }
 
                 }
                 this.desserts_student = item;
-                console.log(this.desserts_student );
+                console.log(this.desserts_student);
             })
         },
     },
