@@ -4,14 +4,14 @@
             <v-container fluid>
                 <h3>เพิ่มวิชาเรียน</h3>
                 <v-row align="center">
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" v-model="name_sub" @input="check()"></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-select v-model="level_sub" :items="level" item-text="value" item-value="value" attach chips label="ระดับการศึกษา" placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!"
                             multiple @input="check()"></v-select>
                     </v-col>
-                    <v-col cols="12" sm="3">
+                    <v-col cols="12" sm="4">
                         <v-btn elevation="10" outline-success large :loading="loading" @click="submit_click(),save_submit()">SAVE</v-btn>
                     </v-col>
                 </v-row>

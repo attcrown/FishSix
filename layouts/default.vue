@@ -105,7 +105,7 @@ export default {
         },
         {
           icon: 'mdi-ab-testing',
-          title: 'เพิ่มวิชาเรียน',
+          title: 'เพื่มรายละเอียด',
           to: '/admin/subject',
         },
       ],

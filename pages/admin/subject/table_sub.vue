@@ -6,7 +6,7 @@
                 <v-toolbar-title>วิชาเปิดสอน (ภาษาไทย)</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" max-width="500px">
+                <v-dialog v-model="dialog" max-width="800px">
                     <template v-slot:activator="{}">
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
                             hide-details></v-text-field>
@@ -15,30 +15,25 @@
                         <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                             New Item
                         </v-btn>
-                    </template>
+                    </template> -->
                     <v-card>
                         <v-card-title>
-                            <span class="text-h5">{{ formTitle }}</span>
+                            <span class="text-h5">EDIT SUBJECT</span>
                         </v-card-title>
 
                         <v-card-text>
                             <v-container>
                                 <v-row>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                                    <v-col cols="12" sm="6" md="6">
+                                        <v-text-field v-model="editedItem.name" label="ชื่อวิชา"></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
+                                    <v-col cols="12" sm="6">
+                                        <v-select v-model="editedItem.level" :items="level" item-text="value"
+                                            item-value="value" attach chips label="ระดับการศึกษา"
+                                            placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!" multiple>
+                                        </v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" md="4">
-                                        <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                                    </v-col>
+
                                 </v-row>
                             </v-container>
                         </v-card-text>
@@ -48,11 +43,11 @@
                             <v-btn color="blue darken-1" text @click="close">
                                 Cancel
                             </v-btn>
-                            <v-btn color="blue darken-1" text @click="save">
+                            <v-btn color="blue darken-1" text @click="edit_save">
                                 Save
                             </v-btn>
                         </v-card-actions>
-                    </v-card> -->
+                    </v-card>
                 </v-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px">
                     <v-card>
@@ -69,12 +64,12 @@
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template v-slot:item.actions="{ item }">
-            <!-- <v-icon small class="mr-2" @click="editItem(item)">
+            <v-icon small class="mr-2" @click="editItem(item)">
                 mdi-pencil
-            </v-icon> -->
-            <v-icon small @click="deleteItem(item)">
-                mdi-delete
             </v-icon>
+            <!-- <v-icon small @click="deleteItem(item)">
+                mdi-delete
+            </v-icon> -->
         </template>
         <template v-slot:no-data>
             <v-btn color="primary" @click="initialize">
@@ -103,14 +98,28 @@ export default {
         ],
         desserts: [],
         editedIndex: -1,
-        // editedItem: {
-        //     name: '',
-        //     level: '',
-        // },
-        // defaultItem: {
-        //     name: '',
-        //     level: '',
-        // },
+        editedItem: {
+            name: '',
+            level: '',
+        },
+        defaultItem: {
+            name: '',
+            level: '',
+        },
+        level: [
+            { key: 1, value: 'ป.1' },
+            { key: 2, value: 'ป.2' },
+            { key: 3, value: 'ป.3' },
+            { key: 4, value: 'ป.4' },
+            { key: 5, value: 'ป.5' },
+            { key: 6, value: 'ป.6' },
+            { key: 7, value: 'ม.1' },
+            { key: 8, value: 'ม.2' },
+            { key: 9, value: 'ม.3' },
+            { key: 10, value: 'ม.4' },
+            { key: 11, value: 'ม.5' },
+            { key: 12, value: 'ม.6' },
+        ],
     }),
 
     computed: {
@@ -120,9 +129,9 @@ export default {
     },
 
     watch: {
-        // dialog(val) {
-        //     val || this.close()
-        // },
+        dialog(val) {
+            val || this.close()
+        },
         dialogDelete(val) {
             val || this.closeDelete()
         },
@@ -143,18 +152,18 @@ export default {
                 for (const key in childData) {
                     const subject = childData[key];
                     num += 1;
-                    item.push({ name: subject.name, level: subject.level, key: key ,index: num});
+                    item.push({ name: subject.name, level: subject.level, key: key, index: num });
                     // console.log('>>>',item);
                 }
                 this.desserts = item;
             })
         },
 
-        // editItem(item) {
-        //     this.editedIndex = this.desserts.indexOf(item)
-        //     this.editedItem = Object.assign({}, item)
-        //     // this.dialog = true
-        // },
+        editItem(item) {
+            this.editedIndex = this.desserts.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
+        },
 
         deleteItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
@@ -169,13 +178,13 @@ export default {
             this.closeDelete();
         },
 
-        // close() {
-        //     this.dialog = false
-        //     this.$nextTick(() => {
-        //         this.editedItem = Object.assign({}, this.defaultItem)
-        //         this.editedIndex = -1
-        //     })
-        // },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
 
         closeDelete() {
             this.dialogDelete = false
@@ -185,14 +194,20 @@ export default {
             })
         },
 
-        // save() {
-        //     if (this.editedIndex > -1) {
-        //         Object.assign(this.desserts[this.editedIndex], this.editedItem)
-        //     } else {
-        //         this.desserts.push(this.editedItem)
-        //     }
-        //     this.close()
-        // },
+        edit_save() {
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/${this.editedItem.key}`).set({
+                name: this.editedItem.name,
+                level: this.editedItem.level,
+            });
+            this.close();
+            // if (this.editedIndex > -1) {
+            //     Object.assign(this.desserts[this.editedIndex], this.editedItem)
+            // } else {
+            //     this.desserts.push(this.editedItem)
+            // }
+            
+        },
     },
 }
 </script>
