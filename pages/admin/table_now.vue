@@ -1,20 +1,77 @@
 <template>
-    <div class="mt-6">
+    <div class="mt-6 mx-10">
         <v-row>
             <v-col cols="12">
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
-                    :search="search_table_student" class="elevation-1">
+                    :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
                     <template v-slot:top>
-                        <v-toolbar flat style="background-color:rgba(230, 226, 12, 0.425);">
+                        <!-- Toolbar section -->
+                        <v-toolbar flat style="background-color: #EBE4DE;" class="rounded-t-xl">
+                            <!-- Search Date Dropdown -->
                             <v-toolbar-title>
-                                <v-select :items="items" v-model="search_date" label="Search Date" class="mt-4"
+                                <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
                                     @change="search_date_student()"></v-select>
                             </v-toolbar-title>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <v-text-field class="" v-model="search_table_student" append-icon="mdi-magnify" label="Search"
-                                single-line hide-details></v-text-field>
+                            <!-- Search Field -->
+                            <v-text-field v-model="search_table_student" append-icon="mdi-magnify" label="Search"
+                                class="mt-10" single-line hide-details dense style="max-width: 200px;"></v-text-field>
+                            <v-btn class="ms-10 mt-10 me-4">
+                                export
+                            </v-btn>
                         </v-toolbar>
+                        <!-- Hover Cards -->
+                        <v-card-group class="d-flex pt-8 pb-8 fonts500" style="background-color: #EBE4DE;">
+                            <v-hover v-slot="{ hover }">
+                                <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-8"
+                                    style="background: #AD382F;" height="159px" width="300px">
+                                    <v-row>
+                                        <v-col cols="auto" class="mr-auto">
+                                            <img :src="require('~/assets/сolleagues discussing team project.png')" class="pt-5 ps-5">
+                                        </v-col>
+                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                            {{ dash_all }}
+                                        </v-col>
+                                        <v-col cols="auto" class="ml-auto me-7">
+                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนนักเรียนทั้งหมด</p>
+                                        </v-col>
+                                    </v-row>
+                                </v-card>
+                            </v-hover>                            
+                            <v-hover v-slot="{ hover }">
+                                <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
+                                    style="background: #322E2B;" height="159px" width="300px">
+                                    <v-row>
+                                        <v-col cols="auto" class="mr-auto">
+                                            <img :src="require('~/assets/young woman at work with laptop writing.png')" class="pt-5 ps-5">
+                                        </v-col>
+                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                            {{ dash_active }}
+                                        </v-col>
+                                        <v-col cols="auto" class="ml-auto me-7">
+                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนักเรียนที่พร้อมเรียน</p>
+                                        </v-col>
+                                    </v-row>
+                                </v-card>
+                            </v-hover>
+                            <v-hover v-slot="{ hover }">
+                                <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
+                                    style="background: #B6A7A2;" height="159px" width="300px">
+                                    <v-row>
+                                        <v-col cols="auto" class="mr-auto">
+                                            <img :src="require('~/assets/сolleagues discussing team project.png')" class="pt-5 ps-5">
+                                        </v-col>
+                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                            {{ dash_notactive }}
+                                        </v-col>
+                                        <v-col cols="auto" class="ml-auto me-7">
+                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนักเรียนที่รอยืนยัน</p>
+                                        </v-col>
+                                    </v-row>
+                                </v-card>
+                            </v-hover>
+                        </v-card-group>
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.status="{ item }">
@@ -35,7 +92,6 @@
             </v-col>
         </v-row>
 
-
         <div>
             <template>
                 <v-row justify="center">
@@ -45,7 +101,7 @@
                                 Open Dialog
                             </v-btn>
                         </template> -->
-                        <v-card>
+                        <v-card class="fonts500">
                             <v-card-title>
                                 <span class="text-h5"><b>DETAIL</b> [ {{ detail_user.date }} ]</span>
                             </v-card-title>
@@ -116,6 +172,9 @@
 <script>
 export default {
     data: () => ({
+        dash_all: 0,
+        dash_active: 0,
+        dash_notactive: 0,
         dialog_detail: false,
         detail_user: [],
         search_date: '',
@@ -134,12 +193,12 @@ export default {
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date' },
-            { text: 'Start', value: 'time_s' },
-            { text: 'End', value: 'time_e' },
-            { text: 'Style', value: 'style' },
-            { text: 'subject', value: 'subject' },
-            { text: 'Status', value: 'status', align: 'start' },
+            { text: 'Date', value: 'date', align: 'center' },
+            { text: 'Start', value: 'time_s', align: 'center' },
+            { text: 'End', value: 'time_e', align: 'center' },
+            { text: 'Style', value: 'style', align: 'center' },
+            { text: 'Subject', value: 'subject', align: 'center' },
+            { text: 'Status', value: 'status', sortable: false, align: 'center' },
             { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts_student: [],
@@ -167,8 +226,8 @@ export default {
 
     methods: {
         getColor(stutus) {
-            if (stutus == 'active') return 'success'
-            else if (stutus == 'Not active') return 'orange'
+            if (stutus === 'พร้อมเรียน') return 'success'
+            else if (stutus === 'รอยืนยัน') return 'orange'
             else return 'red'
         },
 
@@ -181,6 +240,9 @@ export default {
         search_date_student() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
+                this.dash_all = 0;
+                this.dash_active = 0;
+                this.dash_notactive = 0;
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
@@ -247,7 +309,16 @@ export default {
                                                 phone_student: phone_stu,
                                                 phone_teacher: phone_tea,
                                                 class: timedata.class,
+                                                level:timedata.level,
                                             });
+                                            this.dash_all += 1;
+                                            if(timedata.status === 'พร้อมเรียน'){
+                                                this.dash_active += 1;
+                                            }else if(timedata.status === 'รอยืนยัน'){
+                                                this.dash_notactive += 1;
+                                            }else{
+                                                console.log('Error',timedata.status);
+                                            }
                                             // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
                                             if (item.length === Object.keys(datedata).length) {
                                                 this.desserts_student = item;
@@ -261,7 +332,6 @@ export default {
                         }
                     }
                 }
-
                 this.desserts_student = item;
             });
         }
@@ -270,3 +340,17 @@ export default {
     },
 }
 </script>
+<style>
+.v-data-table-header th {
+    background-color: #7e7b7b;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+.fonts500 {
+  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-weight: 500;
+}
+.fonts300 {
+  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-weight: 300;
+}
+</style>
