@@ -8,7 +8,161 @@
                     <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
                 </div>
                 <v-col cols="12">
-                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0" class="px-10">
+                    <v-row>
+                        <style>
+                            .time-label {
+                                color: #000;
+                                font-size: 24px;
+                                font-weight: 500;
+
+                            }
+
+                            .des-label {
+                                color: #000;
+                                font-size: 16px;
+                                font-weight: 300;
+
+                            }
+                        </style>
+                        <v-col cols="4">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ formattedTotalHour }}</div>
+                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+
+                        </v-col>
+
+                        <v-col cols="12">
+                            <v-card style="border-radius: 20px;background: #EBE4DE;" elevation="0" class="px-3">
+
+                                <v-card-text class="p-4">
+                                    <v-row style="border-radius: 20px;background: #EBE4DE;">
+                                        <v-col cols="3" class="time-label">
+                                            ปรับชั่วโมงเรียน
+                                        </v-col>
+                                        <v-col cols="3" class="py-0 mt-2">
+                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
+                                                item-text="text" item-value="value" v-model="selectedAddHour"></v-select>
+                                        </v-col>
+                                        <v-col cols="1" class="py-0 mt-2">
+                                            <v-btn color="green text-white" @click="addTime">ยืนยัน</v-btn>
+                                        </v-col>
+
+                                        <v-col cols="3" class="py-0 mt-2">
+                                            <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
+                                                item-text="text" item-value="value"
+                                                v-model="selectedSubtractHour"></v-select>
+                                        </v-col>
+                                        <v-col cols="1" class="py-0 mt-2">
+                                            <v-btn color="green text-white" @click="subtractTime">ยืนยัน</v-btn>
+                                        </v-col>
+
+
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+
+
+                        </v-col>
+                    </v-row>
+
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
+                            <div>
+                                <button v-if="!isEditingCourse" class="editButton " @click="toEditCourse()">
+                                    <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
+                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
+                                </button>
+                                <button v-if="isEditingCourse" class="saveButton " @click="toEditCourse()">
+                                    <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
+
+                                </button>
+                            </div>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-row>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
+                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
+                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                        label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
+                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                        v-model="hourLeft" label="ชั่วโมงเรียนที่เหลือ">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="courseHour" :readonly="!isEditingCourse"
+                                        label="ชั่วโมงเรียน"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour"
+                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="classType" :readonly="!isEditingCourse"
+                                        label="ประเภทคลาส"></v-text-field>
+                                </v-col>
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+                                <v-col class="py-0" cols="4"> <v-text-field class="black-label" v-model="wantedTeacher"
+                                        :readonly="!isEditingCourse" label="ต้องการเรียนกับครู"
+                                        item-text="teacher.firstName"></v-text-field>
+
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="annotation" v-model="annotation"
+                                        :readonly="!isEditingCourse" label="หมายเหตุ">
+                                    </v-text-field>
+
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="pl-2">ข้อมูลทั่วไป</div>
                             <div>
@@ -26,13 +180,36 @@
                             <v-row class="mt-0" align="center">
                                 <v-col cols="2" sm="2" class="pl-10">
                                     <div>
-                                        <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
-                                            <img :src="profilePic" alt="รูปโปรไฟล์">
+                                        <v-avatar style="max-width: 350px; width: 100%; height: 100%;max-height: 350px;">
+                                            <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์">
+                                            <v-icon style=" font-size: 100px;" v-if="!profilePic" dark>
+                                                mdi-account-circle
+                                            </v-icon>
                                         </v-avatar>
+
                                     </div>
                                 </v-col>
                                 <v-col cols="10">
                                     <v-row>
+                                        <v-col class="py-0" cols="4">
+                                            <div
+                                                style="color: var(--brown-brown-2, #27262B);font-size: 20px;font-weight: 500;">
+                                                รหัสนักเรียน: {{ studentId }}</div>
+                                            <!-- <v-text-field class="black-label" v-model="studentId" counter
+                                            label="รหัสนักเรียน (ไม่จำเป็นต้องกรอก)" disabled>
+                                            <template v-slot:append>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                    </template>
+                                                    <span>FSS ตามด้วยเลข 4 หลัก
+                                                        <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                </v-tooltip>
+                                            </template>
+
+                                        </v-text-field> -->
+                                        </v-col>
+                                        <v-col cols="8" class="py-0"></v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
@@ -66,21 +243,20 @@
 
                                 </v-col>
                                 <v-row class="px-4">
+
                                     <v-col cols="4" class="py-0">
-                                    
+                                        <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile"
+                                            :rules="mobileRules" :readonly="!isEditingDetail" :counter="isEditingDetail"
+                                            required></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile" :rules="mobileRules"
-                                            :readonly="!isEditingDetail" :counter="isEditingDetail" required></v-text-field>
+                                        <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
+                                            :readonly="!isEditingDetail"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <!-- <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
-                                            :readonly="!isEditingDetail"></v-text-field> -->
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <!-- <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
+                                        <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
                                             :rules="idCardRules" :counter="isEditingDetail" :readonly="!isEditingDetail"
-                                            required></v-text-field> -->
+                                            required></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
                                         <!-- <label>สำเนาบัตรประชาชน</label><br> -->
@@ -95,6 +271,7 @@
                             </v-row>
                         </form>
                     </v-card>
+
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-7">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
@@ -273,8 +450,8 @@
                                         <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation"
                                             v-model="education"></v-text-field>
                                     </v-col>
-                                 
-                                
+
+
                                 </v-row>
                             </v-form>
                         </v-card-text>
@@ -285,7 +462,10 @@
 
         </div>
         <!-- dialog -->
-
+        <!-- snackbar -->
+        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
+            <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
+        </v-snackbar>
     </div>
 </template>
   
@@ -299,10 +479,17 @@ export default {
             //status
             isLoading: true,
             userId: null,
+            isEditingCourse: false,
             isEditingDetail: false,
             isEditingAddress: false,
             isEditingContract: false,
             isEditingEducation: false,
+            showSnackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
+
+            selectedAddHour: null,
+            selectedSubtractHour: null,
 
             //data
             profilePic: null,
@@ -311,6 +498,7 @@ export default {
             firstNameDisplay: null,
             lastNameDisplay: null,
             nicknameDisplay: null,
+            studentId: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -332,9 +520,21 @@ export default {
                 province: null,
                 postal: null,
             },
+            email: null,
+            idCardNumber: null,
             education: null,
             studentMobile: null,
             parentMobile: null,
+
+            totalHour: null,
+            studyHour: null,
+            hourLeft: null,
+
+            classType: null,
+            courseHour: null,
+            freeHour: null,
+            wantedTeacher: null,
+            annotation: null,
             //static
             genders: [
                 'ชาย',
@@ -353,6 +553,18 @@ export default {
                 'Full Time',
                 'Part Time',
             ],
+
+            hours: [
+                { value: 0.5, text: "30 นาที" },
+                { value: 0.75, text: "45 นาที" },
+                { value: 1, text: "1 ชั่วโมง" },
+                { value: 1.5, text: "1.30 ชั่วโมง" },
+                { value: 2, text: "2 ชั่วโมง" },
+                { value: 2.5, text: "2.30 ชั่วโมง" },
+                { value: 3, text: "3 ชั่วโมง" },
+
+            ],
+
 
             provinceOptions: [
                 'กระบี่',
@@ -494,13 +706,35 @@ export default {
     },
 
     computed: {
+        formattedTotalHour() {
+            if (this.totalHour === null || this.totalHour === undefined) {
+                return '0 ชั่วโมง';
+            }
 
+            const hours = Math.floor(this.totalHour);
+            const minutes = (this.totalHour - hours) * 60;
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
     },
+
 
 
     methods: {
 
 
+        toEditCourse() {
+            if (this.isEditingCourse == true) {
+                this.isEditingCourse = false;
+            }
+            else {
+                this.isEditingCourse = true;
+            }
+        },
 
         toEditDetail() {
             if (this.isEditingDetail == true) {
@@ -577,7 +811,19 @@ export default {
             const db = this.$fireModule.database();
             await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
-                this.profilePic = childData.profilePic || 'https://cdn.vuetifyjs.com/images/john.jpg';
+                this.profilePic = childData.profilePic || null;
+                this.studentId = childData.studentId || null;
+
+                this.totalHour = childData.totalHour || 0;
+                this.studyHour = childData.studyHour || 0;
+                this.hourLeft = childData.hourLeft || 0;
+
+                this.classType = childData.classType || null;
+                this.courseHour = childData.courseHour || null;
+                this.freeHour = childData.freeHour || null;
+                this.wantedTeacher = childData.wantedTeacher || null;
+                this.annotation = childData.annotation || null;
+
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.firstNameDisplay = childData.firstName || null;
@@ -587,16 +833,23 @@ export default {
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;
                 this.birthDate = childData.birthDate || null;
-               
-                this.address.houseNo = childData.address.houseNo || null;
-                this.address.tambon = childData.address.tambon || null;
-                this.address.amphoe = childData.address.amphoe || null;
-                this.address.province = childData.address.province || null;
-                this.address.postal = childData.address.postal || null;
-       
+
                 this.education = childData.education || null;
                 this.studentMobile = childData.studentMobile || null;
                 this.parentMobile = childData.parentMobile || null;
+
+                try {
+                    this.address.houseNo = childData.address.houseNo || null;
+                    this.address.tambon = childData.address.tambon || null;
+                    this.address.amphoe = childData.address.amphoe || null;
+                    this.address.province = childData.address.province || null;
+                    this.address.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
+
+
                 this.isLoading = false;
 
             })
@@ -667,35 +920,49 @@ export default {
 
         },
 
-        updateSelectedSubjects(key, level, name) {
+        async addTime(value) {
 
-            const index = this.selectedSubjects.findIndex(s => s.name === name);
+            if (this.selectedAddHour !== null) {
 
-            if (index === -1) {
-                this.selectedSubjects.push({ name, level: [level], key });
+                console.log(this.selectedAddHour)
+                const selectedValue = parseFloat(this.selectedAddHour, 10);
 
-            } else {
+                this.totalHour = parseFloat(this.totalHour, 10) + selectedValue;
+                console.log(this.userId)
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    totalHour: this.totalHour,
 
-                const subject = this.selectedSubjects[index];
-                const levelIndex = subject.level.indexOf(level);
-
-                if (levelIndex === -1) {
-
-                    subject.level.push(level);
-                } else {
-
-                    subject.level.splice(levelIndex, 1);
-                }
-
-                if (subject.level.length === 0) {
-                    this.selectedSubjects.splice(index, 1);
-                }
+                })
+                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
             }
-            console.log(this.selectedSubjects);
-
         },
 
 
+        async subtractTime(value) {
+
+            if (this.selectedSubtractHour !== null) {
+
+                console.log(this.selectedSubtractHour)
+                const selectedValue = parseFloat(this.selectedSubtractHour, 10);
+
+                this.totalHour = parseFloat(this.totalHour, 10) - selectedValue;
+
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    totalHour: this.totalHour,
+
+                })
+                this.openSnackbar("success", 'ลดชั่วโมงสำเร็จ!');
+
+            }
+        },
+
+        openSnackbar(status, message) {
+            this.showSnackbar = true;
+            this.snackbarMessage = message;
+            this.snackbarColor = status;
+        },
 
 
     },
@@ -742,6 +1009,12 @@ hr.solid {
     border-top: 3px solid black;
     border-width: 3px;
     opacity: 1;
+}
+
+.black-label .v-label {
+    color: rgb(0, 0, 0);
+    opacity: 1;
+    font-weight: 500;
 }
 </style> 
   

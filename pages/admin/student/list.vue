@@ -91,13 +91,13 @@ export default {
 
 
             headers: [
-            { text: 'รหัสนักเรียน', value: 'stu.studenId' },
+            { text: 'รหัสนักเรียน', value: 'stu.studentId' },
             { text: 'ชื่อเล่น', value: 'stu.nickname' },
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'stu.lastName' },
-                
-                { text: 'เบอร์โทรศัพท์นักเรียน', value: 'stu.studentMobile' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
+                { text: 'ประเภทคลาส', value: 'stu.classType' },
+                { text: 'จำนวนชั่วโมงเรียนที่เหลือ', value: 'stu.hourLeft' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
@@ -137,7 +137,12 @@ export default {
                         const stu = {
                             status: childData[key].status,
                             name: childData[key].name,
+                            studentId:childData[key].studentId,
                             password: childData[key].password,
+
+                            hourLeft: childData[key].hourLeft,
+                            classType: childData[key].classType,
+
                             firstName: childData[key].firstName,
                             lastName: childData[key].lastName,
                             nickname: childData[key].nickname,
