@@ -11,6 +11,7 @@ const _422d84b4 = () => interopDefault(import('..\\pages\\reset_pass.vue' /* web
 const _309445d5 = () => interopDefault(import('..\\pages\\teacher\\index.vue' /* webpackChunkName: "pages/teacher/index" */))
 const _11d17df4 = () => interopDefault(import('..\\pages\\testbase64.vue' /* webpackChunkName: "pages/testbase64" */))
 const _101837bf = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
+const _63399150 = () => interopDefault(import('..\\pages\\testexcel.vue' /* webpackChunkName: "pages/testexcel" */))
 const _524e1418 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
 const _10be955c = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _9953a6fc = () => interopDefault(import('..\\pages\\admin\\basket\\index.vue' /* webpackChunkName: "pages/admin/basket/index" */))
@@ -92,6 +93,10 @@ export const routerOptions = {
     path: "/testdatareal",
     component: _101837bf,
     name: "testdatareal"
+  }, {
+    path: "/testexcel",
+    component: _63399150,
+    name: "testexcel"
   }, {
     path: "/testimage",
     component: _524e1418,

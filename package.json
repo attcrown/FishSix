@@ -21,6 +21,7 @@
     "bootstrap": "5.2.3",
     "core-js": "^3.25.3",
     "cropperjs": "1.5.13",
+    "file-saver": "^2.0.5",
     "firebase": "^9.23.0",
     "nuxt": "^2.15.8",
     "vue": "^2.7.10",
@@ -28,7 +29,8 @@
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "vuelidate": "0.7.7",
-    "vuetify": "^2.6.10"
+    "vuetify": "^2.6.10",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.12.3"

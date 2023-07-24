@@ -17,7 +17,7 @@
                             <!-- Search Field -->
                             <v-text-field v-model="search_table_student" append-icon="mdi-magnify" label="Search"
                                 class="mt-10" single-line hide-details dense style="max-width: 200px;"></v-text-field>
-                            <v-btn class="ms-10 mt-10 me-4">
+                            <v-btn class="ms-10 mt-10 me-4" @click="exportToExcel">
                                 export
                             </v-btn>
                         </v-toolbar>
@@ -31,7 +31,7 @@
                                             <img :src="require('~/assets/сolleagues discussing team project.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                        <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
                                             {{ dash_all }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
@@ -49,7 +49,7 @@
                                             <img :src="require('~/assets/young woman at work with laptop writing.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                        <v-col cols="auto" class="me-5" style="font-size:96px;color:white;">
                                             {{ dash_active }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
@@ -67,7 +67,7 @@
                                             <img :src="require('~/assets/сolleagues discussing team project.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px;">
+                                        <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
                                             {{ dash_notactive }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
@@ -227,6 +227,8 @@
 
 
 <script>
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default {
     data: () => ({
         dash_all: 0,
@@ -350,13 +352,15 @@ export default {
                                         .then(([teacherSnapshot, studentSnapshot]) => {
                                             const teacherData = teacherSnapshot.val();
                                             const studentData = studentSnapshot.val();
-                                            const phone_tea = teacherData.mobile;
-                                            const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
-                                            const namestu = studentData.firstName + " " + studentData.lastName;
-                                            const phone_stu = studentData.studentMobile;
                                             item.push({
-                                                name_student: namestu,
-                                                name: nametea,
+                                                nametea_first : teacherData.firstName,
+                                                nametea_last : teacherData.lastName,
+                                                nickname_tea: teacherData.nickname,
+                                                namestu_first : studentData.firstName,
+                                                namestu_last : studentData.lastName,
+                                                nickname_stu: studentData.nickname,
+                                                name_student : "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                                 subject: timedata.subject,
                                                 date: date,
                                                 time_s: timedata.start,
@@ -365,8 +369,8 @@ export default {
                                                 status: timedata.status,
                                                 key_student: key,
                                                 key_teacher: timedata.teacher,
-                                                phone_student: phone_stu,
-                                                phone_teacher: phone_tea,
+                                                phone_student: studentData.studentMobile,
+                                                phone_teacher: teacherData.mobile,
                                                 class: timedata.class,
                                                 level: timedata.level,
                                                 because: timedata.because,
@@ -393,9 +397,44 @@ export default {
                     }
                 }
                 this.desserts_student = item;
+                console.log(this.desserts_student);
             });
-        }
+        },
+        exportToExcel() {
+            // หัวข้อเอกสาร Excel
+            const headers = ['ชื่อจริงนักเรียน','นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู','วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'Class', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
 
+            // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
+            const data = [headers, ...this.desserts_student.map(item => [
+                item.namestu_first,
+                item.namestu_last,
+                item.nametea_first,
+                item.nametea_last,
+                item.subject,
+                item.date,
+                item.time_s,
+                item.time_e,
+                item.style,
+                item.status,
+                item.phone_student,
+                item.phone_teacher,
+                item.class,
+                item.level,
+                item.because,
+            ])];
+
+            // สร้างเอกสาร Excel
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+            // แปลงข้อมูลให้เป็นรูปแบบไฟล์ Excel
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+            // สร้าง Blob และบันทึกไฟล์
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, 'data.xlsx');
+        },
 
     },
 }

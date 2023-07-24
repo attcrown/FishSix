@@ -198,8 +198,8 @@ export default {
                                 .then(([teacherSnapshot, studentSnapshot]) => {
                                     const teacherData = teacherSnapshot.val();
                                     const studentData = studentSnapshot.val();
-                                    const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
-                                    const namestu = studentData.firstName + " " + studentData.lastName;
+                                    const nametea = "คุณครู " + teacherData.nickname + " " + teacherData.teacherId;
+                                    const namestu = studentData.nickname + " " + studentData.firstName;
                                     item.push({
                                         name_student: namestu,
                                         name: nametea,

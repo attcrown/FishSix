@@ -186,7 +186,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (timedata.status == 'active') {
+                            if (timedata.status == 'พร้อมเรียน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 Promise.all([getTeacherPromise, getStudentPromise])
@@ -289,8 +289,8 @@ export default {
 
 
         getColor(stutus) {
-            if (stutus == 'active') return 'success'
-            else if (stutus == 'Not active') return 'orange'
+            if (stutus === 'พร้อมเรียน') return '#29CC39'
+            else if (stutus === 'รอยืนยัน') return '#FFCB33'
             else return 'red'
         },
     },

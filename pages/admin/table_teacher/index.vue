@@ -527,7 +527,7 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].nickname + ' ' + childData[key].name });
+                        item.push({ key: key, name: childData[key].nickname + ' ' + childData[key].teacherId });
                     }
                 }
                 this.items = item;
@@ -573,7 +573,7 @@ export default {
                                     const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
                                     const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                     const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const nametea = "คุณครู " + teacherData.nickname + " " + teacherData.name;
+                                    const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
                                     const namesub = subjectData.name;
                                     if (this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                         item.push({

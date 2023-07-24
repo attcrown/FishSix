@@ -530,10 +530,10 @@ export default {
         },
         check_status() {
             if (this.mode == 'edit') {
-                return 'active';
+                return 'พร้อมเรียน';
             }
             if (this.mode == 'save') {
-                return 'Not active';
+                return 'รอยืนยัน';
             } else { return 'error'; }
         },
 
@@ -549,7 +549,7 @@ export default {
                 this.value == null ||
                 this.value_student == null ||
                 this.date1 == null) {
-                this.dialog_save_error = true;
+                this.dialog_save_error = true; 
                 return;
             }
             const db = this.$fireModule.database();
@@ -627,7 +627,7 @@ export default {
                             this.check_sub(this.save_detail.subject, key) &&
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
-                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].name });
+                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
                             console.log('items_select_tea', item);
                         }
                     }
@@ -636,7 +636,7 @@ export default {
                 } else {
                     for (const key in childData) {
                         if (childData[key].status == 'teacher') {
-                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].name });
+                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
                         }
                     }
                     this.items = item;
@@ -722,7 +722,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-                        item.push({ key: key, name: childData[key].firstName + " " + childData[key].lastName });
+                        item.push({ key: key, name: childData[key].nickname + " " + childData[key].firstName });
                     }
                 }
                 this.items_student = item;
@@ -752,7 +752,7 @@ export default {
                                         const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
                                         const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                        const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
+                                        const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
                                         const namesub = subjectData.name;
                                         if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             // console.log('New');

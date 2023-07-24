@@ -189,7 +189,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (timedata.status == 'Not active') {
+                            if (timedata.status == 'รอยืนยัน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 Promise.all([getTeacherPromise, getStudentPromise])
@@ -262,7 +262,7 @@ export default {
             console.log('update>>', this.editedItem);
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}/`).update({
-                status: "active",
+                status: "พร้อมเรียน",
             });
             this.close()
         },
@@ -278,8 +278,8 @@ export default {
         },
 
         getColor(stutus) {
-            if (stutus == 'active') return 'success'
-            else if (stutus == 'Not active') return 'orange'
+            if (stutus === 'พร้อมเรียน') return '#29CC39'
+            else if (stutus === 'รอยืนยัน') return '#FFCB33'
             else return 'red'
         },
     },
