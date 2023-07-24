@@ -673,16 +673,26 @@ export default {
                 this.faculty = childData.faculty || null;
                 this.major = childData.major || null;
               
-                this.address.houseNo = childData.address.houseNo || null;
-                this.address.tambon = childData.address.tambon || null;
-                this.address.amphoe = childData.address.amphoe || null;
-                this.address.province = childData.address.province || null;
-                this.address.postal = childData.address.postal || null;
-                this.currAddress.houseNo = childData.address.houseNo || null;
+                try {
+                    this.address.houseNo = childData.address.houseNo || null;
+                    this.address.tambon = childData.address.tambon || null;
+                    this.address.amphoe = childData.address.amphoe || null;
+                    this.address.province = childData.address.province || null;
+                    this.address.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
+                try {
+                    this.currAddress.houseNo = childData.address.houseNo || null;
                 this.currAddress.tambon = childData.address.tambon || null;
                 this.currAddress.amphoe = childData.address.amphoe || null;
                 this.currAddress.province = childData.address.province || null;
                 this.currAddress.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
                 this.isLoading = false;
 
             })
