@@ -28,29 +28,33 @@
                                     style="background: #AD382F;" height="159px" width="300px">
                                     <v-row>
                                         <v-col cols="auto" class="mr-auto">
-                                            <img :src="require('~/assets/сolleagues discussing team project.png')" class="pt-5 ps-5">
+                                            <img :src="require('~/assets/сolleagues discussing team project.png')"
+                                                class="pt-5 ps-5">
                                         </v-col>
                                         <v-col cols="auto" class="me-5" style="font-size:96px;">
                                             {{ dash_all }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
-                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนนักเรียนทั้งหมด</p>
+                                            <p style="font-size: 16px; margin-top: -50px; color:white">จำนวนนักเรียนทั้งหมด
+                                            </p>
                                         </v-col>
                                     </v-row>
                                 </v-card>
-                            </v-hover>                            
+                            </v-hover>
                             <v-hover v-slot="{ hover }">
                                 <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
                                     style="background: #322E2B;" height="159px" width="300px">
                                     <v-row>
                                         <v-col cols="auto" class="mr-auto">
-                                            <img :src="require('~/assets/young woman at work with laptop writing.png')" class="pt-5 ps-5">
+                                            <img :src="require('~/assets/young woman at work with laptop writing.png')"
+                                                class="pt-5 ps-5">
                                         </v-col>
                                         <v-col cols="auto" class="me-5" style="font-size:96px;">
                                             {{ dash_active }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
-                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนักเรียนที่พร้อมเรียน</p>
+                                            <p style="font-size: 16px; margin-top: -50px; color:white">
+                                                จำนวนักเรียนที่พร้อมเรียน</p>
                                         </v-col>
                                     </v-row>
                                 </v-card>
@@ -60,13 +64,15 @@
                                     style="background: #B6A7A2;" height="159px" width="300px">
                                     <v-row>
                                         <v-col cols="auto" class="mr-auto">
-                                            <img :src="require('~/assets/сolleagues discussing team project.png')" class="pt-5 ps-5">
+                                            <img :src="require('~/assets/сolleagues discussing team project.png')"
+                                                class="pt-5 ps-5">
                                         </v-col>
                                         <v-col cols="auto" class="me-5" style="font-size:96px;">
                                             {{ dash_notactive }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
-                                            <p style="font-size: 16px; margin-top: -50px; color:white" >จำนวนักเรียนที่รอยืนยัน</p>
+                                            <p style="font-size: 16px; margin-top: -50px; color:white">
+                                                จำนวนักเรียนที่รอยืนยัน</p>
                                         </v-col>
                                     </v-row>
                                 </v-card>
@@ -101,58 +107,109 @@
                                 Open Dialog
                             </v-btn>
                         </template> -->
-                        <v-card class="fonts500">
-                            <v-card-title>
-                                <span class="text-h5"><b>DETAIL</b> [ {{ detail_user.date }} ]</span>
+                        <v-card class="p-4 rounded-xl">
+                            <v-card-title class="d-flex justify-space-between">
+                                <span style="font-size: 16px" v-if="detail_user.status === 'พร้อมเรียน'">
+                                    <b>รายละเอียดการจองเรียน</b>
+                                    <v-chip class="ma-2" color="#29CC39" text-color="white">
+                                        {{ detail_user.status }}
+                                    </v-chip>
+                                </span>
+                                <span style="font-size: 16px" v-if="detail_user.status === 'รอยืนยัน'">
+                                    <b>รายละเอียดการจองเรียน</b>
+                                    <v-chip class="ma-2" color="#FFCB33" text-color="white">
+                                        {{ detail_user.status }}
+                                    </v-chip>
+                                </span>
+                                <v-btn fab dark small color="#37474F" @click="dialog_detail = false">
+                                    <v-icon dark class="text-h5">
+                                        mdi-close
+                                    </v-icon>
+                                </v-btn>
+
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="12">
+                                            <v-text-field v-model="detail_user.date" label="วันที่เริ่มเรียน" readonly>
+                                                <template #prepend>
+                                                    <span class="mdi mdi-calendar-outline text-h6"></span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="เวลาเริ่มต้น" v-model="detail_user.time_s" readonly>
+                                                <template #prepend>
+                                                    <span class="mdi mdi-timer-alert-outline text-h6"></span>
+                                                </template></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="เวลาสิ้นสุด" v-model="detail_user.time_e" readonly>
+                                                <template #prepend>
+                                                    <span class="mdi mdi-timer-cancel-outline text-h6"></span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="ประเภทคลาส" v-model="detail_user.class"
+                                                readonly></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.style"
+                                                readonly></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-text-field label="ระดับชั้น" v-model="detail_user.level" readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" md="12">
+                                            <v-text-field label="จุดประสงค์ในการเรียนครั้งนี้" v-model="detail_user.because"
+                                                readonly>
+                                            </v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                                <!-- <small>*รายละเอียดการจองของลูกค้าที่สำเร็จแล้ว</small> -->
+                            </v-card-text>
+
+                            <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
+
+                            <v-card-title style="margin-top: -20px;">
+                                <span style="font-size:16px"><b>รายละเอียดเกี่ยวกับครู/นักเรียน</b></span>
                             </v-card-title>
                             <v-card-text>
                                 <v-container>
                                     <v-row>
-                                        <v-col cols="12" sm="6" md="6">
+                                        <v-col cols="12" sm="6">
                                             <v-text-field label="name student" v-model="detail_user.name_student"
                                                 readonly></v-text-field>
                                         </v-col>
-                                        <v-col cols="12" sm="6" md="6">
+                                        <v-col cols="12" sm="6">
                                             <v-text-field label="phone number" v-model="detail_user.phone_student"
                                                 readonly></v-text-field>
                                         </v-col>
-                                        <v-col cols="12" sm="6" md="6">
+                                        <v-col cols="12" sm="6">
                                             <v-text-field label="name teacher" v-model="detail_user.name"
                                                 readonly></v-text-field>
                                         </v-col>
-                                        <v-col cols="12" sm="6" md="6">
+                                        <v-col cols="12" sm="6">
                                             <v-text-field label="phone number" v-model="detail_user.phone_teacher"
-                                                readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject"
-                                                readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="สถานที่เรียน" v-model="detail_user.style"
-                                                readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.class"
-                                                readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="4">
-                                            <v-text-field label="เริ่มเรียน" v-model="detail_user.time_s"
-                                                readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="4">
-                                            <v-text-field label="เลิกเรียน" v-model="detail_user.time_e"
                                                 readonly></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
-                                <small>*รายละเอียดการจองของลูกค้าที่สำเร็จแล้ว</small>
                             </v-card-text>
+
+
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="dialog_detail = false">
-                                    Close
-                                </v-btn>
+
                                 <!-- <v-btn color="blue darken-1" text @click="dialog_detail = false">
                                     Save
                                 </v-btn> -->
@@ -182,24 +239,26 @@ export default {
         items: ['Day', 'Week', 'Month', 'All'],
         headers_student: [
             {
-                text: 'Name Student',
-                align: 'start',
-                sortable: false,
-                value: 'name_student',
-            },
-            {
-                text: 'Name Teacher',
+                text: 'ชื่อครู',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date', align: 'center' },
-            { text: 'Start', value: 'time_s', align: 'center' },
-            { text: 'End', value: 'time_e', align: 'center' },
-            { text: 'Style', value: 'style', align: 'center' },
-            { text: 'Subject', value: 'subject', align: 'center' },
-            { text: 'Status', value: 'status', sortable: false, align: 'center' },
-            { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
+            {
+                text: 'ชื่อนักเรียน',
+                align: 'start',
+                sortable: false,
+                value: 'name_student',
+            },
+            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'รูปแบบการเรียน', value: 'style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'ระดับชั้น', value: 'level', align: 'center' },
+            { text: 'วันที่สอน', value: 'date', align: 'center' },
+            { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
+            { text: 'เวลาเลิกเรียน', value: 'time_e', align: 'center' },
+            { text: 'สถานะ', value: 'status', sortable: false, align: 'center' },
+            { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts_student: [],
         editedIndex: -1,
@@ -226,8 +285,8 @@ export default {
 
     methods: {
         getColor(stutus) {
-            if (stutus === 'พร้อมเรียน') return 'success'
-            else if (stutus === 'รอยืนยัน') return 'orange'
+            if (stutus === 'พร้อมเรียน') return '#29CC39'
+            else if (stutus === 'รอยืนยัน') return '#FFCB33'
             else return 'red'
         },
 
@@ -309,15 +368,16 @@ export default {
                                                 phone_student: phone_stu,
                                                 phone_teacher: phone_tea,
                                                 class: timedata.class,
-                                                level:timedata.level,
+                                                level: timedata.level,
+                                                because: timedata.because,
                                             });
                                             this.dash_all += 1;
-                                            if(timedata.status === 'พร้อมเรียน'){
+                                            if (timedata.status === 'พร้อมเรียน') {
                                                 this.dash_active += 1;
-                                            }else if(timedata.status === 'รอยืนยัน'){
+                                            } else if (timedata.status === 'รอยืนยัน') {
                                                 this.dash_notactive += 1;
-                                            }else{
-                                                console.log('Error',timedata.status);
+                                            } else {
+                                                console.log('Error', timedata.status);
                                             }
                                             // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
                                             if (item.length === Object.keys(datedata).length) {
@@ -345,12 +405,16 @@ export default {
     background-color: #7e7b7b;
     /* เปลี่ยนเป็นสีที่คุณต้องการ */
 }
+
 .fonts500 {
-  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
-  font-weight: 500;
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 500;
 }
+
 .fonts300 {
-  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
-  font-weight: 300;
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 300;
 }
 </style>

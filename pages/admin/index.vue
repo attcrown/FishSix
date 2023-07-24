@@ -7,7 +7,6 @@
   
 <script>
 import dashboard from './dashboard.vue';
-import Table_now from './table_now.vue';
 import table_now from './table_now.vue';
 
 export default {
@@ -19,7 +18,7 @@ export default {
 
   components: {
     dashboard,
-    Table_now,
+    table_now,
   },
   created(){
     
