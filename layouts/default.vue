@@ -1,8 +1,8 @@
 <template>
-  <v-app>
+  <v-app class="fonts500">
     <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
       :clipped-left="clipped" fixed app color="#B6A7A2">
-      <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
+      <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 100%;"></div>
 
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
@@ -164,5 +164,15 @@ export default {
   top: 50%;
   transform: translateY(0%);
 }
+
+.fonts500 {
+  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-weight: 500;
+}
+.fonts300 {
+  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-weight: 300;
+}
+
 </style>
 

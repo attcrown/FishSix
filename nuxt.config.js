@@ -34,6 +34,7 @@ export default {
     // https://go.nuxtjs.dev/eslint
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/google-fonts',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -96,4 +97,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  googleFonts: {
+    families: {
+      Prompt: true, // โหลดสไตล์ทั้งหมดของ Roboto
+    },
+    display: 'swap', // กำหนดการแสดงผลเมื่อโหลด Font
+  },
 }
