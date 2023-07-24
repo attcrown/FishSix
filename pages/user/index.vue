@@ -12,19 +12,19 @@
                     <v-card-text>
                         <v-row>
                             <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">0</span>
+                                <span class=" font-weight-black text-black">{{totalHour}}</span>
                                 <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
-                                <div class="text-h6 font-semibold text-black">Flipclass online</div>
+                                <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนทั้งหมด</div>
                             </v-col>
                             <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">0</span>
+                                <span class=" font-weight-black text-black">{{studyHour}}</span>
                                 <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
-                                <div class="text-h6 font-semibold text-black">Flipclass สาขา</div>
+                                <div class="text-h6 font-semibold text-black">ชั่วโมงที่เรียนไปแล้ว</div>
                             </v-col>
                             <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">0</span>
+                                <span class=" font-weight-black text-black">{{studyHour}}</span>
                                 <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
-                                <div class="text-h6 font-semibold text-black">Active class</div>
+                                <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนที่เหลือ</div>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -49,6 +49,9 @@ export default {
             firstName: '',
             username: '',
             keyuser: '',
+            totalHour: null,
+            studyHour: null,
+            hourLeft: null,
             isLoading: true,
         }
     },
@@ -77,6 +80,9 @@ export default {
             await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
+                this.totalHour = childData.totalHour || 0;
+                this.studyHour = childData.studyHour || 0;
+                this.hourLeft = childData.hourLeft || 0;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.firstNameDisplay = childData.firstName || null;

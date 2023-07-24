@@ -9,7 +9,109 @@
                 </div>
 
                 <v-col cols="12">
-                    <v-card style="border-radius: 32px; background: #F5F5F5;" elevation="0">
+                    <v-row>
+                        <style>
+                            .time-label {
+                                color: #000;
+                                font-size: 24px;
+                                font-weight: 500;
+
+                            }
+
+                            .des-label {
+                                color: #000;
+                                font-size: 16px;
+                                font-weight: 300;
+
+                            }
+                        </style>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="time-label mb-3">{{ totalHour ? totalHour : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="time-label mb-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="time-label mb-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
+                            <div>
+
+                            </div>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-row>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
+                                        readonly maxlength="5" oninput="validity.valid||(value='');"
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
+                                        readonly maxlength="5" oninput="validity.valid||(value='');"
+                                        label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
+                                        readonly maxlength="5" oninput="validity.valid||(value='');" v-model="hourLeft"
+                                        label="ชั่วโมงเรียนที่เหลือ">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" readonly
+                                        label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="classType" readonly
+                                        label="ประเภทคลาส"></v-text-field>
+                                </v-col>
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+                                <v-col class="py-0" cols="4"> <v-text-field class="black-label" v-model="wantedTeacher"
+                                        readonly label="ต้องการเรียนกับครู" item-text="teacher.firstName"></v-text-field>
+
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="annotation" v-model="annotation" readonly
+                                        label="หมายเหตุ">
+                                    </v-text-field>
+
+                                </v-col>
+                            </v-row>
+                        </v-card-text>
+                    </v-card>
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
                         <v-row class="text-right p-3 pb-0 justify-space-between">
 
                             <div>
@@ -22,20 +124,86 @@
                         <v-row class="mt-0" align="center">
                             <v-col cols="2" sm="2" class="pl-10">
                                 <div>
-                                    <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
-
-                                        <img :src="profilePic" alt="รูปโปรไฟล์">
+                                    <v-avatar style="max-width: 350px; width: 100%; height: 100%;max-height: 350px;">
+                                        <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์">
+                                        <v-icon style=" font-size: 100px;" v-if="!profilePic" dark>
+                                            mdi-account-circle
+                                        </v-icon>
                                     </v-avatar>
+
                                 </div>
                             </v-col>
-                            <v-col cols="9" sm="9">
-                                <div>
-                                    <strong class="header text-break">&nbsp;คุณ {{ firstNameDisplay }} {{ lastNameDisplay
-                                    }}</strong>
-                                    <br>
-                                    <span class="userSpan text-break">{{ nicknameDisplay }}</span>
-                                </div>
+                            <v-col cols="10">
+                                <v-row>
+                                    <v-col class="py-0" cols="4">
+                                        <div style="color: var(--brown-brown-2, #27262B);font-size: 20px;font-weight: 500;">
+                                            รหัสนักเรียน: {{ studentId }}</div>
+                                        <!-- <v-text-field class="black-label" v-model="studentId" counter
+                                            label="รหัสนักเรียน (ไม่จำเป็นต้องกรอก)" disabled>
+                                            <template v-slot:append>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                    </template>
+                                                    <span>FSS ตามด้วยเลข 4 หลัก
+                                                        <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                </v-tooltip>
+                                            </template>
+
+                                        </v-text-field> -->
+                                    </v-col>
+                                    <v-col cols="8" class="py-0"></v-col>
+                                    <v-col cols="6" class="py-0">
+                                        <v-text-field label="ชื่อ" name="firstName" v-model="firstName" readonly
+                                            required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6" class="py-0">
+                                        <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName" readonly
+                                            required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname" readonly
+                                            required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="5" class="py-0">
+
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field label="เพศ" name="gender" v-model="gender" readonly></v-text-field>
+
+                                    </v-col>
+
+
+                                </v-row>
                             </v-col>
+                            <v-col cols="12">
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+
+                            </v-col>
+                            <v-row class="px-4">
+
+                                <v-col cols="4" class="py-0">
+                                    <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile" readonly
+                                        required></v-text-field>
+                                </v-col>
+                                <v-col cols="4" class="py-0">
+                                    <v-text-field label="อีเมลล์" name="email" v-model="email"></v-text-field>
+                                </v-col>
+                                <v-col cols="4" class="py-0">
+                                    <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber" readonly
+                                        required></v-text-field>
+                                </v-col>
+                                <v-col cols="4">
+                                    <!-- <label>สำเนาบัตรประชาชน</label><br> -->
+                                    <!-- <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy" disabled
+                                        accept=".pdf,image/*"></v-file-input> -->
+                                    <!-- <a v-if="idCardCopy" href="" @click="downloadFile()"> View</a>
+                                        <a v-if="!idCardCopy"> ไม่มี</a> -->
+                                </v-col>
+
+                            </v-row>
 
                         </v-row>
                     </v-card>
@@ -43,7 +211,8 @@
 
 
                 <v-col cols="12">
-                    <v-card style="border-radius: 32px;background: #F5F5F5;" elevation="0">
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="pl-2">ข้อมูลทั่วไป</div>
                             <div>
@@ -103,7 +272,8 @@
                     </v-card>
                 </v-col>
                 <v-col cols="12">
-                    <v-card style="border-radius: 32px;background: #F5F5F5;" elevation="0">
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="pl-2">ที่อยู่ปัจจุบัน</div>
                             <div>
@@ -257,7 +427,7 @@
                             </v-row></v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
+                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" 
                             @click="saveName"> บันทึกข้อมูล</v-btn>
                         <v-btn color="white" @click="dialogEditName = false">ยกเลิก</v-btn>
                     </v-card-actions>
@@ -311,7 +481,7 @@
                             </v-row></v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
+                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" 
                             @click="saveDetail"> บันทึกข้อมูล</v-btn>
                         <v-btn color="white" @click="dialogEditDetail = false">ยกเลิก</v-btn>
                     </v-card-actions>
@@ -350,7 +520,7 @@
                             </v-row></v-form>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
+                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo"
                             @click="saveAddress"> บันทึกข้อมูล</v-btn>
                         <v-btn color="white" @click="dialogEditAddress = false">ยกเลิก</v-btn>
                     </v-card-actions>
@@ -391,13 +561,18 @@ export default {
             dialogEditDetail: false,
             dialogEditAddress: false,
 
+
             //User data
+            firstNameDisplay: null,
+            lastNameDisplay: null,
+            nicknameDisplay: null,
             profilePic: null,
             profilePicUpload: null,
             iconSize: 120,
             firstNameDisplay: null,
             lastNameDisplay: null,
             nicknameDisplay: null,
+            studentId: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -412,9 +587,28 @@ export default {
                 province: null,
                 postal: null,
             },
+            currAddress: {
+                houseNo: null,
+                tambon: null,
+                amphoe: null,
+                province: null,
+                postal: null,
+            },
+            email: null,
+            idCardNumber: null,
             education: null,
             studentMobile: null,
             parentMobile: null,
+
+            totalHour: null,
+            studyHour: null,
+            hourLeft: null,
+
+            classType: null,
+            courseHour: null,
+            freeHour: null,
+            wantedTeacher: null,
+            annotation: null,
 
             //list of select
             educationLevels:
@@ -578,7 +772,7 @@ export default {
             await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
-
+                this.studentId = childData.studentId || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.firstNameDisplay = childData.firstName || null;
@@ -588,17 +782,33 @@ export default {
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;
                 this.birthDate = childData.birthDate || null;
-               
-                this.address.houseNo = childData.address.houseNo || null;
-                this.address.tambon = childData.address.tambon || null;
-                this.address.amphoe = childData.address.amphoe || null;
-                this.address.province = childData.address.province || null;
-                this.address.postal = childData.address.postal || null;
-       
+
+                this.totalHour = childData.totalHour || 0;
+                this.studyHour = childData.studyHour || 0;
+                this.hourLeft = childData.hourLeft || 0;
+
+                this.classType = childData.classType || null;
+                this.courseHour = childData.courseHour || null;
+                this.freeHour = childData.freeHour || null;
+                this.wantedTeacher = childData.wantedTeacher || null;
+                this.annotation = childData.annotation || null;
+
                 this.education = childData.education || null;
                 this.studentMobile = childData.studentMobile || null;
                 this.parentMobile = childData.parentMobile || null;
+
+                try {
+                    this.address.houseNo = childData.address.houseNo || null;
+                    this.address.tambon = childData.address.tambon || null;
+                    this.address.amphoe = childData.address.amphoe || null;
+                    this.address.province = childData.address.province || null;
+                    this.address.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
                 this.isLoading = false;
+
 
             })
 
@@ -820,6 +1030,11 @@ export default {
     text-transform: none;
 }
 
+hr.solid {
+    border-top: 3px solid black;
+    border-width: 3px;
+    opacity: 1;
+}
 
 .header {
     font-size: 25px;
