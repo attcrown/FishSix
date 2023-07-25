@@ -274,9 +274,11 @@
                                         :error-messages="rateErrors" @change="$v.rate.$touch()" @blur="$v.rate.$touch()"
                                         v-model="rate"></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
-                                    <v-select class="black-label" v-model="classLocation" :items="classLocations"
-                                        label="สาขาที่สามารถสอนได้" multiple></v-select>
+                                <v-col cols="4" class="py-0">
+                                    <v-select class="black-label" v-model="classLocation" :items="locations" item-value="key" 
+                                        label="สาขาที่สามารถสอนได้" item-text="name" multiple>     
+                                    </v-select>
+                                
                                 </v-col>
 
                             </v-row>
@@ -429,6 +431,7 @@ export default {
             faculty: null,
             major: null,
             selectedSubjects: [],
+            locations: [],
 
             //rules
             postalRules: [
@@ -761,7 +764,7 @@ export default {
 
         submit() {
             this.$v.$touch()
-
+            console.log(this.classLocation)
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0 && this.nameErrors == 0
                 && this.idErrors.length == 0 && this.mobileErrors.length == 0
@@ -895,9 +898,39 @@ export default {
 
             })
 
+            await db.ref(`location/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.locations = [];
+                let items = [];
+                let locationName = '';
+                let locationDetail = '';
+
+
+                for (const key in childData) {
+
+                    db.ref(`location/${key}`).on("value", (snapshot) => {
+                        const childData = snapshot.val();
+                        locationName = childData.name;
+                        locationDetail = childData.location;
+
+                    })
+                    const item = {
+                        key: key,
+                        location: locationDetail,
+                        name: locationName
+                    };
+
+                    items.push(item);
+                }
+                this.locations = items;
+                console.log(this.locations);
+                this.isLoading = false;
+
+            })
+
             const snapshot = await db.ref('user').orderByChild('teacherId').limitToLast(1).once('value');
             const lastTeacher = snapshot.val();
-            console.log(lastTeacher)
+
             if (!lastTeacher) {
                 this.teacherId = 'FS0001';
                 return;
