@@ -134,7 +134,7 @@
                             <v-btn color="blue darken-1" text @click="dialog_detail = false">
                                 Close
                             </v-btn>
-                            <v-btn color="blue darken-1" text @click="save_detail_data()">
+                            <v-btn color="blue darken-1" text @click="save_detail_data()" :disabled="!formIsValid">
                                 Save
                             </v-btn>
                         </v-card-actions>
@@ -260,7 +260,7 @@ export default {
                 text: 'ID',
                 align: 'start',
                 sortable: false,
-                value: 'name',
+                value: 'userid',
             },
             { text: 'ชื่อครู', value: 'name' },
             { text: 'ประเภทคลาส', value: 'class', align: 'center' },
@@ -286,6 +286,17 @@ export default {
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        },
+        formIsValid() {
+            return (
+                this.value && 
+                this.save_detail.class &&
+                this.save_detail.style &&
+                this.save_detail.sum_people &&
+                this.save_detail.subject &&
+                this.picker_start &&
+                this.picker_stop
+            );
         },
         allowedHours() {
             return v => v > this.hour_tea;
@@ -444,10 +455,11 @@ export default {
                                     const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                     const locationData = locationSnapshot.val();
 
-                                    const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
+                                    const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
                                     const namesub = subjectData.name;
                                     if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                         item.push({
+                                            userid : teacherData.teacherId,
                                             name: nametea,
                                             date: date,
                                             time_s: timedata.start,

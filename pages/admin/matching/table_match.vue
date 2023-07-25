@@ -338,10 +338,10 @@ export default {
         },
 
         save() {
-            console.log('update>>', this.editedItem);
+            console.log('update>>', this.editedItem ,this.date);
             this.delete_match();
             const db = this.$fireModule.database();
-            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}/`).update({
+            db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
                 teacher: this.editedItem.key_teacher,
                 subject: this.editedItem.subject,
                 style_subject: this.editedItem.style,
@@ -354,7 +354,7 @@ export default {
                 because: this.editedItem.because,
                 status: "พร้อมเรียน",
             });
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e}/`).update({
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
                 invite: '1',
                 sum_people: '1',
                 subject: this.editedItem.subject,

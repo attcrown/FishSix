@@ -157,11 +157,11 @@
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.style"
+                                            <v-text-field label="รูปแบบการเรียน" v-model="detail_user.name_style"
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.subject" readonly>
+                                            <v-text-field label="วิชาที่เรียน" v-model="detail_user.name_subject" readonly>
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
@@ -253,8 +253,8 @@ export default {
                 value: 'name_student',
             },
             { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'รูปแบบการเรียน', value: 'style', align: 'center' },
-            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
@@ -347,11 +347,14 @@ export default {
                                     const timedata = datedata[time];
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
-
-                                    Promise.all([getTeacherPromise, getStudentPromise])
-                                        .then(([teacherSnapshot, studentSnapshot]) => {
+                                    const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    Promise.all([getTeacherPromise, getStudentPromise ,getsubjectPromise,getlocationPromise])
+                                        .then(([teacherSnapshot, studentSnapshot ,subjectSnapshot ,locationSnapshot]) => {
                                             const teacherData = teacherSnapshot.val();
                                             const studentData = studentSnapshot.val();
+                                            const subjectData = subjectSnapshot.val();
+                                            const locationData = locationSnapshot.val();
                                             item.push({
                                                 nametea_first : teacherData.firstName,
                                                 nametea_last : teacherData.lastName,
@@ -362,10 +365,12 @@ export default {
                                                 name_student : "น้อง" + studentData.nickname + " " + studentData.firstName,
                                                 name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                                 subject: timedata.subject,
+                                                name_subject: subjectData.name,
                                                 date: date,
                                                 time_s: timedata.start,
                                                 time_e: timedata.stop,
                                                 style: timedata.style_subject,
+                                                name_style: locationData.name,
                                                 status: timedata.status,
                                                 key_student: key,
                                                 key_teacher: timedata.teacher,
