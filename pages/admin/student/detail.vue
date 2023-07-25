@@ -24,7 +24,7 @@
 
                             }
                         </style>
-                        <v-col cols="4">
+                        <v-col cols="3">
                             <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
                                 <v-card-text class="p-4">
                                     <v-row>
@@ -41,7 +41,7 @@
                                 <v-card-text class="p-4">
                                     <v-row>
                                         <div class="des-label">Flip class </div>
-                                        <div class="time-label my-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
+                                        <div class="time-label my-3">{{ formattedStudyHour }} </div>
                                         <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
                                     </v-row>
                                 </v-card-text>
@@ -53,7 +53,7 @@
                                 <v-card-text class="p-4">
                                     <v-row>
                                         <div class="des-label">Flip class </div>
-                                        <div class="time-label my-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
+                                        <div class="time-label my-3">{{ formattedHourLeft }}</div>
                                         <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
                                     </v-row>
                                 </v-card-text>
@@ -74,6 +74,9 @@
                                         <v-col cols="3" class="py-0 mt-2">
                                             <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
                                                 item-text="text" item-value="value" v-model="selectedAddHour"></v-select>
+
+
+
                                         </v-col>
                                         <v-col cols="1" class="py-0 mt-2">
                                             <v-btn color="green text-white" @click="addTime">ยืนยัน</v-btn>
@@ -83,11 +86,11 @@
                                             <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
                                                 item-text="text" item-value="value"
                                                 v-model="selectedSubtractHour"></v-select>
+
                                         </v-col>
                                         <v-col cols="1" class="py-0 mt-2">
                                             <v-btn color="green text-white" @click="subtractTime">ยืนยัน</v-btn>
                                         </v-col>
-
 
                                     </v-row>
                                 </v-card-text>
@@ -115,19 +118,24 @@
                         <v-card-text>
                             <v-row>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
-                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                    <v-text-field class="black-label" type="number" v-model="totalHourInput" min="0"
+                                        max="99999" :readonly="!isEditingCourse" maxlength="5"
+                                        oninput="validity.valid||(value='');" step="0.01"
+                                        hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
                                         label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
-                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                    <v-text-field class="black-label" type="number" v-model="studyHourInput" min="0"
+                                        max="99999" :readonly="!isEditingCourse" maxlength="5"
+                                        oninput="validity.valid||(value='');" step="0.01"
+                                        hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
                                         label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
                                         :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
-                                        v-model="hourLeft" label="ชั่วโมงเรียนที่เหลือ">
+                                        step="0.01" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
+                                        v-model="hourLeftInput" label="ชั่วโมงเรียนที่เหลือ">
                                     </v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
@@ -489,7 +497,9 @@ export default {
             snackbarColor: '',
 
             selectedAddHour: null,
+
             selectedSubtractHour: null,
+
 
             //data
             profilePic: null,
@@ -529,6 +539,14 @@ export default {
             totalHour: null,
             studyHour: null,
             hourLeft: null,
+
+            totalHourDisplay: null,
+            studyHourDisplay: null,
+            hourLeftDisplay: null,
+
+            totalHourInput: null,
+            studyHourInput: null,
+            hourLeftInput: null,
 
             classType: null,
             courseHour: null,
@@ -707,12 +725,42 @@ export default {
 
     computed: {
         formattedTotalHour() {
-            if (this.totalHour === null || this.totalHour === undefined) {
+            if (this.totalHourDisplay === null || this.totalHourDisplay === undefined) {
                 return '0 ชั่วโมง';
             }
 
-            const hours = Math.floor(this.totalHour);
-            const minutes = (this.totalHour - hours) * 60;
+            const hours = Math.floor(this.totalHourDisplay);
+            const minutes = ((this.totalHourDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+
+
+        },
+        formattedStudyHour() {
+            if (this.studyHourDisplay === null || this.studyHourDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.studyHourDisplay);
+            const minutes = ((this.studyHourDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
+        formattedHourLeft() {
+            if (this.hourLeftDisplay === null || this.hourLeftDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.hourLeftDisplay);
+            const minutes = ((this.hourLeftDisplay - hours) * 60).toFixed(0);
 
             if (minutes === 0) {
                 return `${hours} ชั่วโมง`;
@@ -729,6 +777,7 @@ export default {
 
         toEditCourse() {
             if (this.isEditingCourse == true) {
+                this.updateCourse();
                 this.isEditingCourse = false;
             }
             else {
@@ -817,6 +866,12 @@ export default {
                 this.totalHour = childData.totalHour || 0;
                 this.studyHour = childData.studyHour || 0;
                 this.hourLeft = childData.hourLeft || 0;
+
+
+                this.totalHourDisplay = childData.totalHour || 0;
+                this.studyHourDisplay = childData.studyHour || 0;
+                this.hourLeftDisplay = childData.hourLeft || 0;
+
 
                 this.classType = childData.classType || null;
                 this.courseHour = childData.courseHour || null;
@@ -920,7 +975,42 @@ export default {
 
         },
 
-        async addTime(value) {
+        async updateCourse() {
+            if (this.totalHourInput !== null) {
+                this.totalHourInput = this.convertHourMinuteToMinutes(this.totalHourInput);
+            }
+            if (this.studyHourInput !== null) {
+                this.studyHourInput = this.convertHourMinuteToMinutes(this.studyHourInput);
+            }
+            if (this.hourLeftInput !== null) {
+                this.hourLeftInput = this.convertHourMinuteToMinutes(this.hourLeftInput);
+            }
+            const db = this.$fireModule.database();
+            const updates = {};
+            if (this.totalHourInput !== null) {
+                updates.totalHour = parseFloat(this.totalHourInput);
+            }
+
+            if (this.studyHourInput !== null) {
+                updates.studyHour = parseFloat(this.studyHourInput);
+            }
+
+            if (this.hourLeftInput !== null) {
+                updates.hourLeft = parseFloat(this.hourLeftInput);
+            }
+
+            await db.ref(`user/${this.userId}/`).update(updates);
+            this.totalHourInput = null;
+            this.studyHourInput = null;
+            this.hourLeftInput = null;
+            this.openSnackbar("success", 'แก้ไขชั่วโมงสำเร็จ!');
+            return;
+        },
+
+
+
+        async addTime() {
+
 
             if (this.selectedAddHour !== null) {
 
@@ -935,11 +1025,11 @@ export default {
 
                 })
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
+                return;
             }
         },
 
-
-        async subtractTime(value) {
+        async subtractTime() {
 
             if (this.selectedSubtractHour !== null) {
 
@@ -954,10 +1044,22 @@ export default {
 
                 })
                 this.openSnackbar("success", 'ลดชั่วโมงสำเร็จ!');
-
+                return;
             }
         },
 
+
+        convertHourMinuteToMinutes(input) {
+            const timeStr = input.toString();
+            const [hours, minutes] = timeStr.split('.');
+            if (!minutes) {
+                return `${hours}`;
+            }
+
+            const remainingMinutes = minutes % 60;
+            const formattedMinutes = (remainingMinutes / 60).toFixed(2).slice(2);
+            return `${hours}.${formattedMinutes}`;
+        },
         openSnackbar(status, message) {
             this.showSnackbar = true;
             this.snackbarMessage = message;

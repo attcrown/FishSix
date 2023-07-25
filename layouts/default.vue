@@ -29,9 +29,14 @@
     <v-app-bar :clipped="clipped" fixed app color="white" elevation="0">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
       <v-spacer />
-      <p class="dark">
-        Admin
+      <p class="m-0">
+       Operation
       </p>
+      <v-avatar class="ms-2">
+        <v-icon style=" font-size: 40px;" color="grey">
+          mdi-account-circle
+        </v-icon>
+      </v-avatar>
       <v-btn icon to="/admin/" router exact @click="getout()">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
@@ -92,7 +97,7 @@ export default {
         //   title: 'Edit-Shop',
         //   to: '/admin/edit_shop',
         // },
-        
+
         {
           icon: 'mdi-chart-bubble',
           title: 'ข้อมูลผู้สอน',
@@ -117,7 +122,7 @@ export default {
     }
   },
   mounted() {
-    this.check(); 
+    this.check();
   },
   methods: {
     check() {
@@ -133,7 +138,7 @@ export default {
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
-        }              
+        }
       }
     },
     getout() {
@@ -166,13 +171,15 @@ export default {
 }
 
 .fonts500 {
-  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-family: 'Prompt', sans-serif;
+  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
   font-weight: 500;
 }
+
 .fonts300 {
-  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-family: 'Prompt', sans-serif;
+  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
   font-weight: 300;
 }
-
 </style>
 

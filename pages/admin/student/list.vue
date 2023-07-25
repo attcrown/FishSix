@@ -97,7 +97,7 @@ export default {
                 { text: 'นามสกุล', value: 'stu.lastName' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
-                { text: 'จำนวนชั่วโมงเรียนที่เหลือ', value: 'stu.hourLeft' },
+                { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
