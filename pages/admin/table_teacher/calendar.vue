@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mb-3 d-flex justify-center" >
+        <div class="mb-3 d-flex justify-center">
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
@@ -137,7 +137,6 @@ export default {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
                 console.log(this.selectedEvent);
-                console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -159,15 +158,17 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
+                        if (true){//new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 console.log(timedata);
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                Promise.all([getSubjectPromise])
-                                    .then(([subjectSnapshot]) => {
+                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                Promise.all([getSubjectPromise ,getTeacherPromise])
+                                    .then(([subjectSnapshot , teacherSnapshot]) => {
                                         const sub = subjectSnapshot.val();
+                                        const tea = teacherSnapshot.val();
                                         this.events.push(
                                             {
                                                 name: sub.name,
@@ -179,6 +180,7 @@ export default {
                                                     timedata.stop.substring(3, 5)),
                                                 color: this.getRandomColor(),
                                                 timed: true,
+                                                details: "ครู"+tea.nickname+" "+tea.teacherId,
                                             },
                                         );
                                     })
