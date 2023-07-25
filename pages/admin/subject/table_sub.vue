@@ -1,15 +1,14 @@
 <template>
-    <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="index" class="elevation-1"
-        max-width="500px">
+    <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="index" class="elevation-16 rounded-xl">
         <template v-slot:top>
             <v-toolbar flat>
-                <v-toolbar-title>วิชาเปิดสอน (ภาษาไทย)</v-toolbar-title>
+                <v-toolbar-title class="ms-4"><b>รายวิชาที่เปิดสอน</b></v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="800px">
                     <template v-slot:activator="{}">
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                            hide-details></v-text-field>
+                            hide-details style="max-width: 200px;"></v-text-field>
                     </template>
                     <!-- <template v-slot:activator="{ on, attrs }">
                         <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">

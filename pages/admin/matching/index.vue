@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <calendar hidden></calendar>
+    <div class="mx-5">
+        <calendar></calendar>
         <tablematch></tablematch>
         <tableactive></tableactive>
     </div>

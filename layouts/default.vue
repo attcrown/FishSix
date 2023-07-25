@@ -73,9 +73,19 @@ export default {
           to: '/admin',
         },
         {
-          icon: 'mdi-alert-box',
-          title: 'Ticket',
+          icon: 'mdi-book-open-variant',
+          title: 'จองเวลาเรียน',
           to: '/admin/matching',
+        },
+        {
+          icon: 'mdi-table-large',
+          title: 'ตารางเรียน',
+          to: '',
+        },
+        {
+          icon: 'mdi-folder-file-outline',
+          title: 'รายวิชา',
+          to: '/admin/subject',
         },
         {
           icon: 'mdi-account-school',
@@ -108,11 +118,7 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/admin/student',
         },
-        {
-          icon: 'mdi-ab-testing',
-          title: 'เพื่มรายละเอียด',
-          to: '/admin/subject',
-        },
+        
       ],
       miniVariant: false,
       right: true,

@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-6 mx-10">
+    <div class="mx-5">
         <v-row>
             <v-col cols="12">
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
@@ -441,7 +441,7 @@ export default {
 </script>
 <style>
 .v-data-table-header th {
-    background-color: #7e7b7b;
+    background-color: #D4C1B2;
     /* เปลี่ยนเป็นสีที่คุณต้องการ */
 }
 

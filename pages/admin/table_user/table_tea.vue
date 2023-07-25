@@ -736,12 +736,13 @@ export default {
                 let item = [];
                 this.desserts = [];
                 this.events = [];
+                // this.arrayEvents =[];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
-                            this.arrayEvents.push(date);
+                            // this.arrayEvents.push(date);
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
