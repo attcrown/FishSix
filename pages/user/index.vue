@@ -11,19 +11,19 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-row>
-                            <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{totalHour}}</span>
-                                <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                            <v-col class="text-h4 text-center" cols="4">
+                                <span class=" font-weight-black text-black">{{formattedTotalHour}}</span>
+                                <span class="text-h6  font-semibold text-black"></span>
                                 <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนทั้งหมด</div>
                             </v-col>
-                            <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{studyHour}}</span>
-                                <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                            <v-col class="text-h4 text-center" cols="4">
+                                <span class=" font-weight-black text-black">{{formattedStudyHour}}</span>
+                                <span class="text-h6  font-semibold text-black"></span>
                                 <div class="text-h6 font-semibold text-black">ชั่วโมงที่เรียนไปแล้ว</div>
                             </v-col>
-                            <v-col class="text-h2 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{studyHour}}</span>
-                                <span class="text-h6  font-semibold text-black">ชั่วโมง</span>
+                            <v-col class="text-h4 text-center" cols="4">
+                                <span class=" font-weight-black text-black">{{formattedHourLeft}}</span>
+                                <span class="text-h6  font-semibold text-black"></span>
                                 <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนที่เหลือ</div>
                             </v-col>
                         </v-row>
@@ -56,7 +56,50 @@ export default {
         }
     },
     computed: {
+        formattedTotalHour() {
+            if (this.totalHour === null || this.totalHour === undefined) {
+                return '0 ชั่วโมง';
+            }
 
+            const hours = Math.floor(this.totalHour);
+            const minutes = ((this.totalHour - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+
+
+        },
+        formattedStudyHour() {
+            if (this.studyHour === null || this.studyHour === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.studyHour);
+            const minutes = ((this.studyHour - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
+        formattedHourLeft() {
+            if (this.hourLeft === null || this.hourLeft === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.hourLeft);
+            const minutes = ((this.hourLeft - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
     },
     components: {
         calendar,
@@ -85,9 +128,9 @@ export default {
                 this.hourLeft = childData.hourLeft || 0;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
-                this.firstNameDisplay = childData.firstName || null;
-                this.lastNameDisplay = childData.lastName || null;
-                this.nicknameDisplay = childData.nickname || null;
+                this.firstName = childData.firstName || null;
+                this.lastName = childData.lastName || null;
+                this.nickname = childData.nickname || null;
                 this.nickname = childData.nickname || null;
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;

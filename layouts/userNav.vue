@@ -91,6 +91,11 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/user/profile',
         },
+        {
+          icon: 'mdi-folder ',
+          title: 'คลังเนื้อหา',
+          to: '/user/content',
+        },
        
       ],
       miniVariant: false,

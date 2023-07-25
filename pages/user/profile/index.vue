@@ -13,7 +13,7 @@
                         <style>
                             .time-label {
                                 color: #000;
-                                font-size: 24px;
+                                font-size: 22px;
                                 font-weight: 500;
 
                             }
@@ -29,7 +29,7 @@
                             <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ totalHour ? totalHour : 0 }} ชั่วโมง</div>
+                                        <div class="time-label mb-3">{{formattedTotalHour }}</div>
                                         <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
                                     </v-row>
                                 </v-card-text>
@@ -40,7 +40,7 @@
 
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
+                                        <div class="time-label mb-3">{{formattedStudyHour }}</div>
                                         <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
                                     </v-row>
                                 </v-card-text>
@@ -51,7 +51,7 @@
 
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
+                                        <div class="time-label mb-3">{{ formattedHourLeft}}</div>
                                         <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
                                     </v-row>
                                 </v-card-text>
@@ -69,27 +69,8 @@
                         </v-card-title>
                         <v-card-text>
                             <v-row>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
-                                        readonly maxlength="5" oninput="validity.valid||(value='');"
-                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
-                                </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
-                                        readonly maxlength="5" oninput="validity.valid||(value='');"
-                                        label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
-                                </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
-                                        readonly maxlength="5" oninput="validity.valid||(value='');" v-model="hourLeft"
-                                        label="ชั่วโมงเรียนที่เหลือ">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" readonly
-                                        label="ชั่วโมงที่แถม">
-                                    </v-text-field>
-                                </v-col>
+                          
+                            
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="classType" readonly
                                         label="ประเภทคลาส"></v-text-field>
@@ -330,7 +311,7 @@
                         </v-row>
                     </v-card>
                 </v-col>
-                <v-col cols="12">
+                <!-- <v-col cols="12">
                     <label class=" text-h5 font-weight-bold">ประวัติคลาสที่เคยเรียน</label>
                     <v-simple-table fixed-header height="300px">
                         <template v-slot:default>
@@ -395,7 +376,7 @@
                             </tbody>
                         </template>
                     </v-simple-table>
-                </v-col>
+                </v-col> -->
             </v-row>
 
         </div>
@@ -737,7 +718,50 @@ export default {
         }
     },
     computed: {
+        formattedTotalHour() {
+            if (this.totalHour === null || this.totalHour === undefined) {
+                return '0 ชั่วโมง';
+            }
 
+            const hours = Math.floor(this.totalHour);
+            const minutes = ((this.totalHour - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+
+
+        },
+        formattedStudyHour() {
+            if (this.studyHour === null || this.studyHour === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.studyHour);
+            const minutes = ((this.studyHour - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
+        formattedHourLeft() {
+            if (this.hourLeft === null || this.hourLeft === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.hourLeft);
+            const minutes = ((this.hourLeft - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
 
     },
     mounted() {
