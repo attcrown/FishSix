@@ -45,6 +45,8 @@ const _4f326e2c = () => interopDefault(import('..\\pages\\admin\\subject\\input_
 const _269cff0e = () => interopDefault(import('..\\pages\\admin\\subject\\sub.vue' /* webpackChunkName: "pages/admin/subject/sub" */))
 const _23b19eb0 = () => interopDefault(import('..\\pages\\admin\\subject\\table_location.vue' /* webpackChunkName: "pages/admin/subject/table_location" */))
 const _6579331d = () => interopDefault(import('..\\pages\\admin\\subject\\table_sub.vue' /* webpackChunkName: "pages/admin/subject/table_sub" */))
+const _225cd265 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\calendar.vue' /* webpackChunkName: "pages/admin/table_teacher/calendar" */))
+const _78cb9d88 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\table_tea.vue' /* webpackChunkName: "pages/admin/table_teacher/table_tea" */))
 const _a137a8f8 = () => interopDefault(import('..\\pages\\admin\\table_user\\status_student.vue' /* webpackChunkName: "pages/admin/table_user/status_student" */))
 const _d4a9810e = () => interopDefault(import('..\\pages\\admin\\table_user\\table_tea.vue' /* webpackChunkName: "pages/admin/table_user/table_tea" */))
 const _bd4923ae = () => interopDefault(import('..\\pages\\admin\\teacher\\detail.vue' /* webpackChunkName: "pages/admin/teacher/detail" */))
@@ -228,6 +230,14 @@ export const routerOptions = {
     path: "/admin/subject/table_sub",
     component: _6579331d,
     name: "admin-subject-table_sub"
+  }, {
+    path: "/admin/table_teacher/calendar",
+    component: _225cd265,
+    name: "admin-table_teacher-calendar"
+  }, {
+    path: "/admin/table_teacher/table_tea",
+    component: _78cb9d88,
+    name: "admin-table_teacher-table_tea"
   }, {
     path: "/admin/table_user/status_student",
     component: _a137a8f8,

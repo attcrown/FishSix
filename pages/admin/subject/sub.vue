@@ -5,15 +5,20 @@
                 <h5><b>เพิ่มรายวิชา</b></h5>
                 <v-row align="center">
                     <v-col cols="12" sm="3">
-                        <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" :rules="rules.name" v-model="name_sub" @input="check()" required></v-text-field>
+                        <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" :rules="rules.name" v-model="name_sub"
+                            @input="check()" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="3">
-                        <v-select v-model="level_sub" :items="level" item-text="value" item-value="value" attach chips label="ระดับการศึกษา" placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!"
-                            multiple @input="check()" :rules="rules.select" required></v-select>
+                        <v-select v-model="level_sub" :items="level" item-text="value" item-value="value" attach chips
+                            label="ระดับการศึกษา" placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!" multiple
+                            @input="check()" :rules="rules.select" required></v-select>
                     </v-col>
                     <v-col cols="12" sm="4"></v-col>
                     <v-col cols="12" sm="2">
-                        <v-btn elevation="10" small color="#322E2B" style="color:white" :disabled="loading" @click="submit_click(),save_submit()">เพิ่มรายวิชา<span class="mdi mdi-plus"></span></v-btn>
+                        <v-btn elevation="10" small color="#322E2B" style="color:white" :disabled="loading"
+                            @click="submit_click(), save_submit()">เพิ่มรายวิชา
+                            <span class="mdi mdi-plus"></span>
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -64,25 +69,25 @@ export default {
             ],
         }
     },
-    created(){
+    created() {
         this.check();
         this.check_level();
     },
-    methods:{
-        submit_click(){
-            console.log(this.level_sub,this.name_sub);
+    methods: {
+        submit_click() {
+            console.log(this.level_sub, this.name_sub);
         },
-        check(){
-            if(this.level_sub.length == 0 || this.name_sub == ''){
-                this.loading =  true;
-            }else{this.loading =  false;}
+        check() {
+            if (this.level_sub.length == 0 || this.name_sub == '') {
+                this.loading = true;
+            } else { this.loading = false; }
         },
-        check_level(){
-            if(this.name_level == ''){
-                this.loading_level =  true;
-            }else{this.loading_level =  false;}
+        check_level() {
+            if (this.name_level == '') {
+                this.loading_level = true;
+            } else { this.loading_level = false; }
         },
-        save_submit(){
+        save_submit() {
             let key_items = new Date().getTime()
             const db = this.$fireModule.database();
             db.ref(`subject_all/${key_items}`).set({
@@ -97,6 +102,6 @@ export default {
         //     });
         // },
     },
-    
+
 }
 </script>

@@ -202,6 +202,8 @@ export default {
                                             date: date,
                                             time_s: timedata.start,
                                             time_e: timedata.stop,
+                                            time_s_tea: timedata.start_tea,
+                                            time_e_tea: timedata.stop_tea,
                                             style: timedata.style_subject,
                                             status: timedata.status,
                                             key_student: key,
@@ -211,6 +213,7 @@ export default {
                                             class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
+
                                         });
                                     })
                                     .catch((error) => {

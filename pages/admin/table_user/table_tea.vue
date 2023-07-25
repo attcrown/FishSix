@@ -4,29 +4,29 @@
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
-                        <v-toolbar flat>
-                            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                        <v-toolbar flat style="background-color:#AD382F;"  class="rounded-t-xl elevation-16">
+                            <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
                                 Today
                             </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="prev">
+                            <v-btn fab text small color="grey lighten-5" @click="prev">
                                 <v-icon small>
                                     mdi-chevron-left
                                 </v-icon>
                             </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="next">
+                            <v-btn fab text small color="grey lighten-5" @click="next">
                                 <v-icon small>
                                     mdi-chevron-right
                                 </v-icon>
                             </v-btn>
 
-                            <v-toolbar-title v-if="$refs.calendar">
+                            <v-toolbar-title v-if="$refs.calendar" style="color:#FAFAFA">
                                 {{ $refs.calendar.title }}
                             </v-toolbar-title>
 
                             <v-spacer></v-spacer>
                             <v-menu bottom right>
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                                    <v-btn outlined color="grey lighten-5" v-bind="attrs" v-on="on">
                                         <span>{{ typeToLabel[type] }}</span>
                                         <v-icon right>
                                             mdi-menu-down
@@ -427,7 +427,7 @@ export default {
         min_tea: 0,
 
         focus: '',
-        type: 'month',
+        type: 'week',
         typeToLabel: {
             month: 'Month',
             week: 'Week',
