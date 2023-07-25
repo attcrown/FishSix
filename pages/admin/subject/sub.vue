@@ -75,7 +75,7 @@ export default {
     },
     methods: {
         submit_click() {
-            console.log(this.level_sub, this.name_sub);
+            // console.log(this.level_sub, this.name_sub);
         },
         check() {
             if (this.level_sub.length == 0 || this.name_sub == '') {

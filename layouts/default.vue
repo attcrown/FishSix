@@ -89,13 +89,33 @@ export default {
         },
         {
           icon: 'mdi-account-school',
-          title: 'Teacher',
+          title: 'ครู',
+          to: '',
+        },
+        {
+          icon: 'mdi-circle-outline',
+          title: 'ตารางครู',
           to: '/admin/table_teacher',
         },
         {
+          icon: 'mdi-circle-outline',
+          title: 'ข้อมูลครู',
+          to: '/admin/teacher',
+        },
+        {
           icon: 'mdi-account',
-          title: 'Student',
+          title: 'นักเรียน',
+          to: '',
+        },
+        {
+          icon: 'mdi-circle-outline',
+          title: 'ตารางนักเรียน',
           to: '/admin/table_user',
+        },
+        {
+          icon: 'mdi-circle-outline',
+          title: 'ข้อมูลนักเรียน',
+          to: '/admin/student',
         },
         // {
         //   icon: 'mdi-store',
@@ -106,18 +126,7 @@ export default {
         //   icon: 'mdi-store-settings',
         //   title: 'Edit-Shop',
         //   to: '/admin/edit_shop',
-        // },
-
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'ข้อมูลผู้สอน',
-          to: '/admin/teacher',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'ข้อมูลนักเรียน',
-          to: '/admin/student',
-        },
+        // },        
         
       ],
       miniVariant: false,

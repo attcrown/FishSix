@@ -28,6 +28,7 @@ const _0db298a8 = () => interopDefault(import('..\\pages\\admin\\table_user\\ind
 const _207312ac = () => interopDefault(import('..\\pages\\admin\\teacher\\index.vue' /* webpackChunkName: "pages/admin/teacher/index" */))
 const _6c694ed6 = () => interopDefault(import('..\\pages\\teacher\\profile\\index.vue' /* webpackChunkName: "pages/teacher/profile/index" */))
 const _3c7b0cd1 = () => interopDefault(import('..\\pages\\teacher\\table\\index.vue' /* webpackChunkName: "pages/teacher/table/index" */))
+const _7a1dd6a9 = () => interopDefault(import('..\\pages\\user\\content\\index.vue' /* webpackChunkName: "pages/user/content/index" */))
 const _d3c3390e = () => interopDefault(import('..\\pages\\user\\profile\\index.vue' /* webpackChunkName: "pages/user/profile/index" */))
 const _5eba2398 = () => interopDefault(import('..\\pages\\user\\table\\index.vue' /* webpackChunkName: "pages/user/table/index" */))
 const _cc4fbbfa = () => interopDefault(import('..\\pages\\admin\\edit_shop\\additem.vue' /* webpackChunkName: "pages/admin/edit_shop/additem" */))
@@ -162,6 +163,10 @@ export const routerOptions = {
     path: "/teacher/table",
     component: _3c7b0cd1,
     name: "teacher-table"
+  }, {
+    path: "/user/content",
+    component: _7a1dd6a9,
+    name: "user-content"
   }, {
     path: "/user/profile",
     component: _d3c3390e,

@@ -29,26 +29,50 @@
 
                                 <v-card-text>
                                     <v-container>
+
                                         <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.name" label="ครูผู้สอน"></v-text-field>
+                                            <v-col cols="12" sm="6" md="6">
+                                                <v-text-field v-model="editedItem.name" label="ครูผู้สอน"
+                                                    disabled></v-text-field>
                                             </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.date" label="วันที่"></v-text-field>
+                                            <v-col cols="12" sm="6" md="6">
+                                                <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                                                    :return-value.sync="date" transition="scale-transition" offset-y
+                                                    min-width="auto">
+                                                    <template v-slot:activator="{ on, attrs }">
+                                                        <v-text-field v-model="date" label="วันที่เรียน"
+                                                            prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                            v-on="on"></v-text-field>
+                                                    </template>
+                                                    <v-date-picker v-model="date" no-title scrollable>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn text color="primary" @click="menu = false">
+                                                            Cancel
+                                                        </v-btn>
+                                                        <v-btn text color="primary" @click="$refs.menu.save(date)">
+                                                            OK
+                                                        </v-btn>
+                                                    </v-date-picker>
+                                                </v-menu>
                                             </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.style"
-                                                    label="รูปแบบการสอน"></v-text-field>
+
+                                            <v-col cols="12" sm="6">
+                                                <v-select :items="select_location" label="สถานที่สอน"
+                                                    v-model="editedItem.style" item-text="name" item-value="key"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-select :items="select_class" label="รูปแบบการสอน"
+                                                    v-model="editedItem.class"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" sm="4">
+                                                <v-select :items="select_subject" label="วิชาเรียน" item-text="name"
+                                                    item-value="key" v-model="editedItem.subject"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.time_s" label="เริ่มเรียน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.time_e" label="เลิกเรียน"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.subject"
-                                                    label="วิชาที่ต้องการเรียน"></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -63,20 +87,20 @@
                                         <v-row>
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field v-model="editedItem.phone_teacher"
-                                                    label="Phone number teacher" readonly></v-text-field>
+                                                    label="Phone number teacher" disabled></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field v-model="editedItem.name" label="Name teacher"
-                                                    readonly></v-text-field>
+                                                    disabled></v-text-field>
                                             </v-col>
 
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field v-model="editedItem.phone_student"
-                                                    label="Phone number student" readonly></v-text-field>
+                                                    label="Phone number student" disabled></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
                                                 <v-text-field color="black" v-model="editedItem.name_student"
-                                                    label="Name student" readonly></v-text-field>
+                                                    label="Name student" disabled></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
@@ -91,7 +115,7 @@
                                     <v-btn color="blue dark-4" text @click="close">
                                         <b>ปิด</b>
                                     </v-btn>
-                                    <v-btn color="light-green lighten-4" @click="save">
+                                    <v-btn color="light-green lighten-4" :disabled="!formIsValid" @click="save">
                                         <b>ยืนยันการจอง</b>
                                     </v-btn>
                                 </v-card-actions>
@@ -128,6 +152,14 @@
 <script>
 export default {
     data: () => ({
+        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        menu: false,
+        modal: false,
+        menu2: false,
+        old_item: [],
+        select_location: [],
+        select_class: [],
+        select_subject: [],
         search: '',
         dialog: false,
         dialogDelete: false,
@@ -145,8 +177,8 @@ export default {
                 value: 'name_student',
             },
             { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'รูปแบบการเรียน', value: 'style', align: 'center' },
-            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
@@ -163,6 +195,20 @@ export default {
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Class'
+        },
+        formIsValid() {
+            return (
+                this.editedItem.key_student &&
+                this.editedItem.date &&
+                this.editedItem.time_e &&
+                this.editedItem.name &&
+                this.date &&
+                this.editedItem.style &&
+                this.editedItem.class &&
+                this.editedItem.subject &&
+                this.editedItem.time_s &&
+                this.editedItem.time_e
+            );
         },
     },
 
@@ -195,18 +241,26 @@ export default {
                             if (timedata.status == 'รอยืนยัน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise])
-                                    .then(([teacherSnapshot, studentSnapshot]) => {
+                                const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
+                                        const subjectData = subjectSnapshot.val();
+                                        const locationData = locationSnapshot.val();
                                         item.push({
                                             name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                             name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                             subject: timedata.subject,
+                                            name_subject: subjectData.name,
                                             date: date,
                                             time_s: timedata.start,
                                             time_e: timedata.stop,
+                                            time_s_tea: timedata.start_tea,
+                                            time_e_tea: timedata.stop_tea,
                                             style: timedata.style_subject,
+                                            name_style: locationData.name,
                                             status: timedata.status,
                                             key_student: key,
                                             key_teacher: timedata.teacher,
@@ -218,7 +272,7 @@ export default {
                                         });
                                     })
                                     .catch((error) => {
-                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล", error);
                                     });
                             }
                         }
@@ -230,11 +284,35 @@ export default {
         },
 
         editItem(item) {
-            // console.log('item>>',item);
+            this.old_item = item;
+            console.log('item>>', item);
+            this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
-            // console.log('editedItem>>',this.editedItem);
+            this.search_select_location_class(item.key_teacher);
             this.dialog = true
+        },
+
+        search_select_location_class(key) {
+            const db = this.$fireModule.database();
+            db.ref(`user/${key}`).on("value", (snapshot) => {
+                this.select_location = [];
+                this.select_subject = [];
+                const childData = snapshot.val();
+                for (const key in childData.classLocation) {
+                    db.ref(`location/${childData.classLocation[key]}`).once("value", (snapshot) => {
+                        const location_data = snapshot.val();
+                        this.select_location.push({ name: location_data.name, key: childData.classLocation[key] });
+                    })
+                }
+                for (const subject_key in childData.subject_all) {
+                    db.ref(`subject_all/${subject_key}`).once("value", (snapshot) => {
+                        const subject_data = snapshot.val();
+                        this.select_subject.push({ name: subject_data.name, key: subject_key });
+                    });
+                }
+                this.select_class = childData.classType;
+            });
         },
 
 
@@ -261,17 +339,41 @@ export default {
 
         save() {
             console.log('update>>', this.editedItem);
+            this.delete_match();
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}/`).update({
+                teacher: this.editedItem.key_teacher,
+                subject: this.editedItem.subject,
+                style_subject: this.editedItem.style,
+                level: this.editedItem.level,
+                class: this.editedItem.class,
+                start: this.editedItem.time_s,
+                stop: this.editedItem.time_e,
+                start_tea: this.editedItem.time_s,
+                stop_tea: this.editedItem.time_e,
+                because: this.editedItem.because,
                 status: "พร้อมเรียน",
             });
-            this.close()
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e}/`).update({
+                invite: '1',
+                sum_people: '1',
+                subject: this.editedItem.subject,
+                style_subject: this.editedItem.style,
+                class: this.editedItem.class,
+                start: this.editedItem.time_s,
+                stop: this.editedItem.time_e,
+            });
+            this.close();
         },
 
         delete_match() {
             console.log('del>>', this.editedItem);
             const db = this.$fireModule.database();
-            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove()
+            db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
+                .then(() => {
+                    console.log("success del");
+                });
+            db.ref(`date_match/${this.old_item.key_teacher}/${this.old_item.date}/${this.old_item.time_e_tea}`).remove()
                 .then(() => {
                     console.log("success del");
                     this.close();

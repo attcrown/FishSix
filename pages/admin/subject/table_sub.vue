@@ -176,7 +176,7 @@ export default {
         },
 
         deleteItemConfirm() {
-            console.log(this.editedItem.key);
+            // console.log(this.editedItem.key);
             const db = this.$fireModule.database();
             db.ref(`subject_all/${this.editedItem.key}`).remove();
             this.closeDelete();

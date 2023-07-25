@@ -397,7 +397,7 @@ export default {
                     }
                 }
                 this.desserts_student = item;
-                console.log(this.desserts_student);
+                // console.log(this.desserts_student);
             });
         },
         exportToExcel() {

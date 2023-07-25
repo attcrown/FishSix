@@ -141,8 +141,8 @@ export default {
                 value: 'name_student',
             },
             { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'รูปแบบการเรียน', value: 'style', align: 'center' },
-            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
@@ -191,20 +191,26 @@ export default {
                             if (timedata.status == 'พร้อมเรียน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise])
-                                    .then(([teacherSnapshot, studentSnapshot]) => {
+                                const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise,getlocationPromise])
+                                    .then(([teacherSnapshot, studentSnapshot ,subjectSnapshot ,locationSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
+                                        const subjectData = subjectSnapshot.val();
+                                        const locationData = locationSnapshot.val();
                                         item.push({
                                             name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                             name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                             subject: timedata.subject,
+                                            name_subject: subjectData.name,
                                             date: date,
                                             time_s: timedata.start,
                                             time_e: timedata.stop,
                                             time_s_tea: timedata.start_tea,
                                             time_e_tea: timedata.stop_tea,
                                             style: timedata.style_subject,
+                                            name_style: locationData.name,
                                             status: timedata.status,
                                             key_student: key,
                                             key_teacher: timedata.teacher,
@@ -224,7 +230,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                console.log(this.desserts);
+                // console.log(this.desserts);
             })
         },
 
@@ -259,7 +265,7 @@ export default {
         },
 
         save() {
-            console.log('update>>', this.editedItem);
+            // console.log('update>>', this.editedItem);
             this.close()
         },
 
@@ -268,7 +274,7 @@ export default {
                 alert("No data to delete");
                 return;
             }
-            console.log(this.editedItem);
+            // console.log(">>>>",this.editedItem);
             const db = this.$fireModule.database();
             let sum = 0;
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
@@ -279,12 +285,12 @@ export default {
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
                 invite: sum,
             }).then(() => {
-                console.log("success invite");
+                // console.log("success invite");
             });
 
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove()
                 .then(() => {
-                    console.log("success del");
+                    // console.log("success del");
                 });
         },
 

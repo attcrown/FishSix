@@ -376,7 +376,7 @@ export default {
         items_select_tea: [],
         items_student: [],
         style_subject: [],
-        style_class: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
+        style_class: [],
         picker_start: null,
         picker_stop: null,
         search_value: null,
@@ -474,7 +474,7 @@ export default {
             else return 'red'
         },
         detail_match(item) {
-            console.log(item);
+            // console.log(item);
         },
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
@@ -485,7 +485,7 @@ export default {
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
-            console.log(this.focus);
+            // console.log(this.focus);
         },
         getEventColor(event) {
             return event.color
@@ -503,8 +503,8 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
-                console.log(this.selectedEvent);
-                console.log(this.selectedElement);
+                // console.log(this.selectedEvent);
+                // console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -527,7 +527,7 @@ export default {
         },
 
         save_detail_data() {
-            console.log(this.mode);
+            // console.log(this.mode);
             if (this.save_detail.subject == null ||
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
@@ -551,6 +551,8 @@ export default {
                     start: this.picker_start,
                     class: this.save_detail.class,
                     stop: this.picker_stop,
+                    start_tea: this.picker_start,
+                    stop_tea: this.picker_stop,
                     because: this.save_detail.because,
                     status: this.check_status(),
                 });
@@ -614,7 +616,7 @@ export default {
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
                             item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
-                            console.log('items_select_tea', item);
+                            // console.log('items_select_tea', item);
                         }
                     }
                     this.items_select_tea = item;
@@ -667,11 +669,11 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const detail = childData[key];
-                    console.log('check_sub', detail.name, detail.level, name);
+                    // console.log('check_sub', detail.name, detail.level, name);
                     if (detail.name === name) {
-                        console.log('หยุด');
+                        // console.log('หยุด');
                         levels = detail.level;
-                        console.log(levels);
+                        // console.log(levels);
                         break;
                     }
                 }
@@ -782,7 +784,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                console.log(this.desserts);
+                // console.log(this.desserts);
             })
         },
         check_time_start() {
@@ -802,18 +804,16 @@ export default {
         },
 
         editItem(item) {
-            console.log('editadd', item);
+            // console.log('editadd', item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             this.value = item.key;
             this.date1 = item.date;
-
-            this.save_detail.class = item.class;
             this.style_class = item.class_all;
-
-            this.save_detail.style = item.keyLocation;
             this.style_subject = item.full_location;
 
+            this.save_detail.class = item.class;    
+            this.save_detail.style = item.keyLocation;            
             this.save_detail.subject = item.subject;
             this.save_detail.keysubject = item.keySubject;
 
@@ -836,7 +836,7 @@ export default {
                     const detail = childData[key];
                     if (detail.name === item.subject) {
                         level = detail.level;
-                        console.log(level);
+                        // console.log(level);
                         break;
                     }
                 }
@@ -853,7 +853,7 @@ export default {
                     const detail = childData[key];
                     if (detail.name === this.save_detail.subject) {
                         level = detail.level;
-                        console.log(level);
+                        // console.log(level);
                         break;
                     }
                 }
@@ -886,10 +886,10 @@ export default {
                     this.style_class = location.classType;
 
                     for (const key in location.classLocation) {
-                        console.log(location.classLocation[key]);
+                        // console.log(location.classLocation[key]);
                         db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
                             const childData = snapshot.val();
-                            this.style_subject.push({name:childData.name,key:location.classLocation[key]});
+                            this.style_subject.push({ name: childData.name, key: location.classLocation[key] });
                         })
                     }
                     // console.log(this.style_subject);

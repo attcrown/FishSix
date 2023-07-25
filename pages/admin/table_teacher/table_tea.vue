@@ -321,7 +321,7 @@ export default {
         },
 
         save_detail_data() {
-            console.log(this.mode);
+            // console.log(this.mode);
             if (this.save_detail.class == '' ||
                 this.save_detail.style == '' ||
                 this.save_detail.subject == '' ||
@@ -393,7 +393,7 @@ export default {
                 this.style_subject = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    console.log(">>>", childData[key]);
+                    // console.log(">>>", childData[key]);
                     const getLocationPromise = db.ref(`location/${childData[key]}`).once("value");
                     Promise.all([getLocationPromise])
                         .then(([location]) => {
@@ -414,7 +414,7 @@ export default {
                     this.subject.push({ key: details, name: sub.name });
                 }
                 this.subject.push({ key: '00000', name: 'ทุกวิชา' });
-                console.log(this.subject);
+                // console.log(this.subject);
             })
         },
 
@@ -489,7 +489,7 @@ export default {
         },
 
         editItem(item) {
-            console.log(item);
+            // console.log(item);
             this.search_class_tea(item.key);
             this.search_style_tea(item.key);
             this.search_subject_tea(item.key);

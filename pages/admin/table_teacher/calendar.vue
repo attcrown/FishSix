@@ -136,7 +136,7 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
-                console.log(this.selectedEvent);
+                // console.log(this.selectedEvent);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -162,7 +162,7 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                console.log(timedata);
+                                // console.log(timedata);
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
                                 Promise.all([getSubjectPromise ,getTeacherPromise])
