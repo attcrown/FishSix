@@ -1,7 +1,8 @@
 <template>
-    <div class="">
+    <div class="pt-10">
         <template>
-            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" class="elevation-1 mt-5">
+            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date"
+                class="elevation-16 rounded-xl">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.status="{ item }">
                     <v-chip :color="getColor(item.status)" dark>
@@ -9,8 +10,8 @@
                     </v-chip>
                 </template>
                 <template v-slot:top>
-                    <v-toolbar flat color="red lighten-5">
-                        <v-toolbar-title>Ticket คำร้องขอจองเวลาเรียน</v-toolbar-title>
+                    <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
+                        <v-toolbar-title><b>คำร้องขอจองเวลาเรียน</b></v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
@@ -132,24 +133,26 @@ export default {
         dialogDelete: false,
         headers: [
             {
-                text: 'Name Student',
-                align: 'start',
-                sortable: false,
-                value: 'name_student',
-            },
-            {
-                text: 'Name Teacher',
+                text: 'ชื่อครู',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date', align: 'center' },
-            { text: 'Start', value: 'time_s', align: 'start' },
-            { text: 'End', value: 'time_e', align: 'start' },
-            { text: 'Style', value: 'style', align: 'start' },
-            { text: 'Subject', value: 'subject', align: 'start' },
-            { text: 'Status', value: 'status', align: 'start' },
-            { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
+            {
+                text: 'ชื่อนักเรียน',
+                align: 'start',
+                sortable: false,
+                value: 'name_student',
+            },
+            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'รูปแบบการเรียน', value: 'style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'ระดับชั้น', value: 'level', align: 'center' },
+            { text: 'วันที่สอน', value: 'date', align: 'center' },
+            { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
+            { text: 'เวลาเลิกเรียน', value: 'time_e', align: 'center' },
+            { text: 'สถานะ', value: 'status', sortable: false, align: 'center' },
+            { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts: [],
         editedIndex: -1,
@@ -196,13 +199,9 @@ export default {
                                     .then(([teacherSnapshot, studentSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
-                                        const phone_tea = teacherData.mobile;
-                                        const nametea = "คุณครู " + teacherData.firstName + " " + teacherData.lastName;
-                                        const namestu = studentData.firstName + " " + studentData.lastName;
-                                        const phone_stu = studentData.studentMobile;
                                         item.push({
-                                            name_student: namestu,
-                                            name: nametea,
+                                            name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                             subject: timedata.subject,
                                             date: date,
                                             time_s: timedata.start,
@@ -211,10 +210,12 @@ export default {
                                             status: timedata.status,
                                             key_student: key,
                                             key_teacher: timedata.teacher,
-                                            phone_student: phone_stu,
-                                            phone_teacher: phone_tea,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
                                             class: timedata.class,
-                                        });                                        
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                        });
                                     })
                                     .catch((error) => {
                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");

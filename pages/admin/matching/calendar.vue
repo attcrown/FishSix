@@ -1,32 +1,32 @@
 <template>
     <div>
-        <div class="mb-3">
-            <v-row class="fill-height" style="max-width:1000px">
+        <div class="mb-3 d-flex justify-center" >
+            <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
-                        <v-toolbar flat>
-                            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                        <v-toolbar flat style="background-color:#AD382F;"  class="rounded-t-xl" :class="`elevation-${hover ? 24 : 6}`">
+                            <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
                                 Today
                             </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="prev">
+                            <v-btn fab text small color="grey lighten-5" @click="prev">
                                 <v-icon small>
                                     mdi-chevron-left
                                 </v-icon>
                             </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="next">
+                            <v-btn fab text small color="grey lighten-5" @click="next">
                                 <v-icon small>
                                     mdi-chevron-right
                                 </v-icon>
                             </v-btn>
 
-                            <v-toolbar-title v-if="$refs.calendar">
+                            <v-toolbar-title v-if="$refs.calendar" style="color:#FAFAFA">
                                 {{ $refs.calendar.title }}
                             </v-toolbar-title>
 
                             <v-spacer></v-spacer>
                             <v-menu bottom right>
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                                    <v-btn outlined color="grey lighten-5" v-bind="attrs" v-on="on">
                                         <span>{{ typeToLabel[type] }}</span>
                                         <v-icon right>
                                             mdi-menu-down
@@ -92,7 +92,7 @@
 export default {
     data: () => ({
         focus: '',
-        type: 'month',
+        type: 'week',
         typeToLabel: {
             month: 'Month',
             week: 'Week',
@@ -155,26 +155,34 @@ export default {
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.events = [];
+                const now = new Date();
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        const datedata = keydata[date];
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            this.events.push(
-                                {
-                                    name: timedata.subject,
-                                    start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                        date.substring(8, 10), timedata.start.substring(0, 2),
-                                        timedata.start.substring(3, 5)),
-                                    end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                        date.substring(8, 10), timedata.stop.substring(0, 2),
-                                        timedata.stop.substring(3, 5)),
-                                    color: this.getRandomColor(),
-                                    timed: true,
-                                },
-                            );
-
+                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                console.log(timedata);
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                Promise.all([getSubjectPromise])
+                                    .then(([subjectSnapshot]) => {
+                                        const sub = subjectSnapshot.val();
+                                        this.events.push(
+                                            {
+                                                name: sub.name,
+                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.start.substring(0, 2),
+                                                    timedata.start.substring(3, 5)),
+                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                    timedata.stop.substring(3, 5)),
+                                                color: this.getRandomColor(),
+                                                timed: true,
+                                            },
+                                        );
+                                    })
+                            }
                         }
                     }
                 }
@@ -183,3 +191,9 @@ export default {
     }
 }
 </script>
+<style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+</style>

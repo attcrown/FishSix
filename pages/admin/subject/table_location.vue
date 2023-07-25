@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="index" class="elevation-1"
+    <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="index" class="elevation-16 rounded-xl"
         max-width="500px">
         <template v-slot:top>
             <v-toolbar flat>

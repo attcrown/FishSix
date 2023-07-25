@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-card flat>
-            <h3 class="p-3">เพิ่มสถามที่สอน</h3>
+        <v-card flat class="elevation-16 rounded-t-xl px-5 pt-8" style="background-color:#EBE4DE">
+            <h5 class="px-4"><b>เพิ่มสถานที่สอน</b></h5>
             <v-snackbar v-model="snackbar" absolute top right color="success">
                 <span>Add successful!</span>
                 <v-icon dark> mdi-checkbox-marked-circle </v-icon>
@@ -29,8 +29,8 @@
                                 </template>
                             </v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="2">
-                            <v-btn elevation="10" outline-success large :disabled="!formIsValid" type="submit">SAVE</v-btn>
+                        <v-col cols="12" sm="2" class="mt-5">
+                            <v-btn elevation="10" small color="#322E2B" style="color:white" :disabled="!formIsValid" type="submit">เพิ่มสถานที่สอน<span class="mdi mdi-plus"></span></v-btn>
                         </v-col>
 
                         <!-- <v-col cols="12" sm="6">

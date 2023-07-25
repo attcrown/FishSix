@@ -1,18 +1,19 @@
 <template>
     <div>
-        <v-card>
+        <v-card class="elevation-16 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
             <v-container fluid>
-                <h3>เพิ่มวิชาเรียน</h3>
+                <h5><b>เพิ่มรายวิชา</b></h5>
                 <v-row align="center">
-                    <v-col cols="12" sm="4">
-                        <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" v-model="name_sub" @input="check()"></v-text-field>
+                    <v-col cols="12" sm="3">
+                        <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" :rules="rules.name" v-model="name_sub" @input="check()" required></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="4">
+                    <v-col cols="12" sm="3">
                         <v-select v-model="level_sub" :items="level" item-text="value" item-value="value" attach chips label="ระดับการศึกษา" placeholder="กรุณาเลือกเรียงลงมา !!ไม่ติกข้ามไปมา!!"
-                            multiple @input="check()"></v-select>
+                            multiple @input="check()" :rules="rules.select" required></v-select>
                     </v-col>
-                    <v-col cols="12" sm="4">
-                        <v-btn elevation="10" outline-success large :disabled="loading" @click="submit_click(),save_submit()">SAVE</v-btn>
+                    <v-col cols="12" sm="4"></v-col>
+                    <v-col cols="12" sm="2">
+                        <v-btn elevation="10" small color="#322E2B" style="color:white" :disabled="loading" @click="submit_click(),save_submit()">เพิ่มรายวิชา<span class="mdi mdi-plus"></span></v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -37,6 +38,11 @@ import { computed } from 'vue';
 export default {
     data() {
         return {
+            rules: {
+                // age: [(val) => val < 10 || `I don't believe you!`],
+                select: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
+                name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
+            },
             loading: false,
             loading_level: false,
             name_sub: '',
