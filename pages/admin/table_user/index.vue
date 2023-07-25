@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mx-5">
         <table_tea></table_tea>
         <!-- <status_student></status_student> -->
     </div>

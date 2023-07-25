@@ -257,20 +257,20 @@ export default {
         dialogDelete: false,
         headers: [
             {
-                text: 'ชื่อเล่น-รหัสครู',
+                text: 'ID',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date' },
-            { text: 'Start', value: 'time_s' },
-            { text: 'End', value: 'time_e' },
-            { text: 'Style', value: 'style' },
-            { text: 'subject', value: 'subject' },
-            { text: 'class', value: 'class' },
-            // { text: 'จำนวนนักเรียนใน Class', value: 'invite', align: 'center' },
-            { text: 'จำนวนคนเปิดรับ', value: 'sum_people', align: 'center' },
-            { text: 'Actions', value: 'actions', sortable: false },
+            { text: 'ชื่อครู', value: 'name' },
+            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'สถานที่สอน', value: 'style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'วันที่สอน', value: 'date', align: 'center' },
+            { text: 'เวลาเริ่มต้น', value: 'time_s' , align: 'center'},
+            { text: 'เวลาสิ้นสุด', value: 'time_e' , align: 'center'},
+            { text: 'จำนวนนักเรียน', value: 'sum_people', align: 'center' },
+            { text: 'แก้ไขข้อมูล', value: 'actions', sortable: false },
         ],
         desserts: [],
         editedIndex: -1,
@@ -430,8 +430,7 @@ export default {
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
-                            const timedata = datedata[time];
-                            console.log(timedata.style_subject);
+                            const timedata = datedata[time];                            
                             const getTeacherPromise = db.ref(`user/${key}`).once("value");
                             const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                             const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");

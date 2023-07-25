@@ -4,7 +4,7 @@
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
-                        <v-toolbar flat style="background-color:#AD382F;"  class="rounded-t-xl elevation-16">
+                        <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
                             <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
                                 Today
                             </v-btn>
@@ -86,73 +86,63 @@
             </v-row>
         </div>
 
-        <v-card>
-            <v-container fluid>
-                <v-row align="center">
-                    <v-col cols="12">
-                        <div>
-                            <div class="subheading">
-                                <!-- <h3>Student</h3> -->
-                            </div>
-                            <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
-                                :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
-                                @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
-                        </div>
-                    </v-col>
 
-                    <v-col cols="4">
-                        <v-autocomplete v-model="search_value" :items="items" label="Search teacher"
-                            @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
-                    </v-col>
-                    <v-col cols="4">
-                        <v-autocomplete v-model="search_class" :items="style_class" @change="search_date_teacher()"
-                            label="Search Class"></v-autocomplete>
-                    </v-col>
-                    <v-col cols="4">
-                        <v-autocomplete v-model="search_style_sub" :items="style_subject" @change="search_date_teacher()"
-                            label="Search Style"></v-autocomplete>
-                    </v-col>
+        <v-row align="center">
+            <v-col cols="12">
+                <div>
+                    <div class="subheading">
+                        <!-- <h3>Student</h3> -->
+                    </div>
+                    <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
+                        :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
+                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                </div>
+            </v-col>
 
-                    <v-col cols="12">
-                        <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
-                            class="elevation-1">
-                            <template v-slot:top>
-                                <v-toolbar flat style="background-color:rgba(37, 110, 8, 0.425);">
-                                    <v-toolbar-title>ตารางที่สามารถจองคิวได้เลย</v-toolbar-title>
-                                    <v-divider class="mx-4" inset vertical></v-divider>
-                                    <v-spacer></v-spacer>
-                                    <v-text-field class="me-10" v-model="search_table_teacher" append-icon="mdi-magnify"
-                                        label="Search" single-line hide-details></v-text-field>
-                                    <v-dialog v-model="dialogDelete" max-width="500px">
-                                        <template v-slot:activator="{}">
-                                            <v-btn color="primary" dark class="mb-2" @click="dialog_select_date = true">
-                                                จองคิวนอกตาราง
-                                            </v-btn>
-                                        </template>
-                                        <!-- <v-card>
-                                                <v-card-title class="text-h5">Are you sure you want to delete this
-                                                    item?</v-card-title>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                                                    <v-spacer></v-spacer>
-                                                </v-card-actions>
-                                            </v-card> -->
-                                    </v-dialog>
-                                </v-toolbar>
-                            </template>
-                            <!-- eslint-disable-next-line vue/valid-v-slot -->
-                            <template v-slot:item.actions="{ item }">
-                                <v-icon xl class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
-                                    mdi-plus-box-multiple
-                                </v-icon>
-                            </template>
-                        </v-data-table>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card>
+            <!-- <v-col cols="4">
+                <v-autocomplete v-model="search_value" :items="items" label="Search teacher" @change="search_date_teacher()"
+                    item-text="name" item-value="key"></v-autocomplete>
+            </v-col>
+            <v-col cols="4">
+                <v-autocomplete v-model="search_class" :items="style_class" @change="search_date_teacher()"
+                    label="Search Class"></v-autocomplete>
+            </v-col>
+            <v-col cols="4">
+                <v-autocomplete v-model="search_style_sub" :items="style_subject" @change="search_date_teacher()"
+                    label="Search Style"></v-autocomplete>
+            </v-col> -->
+
+            <v-col cols="12">
+                <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
+                    class="elevation-16 rounded-xl">
+                    <template v-slot:top>
+                        <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
+                            <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
+                            <v-divider class="mx-4" inset vertical></v-divider>
+                            <v-spacer></v-spacer>
+                            <v-text-field class="me-10" v-model="search_table_teacher" append-icon="mdi-magnify"
+                                label="Search" single-line hide-details style="max-width: 200px;"></v-text-field>
+
+                            <v-dialog v-model="dialogDelete" max-width="500px">
+                                <template v-slot:activator="{}">
+                                    <v-btn elevation="10" small dark color="#322E2B" class="mb-2 mt-5"
+                                        @click="dialog_select_date = true">
+                                        จองคิวนอกตาราง<span class="mdi mdi-plus text-h6"></span>
+                                    </v-btn>
+                                </template>
+                            </v-dialog>
+                        </v-toolbar>
+                    </template>
+                    <!-- eslint-disable-next-line vue/valid-v-slot -->
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon xl class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                            mdi-plus-box-multiple
+                        </v-icon>
+                    </template>
+                </v-data-table>
+            </v-col>
+        </v-row>
+
 
         <template>
             <v-row justify="center">
@@ -176,7 +166,8 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value" :items="items_select_tea" label="Search teacher"
-                                            item-text="name" item-value="key" @change="check_time_start();"
+                                            item-text="name" item-value="key"
+                                            @change="check_time_start(), search_location()"
                                             :disabled="mode === 'edit' || save_detail.level === undefined"
                                             style="font-weight: bold;"></v-autocomplete>
                                     </v-col>
@@ -188,15 +179,10 @@
 
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
-                                            style="font-weight: bold;"></v-select>
+                                            style="font-weight: bold;" item-text="name" item-value="key"></v-select>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6" :hidden="mode === 'save'">
-                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
-                                            style="font-weight: bold;" disabled></v-select>
-                                    </v-col>
-
-                                    <v-col cols="12" sm="6" :hidden="mode === 'edit'">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
                                             style="font-weight: bold;"></v-select>
                                     </v-col>
@@ -216,6 +202,8 @@
                                     </v-col>
                                 </v-row>
 
+
+                                <!-- ---------------------------EDIT------------------------  -->
                                 <v-row :hidden="mode === 'save'">
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
                                         <v-text-field v-model="save_detail.subject"
@@ -243,8 +231,9 @@
                                             style="font-weight: bold;"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
-                                        <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
-                                            readonly style="font-weight: bold;"></v-select>
+                                        <v-select :items="style_subject" item-text="name" item-value="key"
+                                            label="สถานที่สอน" v-model="save_detail.style" readonly
+                                            style="font-weight: bold;"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
@@ -386,7 +375,7 @@ export default {
         items: [],
         items_select_tea: [],
         items_student: [],
-        style_subject: ['Online', 'On-site'],
+        style_subject: [],
         style_class: ['Flipclass online', 'Flipclass สาขา', 'Private class'],
         picker_start: null,
         picker_stop: null,
@@ -405,19 +394,19 @@ export default {
         arrayEvents: [],
         headers: [
             {
-                text: 'Name Teacher',
+                text: 'ชื่อครู',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Date', value: 'date', align: 'center' },
-            { text: 'Start', value: 'time_s', align: 'start' },
-            { text: 'End', value: 'time_e', align: 'start' },
-            { text: 'Style', value: 'style', align: 'start' },
-            { text: 'class', value: 'class', align: 'start' },
-            { text: 'subject', value: 'subject', align: 'start' },
-            { text: 'จำนวนเปิดรับ', value: 'sum_people', align: 'center' },
-            { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
+            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'สถานที่สอน', value: 'style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'วันที่สอน', value: 'date', align: 'center' },
+            { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
+            { text: 'เวลาสิ้นสุด', value: 'time_e', align: 'center' },
+            { text: 'จำนวนนักเรียน', value: 'sum_people', align: 'center' },
+            { text: 'จองคิว', value: 'actions', sortable: false, align: 'center' },
         ],
 
         desserts: [],
@@ -549,25 +538,22 @@ export default {
                 this.value == null ||
                 this.value_student == null ||
                 this.date1 == null) {
-                this.dialog_save_error = true; 
+                this.dialog_save_error = true;
                 return;
             }
             const db = this.$fireModule.database();
             if (this.mode === 'save') {
-                db.ref(`subject_all/${this.save_detail.subject}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
-                        teacher: this.value,
-                        subject: childData.name,
-                        style_subject: this.save_detail.style,
-                        level: this.save_detail.level,
-                        start: this.picker_start,
-                        class: this.save_detail.class,
-                        stop: this.picker_stop,
-                        because: this.save_detail.because,
-                        status: this.check_status(),
-                    });
-                })
+                db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                    teacher: this.value,
+                    subject: this.save_detail.subject,
+                    style_subject: this.save_detail.style,
+                    level: this.save_detail.level,
+                    start: this.picker_start,
+                    class: this.save_detail.class,
+                    stop: this.picker_stop,
+                    because: this.save_detail.because,
+                    status: this.check_status(),
+                });
             } else if (this.mode === 'edit') {
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
@@ -578,7 +564,7 @@ export default {
                         })
                         db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                             teacher: this.value,
-                            subject: this.save_detail.subject,
+                            subject: this.save_detail.keysubject,
                             style_subject: this.save_detail.style,
                             level: this.save_detail.level,
                             class: this.save_detail.class,
@@ -747,289 +733,56 @@ export default {
                                 const timedata = datedata[time];
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                Promise.all([getTeacherPromise, getSubjectPromise])
+                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
                                     .then((snapshots) => {
                                         const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
                                         const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
                                         const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const locationData = locationSnapshot.val();
                                         const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
                                         const namesub = subjectData.name;
                                         if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
-                                            // console.log('New');
-                                            if (this.search_value == key &&
-                                                this.search_style_sub == timedata.style_subject &&
-                                                this.search_class == timedata.class) {
-                                                // console.log('หาทั้งสอง');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == key &&
-                                                this.search_style_sub == null &&
-                                                this.search_class == null) {
-                                                // console.log('หาครู');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == null &&
-                                                this.search_style_sub == timedata.style_subject &&
-                                                this.search_class == null) {
-                                                // console.log('หารูปแบบ');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == null &&
-                                                this.search_style_sub == null &&
-                                                this.search_class == timedata.class) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == key &&
-                                                this.search_style_sub == timedata.style_subject &&
-                                                this.search_class == null) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == key &&
-                                                this.search_style_sub == timedata.style_subject &&
-                                                this.search_class == timedata.class) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == key &&
-                                                this.search_style_sub == null &&
-                                                this.search_class == timedata.class) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == null &&
-                                                this.search_style_sub == timedata.style_subject &&
-                                                this.search_class == timedata.class) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else if (
-                                                this.search_value == null &&
-                                                this.search_style_sub == null &&
-                                                this.search_class == null) {
-                                                // console.log('หาหมด');
-                                                item.push({
-                                                    name: nametea,
-                                                    date: date,
-                                                    class: timedata.class,
-                                                    time_s: timedata.start,
-                                                    time_e: timedata.stop,
-                                                    style: timedata.style_subject,
-                                                    subject: namesub,
-                                                    sum_people: timedata.invite + '/' + timedata.sum_people,
-                                                    key: key,
-                                                });
-                                                // console.log(item);
-                                                this.events.push(
-                                                    {
-                                                        name: namesub,
-                                                        start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.start.substring(0, 2),
-                                                            timedata.start.substring(3, 5)),
-                                                        end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                            date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                            timedata.stop.substring(3, 5)),
-                                                        color: this.getRandomColor(),
-                                                        timed: true,
-                                                    },
-                                                );
-                                            } else {
-                                                console.log('Error');
-                                            }
+                                            item.push({
+                                                name: nametea,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: locationData.name,
+                                                class: timedata.class,
+                                                class_all: teacherData.classType,
+                                                subject: namesub,
+                                                keySubject: timedata.subject,
+                                                people: timedata.sum_people,
+                                                sum_people: timedata.invite + "/" + timedata.sum_people,
+                                                invite: timedata.invite,
+                                                key: key,
+                                                full_location: { name: locationData.name, key: timedata.style_subject },
+                                                keyLocation: timedata.style_subject,
+                                            });
+                                            this.events.push(
+                                                {
+                                                    name: namesub,
+                                                    start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.start.substring(0, 2),
+                                                        timedata.start.substring(3, 5)),
+                                                    end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                        timedata.stop.substring(3, 5)),
+                                                    color: this.getRandomColor(),
+                                                    timed: true,
+                                                },
+                                            );
                                         }
                                     })
                             }
-                        } else { 
-                            // console.log('Old day'); 
                         }
                     }
                 }
                 this.desserts = item;
+                console.log(this.desserts);
             })
         },
         check_time_start() {
@@ -1049,15 +802,21 @@ export default {
         },
 
         editItem(item) {
-            // console.log('editadd',item);
+            console.log('editadd', item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
-            // console.log(item);
             this.value = item.key;
             this.date1 = item.date;
+
             this.save_detail.class = item.class;
-            this.save_detail.style = item.style;
+            this.style_class = item.class_all;
+
+            this.save_detail.style = item.keyLocation;
+            this.style_subject = item.full_location;
+
             this.save_detail.subject = item.subject;
+            this.save_detail.keysubject = item.keySubject;
+
             this.picker_start_tea = item.time_s;
             this.picker_stop_tea = item.time_e;
             this.dialog_detail = true;
@@ -1116,6 +875,28 @@ export default {
             })
         },
 
+        search_location() {
+            this.style_subject = [];
+            const db = this.$fireModule.database();
+            const getTeacherPromise = db.ref(`user/${this.value}`).once("value");
+            Promise.all([getTeacherPromise])
+                .then((snapshots) => {
+                    const teacherSnapshot = snapshots[0];
+                    const location = teacherSnapshot.val();
+                    this.style_class = location.classType;
+
+                    for (const key in location.classLocation) {
+                        console.log(location.classLocation[key]);
+                        db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
+                            const childData = snapshot.val();
+                            this.style_subject.push({name:childData.name,key:location.classLocation[key]});
+                        })
+                    }
+                    // console.log(this.style_subject);
+                })
+
+        },
+
         deleteItem(item) {
             this.delcon = item;
             this.dialogDelete = true
@@ -1159,6 +940,11 @@ export default {
 </script>
 
 <style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+
 @media only screen and (max-width: 600px) {
 
     /* ซ่อน element ที่ไม่ต้องการแสดงผล */
