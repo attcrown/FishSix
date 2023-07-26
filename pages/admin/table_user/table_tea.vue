@@ -206,9 +206,10 @@
                                 <!-- ---------------------------EDIT------------------------  -->
                                 <v-row :hidden="mode === 'save'">
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
-                                        <v-text-field v-model="save_detail.subject"
-                                            :readonly="save_detail.subject !== 'ทุกวิชา'"
-                                            style="font-weight: bold;"></v-text-field>
+                                        <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
+                                        :items="subject_select_tea" @input="search_level_select2()" 
+                                        :readonly="save_detail.subject != '00000'"
+                                            style="font-weight: bold;"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
@@ -557,16 +558,16 @@ export default {
                     status: this.check_status(),
                 });
             } else if (this.mode === 'edit') {
+                console.log(this.save_detail);
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
-                        // console.log('save', childData.invite);
                         db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).update({
                             invite: parseInt(childData.invite) + 1,
                         })
                         db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                             teacher: this.value,
-                            subject: this.save_detail.keysubject,
+                            subject: this.save_detail.subject,
                             style_subject: this.save_detail.style,
                             level: this.save_detail.level,
                             class: this.save_detail.class,
@@ -804,7 +805,7 @@ export default {
         },
 
         editItem(item) {
-            // console.log('editadd', item);
+            console.log('editadd', item);
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             this.value = item.key;
@@ -814,7 +815,7 @@ export default {
 
             this.save_detail.class = item.class;    
             this.save_detail.style = item.keyLocation;            
-            this.save_detail.subject = item.subject;
+            this.save_detail.subject = item.keySubject;
             this.save_detail.keysubject = item.keySubject;
 
             this.picker_start_tea = item.time_s;
@@ -822,6 +823,7 @@ export default {
             this.dialog_detail = true;
             if (item.subject != 'ทุกวิชา') {
                 this.search_level_select_edit(item);
+                this.search_subject_teacher(item);
             } else {
                 this.search_subject_teacher(item);
             }
@@ -834,7 +836,7 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const detail = childData[key];
-                    if (detail.name === item.subject) {
+                    if (key === item.keySubject) {
                         level = detail.level;
                         // console.log(level);
                         break;
@@ -851,9 +853,8 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const detail = childData[key];
-                    if (detail.name === this.save_detail.subject) {
+                    if (key === this.save_detail.subject) {
                         level = detail.level;
-                        // console.log(level);
                         break;
                     }
                 }
@@ -869,10 +870,11 @@ export default {
                 for (const key in childData) {
                     const detail = childData[key];
                     // console.log('check_sub', detail.name, name);
-                    subject.push(detail.name);
+                    subject.push({name:detail.name,key:key});
                 }
                 this.subject_select_tea = subject;
             })
+            console.log(this.subject_select_tea);
         },
 
         search_location() {
