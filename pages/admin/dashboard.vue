@@ -1,8 +1,7 @@
 <template>
     <div>
         <v-row>
-
-            <v-col cols="12" sm="6" md="6" hidden>
+            <v-col cols="12" sm="6" md="6" >
                 <div class="text-center">
                     <v-progress-circular xl :rotate="270" :size="200" :width="15" :value="value" color="teal">
                         {{ value }}% Active
@@ -15,7 +14,7 @@
                 </div>
             </v-col>
 
-            <v-col cols="12" sm="6" md="6" hidden>
+            <v-col cols="12" sm="6" md="6">
                 <v-card class="mx-auto text-center" color="green" dark max-width="600">
                     <v-card-text>
                         <v-sheet color="rgba(0, 0, 0, .12)">

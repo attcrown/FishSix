@@ -84,11 +84,6 @@
  */
 
 
-/*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
-
-/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
-
-
 /**
  * @license
  * Copyright 2020 Google LLC
@@ -173,6 +168,11 @@
  */
 
 
+/*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
+
+/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
+
+
 /**
  * @license
  * Copyright 2020 Google LLC
@@ -209,9 +209,6 @@
  */
 
 /*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
-
-
-/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
 
 
 /*!

@@ -22,20 +22,26 @@
                                     New Item
                                 </v-btn>
                             </template> -->
-                            <v-card>
+                            <v-card class="p-4 rounded-xl">
                                 <v-card-title>
-                                    <span class="text-h5">{{ formTitle }}</span>
+                                    <span style="font-size: 16px">
+                                        <b>ยืนยันครูกับนักเรียน</b>
+                                    </span>
+                                    <v-spacer></v-spacer>
+                                    <v-btn fab dark small color="#37474F" @click="close">
+                                        <v-icon dark class="text-h5">
+                                            mdi-close
+                                        </v-icon>
+                                    </v-btn>
                                 </v-card-title>
-
                                 <v-card-text>
                                     <v-container>
-
                                         <v-row>
-                                            <v-col cols="12" sm="6" md="6">
+                                            <!-- <v-col cols="12" sm="6" md="6">
                                                 <v-text-field v-model="editedItem.name" label="ครูผู้สอน"
                                                     disabled></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="6">
+                                            </v-col> -->
+                                            <v-col cols="12" sm="12">
                                                 <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                                     :return-value.sync="date" transition="scale-transition" offset-y
                                                     min-width="auto">
@@ -55,68 +61,79 @@
                                                     </v-date-picker>
                                                 </v-menu>
                                             </v-col>
-
                                             <v-col cols="12" sm="6">
-                                                <v-select :items="select_location" label="สถานที่สอน"
-                                                    v-model="editedItem.style" item-text="name" item-value="key"></v-select>
+                                                <v-text-field label="เวลาเริ่มต้น" v-model="editedItem.time_s">
+                                                    <template #prepend>
+                                                        <span class="mdi mdi-timer-alert-outline text-h6"></span>
+                                                    </template></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field label="เวลาสิ้นสุด" v-model="editedItem.time_e">
+                                                    <template #prepend>
+                                                        <span class="mdi mdi-timer-cancel-outline text-h6"></span>
+                                                    </template>
+                                                </v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_class" label="รูปแบบการสอน"
                                                     v-model="editedItem.class"></v-select>
                                             </v-col>
-                                            <v-col cols="12" sm="4">
-                                                <v-select :items="select_subject" label="วิชาเรียน" item-text="name"
+                                            <v-col cols="12" sm="6">
+                                                <v-select :items="select_location" label="สถานที่สอน"
+                                                    v-model="editedItem.style" item-text="name" item-value="key"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-select :items="select_subject" label="วิชา" item-text="name"
                                                     item-value="key" v-model="editedItem.subject"></v-select>
                                             </v-col>
-                                            <v-col cols="12" sm="6" md="4">
+                                            <v-col cols="12" sm="6">
+                                                <v-text-field label="ระดับชั้น" v-model="editedItem.level" disabled>
+                                                </v-text-field>
+                                            </v-col>
+                                            <!-- <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.time_s" label="เริ่มเรียน"></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="4">
                                                 <v-text-field v-model="editedItem.time_e" label="เลิกเรียน"></v-text-field>
-                                            </v-col>
+                                            </v-col> -->
                                         </v-row>
                                     </v-container>
                                 </v-card-text>
+                                <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
 
-                                <v-card-title>
-                                    <span class="text-h5">Detail</span>
+                                <v-card-title style="margin-top: -20px;">
+                                    <span style="font-size:16px"><b>รายละเอียดเกี่ยวกับครู/นักเรียน</b></span>
                                 </v-card-title>
 
                                 <v-card-text>
                                     <v-container>
                                         <v-row>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.phone_teacher"
-                                                    label="Phone number teacher" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.name_student" label="ชื่อนักเรียน"
+                                                    readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.name" label="Name teacher"
-                                                    disabled></v-text-field>
-                                            </v-col>
-
-                                            <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.phone_student"
-                                                    label="Phone number student" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.phone_student" label="เบอร์โทรนักเรียน"
+                                                    readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field color="black" v-model="editedItem.name_student"
-                                                    label="Name student" disabled></v-text-field>
+                                                <v-text-field v-model="editedItem.name" label="ชื่อคุณครู"
+                                                    readonly></v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6" md="6">
+                                                <v-text-field v-model="editedItem.phone_teacher" label="เบอร์โทรคุณครู"
+                                                    readonly></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-container>
                                 </v-card-text>
 
-                                <v-card-actions>
-
-                                    <v-btn color="red lighten-4" @click="dialogDelete = true">
-                                        <b>ยกเลิกการจอง</b>
-                                    </v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue dark-4" text @click="close">
-                                        <b>ปิด</b>
-                                    </v-btn>
-                                    <v-btn color="light-green lighten-4" :disabled="!formIsValid" @click="save">
-                                        <b>ยืนยันการจอง</b>
+                                <v-card-actions class="d-flex justify-center">
+                                    <v-btn class="me-5" color="#FC0405" dark @click="dialogDelete = true" elevation="16" rounded>
+                                        <b>ยกเลิกการจองเรียน</b>
+                                    </v-btn>                                
+                                    <v-btn color="#29CC39" dark :disabled="!formIsValid" @click="save" elevation="16" rounded>
+                                        <b>ยืนยันการจองเรียน</b>
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -279,13 +296,13 @@ export default {
                     }
                 }
                 this.desserts = item;
-                console.log(this.desserts);
+                // console.log(this.desserts);
             })
         },
 
         editItem(item) {
             this.old_item = item;
-            console.log('item>>', item);
+            // console.log('item>>', item);
             this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
@@ -338,7 +355,7 @@ export default {
         },
 
         save() {
-            console.log('update>>', this.editedItem ,this.date);
+            // console.log('update>>', this.editedItem ,this.date);
             this.delete_match();
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
@@ -367,7 +384,7 @@ export default {
         },
 
         delete_match() {
-            console.log('del>>', this.editedItem);
+            // console.log('del>>', this.editedItem);
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
                 .then(() => {

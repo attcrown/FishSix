@@ -263,7 +263,8 @@
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="classLocation" v-model="classLocation"
                                             :readonly="!isEditingContract" label="สาขาที่สามารถสอนได้"></v-text-field>
-                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation" :items="classLocations"
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation" 
+                                            :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
                                     </v-col>
 
@@ -416,18 +417,7 @@ export default {
                 'Flip class',
                 'Private',
             ],
-            classLocations: [
-                'งามวงศ์วาน',
-                'บางกะปิ',
-                'สยาม',
-                'พระราม 2',
-                'ศาลายา',
-                'ปิ่นเกล้า',
-                'ชลบุรี',
-                'รามอินทรา',
-                'บางนา',
-                'รังสิต',
-            ],
+            classLocations: [],
 
             provinceOptions: [
                 'กระบี่',
@@ -565,7 +555,7 @@ export default {
         this.readdata();
         this.fetchData();
         this.readSubject();
-
+        this.getlocation();
     },
 
     computed: {
@@ -574,9 +564,16 @@ export default {
 
 
     methods: {
-
-
-
+        getlocation(){
+            const db = this.$fireModule.database();
+            db.ref(`location/`).on("value", (snapshot) => {
+                this.classLocations=[];
+                const childData = snapshot.val();
+                for(const key in childData){
+                    this.classLocations.push({key:key , name:childData[key].name});
+                }
+            })
+        },
         toEditDetail() {
             if (this.isEditingDetail == true) {
                 this.isEditingDetail = false;

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mb-3"> <!--style="max-width:900px"-->
+        <div class="mb-3" style="max-width:100%;"> <!--style="max-width:900px"-->
             <v-sheet height="64">
                 <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
                     <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
@@ -130,8 +130,8 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
-                console.log(this.selectedEvent);
-                console.log(this.selectedElement);
+                // console.log(this.selectedEvent);
+                // console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
             }
 
@@ -157,7 +157,7 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                console.log(timedata);
+                                // console.log(timedata);
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 Promise.all([getSubjectPromise])
                                     .then(([subjectSnapshot]) => {
