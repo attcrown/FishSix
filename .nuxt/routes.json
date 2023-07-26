@@ -126,6 +126,13 @@
     "_name": "_19281b20"
   },
   {
+    "name": "admin-submit_table",
+    "path": "/admin/submit_table",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\submit_table\\\\index.vue",
+    "chunkName": "pages/admin/submit_table/index",
+    "_name": "_673df401"
+  },
+  {
     "name": "admin-table_now",
     "path": "/admin/table_now",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\table_now.vue",
@@ -292,6 +299,13 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\subject\\\\table_sub.vue",
     "chunkName": "pages/admin/subject/table_sub",
     "_name": "_6579331d"
+  },
+  {
+    "name": "admin-submit_table-card",
+    "path": "/admin/submit_table/card",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\submit_table\\\\card.vue",
+    "chunkName": "pages/admin/submit_table/card",
+    "_name": "_46644531"
   },
   {
     "name": "admin-table_teacher-calendar",

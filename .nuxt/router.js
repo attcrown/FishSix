@@ -22,6 +22,7 @@ const _33c92baa = () => interopDefault(import('..\\pages\\admin\\matching\\index
 const _06a896dc = () => interopDefault(import('..\\pages\\admin\\shop\\index.vue' /* webpackChunkName: "pages/admin/shop/index" */))
 const _aa63029e = () => interopDefault(import('..\\pages\\admin\\student\\index.vue' /* webpackChunkName: "pages/admin/student/index" */))
 const _19281b20 = () => interopDefault(import('..\\pages\\admin\\subject\\index.vue' /* webpackChunkName: "pages/admin/subject/index" */))
+const _673df401 = () => interopDefault(import('..\\pages\\admin\\submit_table\\index.vue' /* webpackChunkName: "pages/admin/submit_table/index" */))
 const _6dcfd64a = () => interopDefault(import('..\\pages\\admin\\table_now.vue' /* webpackChunkName: "pages/admin/table_now" */))
 const _788e713b = () => interopDefault(import('..\\pages\\admin\\table_teacher\\index.vue' /* webpackChunkName: "pages/admin/table_teacher/index" */))
 const _0db298a8 = () => interopDefault(import('..\\pages\\admin\\table_user\\index.vue' /* webpackChunkName: "pages/admin/table_user/index" */))
@@ -46,6 +47,7 @@ const _4f326e2c = () => interopDefault(import('..\\pages\\admin\\subject\\input_
 const _269cff0e = () => interopDefault(import('..\\pages\\admin\\subject\\sub.vue' /* webpackChunkName: "pages/admin/subject/sub" */))
 const _23b19eb0 = () => interopDefault(import('..\\pages\\admin\\subject\\table_location.vue' /* webpackChunkName: "pages/admin/subject/table_location" */))
 const _6579331d = () => interopDefault(import('..\\pages\\admin\\subject\\table_sub.vue' /* webpackChunkName: "pages/admin/subject/table_sub" */))
+const _46644531 = () => interopDefault(import('..\\pages\\admin\\submit_table\\card.vue' /* webpackChunkName: "pages/admin/submit_table/card" */))
 const _225cd265 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\calendar.vue' /* webpackChunkName: "pages/admin/table_teacher/calendar" */))
 const _78cb9d88 = () => interopDefault(import('..\\pages\\admin\\table_teacher\\table_tea.vue' /* webpackChunkName: "pages/admin/table_teacher/table_tea" */))
 const _a137a8f8 = () => interopDefault(import('..\\pages\\admin\\table_user\\status_student.vue' /* webpackChunkName: "pages/admin/table_user/status_student" */))
@@ -139,6 +141,10 @@ export const routerOptions = {
     path: "/admin/subject",
     component: _19281b20,
     name: "admin-subject"
+  }, {
+    path: "/admin/submit_table",
+    component: _673df401,
+    name: "admin-submit_table"
   }, {
     path: "/admin/table_now",
     component: _6dcfd64a,
@@ -235,6 +241,10 @@ export const routerOptions = {
     path: "/admin/subject/table_sub",
     component: _6579331d,
     name: "admin-subject-table_sub"
+  }, {
+    path: "/admin/submit_table/card",
+    component: _46644531,
+    name: "admin-submit_table-card"
   }, {
     path: "/admin/table_teacher/calendar",
     component: _225cd265,

@@ -80,11 +80,11 @@ export default {
         {
           icon: 'mdi-table-large',
           title: 'ตารางเรียน',
-          to: '',
+          to: '/admin/submit_table',
         },
         {
           icon: 'mdi-folder-file-outline',
-          title: 'รายวิชา',
+          title: 'เพิ่มรายละเอียด',
           to: '/admin/subject',
         },
         {

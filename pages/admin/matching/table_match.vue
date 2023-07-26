@@ -84,7 +84,7 @@
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
-                                                    item-value="key" v-model="editedItem.subject"></v-select>
+                                                    item-value="key" v-model="editedItem.subject" disabled></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-text-field label="ระดับชั้น" v-model="editedItem.level" disabled>
