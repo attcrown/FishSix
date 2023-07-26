@@ -187,14 +187,23 @@
                                             style="font-weight: bold;"></v-select>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
+                                            @change="validateTime(), picker_stop = null"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
+                                            label="เลิกเรียน"></v-select>
+                                    </v-col>
+
+                                    <!-- <v-col cols="12" sm="6">
                                         <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
                                             style="font-weight: bold;"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field label="เลิกเรียน" v-model="picker_stop"
                                             @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
-                                    </v-col>
+                                    </v-col> -->
 
                                     <v-col cols="12" sm="12">
                                         <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
@@ -207,8 +216,8 @@
                                 <v-row :hidden="mode === 'save'">
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
-                                        :items="subject_select_tea" @input="search_level_select2()" 
-                                        :readonly="save_detail.subject != '00000'"
+                                            :items="subject_select_tea" @input="search_level_select2()"
+                                            :readonly="save_detail.subject != '00000'"
                                             style="font-weight: bold;"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
@@ -241,14 +250,23 @@
                                             style="font-weight: bold;" readonly></v-select>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
+                                            @change="validateTime(), picker_stop = null"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
+                                            label="เลิกเรียน"></v-select>
+                                    </v-col>
+
+                                    <!-- <v-col cols="12" sm="6">
                                         <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
                                             style="font-weight: bold;"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field label="เลิกเรียน" v-model="picker_stop"
                                             @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
-                                    </v-col>
+                                    </v-col> -->
 
                                     <v-col cols="12" sm="12">
                                         <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
@@ -260,7 +278,8 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="clear_item(), dialog_detail = false">
+                            <v-btn color="blue darken-1" text
+                                @click="clear_item(), dialog_detail = false, dialog_select_date = false">
                                 Close
                             </v-btn>
                             <v-btn color="blue darken-1" text @click="save_detail_data()">
@@ -429,7 +448,15 @@ export default {
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-
+        time_standart: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+        time_standart_stop: [],
+        time_standart_sum: [],
     }),
 
     computed: {
@@ -469,6 +496,40 @@ export default {
     },
 
     methods: {
+        validateTime() {
+            if (this.picker_stop == null) {
+                this.time_standart_stop = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.picker_start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        if (sum > 1) {
+                            // console.log(this.time_standart[key]);
+                            this.time_standart_stop.push(this.time_standart[key]);
+                        }
+                    }
+                }
+            } else if (this.picker_stop != null && this.picker_start != null) {
+                this.time_standart_sum = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.picker_stop == this.time_standart[key]) {
+                        sum = 0;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                        break;
+                    }
+                    else if (this.picker_start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                    }
+                }
+                console.log(this.time_standart_sum);
+            } else {
+                alert("ลงเวลาไม่ถูกต้อง");
+                this.close();
+                this.clear_item();
+            }
+        },
         getColor(stutus) {
             if (stutus == 'active') return 'success'
             else if (stutus == 'Not active') return 'orange'
@@ -598,6 +659,16 @@ export default {
             this.picker_stop_tea = null;
             this.picker_start = null;
             this.picker_stop = null;
+            this.time_standart = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+                , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+                , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+                , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+                , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+                , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+            this.time_standart_stop = [];
+            this.time_standart_sum = [];
+
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -806,6 +877,7 @@ export default {
 
         editItem(item) {
             console.log('editadd', item);
+
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             this.value = item.key;
@@ -813,8 +885,8 @@ export default {
             this.style_class = item.class_all;
             this.style_subject = item.full_location;
 
-            this.save_detail.class = item.class;    
-            this.save_detail.style = item.keyLocation;            
+            this.save_detail.class = item.class;
+            this.save_detail.style = item.keyLocation;
             this.save_detail.subject = item.keySubject;
             this.save_detail.keysubject = item.keySubject;
 
@@ -827,8 +899,35 @@ export default {
             } else {
                 this.search_subject_teacher(item);
             }
+            this.check_time_select(item);
         },
 
+        check_time_select(item) {
+            this.time_standart = [];
+            this.time_standart_stop = [];
+            this.time_all = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+                , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+                , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+                , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+                , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+                , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+            let sum = 0;
+            for (const key in this.time_all) {
+                if (item.time_e == this.time_all[key]) {
+                    sum = 0;
+                    this.time_standart.push(this.time_all[key]);
+                    this.time_standart_stop.push(this.time_all[key]);
+                    break;
+                }
+                else if (item.time_s == this.time_all[key] || (sum != 0)) {
+                    sum++;
+                    this.time_standart.push(this.time_all[key]);
+                    this.time_standart_stop.push(this.time_all[key]);
+                }
+            }
+            console.log(this.time_standart);
+        },
         search_level_select_edit(item) {
             let level = [];
             const db = this.$fireModule.database();
@@ -870,7 +969,7 @@ export default {
                 for (const key in childData) {
                     const detail = childData[key];
                     // console.log('check_sub', detail.name, name);
-                    subject.push({name:detail.name,key:key});
+                    subject.push({ name: detail.name, key: key });
                 }
                 this.subject_select_tea = subject;
             })

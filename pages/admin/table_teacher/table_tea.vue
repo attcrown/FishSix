@@ -12,20 +12,6 @@
                             @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     </div>
                 </v-col>
-
-                <!-- <v-col cols="4">
-                            <v-autocomplete v-model="search_value" :items="items" label="Search teacher"
-                                @change="search_date_teacher()" item-text="name" item-value="key"></v-autocomplete>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-autocomplete v-model="search_class" :items="class_flip" label="Search class"
-                                @change="search_date_teacher()"></v-autocomplete>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-autocomplete v-model="search_style_sub" :items="style_subject"
-                                @change="search_date_teacher()" label="Search Subject"></v-autocomplete>
-                        </v-col> -->
-
                 <v-col cols="12">
                     <v-data-table :headers="headers" :items="desserts" :search="search_table" sort-by="date"
                         class="elevation-16 rounded-xl">
@@ -35,8 +21,6 @@
                                 <v-toolbar-title><b>ตารางสอนครู</b></v-toolbar-title>
                                 <v-divider class="mx-4" inset vertical></v-divider>
                                 <v-spacer></v-spacer>
-                                <!-- <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                                            hide-details></v-text-field> -->
                                 <v-text-field class="me-10" v-model="search_table" append-icon="mdi-magnify" label="Search"
                                     single-line hide-details style="max-width: 200px;"></v-text-field>
                                 <v-dialog v-model="dialogDelete" max-width="500px">
@@ -60,19 +44,15 @@
                             </v-toolbar>
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
-                        <template v-slot:item.actions="{ item }" >
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" small class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                        <template v-slot:item.actions="{ item }">
+                            <v-icon v-if="!(parseInt(item.invite) > 0)" small class="mr-2"
+                                @click="editItem(item), dialog_detail = true, mode = 'edit'">
                                 mdi-pencil
                             </v-icon>
                             <v-icon v-if="!(parseInt(item.invite) > 0)" small @click="deleteItem(item)">
                                 mdi-delete
                             </v-icon>
                         </template>
-                        <!-- <template v-slot:no-data>
-                                    <v-btn color="primary" @click="search_date_teacher()">
-                                        Reset
-                                    </v-btn>
-                                </template> -->
                     </v-data-table>
                 </v-col>
             </v-row>
@@ -116,22 +96,31 @@
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
                                             v-model="save_detail.subject"></v-select>
                                     </v-col>
-
                                     <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มสอน"
+                                            @change="validateTime(), picker_stop=null"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="4">
+                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
+                                            label="หยุดสอน"></v-select>
+                                    </v-col>
+
+                                    <!-- <v-col cols="12" sm="4">
                                         <v-text-field label="เริ่มสอน" v-model="picker_start"
                                             @click="dialog_time = true"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="4">
+                                    </v-col> -->
+                                    <!-- <v-col cols="12" sm="4">
                                         <v-text-field label="หยุดสอน" v-model="picker_stop"
                                             @click="dialog_time_stop = true"></v-text-field>
-                                    </v-col>
+                                    </v-col> -->
                                 </v-row>
                             </v-container>
                             <small>*การลงเวลามีผลต่อการแสดงผลฝั่งลูกค้ากรุณาใช้ความชัวในกแารลงเวลา</small>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_detail = false">
+                            <v-btn color="blue darken-1" text
+                                @click="dialog_detail = false; dialog_select_date = false; clear_item()">
                                 Close
                             </v-btn>
                             <v-btn color="blue darken-1" text @click="save_detail_data()" :disabled="!formIsValid">
@@ -243,8 +232,6 @@ export default {
         style_subject: [],
         class_flip: [],
         subject: [],
-        picker_start: null,
-        picker_stop: null,
         search_value: null,
         search_style_sub: null,
         search_class: null,
@@ -267,8 +254,8 @@ export default {
             { text: 'สถานที่สอน', value: 'style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
-            { text: 'เวลาเริ่มต้น', value: 'time_s' , align: 'center'},
-            { text: 'เวลาสิ้นสุด', value: 'time_e' , align: 'center'},
+            { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
+            { text: 'เวลาสิ้นสุด', value: 'time_e', align: 'center' },
             { text: 'จำนวนนักเรียน', value: 'sum_people', align: 'center' },
             { text: 'แก้ไขข้อมูล', value: 'actions', sortable: false },
         ],
@@ -277,6 +264,18 @@ export default {
 
         hour_tea: 0,
         min_tea: 0,
+
+        time_standart: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+        time_standart_stop: [],
+        time_standart_sum: [],
+        picker_start: null,
+        picker_stop: null,
 
     }),
     components: {
@@ -289,7 +288,7 @@ export default {
         },
         formIsValid() {
             return (
-                this.value && 
+                this.value &&
                 this.save_detail.class &&
                 this.save_detail.style &&
                 this.save_detail.sum_people &&
@@ -323,7 +322,40 @@ export default {
     },
 
     methods: {
-
+        validateTime() {
+            if (this.picker_stop == null) {
+                this.time_standart_stop = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.picker_start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        if (sum > 1) {
+                            // console.log(this.time_standart[key]);
+                            this.time_standart_stop.push(this.time_standart[key]);
+                        }
+                    }
+                }
+            } else if (this.picker_stop != null && this.picker_start != null) {
+                this.time_standart_sum=[];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.picker_stop == this.time_standart[key]) {
+                        sum = 0;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                        break;
+                    }
+                    else if (this.picker_start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                    }
+                }
+                console.log(this.time_standart_sum);
+            } else {
+                alert("ลงเวลาไม่ถูกต้อง");
+                this.close();
+                this.clear_item();
+            }
+        },
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
             const randomColor = this.colors[randomIndex]
@@ -361,9 +393,9 @@ export default {
                     db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
                 }
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-                    class: this.save_detail.class,                    
+                    class: this.save_detail.class,
                     sum_people: this.save_detail.sum_people,
-                    subject : this.save_detail.subject,
+                    subject: this.save_detail.subject,
                     style_subject: this.save_detail.style,
                     start: this.picker_start,
                     stop: this.picker_stop,
@@ -441,7 +473,7 @@ export default {
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
-                            const timedata = datedata[time];                            
+                            const timedata = datedata[time];
                             const getTeacherPromise = db.ref(`user/${key}`).once("value");
                             const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                             const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
@@ -459,13 +491,13 @@ export default {
                                     const namesub = subjectData.name;
                                     if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                         item.push({
-                                            userid : teacherData.teacherId,
+                                            userid: teacherData.teacherId,
                                             name: nametea,
                                             date: date,
                                             time_s: timedata.start,
                                             time_e: timedata.stop,
                                             style: locationData.name,
-                                            keystyle: timedata.style_subject,                                            
+                                            keystyle: timedata.style_subject,
                                             class: timedata.class,
                                             subject: namesub,
                                             keySubject: timedata.subject,
@@ -501,7 +533,15 @@ export default {
         },
 
         editItem(item) {
-            // console.log(item);
+            console.log(item);
+            this.time_standart_stop = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+            this.time_standart = this.time_standart_stop;
             this.search_class_tea(item.key);
             this.search_style_tea(item.key);
             this.search_subject_tea(item.key);
