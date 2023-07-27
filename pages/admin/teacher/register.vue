@@ -4,10 +4,12 @@
 
         <v-row v-if="!isLoading">
 
+
             <div style="display: flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลครู</h1>
                 <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
             </div>
+
             <div class="col-sm-12">
                 <form ref="registerForms">
 
@@ -55,7 +57,7 @@
                                     <v-col cols="9" class="py-0"></v-col>
                                     <v-col cols="6" class="py-0">
                                         <v-text-field class="black-label" v-model="name" :error-messages="nameErrors"
-                                            counter label="Username (กรุณาระบุเป็นภาษาอังกฤษ)" required
+                                            readonly counter label="Username (ไม่ต้องกรอก)" required disabled
                                             @input="$v.name.$touch()" @blur="$v.name.$touch()">
 
                                             <template v-slot:append>
@@ -72,8 +74,8 @@
                                     </v-col>
                                     <v-col cols="6" class="py-0">
                                         <v-text-field class="black-label" v-model="password" :error-messages="passErrors"
-                                            :counter="20" label="รหัสผ่าน" required @input="$v.password.$touch()"
-                                            @blur="$v.password.$touch()">
+                                            readonly :counter="20" label="รหัสผ่าน (ไม่ต้องกรอก)" required
+                                            @input="$v.password.$touch()" disabled @blur="$v.password.$touch()">
                                             <template v-slot:append>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on }">
@@ -87,14 +89,31 @@
 
                                     </v-col>
                                     <v-col cols="4" class="py-0 ">
-                                        <v-text-field class="black-label" name="firstName" v-model="firstName" label="ชื่อ"
-                                            :error-messages="firstNameErrors" required @input="$v.firstName.$touch()"
-                                            @blur="$v.firstName.$touch()">
+                                        <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                            label="ชื่อ (ภาษาอังกฤษ)" :error-messages="firstNameEngErrors" required
+                                            v-on:keypress="isLetter($event)" @input="$v.firstNameEng.$touch()"
+                                            @blur="$v.firstNameEng.$touch()">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                            :error-messages="lastNameEngErrors" label="นามสกุล (ภาษาอังกฤษ)" required
+                                            v-on:keypress="isLetter($event)" @input="$v.lastNameEng.$touch()"
+                                            @blur="$v.lastNameEng.$touch()">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+
+                                    </v-col>
+                                    <v-col cols="4" class="py-0 ">
+                                        <v-text-field class="black-label" name="firstName" v-model="firstName"
+                                            label="ชื่อ (ภาษาไทย)" :error-messages="firstNameErrors" required
+                                            @input="$v.firstName.$touch()" @blur="$v.firstName.$touch()">
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
                                         <v-text-field class="black-label" name="lastName" v-model="lastName"
-                                            :error-messages="lastNameErrors" label="นามสกุล" required
+                                            :error-messages="lastNameErrors" label="นามสกุล (ภาษาไทย)" required
                                             @input="$v.lastName.$touch()" @blur="$v.lastName.$touch()">
                                         </v-text-field>
                                     </v-col>
@@ -172,19 +191,26 @@
                                         v-model="address.houseNo"></v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-text-field class="black-label" name="tambon" label="ตำบล/แขวง"
-                                        v-model="address.tambon"></v-text-field>
+                                    <v-autocomplete class="black-label" v-model="selectedTambon" :items="tambons"
+                                        :item-value="tambonValue" item-text="name_th" :search-input.sync="searchTambon"
+                                        no-data-text="กรุณากรอกชื่อตำบล" @update:search-input="fetchTambons"
+                                        label="ตำบล"></v-autocomplete>
+                                    <!-- <v-autocomplete class="black-label" name="tambon" label="ตำบล/แขวง" :items="tambons"
+                                        item-text="name" v-model="address.tambon"></v-autocomplete> -->
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-text-field class="black-label" name="amphoe" label="อำเภอ/เขต"
+                                    <!-- <v-autocomplete v-model="address.amphoe" :items="amphoes" item-text="name_th"
+                                        :search-input.sync="searchAmphoe" @update:search-input="fetchAmphoe"
+                                        label="อำเภอ"></v-autocomplete> -->
+                                    <v-text-field class="black-label" name="amphoe" label="อำเภอ/เขต" readonly
                                         v-model="address.amphoe"></v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-autocomplete class="black-label" name="province" v-model="address.province"
-                                        :items="provinceOptions" autocomplete label="จังหวัด"></v-autocomplete>
+                                    <v-text-field class="black-label" name="province" v-model="address.province" readonly
+                                        label="จังหวัด"></v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-text-field class="black-label" name="postal" label="รหัสไปรษณีย์" required
+                                    <v-text-field class="black-label" name="postal" label="รหัสไปรษณีย์" required readonly
                                         :rules="postalRules" v-model="address.postal"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
@@ -201,26 +227,29 @@
                                     </v-col>
 
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_houseNo" label="บ้านเลขที่"
+                                        <v-text-field class="black-label" name="curr_houseNo" label="บ้านเลขที่" :disabled="isAddressSame"
                                             v-model="currAddress.houseNo"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_tambon" label="ตำบล/แขวง"
+                                        <v-autocomplete v-if="!isAddressSame" class="black-label" v-model="selectedCurrTambon"
+                                            :items="currTambons" :item-value="currTambonValue" item-text="name_th"
+                                            :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                            @update:search-input="fetchCurrTambons" label="ตำบล"></v-autocomplete>
+                                            <v-text-field  v-if="isAddressSame" class="black-label" name="curr_tambon" label="ตำบล" :disabled="isAddressSame"
                                             v-model="currAddress.tambon"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_amphoe" label="อำเภอ/เขต"
+                                        <v-text-field class="black-label" name="curr_amphoe" label="อำเภอ/เขต" :disabled="isAddressSame"
                                             v-model="currAddress.amphoe"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
 
-                                        <v-autocomplete class="black-label" name="curr_province"
-                                            v-model="currAddress.province" :items="provinceOptions" autocomplete
-                                            label="จังหวัด"></v-autocomplete>
+                                        <v-text-field class="black-label" name="province" v-model="currAddress.province" :disabled="isAddressSame"
+                                            readonly label="จังหวัด"></v-text-field>
 
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_postal" label="รหัสไปรษณีย์"
+                                        <v-text-field class="black-label" name="curr_postal" label="รหัสไปรษณีย์" :disabled="isAddressSame"
                                             :rules="postalRules" v-model="currAddress.postal"></v-text-field>
                                     </v-col>
 
@@ -275,10 +304,10 @@
                                         v-model="rate"></v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-select class="black-label" v-model="classLocation" :items="locations" item-value="key" 
-                                        label="สาขาที่สามารถสอนได้" item-text="name" multiple>     
+                                    <v-select class="black-label" v-model="classLocation" :items="locations"
+                                        item-value="key" label="สาขาที่สามารถสอนได้" item-text="name" multiple>
                                     </v-select>
-                                
+
                                 </v-col>
 
                             </v-row>
@@ -374,7 +403,9 @@
 
     </div>
 </template>
+
 <script>
+
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, email, numeric } from 'vuelidate/lib/validators'
 import pageLoader from '@/components/loader.vue';
@@ -392,12 +423,16 @@ export default {
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
+            isAddressSame:false,
             //register field
             status: "teacher",
             profilePic: null,
             teacherId: null,
-            name: null,
+
             password: null,
+            firstNameEng: null,
+            name: null,
+            lastNameEng: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -432,6 +467,19 @@ export default {
             major: null,
             selectedSubjects: [],
             locations: [],
+
+
+            tambons: [],
+            currTambons: [],
+            amphoes: [],
+            provinces: [],
+            selectedTambon: '',
+            selectedCurrTambon: '',
+            selectedAmphoes: '',
+            selectedCurrAmphoes: '',
+            selectedProvince: '',
+            searchTambon: '',
+            searchCurrTambon: '',
 
             //rules
             postalRules: [
@@ -471,101 +519,8 @@ export default {
                 'Private',
             ],
 
-            classLocations: [
-                'งามวงศ์วาน',
-                'บางกะปิ',
-                'สยาม',
-                'พระราม 2',
-                'ศาลายา',
-                'ปิ่นเกล้า',
-                'ชลบุรี',
-                'รามอินทรา',
-                'บางนา',
-                'รังสิต',
-            ],
-
             subjects: [],
-            provinceOptions: [
-                'กระบี่',
-                'กรุงเทพมหานคร',
-                'กาญจนบุรี',
-                'กาฬสินธุ์',
-                'กำแพงเพชร',
-                'ขอนแก่น',
-                'จันทบุรี',
-                'ฉะเชิงเทรา',
-                'ชลบุรี',
-                'ชัยนาท',
-                'ชัยภูมิ',
-                'ชุมพร',
-                'เชียงราย',
-                'เชียงใหม่',
-                'ตรัง',
-                'ตราด',
-                'ตาก',
-                'นครนายก',
-                'นครปฐม',
-                'นครพนม',
-                'นครราชสีมา',
-                'นครศรีธรรมราช',
-                'นครสวรรค์',
-                'นนทบุรี',
-                'นราธิวาส',
-                'น่าน',
-                'บึงกาฬ',
-                'บุรีรัมย์',
-                'ปทุมธานี',
-                'ประจวบคีรีขันธ์',
-                'ปราจีนบุรี',
-                'ปัตตานี',
-                'พระนครศรีอยุธยา',
-                'พะเยา',
-                'พังงา',
-                'พัทลุง',
-                'พิจิตร',
-                'พิษณุโลก',
-                'เพชรบุรี',
-                'เพชรบูรณ์',
-                'แพร่',
-                'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม',
-                'มุกดาหาร',
-                'แม่ฮ่องสอน',
-                'ยะลา',
-                'ยโสธร',
-                'ร้อยเอ็ด',
-                'ระนอง',
-                'ระยอง',
-                'ราชบุรี',
-                'ลพบุรี',
-                'ลำปาง',
-                'ลำพูน',
-                'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร',
-                'สงขลา',
-                'สตูล',
-                'สมุทรปราการ',
-                'สมุทรสงคราม',
-                'สมุทรสาคร',
-                'สระแก้ว',
-                'สระบุรี',
-                'สิงห์บุรี',
-                'สุโขทัย',
-                'สุพรรณบุรี',
-                'สุราษฎร์ธานี',
-                'สุรินทร์',
-                'หนองคาย',
-                'หนองบัวลำภู',
-                'อ่างทอง',
-                'อำนาจเจริญ',
-                'อุดรธานี',
-                'อุตรดิตถ์',
-                'อุทัยธานี',
-                'อุบลราชธานี',
-                'อ่างทอง'
-            ],
+
         }
     },
     mixins: [validationMixin],
@@ -573,6 +528,8 @@ export default {
         teacherId: { maxLength: maxLength(6), minLength: minLength(6) },
         name: { required, maxLength: maxLength(6), minLength: minLength(6) },
         password: { required, maxLength: maxLength(20), minLength: minLength(6) },
+        firstNameEng: { required },
+        lastNameEng: { required },
         firstName: { required },
         lastName: { required },
         email: { required, email },
@@ -593,6 +550,7 @@ export default {
         },
     },
     computed: {
+
         idErrors() {
             const errors = []
             if (!this.$v.teacherId.$dirty) return errors
@@ -626,6 +584,20 @@ export default {
             if (!this.$v.password.required) {
                 errors.push('กรุณากรอกรหัสผ่าน')
             }
+            return errors
+        },
+
+        firstNameEngErrors() {
+            const errors = []
+            if (!this.$v.firstNameEng.$dirty) return errors
+            !this.$v.firstNameEng.required && errors.push('กรุณาระบุชื่อผู้สอนเป็นภาษาอังกฤษ')
+            return errors
+        },
+
+        lastNameEngErrors() {
+            const errors = []
+            if (!this.$v.lastNameEng.$dirty) return errors
+            !this.$v.lastNameEng.required && errors.push('กรุณาระบุนามสกุลเป็นภาษาอังกฤษ')
             return errors
         },
 
@@ -699,17 +671,53 @@ export default {
     },
     mounted() {
         this.readdata();
+        //this.fetchData();
     },
 
     watch: {
         menu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
+        'firstNameEng': {
+            handler: 'updateUsername',
+            immediate: true,
+        },
+        'selectedTambon': {
+            handler: 'fetchAmphoe',
+            immediate: true,
+        },
+
+        'selectedAmphoes': {
+            handler: 'fetchProvince',
+            immediate: true,
+        },
+
+        'selectedCurrTambon': {
+            handler: 'fetchCurrAmphoe',
+            immediate: true,
+        },
+        'selectedCurrAmphoes': {
+            handler: 'fetchCurrProvince',
+            immediate: true,
+        },
+
     },
     methods: {
         updateCurrAddress() {
+            if(this.isAddressSame){
+
+                this.currAddress = {houseNo:null, tambon: null, amphoe: null, province: null, postal: null};
+                this.isAddressSame = false;
+            
+            }
+            else{
+                this.isAddressSame = true;
+            }
+
             if (this.address) {
+              
                 this.currAddress = { ...this.address };
+
             } else {
                 this.currAddress = null;
             }
@@ -764,8 +772,9 @@ export default {
 
         submit() {
             this.$v.$touch()
-            console.log(this.classLocation)
+
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
+                && this.firstNameEngErrors == 0 && this.lastNameEngErrors == 0
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0 && this.nameErrors == 0
                 && this.idErrors.length == 0 && this.mobileErrors.length == 0
                 && this.idCardNumberErrors.length == 0 && this.contractErrors.length == 0
@@ -792,6 +801,8 @@ export default {
                 name: this.name,
                 password: this.password,
                 profilePic: this.profilePic,
+                firstNameEng:this.firstNameEng,
+                lastNameEng:this.lastNameEng,
                 firstName: this.firstName,
                 lastName: this.lastName,
                 nickname: this.nickname,
@@ -923,7 +934,7 @@ export default {
                     items.push(item);
                 }
                 this.locations = items;
-                console.log(this.locations);
+
                 this.isLoading = false;
 
             })
@@ -943,6 +954,249 @@ export default {
 
             }
 
+        },
+
+
+        updateUsername() {
+            if (this.firstNameEng) {
+                const num = parseInt(this.teacherId.slice(2), 10);
+                this.name = this.firstNameEng + num;
+                this.password = this.firstNameEng + num;
+            }
+            else {
+                this.name = null;
+            }
+
+        },
+        async fetchProvince() {
+            if (this.selectedAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedAmphoes.province_id;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.address.province = item.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchAmphoe() {
+            if (this.selectedTambon) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedTambon.amphure_id;
+                this.address.tambon = this.selectedTambon.name_th;
+                this.address.postal = this.selectedTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedAmphoes = item;
+                        this.address.amphoe = this.selectedAmphoes.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchTambon) {
+                tambonsRef
+                    .orderByChild("name_th") // Replace 'name' with the relevant field you want to filter by
+                    .startAt(this.searchTambon)
+                    .endAt(this.searchTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.tambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.tambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        async fetchCurrProvince() {
+            if (this.selectedCurrAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedCurrAmphoes.province_id;
+
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.currAddress.province = item.name_th;
+                    }
+
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchCurrAmphoe() {
+            if (this.selectedCurrTambon) {
+                console.log(this.selectedCurrTambon)
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedCurrTambon.amphure_id;
+                this.currAddress.tambon = this.selectedCurrTambon.name_th;
+                this.currAddress.postal = this.selectedCurrTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedCurrAmphoes = item;
+                        this.currAddress.amphoe = this.selectedCurrTambon.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchCurrTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchCurrTambon) {
+                tambonsRef
+                    .orderByChild("name_th") 
+                    .startAt(this.searchCurrTambon)
+                    .endAt(this.searchCurrTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.currTambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.currTambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        tambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+        currTambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+
+        isLetter(e) {
+            let char = String.fromCharCode(e.keyCode);
+            if (/^[A-Za-z]+$/.test(char)) return true;
+            else e.preventDefault();
         },
 
         encode(a) {

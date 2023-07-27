@@ -100,8 +100,8 @@
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
-                                            :rules="idCardRules" :counter="isEditingDetail" :readonly="!isEditingDetail"
-                                            ></v-text-field>
+                                            :rules="idCardRules" :counter="isEditingDetail"
+                                            :readonly="!isEditingDetail"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
                                         <label>สำเนาบัตรประชาชน</label><br>
@@ -235,8 +235,8 @@
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="classType" label="ประเภทคลาส"
                                             :readonly="!isEditingContract" v-model="classType"></v-text-field>
-                                        <v-select v-if="isEditingContract" class="black-label" v-model="classType" :items="classTypes"
-                                            label="ประเภทคลาส" multiple ></v-select>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classType"
+                                            :items="classTypes" label="ประเภทคลาส" multiple></v-select>
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
@@ -261,9 +261,10 @@
                                             oninput="validity.valid||(value='');" v-model="rate"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="classLocation" v-model="classLocation"
-                                            :readonly="!isEditingContract" label="สาขาที่สามารถสอนได้"></v-text-field>
-                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation" 
+                                        <v-text-field v-if="!isEditingContract" name="classLocation"
+                                            v-model="classLocationDisplay" :readonly="!isEditingContract"
+                                            label="สาขาที่สามารถสอนได้"></v-text-field>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation"
                                             :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
                                     </v-col>
@@ -385,8 +386,9 @@ export default {
             idCardCopy: null,
             contract: null,
             workType: null,
-            classType:null,
-            classLocation:null, 
+            classType: null,
+            classLocation: [],
+            classLocationDisplay: [],
             startDate: null,
             rate: null,
             university: null,
@@ -419,87 +421,7 @@ export default {
             ],
             classLocations: [],
 
-            provinceOptions: [
-                'กระบี่',
-                'กรุงเทพมหานคร',
-                'กาญจนบุรี',
-                'กาฬสินธุ์',
-                'กำแพงเพชร',
-                'ขอนแก่น',
-                'จันทบุรี',
-                'ฉะเชิงเทรา',
-                'ชลบุรี',
-                'ชัยนาท',
-                'ชัยภูมิ',
-                'ชุมพร',
-                'เชียงราย',
-                'เชียงใหม่',
-                'ตรัง',
-                'ตราด',
-                'ตาก',
-                'นครนายก',
-                'นครปฐม',
-                'นครพนม',
-                'นครราชสีมา',
-                'นครศรีธรรมราช',
-                'นครสวรรค์',
-                'นนทบุรี',
-                'นราธิวาส',
-                'น่าน',
-                'บึงกาฬ',
-                'บุรีรัมย์',
-                'ปทุมธานี',
-                'ประจวบคีรีขันธ์',
-                'ปราจีนบุรี',
-                'ปัตตานี',
-                'พระนครศรีอยุธยา',
-                'พะเยา',
-                'พังงา',
-                'พัทลุง',
-                'พิจิตร',
-                'พิษณุโลก',
-                'เพชรบุรี',
-                'เพชรบูรณ์',
-                'แพร่',
-                'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม',
-                'มุกดาหาร',
-                'แม่ฮ่องสอน',
-                'ยะลา',
-                'ยโสธร',
-                'ร้อยเอ็ด',
-                'ระนอง',
-                'ระยอง',
-                'ราชบุรี',
-                'ลพบุรี',
-                'ลำปาง',
-                'ลำพูน',
-                'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร',
-                'สงขลา',
-                'สตูล',
-                'สมุทรปราการ',
-                'สมุทรสงคราม',
-                'สมุทรสาคร',
-                'สระแก้ว',
-                'สระบุรี',
-                'สิงห์บุรี',
-                'สุโขทัย',
-                'สุพรรณบุรี',
-                'สุราษฎร์ธานี',
-                'สุรินทร์',
-                'หนองคาย',
-                'หนองบัวลำภู',
-                'อ่างทอง',
-                'อำนาจเจริญ',
-                'อุดรธานี',
-                'อุตรดิตถ์',
-                'อุทัยธานี',
-                'อุบลราชธานี',
-                'อ่างทอง'
-            ],
+
 
             //rules
 
@@ -556,6 +478,9 @@ export default {
         this.fetchData();
         this.readSubject();
         this.getlocation();
+        this.initialize();
+        this.getTeacherLocation();
+
     },
 
     computed: {
@@ -564,16 +489,36 @@ export default {
 
 
     methods: {
-        getlocation(){
+        async initialize() {
+
+            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()], this.getlocation());
+
+            this.getTeacherLocation();
+        },
+        getlocation() {
             const db = this.$fireModule.database();
             db.ref(`location/`).on("value", (snapshot) => {
-                this.classLocations=[];
+                this.classLocations = [];
                 const childData = snapshot.val();
-                for(const key in childData){
-                    this.classLocations.push({key:key , name:childData[key].name});
+                for (const key in childData) {
+                    this.classLocations.push({ key: key, name: childData[key].name });
                 }
             })
+
         },
+
+        async getTeacherLocation() {
+            const db = this.$fireModule.database();
+
+            for (let i = 0; i < this.classLocation.length; i++) {
+
+                const classSnapshot = await db.ref(`location/${this.classLocation[i]}`).once("value");
+                const childClassData = classSnapshot.val();
+                this.classLocationDisplay.push(childClassData.name)
+             
+            }
+        },
+
         toEditDetail() {
             if (this.isEditingDetail == true) {
                 this.isEditingDetail = false;
@@ -669,7 +614,7 @@ export default {
                 this.university = childData.university || null;
                 this.faculty = childData.faculty || null;
                 this.major = childData.major || null;
-              
+
                 try {
                     this.address.houseNo = childData.address.houseNo || null;
                     this.address.tambon = childData.address.tambon || null;
@@ -682,17 +627,20 @@ export default {
 
                 try {
                     this.currAddress.houseNo = childData.address.houseNo || null;
-                this.currAddress.tambon = childData.address.tambon || null;
-                this.currAddress.amphoe = childData.address.amphoe || null;
-                this.currAddress.province = childData.address.province || null;
-                this.currAddress.postal = childData.address.postal || null;
+                    this.currAddress.tambon = childData.address.tambon || null;
+                    this.currAddress.amphoe = childData.address.amphoe || null;
+                    this.currAddress.province = childData.address.province || null;
+                    this.currAddress.postal = childData.address.postal || null;
                 } catch (error) {
                     this.isLoading = false;
                 }
 
+
                 this.isLoading = false;
 
             })
+
+
 
         },
 
@@ -719,6 +667,7 @@ export default {
             }
 
             this.selectedSubjects = selectedItems;
+
 
 
         },
