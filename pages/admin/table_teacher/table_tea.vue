@@ -397,9 +397,7 @@ export default {
                 });
                 this.clear_item();
                 this.dialog_detail = false;
-            } else {
-                this.dialog_save_error = true;
-            }
+            } 
             const getTimePromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise])
                 .then(([timeSnapshot]) => {

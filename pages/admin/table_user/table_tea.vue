@@ -218,36 +218,36 @@
                                         <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
                                             :items="subject_select_tea" @input="search_level_select2()"
                                             :readonly="save_detail.subject != '00000'"
-                                            style="font-weight: bold;"></v-autocomplete>
+                                            ></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
-                                            label="ชื่อวิชา" item-text="name" item-value="key" style="font-weight: bold;"
+                                            label="ชื่อวิชา" item-text="name" item-value="key" 
                                             @input="search_level_select2()"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-autocomplete v-model="save_detail.level" :items="level_select_add"
                                             label="ระดับการศักษา" :disabled="save_detail.subject === undefined"
-                                            style="font-weight: bold;"></v-autocomplete>
+                                            ></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
-                                            item-text="name" item-value="key" style="font-weight: bold;"
+                                            item-text="name" item-value="key" 
                                             readonly></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value_student" :items="items_student"
                                             label="Search student" item-text="name" item-value="key"
-                                            style="font-weight: bold;"></v-autocomplete>
+                                            ></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
                                             label="สถานที่สอน" v-model="save_detail.style" readonly
-                                            style="font-weight: bold;"></v-select>
+                                            ></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
-                                            style="font-weight: bold;" readonly></v-select>
+                                             readonly></v-select>
                                     </v-col>
 
                                     <v-col cols="12" sm="4">
@@ -261,16 +261,16 @@
 
                                     <!-- <v-col cols="12" sm="6">
                                         <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
-                                            style="font-weight: bold;"></v-text-field>
+                                            ></v-text-field>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-text-field label="เลิกเรียน" v-model="picker_stop"
-                                            @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
+                                            @click="dialog_time_stop = true" ></v-text-field>
                                     </v-col> -->
 
                                     <v-col cols="12" sm="12">
                                         <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
-                                            style="font-weight: bold;"></v-text-field>
+                                            ></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -819,7 +819,7 @@ export default {
                                         const locationData = locationSnapshot.val();
                                         const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
                                         const namesub = subjectData.name;
-                                        if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
+                                        if (true){//parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({
                                                 name: nametea,
                                                 date: date,
