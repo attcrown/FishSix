@@ -61,7 +61,17 @@
                                                     </v-date-picker>
                                                 </v-menu>
                                             </v-col>
+
                                             <v-col cols="12" sm="6">
+                                                <v-select :items="time_standart" v-model="editedItem.time_s" label="เวลาเริ่มต้น"
+                                                    @change="validateTime(), editedItem.time_e = null"></v-select>
+                                            </v-col>
+                                            <v-col cols="12" sm="6">
+                                                <v-select :items="time_standart_stop" v-model="editedItem.time_e"
+                                                    @change="validateTime()" label="เวลาสิ้นสุด"></v-select>
+                                            </v-col>
+
+                                            <!-- <v-col cols="12" sm="6">
                                                 <v-text-field label="เวลาเริ่มต้น" v-model="editedItem.time_s">
                                                     <template #prepend>
                                                         <span class="mdi mdi-timer-alert-outline text-h6"></span>
@@ -73,7 +83,7 @@
                                                         <span class="mdi mdi-timer-cancel-outline text-h6"></span>
                                                     </template>
                                                 </v-text-field>
-                                            </v-col>
+                                            </v-col> -->
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_class" label="รูปแบบการสอน"
                                                     v-model="editedItem.class"></v-select>
@@ -129,10 +139,12 @@
                                 </v-card-text>
 
                                 <v-card-actions class="d-flex justify-center">
-                                    <v-btn class="me-5" color="#FC0405" dark @click="dialogDelete = true" elevation="16" rounded>
+                                    <v-btn class="me-5" color="#FC0405" dark @click="dialogDelete = true" elevation="16"
+                                        rounded>
                                         <b>ยกเลิกการจองเรียน</b>
-                                    </v-btn>                                
-                                    <v-btn color="#29CC39" dark :disabled="!formIsValid" @click="save" elevation="16" rounded>
+                                    </v-btn>
+                                    <v-btn color="#29CC39" dark :disabled="!formIsValid" @click="save" elevation="16"
+                                        rounded>
                                         <b>ยืนยันการจองเรียน</b>
                                     </v-btn>
                                 </v-card-actions>
@@ -207,6 +219,15 @@ export default {
         editedIndex: -1,
         editedItem: {},
         defaultItem: {},
+        time_standart: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+        time_standart_stop: [],
+        time_standart_sum: [],
     }),
 
     computed: {
@@ -303,6 +324,13 @@ export default {
         editItem(item) {
             this.old_item = item;
             // console.log('item>>', item);
+            this.time_standart_stop = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
             this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
@@ -401,6 +429,41 @@ export default {
             if (stutus === 'พร้อมเรียน') return '#29CC39'
             else if (stutus === 'รอยืนยัน') return '#FFCB33'
             else return 'red'
+        },
+
+        validateTime() {
+            // this.time_standart_stop = [];
+            if (true){//this.editedItem.time_e == null) {
+                this.time_standart_stop = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.editedItem.time_s == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        if (sum > 1) {
+                            // console.log(this.time_standart[key]);
+                            this.time_standart_stop.push(this.time_standart[key]);
+                        }
+                    }
+                }
+            }if (this.editedItem.time_e != null && this.editedItem.time_s != null) {
+                this.time_standart_sum = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (this.editedItem.time_e == this.time_standart[key]) {
+                        sum = 0;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                        break;
+                    }
+                    else if (this.editedItem.time_s == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                    }
+                }
+                console.log(this.time_standart_sum);
+            } 
+            // else {
+            //     alert("ลงเวลาไม่ถูกต้อง");
+            // }
         },
     },
 }
