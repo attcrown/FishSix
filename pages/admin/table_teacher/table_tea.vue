@@ -323,7 +323,7 @@ export default {
 
     methods: {
         validateTime() {
-            if (this.picker_stop == null) {
+            if (true){//this.picker_stop == null) {
                 this.time_standart_stop = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
@@ -335,7 +335,8 @@ export default {
                         }
                     }
                 }
-            } else if (this.picker_stop != null && this.picker_start != null) {
+            }
+            if (this.picker_stop != null && this.picker_start != null) {
                 this.time_standart_sum=[];
                 let sum = 0;
                 for (const key in this.time_standart) {
@@ -350,11 +351,12 @@ export default {
                     }
                 }
                 console.log(this.time_standart_sum);
-            } else {
-                alert("ลงเวลาไม่ถูกต้อง");
-                this.close();
-                this.clear_item();
-            }
+            } 
+            // else {
+            //     alert("ลงเวลาไม่ถูกต้อง");
+            //     this.close();
+            //     this.clear_item();
+            // }
         },
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
