@@ -89,7 +89,7 @@
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนเปิดรับ" v-model="save_detail.sum_people"
-                                            number></v-text-field>
+                                        :disabled="mode == 'edit'" inputmode="numeric"></v-text-field>
                                     </v-col>
 
                                     <v-col cols="12" sm="4" v-if="value != null">

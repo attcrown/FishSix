@@ -37,9 +37,9 @@
           mdi-account-circle
         </v-icon>
       </v-avatar>
-      <v-btn icon to="/admin/" router exact @click="getout()">
+      <!-- <v-btn icon to="/admin/" router exact @click="getout()">
         <v-icon>mdi-logout</v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-app-bar>
 
 
@@ -79,7 +79,7 @@ export default {
         },
         {
           icon: 'mdi-table-large',
-          title: 'ตารางเรียน',
+          title: 'เช็คชื่อ/ส่งพัฒนาการ',
           to: '/admin/submit_table',
         },
         {
