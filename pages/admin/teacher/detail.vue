@@ -491,7 +491,7 @@ export default {
     methods: {
         async initialize() {
 
-            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()], this.getlocation());
+            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()]);
 
             this.getTeacherLocation();
         },
