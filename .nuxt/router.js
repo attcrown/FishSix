@@ -16,6 +16,7 @@ const _f241b398 = () => interopDefault(import('..\\pages\\testimage.vue' /* webp
 const _824854dc = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _1efb5442 = () => interopDefault(import('..\\pages\\admin\\basket\\index.vue' /* webpackChunkName: "pages/admin/basket/index" */))
 const _00845de9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
+const _411899b3 = () => interopDefault(import('..\\pages\\admin\\content\\index.vue' /* webpackChunkName: "pages/admin/content/index" */))
 const _0899110a = () => interopDefault(import('..\\pages\\admin\\dashboard.vue' /* webpackChunkName: "pages/admin/dashboard" */))
 const _8c509b3e = () => interopDefault(import('..\\pages\\admin\\edit_shop\\index.vue' /* webpackChunkName: "pages/admin/edit_shop/index" */))
 const _33c92baa = () => interopDefault(import('..\\pages\\admin\\matching\\index.vue' /* webpackChunkName: "pages/admin/matching/index" */))
@@ -32,6 +33,7 @@ const _3c7b0cd1 = () => interopDefault(import('..\\pages\\teacher\\table\\index.
 const _7a1dd6a9 = () => interopDefault(import('..\\pages\\user\\content\\index.vue' /* webpackChunkName: "pages/user/content/index" */))
 const _d3c3390e = () => interopDefault(import('..\\pages\\user\\profile\\index.vue' /* webpackChunkName: "pages/user/profile/index" */))
 const _5eba2398 = () => interopDefault(import('..\\pages\\user\\table\\index.vue' /* webpackChunkName: "pages/user/table/index" */))
+const _7a4dac40 = () => interopDefault(import('..\\pages\\admin\\content\\detail.vue' /* webpackChunkName: "pages/admin/content/detail" */))
 const _cc4fbbfa = () => interopDefault(import('..\\pages\\admin\\edit_shop\\additem.vue' /* webpackChunkName: "pages/admin/edit_shop/additem" */))
 const _7bde88c4 = () => interopDefault(import('..\\pages\\admin\\edit_shop\\testter.vue' /* webpackChunkName: "pages/admin/edit_shop/testter" */))
 const _ab0c1916 = () => interopDefault(import('..\\pages\\admin\\matching\\calendar.vue' /* webpackChunkName: "pages/admin/matching/calendar" */))
@@ -118,6 +120,10 @@ export const routerOptions = {
     component: _00845de9,
     name: "admin-candidate"
   }, {
+    path: "/admin/content",
+    component: _411899b3,
+    name: "admin-content"
+  }, {
     path: "/admin/dashboard",
     component: _0899110a,
     name: "admin-dashboard"
@@ -181,6 +187,10 @@ export const routerOptions = {
     path: "/user/table",
     component: _5eba2398,
     name: "user-table"
+  }, {
+    path: "/admin/content/detail",
+    component: _7a4dac40,
+    name: "admin-content-detail"
   }, {
     path: "/admin/edit_shop/additem",
     component: _cc4fbbfa,

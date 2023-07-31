@@ -84,6 +84,13 @@
     "_name": "_00845de9"
   },
   {
+    "name": "admin-content",
+    "path": "/admin/content",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\content\\\\index.vue",
+    "chunkName": "pages/admin/content/index",
+    "_name": "_411899b3"
+  },
+  {
     "name": "admin-dashboard",
     "path": "/admin/dashboard",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\dashboard.vue",
@@ -194,6 +201,13 @@
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\user\\\\table\\\\index.vue",
     "chunkName": "pages/user/table/index",
     "_name": "_5eba2398"
+  },
+  {
+    "name": "admin-content-detail",
+    "path": "/admin/content/detail",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\admin\\\\content\\\\detail.vue",
+    "chunkName": "pages/admin/content/detail",
+    "_name": "_7a4dac40"
   },
   {
     "name": "admin-edit_shop-additem",

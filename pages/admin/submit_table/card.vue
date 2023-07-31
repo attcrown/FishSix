@@ -27,7 +27,7 @@
                     type="submit" rounded>Export<span class="mdi mdi-microsoft-excel text-h6"></span></v-btn>
 
                 <v-btn elevation="10" color="#322E2B" class="mt-3" style="color:white" :disabled="!formIsValid"
-                    type="submit" rounded>ค้นหา<span class="mdi mdi-magnify text-h6" @click="search_date_teacher()"></span></v-btn>
+                    type="submit" @click="search_date_teacher()" rounded>ค้นหา<span class="mdi mdi-magnify text-h6"></span></v-btn>
             </div>
         </v-card>
 
@@ -118,7 +118,7 @@ export default {
         search_date_teacher() {
             console.log('ทำๆ');
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).once("value", (snapshot) => {
+            db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.desserts = [];
                 this.arrayEvents = [];
