@@ -88,6 +88,11 @@ export default {
           to: '/admin/subject',
         },
         {
+          icon: 'mdi-folder',
+          title: 'คลังเนื้อหา',
+          to: '/admin/content',
+        },
+        {
           icon: 'mdi-account-school',
           title: 'ครู',
           to: '',
