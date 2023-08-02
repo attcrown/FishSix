@@ -149,19 +149,19 @@
                                 </v-col>
                                 <v-col cols="4" class="py-0">
                                     <v-text-field class="black-label" v-model="mobile" :error-messages="mobileErrors"
-                                        label="เบอร์โทรศัพท์" required @input="$v.mobile.$touch()" counter
+                                        label="เบอร์โทรศัพท์"  @input="$v.mobile.$touch()" counter
                                         @blur="$v.mobile.$touch()">
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
                                     <v-text-field class="black-label" v-model="email" :error-messages="emailErrors"
-                                        label="Email" required @input="$v.email.$touch()" @blur="$v.email.$touch()">
+                                        label="Email"  @input="$v.email.$touch()" @blur="$v.email.$touch()">
                                     </v-text-field>
                                 </v-col>
 
                                 <v-col cols="4" class="py-0 pb-5">
                                     <v-text-field class="black-label" v-model="idCardNumber"
-                                        :error-messages="idCardNumberErrors" counter label="หมายเลขบัตรประชาชน" required
+                                        :error-messages="idCardNumberErrors" counter label="หมายเลขบัตรประชาชน" 
                                         @input="$v.idCardNumber.$touch()" @blur="$v.idCardNumber.$touch()">
                                     </v-text-field>
                                 </v-col>
@@ -619,7 +619,7 @@ export default {
             const errors = []
             if (!this.$v.email.$dirty) return errors
             !this.$v.email.email && errors.push('Must be valid e-mail')
-            !this.$v.email.required && errors.push('E-mail is required')
+         
             return errors
         },
         mobileErrors() {
@@ -627,7 +627,7 @@ export default {
             if (!this.$v.mobile.$dirty) return errors
             !this.$v.mobile.numeric && errors.push('กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข')
             !this.$v.mobile.minLength && errors.push('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง')
-            !this.$v.mobile.required && errors.push('กรุณากรอกเบอร์โทรศัพท์')
+           
             return errors
         },
         idCardNumberErrors() {
@@ -636,7 +636,7 @@ export default {
             !this.$v.idCardNumber.numeric && errors.push('กรุณากรอกหมายเลขบัตรประชาชนเป็นตัวเลข')
             !this.$v.idCardNumber.minLength && errors.push('กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง')
             !this.$v.idCardNumber.maxLength && errors.push('กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง')
-            !this.$v.idCardNumber.required && errors.push('กรุณากรอกหมายเลขบัตรประชาชน')
+    
             return errors
         },
         contractErrors() {
@@ -661,7 +661,7 @@ export default {
         rateErrors() {
             const errors = []
             if (!this.$v.rate.$dirty) return errors
-            !this.$v.rate.required && errors.push('กรุณากรอกเรทค่าจ้างต่อชั่วโมง')
+  
             return errors
         },
 
