@@ -16,30 +16,35 @@
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
                                 </button>
-                                <button v-if="isEditingDetail" class="saveButton " @click="toEditDetail()">
+                                <button v-if="isEditingDetail" class="saveButton " @click="toEditDetail()"
+                                    :loading="isSubmitting">
                                     <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
 
                                 </button>
                             </div>
                         </v-card-title>
-                        <form ref="detailForm">
+                        <v-form ref="detailForm" @submit.prevent="toEditDetail">
                             <v-row class="mt-0" align="center">
                                 <v-col cols="3" sm="3" class="pl-10">
                                     <div>
-                                        <v-avatar style="max-width: 350px; width: 100%; height: 100%;max-height: 350px;">
+                                        <v-avatar style="max-width: 180px; width: 100%; height: 100%;max-height: 180px;">
                                             <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์">
                                             <v-icon style=" font-size: 100px;" v-if="!profilePic" dark>
                                                 mdi-account-circle
                                             </v-icon>
                                         </v-avatar>
-
+                                        <label v-if="isEditingDetail" class="upload-label mt-3" for="upload-file">
+                                            เปลี่ยนรูป
+                                            <input type="file" id="upload-file" hidden @change="uploadFile" />
+                                        </label>
 
                                     </div>
                                 </v-col>
                                 <v-col cols="9">
                                     <v-row>
                                         <v-col cols="3">
-                                            <v-text-field v-model="teacherId" counter label="รหัสครู (ไม่จำเป็นต้องกรอก)">
+                                            <v-text-field v-model="teacherId" counter label="รหัสครู (ไม่จำเป็นต้องกรอก) "
+                                                :readonly="!isEditingDetail" required :rules="teacherIdRules">
                                                 <template v-slot:append>
                                                     <v-tooltip bottom>
                                                         <template v-slot:activator="{ on }">
@@ -114,7 +119,7 @@
                                 </v-row>
 
                             </v-row>
-                        </form>
+                        </v-form>
                     </v-card>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-7">
@@ -140,18 +145,22 @@
                                             v-model="address.houseNo"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field name="tambon" label="ตำบล/แขวง" :readonly="!isEditingAddress"
-                                            v-model="address.tambon"></v-text-field>
+                                        <v-text-field v-if="!isEditingAddress" name="tambon" label="ตำบล/แขวง"
+                                            :readonly="!isEditingAddress" v-model="address.tambon"></v-text-field>
+
+                                        <v-autocomplete v-if="isEditingAddress" class="black-label" v-model="selectedTambon"
+                                            :items="tambons" :item-value="tambonValue" item-text="name_th"
+                                            :search-input.sync="searchTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                            @update:search-input="fetchTambons" label="ตำบล"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field name="amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
                                             v-model="address.amphoe"></v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field v-if="!isEditingAddress" name="province" label="จังหวัด"
-                                            :readonly="!isEditingAddress" v-model="address.province"></v-text-field>
-                                        <v-autocomplete v-if="isEditingAddress" name="province" v-model="address.province"
-                                            :items="provinceOptions" autocomplete label="จังหวัด"></v-autocomplete>
+                                        <v-text-field name="province" label="จังหวัด" :readonly="!isEditingAddress"
+                                            v-model="address.province"></v-text-field>
+
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field name="postal" label="รหัสไปรษณีย์" :rules="postalRules"
@@ -164,33 +173,39 @@
 
                                     </v-col>
                                     <v-row class="px-4">
-                                        <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน <v-checkbox label="ที่อยู่ตามบัตรประชาชน "
-                                                :input-value="isSameAddress()" :disabled="!isEditingAddress"
-                                                @click="updateCurrAddress()"></v-checkbox></p>
+                                        <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน
+                                            <v-checkbox label="ที่อยู่ตามบัตรประชาชน " :disabled="!isEditingAddress"
+                                                @click="updateCurrAddress()"></v-checkbox>
+                                        </p>
 
                                         <v-col cols="4">
                                             <v-text-field name="curr_houseNo" label="บ้านเลขที่"
-                                                :readonly="!isEditingAddress" v-model="currAddress.houseNo"></v-text-field>
+                                                :readonly="!isEditingAddress" :disabled="isAddressSame"
+                                                v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field name="curr_tambon" label="ตำบล/แขวง" :readonly="!isEditingAddress"
-                                                v-model="currAddress.tambon"></v-text-field>
+                                            <v-text-field v-if="!isEditingAddress" name="curr_tambon" label="ตำบล/แขวง"
+                                                readonly v-model="currAddress.tambon"></v-text-field>
+                                            <v-autocomplete v-if="isEditingAddress" class="black-label"
+                                                :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
+                                                :item-value="currTambonValue" item-text="name_th"
+                                                :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                                @update:search-input="fetchCurrTambons" label="ตำบล"></v-autocomplete>
+
                                         </v-col>
                                         <v-col cols="4">
                                             <v-text-field name="curr_amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
-                                                v-model="currAddress.amphoe"></v-text-field>
+                                                :disabled="isAddressSame" v-model="currAddress.amphoe"></v-text-field>
                                         </v-col>
                                         <v-col cols="6">
-                                            <v-text-field v-if="!isEditingAddress" name="curr_province" label="จังหวัด"
-                                                :readonly="!isEditingAddress" v-model="currAddress.province"></v-text-field>
-                                            <v-autocomplete v-if="isEditingAddress" name="curr_province"
-                                                v-model="currAddress.province" :items="provinceOptions" autocomplete
-                                                label="จังหวัด"></v-autocomplete>
+                                            <v-text-field name="curr_province" label="จังหวัด" :readonly="!isEditingAddress"
+                                                :disabled="isAddressSame" v-model="currAddress.province"></v-text-field>
 
                                         </v-col>
                                         <v-col cols="6">
                                             <v-text-field name="curr_postal" label="รหัสไปรษณีย์" :rules="postalRules"
-                                                :readonly="!isEditingAddress" v-model="currAddress.postal"></v-text-field>
+                                                :disabled="isAddressSame" :readonly="!isEditingAddress"
+                                                v-model="currAddress.postal"></v-text-field>
                                         </v-col>
 
                                     </v-row>
@@ -218,7 +233,7 @@
                             </div>
                         </v-card-title>
                         <v-card-text>
-                            <v-form ref="contractFrom">
+                            <v-form ref="contractForm">
                                 <v-row>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
@@ -233,10 +248,7 @@
                                             label="ประเภทการทำงาน" required></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="classType" label="ประเภทคลาส"
-                                            :readonly="!isEditingContract" v-model="classType"></v-text-field>
-                                        <v-select v-if="isEditingContract" class="black-label" v-model="classType"
-                                            :items="classTypes" label="ประเภทคลาส" multiple></v-select>
+
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
@@ -312,7 +324,7 @@
                                             <span class="text-danger">*</span>
                                             <span style="color: #000;font-size: 16px;">วิชาที่สอนได้</span>
                                             <span v-if="isEditingEducation" class="text-danger"
-                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ</span>
+                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span>
                                         </label>
                                         <table class="table table-sm">
                                             <tbody>
@@ -339,13 +351,15 @@
 
         </div>
         <!-- dialog -->
-
+        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
+            <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
+        </v-snackbar>
     </div>
 </template>
   
 <script>
 import pageLoader from '@/components/loader.vue';
-
+import axios from 'axios';
 export default {
 
     data() {
@@ -354,13 +368,23 @@ export default {
             isLoading: true,
             userId: null,
             teacherId: null,
+            lastTeacherId: null,
+            activePicker: null,
+            date: null,
+            menu: false,
+            isSubmitting: false,
             isEditingDetail: false,
             isEditingAddress: false,
+            isAddressSame: false,
             isEditingContract: false,
             isEditingEducation: false,
+            showSnackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
 
             //data
             profilePic: null,
+            profilePicUpload: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -396,6 +420,20 @@ export default {
             major: null,
             subjects: [],
             selectedSubjects: [],
+
+            //api
+            tambons: [],
+            currTambons: [],
+            amphoes: [],
+            provinces: [],
+            selectedTambon: '',
+            selectedCurrTambon: '',
+            selectedAmphoes: '',
+            selectedCurrAmphoes: '',
+            selectedProvince: '',
+            searchTambon: '',
+            searchCurrTambon: '',
+
             //static
             genders: [
                 'ชาย',
@@ -464,6 +502,15 @@ export default {
                 value => !!value || 'กรุณากรอกเรทค่าจ้าง',
 
             ],
+            startDateRules: [
+                value => !!value || 'กรุณาเลือกวันที่เริ่มทำงาน',
+
+            ],
+            teacherIdRules: [
+                value => !!value || 'กรุณากรอก รหัสครู',
+                value => /^FS\d{4}$/.test(value) || 'รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)'
+
+            ],
 
         }
 
@@ -486,7 +533,31 @@ export default {
     computed: {
 
     },
+    watch: {
+        menu(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
 
+        'selectedTambon': {
+            handler: 'fetchAmphoe',
+            immediate: true,
+        },
+
+        'selectedAmphoes': {
+            handler: 'fetchProvince',
+            immediate: true,
+        },
+
+        'selectedCurrTambon': {
+            handler: 'fetchCurrAmphoe',
+            immediate: true,
+        },
+        'selectedCurrAmphoes': {
+            handler: 'fetchCurrProvince',
+            immediate: true,
+        },
+
+    },
 
     methods: {
         async initialize() {
@@ -515,55 +586,227 @@ export default {
                 const classSnapshot = await db.ref(`location/${this.classLocation[i]}`).once("value");
                 const childClassData = classSnapshot.val();
                 this.classLocationDisplay.push(childClassData.name)
-             
+
             }
         },
 
-        toEditDetail() {
+        validateDetailEdit() {
+            return this.$refs[`detailForm`].validate();
+        },
+        validateAddressEdit() {
+            return this.$refs[`addressForm`].validate();
+        },
+        validateContractEdit() {
+            return this.$refs[`contractForm`].validate();
+        },
+        validateEducationEdit() {
+            return this.$refs[`educationForm`].validate();
+        },
+        async uploadFile(e) {
+            this.profilePic = e.target.files[0];
+            const db = this.$fireModule.database();
+            const storageRef = this.$fireModule.storage().ref();
+            const userRef = storageRef.child(`user/${this.userId}/profilePic.jpg`);
+
+            try {
+
+                const snapshot = await userRef.put(this.profilePic);
+
+                const downloadURL = await snapshot.ref.getDownloadURL();
+
+                await db.ref(`user/${this.userId}`).update({
+                    profilePic: downloadURL,
+                });
+            } catch (error) {
+                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!'+error);
+            }
+        },
+        async toEditDetail() {
             if (this.isEditingDetail == true) {
-                this.isEditingDetail = false;
+
+                if (this.validateDetailEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+                    const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
+                    if (isIDDuplicate && this.lastTeacherId != this.teacherId) {
+                        this.openSnackbar("error", 'รหัสของครูซ้ำ รหัสที่ซ้ำคือ ' + this.teacherId);
+                        this.isSubmitting = false;
+                        return;
+                    }
+                    await db.ref(`user/${this.userId}/`).update({
+                        teacherId: this.teacherId,
+                        profilePic: this.profilePic,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        nickname: this.nickname,
+                        mobile: this.mobile,
+                        email: this.email,
+                        gender: this.gender,
+                        currJob: this.currJob,
+                        idCardNumber: this.idCardNumber,
+                        idCardCopy: this.idCardCopy,
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        });
+
+                }
+
             }
             else {
                 this.isEditingDetail = true;
             }
         },
 
-        toEditAddress() {
+        async checkDuplicateName(id) {
+            const db = this.$fireModule.database();
+            const snapshot = await db.ref('user').orderByChild('teacherId').equalTo(id).once('value');
+            const existingTeacher = snapshot.val();
+            return !!existingTeacher;
+        },
+        updateCurrAddress() {
+
+            if (this.isAddressSame) {
+
+                this.currAddress = { houseNo: null, tambon: null, amphoe: null, province: null, postal: null };
+                this.isAddressSame = false;
+                if (this.address) {
+
+                    this.currAddress = { ...this.address };
+
+                } else {
+                    this.currAddress = null;
+                }
+            }
+            else {
+                this.isAddressSame = true;
+            }
+
+
+        },
+        async toEditAddress() {
             if (this.isEditingAddress == true) {
                 this.isEditingAddress = false;
+
+                if (this.validateAddressEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        address: this.address,
+                        currAddress: this.currAddress,
+                        ...(this.isAddressSame ? { currAddress: this.address } : {}),
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลที่อยู่เสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        });
+
+                }
+
+
+
             }
             else {
                 this.isEditingAddress = true;
             }
         },
 
-        toEditContract() {
+        async toEditContract() {
             if (this.isEditingContract == true) {
                 this.isEditingContract = false;
+
+                if (this.validateContractEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        contract: this.contract,
+                        workType: this.workType,
+                        classType: this.classType,
+                        startDate: this.startDate,
+                        rate: this.rate,
+                        classLocation: this.classLocation,
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingContract = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingContract = false;
+                        });
+
+                }
             }
             else {
                 this.isEditingContract = true;
             }
         },
 
-        toEditEducation() {
+        async toEditEducation() {
             if (this.isEditingEducation == true) {
                 this.isEditingEducation = false;
+                if (this.validateEducationEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+                  
+                    await db.ref(`user/${this.userId}/`).update({
+                        university: this.university,
+                        faculty: this.faculty,
+                        major: this.major,
+             
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        });
+
+                }
             }
             else {
                 this.isEditingEducation = true;
             }
         },
 
-
-
-        updateCurrAddress() {
-            if (this.address) {
-                this.currAddress = { ...this.address };
-            } else {
-                this.currAddress = null;
-            }
+        save(date) {
+            this.$refs.menu.save(date)
         },
+
+
 
         downloadFile() {
             window.open(this.idCardCopy, '_blank');
@@ -589,12 +832,19 @@ export default {
             return true && !this.isEditingAddress;
         },
 
+        openSnackbar(status, message) {
+            this.showSnackbar = true;
+            this.snackbarMessage = message;
+            this.snackbarColor = status;
+        },
+
         async readdata() {
 
             const db = this.$fireModule.database();
             await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
+                this.lastTeacherId = childData.teacherId || null;
                 this.teacherId = childData.teacherId || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
@@ -626,11 +876,11 @@ export default {
                 }
 
                 try {
-                    this.currAddress.houseNo = childData.address.houseNo || null;
-                    this.currAddress.tambon = childData.address.tambon || null;
-                    this.currAddress.amphoe = childData.address.amphoe || null;
-                    this.currAddress.province = childData.address.province || null;
-                    this.currAddress.postal = childData.address.postal || null;
+                    this.currAddress.houseNo = childData.currAddress.houseNo || null;
+                    this.currAddress.tambon = childData.currAddress.tambon || null;
+                    this.currAddress.amphoe = childData.currAddress.amphoe || null;
+                    this.currAddress.province = childData.currAddress.province || null;
+                    this.currAddress.postal = childData.currAddress.postal || null;
                 } catch (error) {
                     this.isLoading = false;
                 }
@@ -737,8 +987,230 @@ export default {
 
         },
 
+        async fetchProvince() {
+            if (this.selectedAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedAmphoes.province_id;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.address.province = item.name_th;
+                    }
 
 
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchAmphoe() {
+            if (this.selectedTambon) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedTambon.amphure_id;
+                this.address.tambon = this.selectedTambon.name_th;
+                this.address.postal = this.selectedTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedAmphoes = item;
+                        this.address.amphoe = this.selectedAmphoes.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchTambon) {
+                tambonsRef
+                    .orderByChild("name_th") // Replace 'name' with the relevant field you want to filter by
+                    .startAt(this.searchTambon)
+                    .endAt(this.searchTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.tambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.tambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        async fetchCurrProvince() {
+            if (this.selectedCurrAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedCurrAmphoes.province_id;
+
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.currAddress.province = item.name_th;
+                    }
+
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchCurrAmphoe() {
+            if (this.selectedCurrTambon) {
+                console.log(this.selectedCurrTambon)
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedCurrTambon.amphure_id;
+                this.currAddress.tambon = this.selectedCurrTambon.name_th;
+                this.currAddress.postal = this.selectedCurrTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedCurrAmphoes = item;
+                        this.currAddress.amphoe = this.selectedCurrTambon.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchCurrTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchCurrTambon) {
+                tambonsRef
+                    .orderByChild("name_th")
+                    .startAt(this.searchCurrTambon)
+                    .endAt(this.searchCurrTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.currTambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.currTambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        tambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+        currTambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
 
     },
 
@@ -784,6 +1256,32 @@ hr.solid {
     border-top: 3px solid black;
     border-width: 3px;
     opacity: 1;
+}
+
+.upload-label {
+    border-radius: 10px;
+    border: 1px solid var(--brown-brown-1, #322E2B);
+    color: var(--write-1, #F8F9FB);
+    background: var(--brown-brown-1, #322E2B);
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-label:hover {
+    color: var(--brown-brown-1, #322E2B);
+    background-color: #ffffff;
+}
+
+.black-label .v-label {
+    color: rgb(0, 0, 0);
+    opacity: 1;
+    font-weight: 500;
 }
 </style> 
   

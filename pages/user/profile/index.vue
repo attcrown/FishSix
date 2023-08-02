@@ -957,7 +957,7 @@ export default {
         async saveAddress() {
             const db = this.$fireModule.database();
             this.loading = true;
-            // Check if the user has uploaded a profile picture
+         
             if (this.profilePicUpload && this.dialogEditName == true) {
                 const storageRef = this.$fireModule.storage().ref();
                 const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
@@ -969,7 +969,6 @@ export default {
                     // Get the download URL of the uploaded file
                     const downloadURL = await snapshot.ref.getDownloadURL();
 
-                    // Update the profile picture in the database
                     await db.ref(`user/${this.keyuser}`).update({
                         profilePic: downloadURL,
                     });

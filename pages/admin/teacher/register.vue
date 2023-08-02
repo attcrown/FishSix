@@ -280,9 +280,7 @@
                                         @change="$v.workType.$touch()" @blur="$v.workType.$touch()" required></v-select>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-select class="black-label" v-model="classType" :items="classTypes" label="ประเภทคลาส"
-                                        multiple :error-messages="classTypeErrors" @change="$v.classType.$touch()"
-                                        @blur="$v.classType.$touch()" required></v-select>
+
                                 </v-col>
                                 <v-col cols="4" class="py-0">
                                     <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
@@ -1052,7 +1050,7 @@ export default {
                         const tambonsData = snapshot.val();
 
                         this.tambons = [];
-                        let items = [];
+                       
                         for (const key in tambonsData) {
                             const tambonData = tambonsData[key];
                             const item = {
