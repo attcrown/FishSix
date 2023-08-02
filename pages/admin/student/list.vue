@@ -11,7 +11,7 @@
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                         hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers" :items="items" :search="search">
+                <v-data-table :headers="headers" :items="formattedItems" :search="search">
                     <template v-slot:top>
 
 
@@ -25,7 +25,7 @@
                                 </v-card-title>
                                 <v-card-text class=" text-center mt-2">
                                     <div class="text-h5">ข้อมูลคุณ {{ editDetail }}
-                                        </div>
+                                    </div>
                                     <small></small>
                                 </v-card-text>
 
@@ -62,8 +62,8 @@
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon small color="black" class="mr-1" @click="viewItem(item)">
-                                mdi-eye
-                            </v-icon>
+                            mdi-eye
+                        </v-icon>
                         <v-icon small color="red" @click="deleteItem(item)">
                             mdi-delete
                         </v-icon>
@@ -76,6 +76,7 @@
 </template>
 <script>
 import pageLoader from '@/components/loader.vue';
+
 export default {
     layout: 'default',
     data() {
@@ -85,26 +86,32 @@ export default {
 
             deleteConfirm: [],
             detailDelete: '',
-            editDetail :'',
+            editDetail: '',
             dialogDetail: false,
             dialogDelete: false,
 
 
             headers: [
-            { text: 'รหัสนักเรียน', value: 'stu.studentId' },
-            { text: 'ชื่อเล่น', value: 'stu.nickname' },
+                { text: 'รหัสนักเรียน', value: 'stu.studentId' },
+                { text: 'ชื่อเล่น', value: 'stu.nickname' },
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'stu.lastName' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
+                { text: 'เวลาที่บันทึก', value: 'formattedCreatedAt' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
         }
     },
     computed: {
-
+        formattedItems() {
+            return this.items.map(item => ({
+                ...item,
+                formattedCreatedAt: this.formatDateToYYMMDD(item.stu.createdAt),
+            }));
+        },
     },
     watch: {
         dialog(val) {
@@ -118,40 +125,36 @@ export default {
         pageLoader,
     },
     mounted() {
-        this.search_teacher();
+        this.searchStudent();
     },
     methods: {
         viewItem(item) {
             this.$router.push({ path: 'student/detail', query: { userId: item.key } });
-           
+
         },
 
-        search_teacher() {
+        searchStudent() {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-        
-                        const stu = {
-                            status: childData[key].status,
-                            name: childData[key].name,
-                            studentId:childData[key].studentId,
-                            password: childData[key].password,
 
+                        const stu = {
+                    
+                            studentId: childData[key].studentId,
+                            createdAt: childData[key].createdAt,
                             hourLeft: childData[key].hourLeft,
                             classType: childData[key].classType,
-
                             firstName: childData[key].firstName,
                             lastName: childData[key].lastName,
                             nickname: childData[key].nickname,
                             studentMobile: childData[key].studentMobile,
-                            email: childData[key].email,
-                            gender: childData[key].gender,
+                            
                             school: childData[key].school,
                             education: childData[key].education,
-                            address: childData[key].address,
+                           
                             parentFirstName: childData[key].parentFirstName,
                             parentMobile: childData[key].parentMobile,
                             parentJob: childData[key].parentJob,
@@ -198,6 +201,19 @@ export default {
         closeDelete() {
             this.dialogDelete = false;
 
+
+        },
+        formatDateToYYMMDD(timestamp) {
+            if (timestamp) {
+                const date = new Date(timestamp);
+                const year = date.getUTCFullYear().toString().slice(-2);
+                const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+                const day = date.getUTCDate().toString().padStart(2, '0');
+                return `${year}/${month}/${day}`;
+            }
+            else {
+                return;
+            }
 
         },
     },

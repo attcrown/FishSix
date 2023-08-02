@@ -58,6 +58,20 @@
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="9"></v-col>
+                                        <v-col cols="6" class="py-0 ">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng" 
+                                            :rules="firstNameEngRules" :readonly="!isEditingDetail"
+                                                label="ชื่อ (ภาษาอังกฤษ)" required
+                                                v-on:keypress="isLetter($event)">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="py-0">
+                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                             label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" :readonly="!isEditingDetail"
+                                                v-on:keypress="isLetter($event)" >
+                                            </v-text-field>
+                                        </v-col>
+                                      
                                         <v-col cols="6" class="py-0">
                                             <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
@@ -324,7 +338,8 @@
                                             <span class="text-danger">*</span>
                                             <span style="color: #000;font-size: 16px;">วิชาที่สอนได้</span>
                                             <span v-if="isEditingEducation" class="text-danger"
-                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span>
+                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ
+                                                เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span>
                                         </label>
                                         <table class="table table-sm">
                                             <tbody>
@@ -385,6 +400,8 @@ export default {
             //data
             profilePic: null,
             profilePicUpload: null,
+            firstNameEng: null,
+            lastNameEng: null,
             firstName: null,
             lastName: null,
             nickname: null,
@@ -467,17 +484,25 @@ export default {
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 100) || 'Name must be less than 10 characters',
             ],
-            firstNameRules: [
+            firstNameEngRules: [
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+            ],
+            lastnameEngRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+            ],
+            firstNameRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             lastnameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             nicknameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
                 value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
@@ -618,7 +643,7 @@ export default {
                     profilePic: downloadURL,
                 });
             } catch (error) {
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!'+error);
+                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!' + error);
             }
         },
         async toEditDetail() {
@@ -636,6 +661,8 @@ export default {
                     await db.ref(`user/${this.userId}/`).update({
                         teacherId: this.teacherId,
                         profilePic: this.profilePic,
+                        firstNameEng: this.firstNameEng,
+                        lastNameEng: this.lastNameEng,
                         firstName: this.firstName,
                         lastName: this.lastName,
                         nickname: this.nickname,
@@ -775,12 +802,12 @@ export default {
                 if (this.validateEducationEdit()) {
                     const db = this.$fireModule.database();
                     this.isSubmitting = true;
-                  
+
                     await db.ref(`user/${this.userId}/`).update({
                         university: this.university,
                         faculty: this.faculty,
                         major: this.major,
-             
+
                     })
                         .then(() => {
 
@@ -846,6 +873,8 @@ export default {
                 this.profilePic = childData.profilePic || null;
                 this.lastTeacherId = childData.teacherId || null;
                 this.teacherId = childData.teacherId || null;
+                this.firstNameEng = childData.firstNameEng || null;
+                this.lastNameEng = childData.lastNameEng || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.nickname = childData.nickname || null;
@@ -1211,7 +1240,11 @@ export default {
                 zip_code: item.zip_code,
             };
         },
-
+        isLetter(e) {
+            let char = String.fromCharCode(e.keyCode);
+            if (/^[A-Za-z]+$/.test(char)) return true;
+            else e.preventDefault();
+        },
     },
 
 };

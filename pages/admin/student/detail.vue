@@ -184,7 +184,7 @@
                                 </button>
                             </div>
                         </v-card-title>
-                        <form ref="detailForm">
+                        <v-form ref="detailForm" @submit.prevent="toEditDetail">
                             <v-row class="mt-0" align="center">
                                 <v-col cols="2" sm="2" class="pl-10">
                                     <div>
@@ -218,6 +218,18 @@
                                         </v-text-field> -->
                                         </v-col>
                                         <v-col cols="8" class="py-0"></v-col>
+                                        <v-col cols="6" class="py-0 ">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required
+                                                v-on:keypress="isLetter($event)">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="py-0">
+                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules"
+                                                v-on:keypress="isLetter($event)">
+                                            </v-text-field>
+                                        </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
@@ -277,7 +289,7 @@
                                 </v-row>
 
                             </v-row>
-                        </form>
+                        </v-form>
                     </v-card>
 
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
@@ -371,62 +383,47 @@
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลข้อมูลผู้ปกครอง</div>
                             <div>
-                                <button v-if="!isEditingContract" class="editButton " @click="toEditContract()">
+                                <button v-if="!isEditingParentDetail" class="editButton " @click="toEditParentDetails()">
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
                                 </button>
-                                <button v-if="isEditingContract" class="saveButton " @click="toEditContract()">
+                                <button v-if="isEditingParentDetail" class="saveButton " @click="toEditParentDetails()">
                                     <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
 
                                 </button>
                             </div>
                         </v-card-title>
                         <v-card-text>
-                            <v-form ref="contractFrom">
-                                <!-- <v-row>
+                            <v-form ref="parentDetailForm">
 
-                                    <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
-                                            :readonly="!isEditingContract" v-model="contract"></v-text-field>
-                                        <v-select v-if="isEditingContract" v-model="contract" :items="contracts"
-                                            label="สัญญาจ้าง" required></v-select>
+                                <v-row>
+
+                                    <v-col class="py-0" cols="4">
+                                        <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName"
+                                            :readonly="!isEditingParentDetail" label="ชื่อผู้ปกครอง" required>
+                                        </v-text-field>
                                     </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="workType" label="ประเภทการทำงาน"
-                                            :readonly="!isEditingContract" v-model="workType"></v-text-field>
-                                        <v-select v-if="isEditingContract" v-model="workType" :items="workTypes"
-                                            label="ประเภทการทำงาน" required></v-select>
+                                    <v-col class="py-0" cols="4">
+                                        <v-text-field class="black-label" name="parentMobile" v-model="parentMobile"
+                                            :readonly="!isEditingParentDetail" label="เบอร์โทรศัพท์ผู้ปกครอง" required>
+                                        </v-text-field>
                                     </v-col>
-                                    <v-col cols="4">
+                                    <v-col class="py-0" cols="4">
 
                                     </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
-                                            :readonly="!isEditingContract" v-model="startDate"></v-text-field>
-                                        <v-menu v-if="isEditingContract" ref="menu" v-model="menu"
-                                            :close-on-content-click="false" transition="scale-transition" offset-y
-                                            min-width="auto">
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
-                                                    prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                    :rules="startDateRules" required v-on="on"></v-text-field>
-                                            </template>
-                                            <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
-                                                min="1950-01-01" @change="save"></v-date-picker>
-                                        </v-menu>
+                                    <v-col class="py-0" cols="4">
+                                        <v-text-field class="black-label" name="parentJob" v-model="parentJob"
+                                            :readonly="!isEditingParentDetail" label="อาชีพ">
+                                        </v-text-field>
                                     </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="rate" v-model="rate"
-                                            :readonly="!isEditingContract" label="เรทค่าสอน/ชั่วโมง"></v-text-field>
-                                        <v-text-field v-if="isEditingContract" name="rate" type="number"
-                                            label="เรทค่าสอน/ชั่วโมง" min="0" max="99999" maxlength="5" :rules="rateRules"
-                                            oninput="validity.valid||(value='');" v-model="rate"></v-text-field>
+                                    <v-col class="py-0" cols="4">
+                                        <v-textarea class="black-label" name="expectation" v-model="expectation"
+                                            :readonly="!isEditingParentDetail" label="ความคาดหวัง" rows="2">
+                                        </v-textarea>
                                     </v-col>
 
 
-                                </v-row> -->
-
-
+                                </v-row>
                             </v-form>
                         </v-card-text>
 
@@ -490,7 +487,7 @@ export default {
             isEditingCourse: false,
             isEditingDetail: false,
             isEditingAddress: false,
-            isEditingContract: false,
+            isEditingParentDetail: false,
             isEditingEducation: false,
             showSnackbar: false,
             snackbarMessage: '',
@@ -500,7 +497,7 @@ export default {
 
             selectedSubtractHour: null,
 
-
+            lastStudentId: null,
             //data
             profilePic: null,
             profilePicUpload: null,
@@ -534,6 +531,10 @@ export default {
             idCardNumber: null,
             education: null,
             studentMobile: null,
+
+            parentFirstName: null,
+            expectation: null,
+            parentJob: null,
             parentMobile: null,
 
             totalHour: null,
@@ -668,29 +669,34 @@ export default {
 
             //rules
 
-            nameRules: [
+
+            firstNameEngRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+            ],
+            lastnameEngRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             firstNameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             lastnameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             nicknameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
                 value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
                 value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
             idCardRules: [
-                value => !!value || 'กรุณากรอกหมายเลขบัตรประชาชน',
-                value => /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
+
+                value => value === '' || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
             ],
 
             mobileRules: [
@@ -699,14 +705,9 @@ export default {
             ],
 
             emailRules: [
-                value => !!value || 'กรุณากรอก อีเมล',
-                value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
+                value => value === '' || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
             ],
 
-            rateRules: [
-                value => !!value || 'กรุณากรอกเรทค่าจ้าง',
-
-            ],
 
         }
 
@@ -774,6 +775,19 @@ export default {
 
     methods: {
 
+        validateDetailEdit() {
+            return this.$refs[`detailForm`].validate();
+        },
+        validateAddressEdit() {
+            return this.$refs[`addressForm`].validate();
+        },
+        validateParentDetailFormEdit() {
+            return this.$refs[`parentDetailForm`].validate();
+        },
+
+        validateEducationEdit() {
+            return this.$refs[`educationForm`].validate();
+        },
 
         toEditCourse() {
             if (this.isEditingCourse == true) {
@@ -785,16 +799,60 @@ export default {
             }
         },
 
-        toEditDetail() {
+        async toEditDetail() {
             if (this.isEditingDetail == true) {
-                this.isEditingDetail = false;
+
+                if (this.validateDetailEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+                    // const isIDDuplicate = await this.checkDuplicateName(this.studentId);
+                    // if (isIDDuplicate && this.lastStudentId != this.studentId) {
+                    //     this.openSnackbar("error", 'รหัสของนักเรียนซ้ำ รหัสที่ซ้ำคือ ' + this.studentId);
+                    //     this.isSubmitting = false;
+                    //     return;
+                    // }
+                    await db.ref(`user/${this.userId}/`).update({
+
+                        profilePic: this.profilePic,
+                        firstNameEng: this.firstNameEng,
+                        lastNameEng: this.lastNameEng,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        nickname: this.nickname,
+                        studentMobile: this.studentMobile,
+                        email: this.email,
+                        gender: this.gender,
+
+                        idCardNumber: this.idCardNumber,
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        });
+
+                }
+
             }
             else {
                 this.isEditingDetail = true;
             }
         },
-
-        toEditAddress() {
+        async checkDuplicateName(id) {
+            const db = this.$fireModule.database();
+            const snapshot = await db.ref('user').orderByChild('studentId').equalTo(id).once('value');
+            const existingStudent = snapshot.val();
+            return !!existingStudent;
+        },
+        async toEditAddress() {
             if (this.isEditingAddress == true) {
                 this.isEditingAddress = false;
             }
@@ -803,18 +861,70 @@ export default {
             }
         },
 
-        toEditContract() {
-            if (this.isEditingContract == true) {
-                this.isEditingContract = false;
+        async toEditParentDetails() {
+            if (this.isEditingParentDetail == true) {
+                if (this.validateParentDetailFormEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+                    // const isIDDuplicate = await this.checkDuplicateName(this.studentId);
+                    // if (isIDDuplicate && this.lastStudentId != this.studentId) {
+                    //     this.openSnackbar("error", 'รหัสของนักเรียนซ้ำ รหัสที่ซ้ำคือ ' + this.studentId);
+                    //     this.isSubmitting = false;
+                    //     return;
+                    // }
+                    await db.ref(`user/${this.userId}/`).update({
+                        parentFirstName: this.parentFirstName,
+                        parentJob: this.parentJob,
+                        expectation: this.expectation,
+                        parentMobile: this.parentMobile,
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingParentDetail = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingParentDetail = false;
+                        });
+
+                }
             }
             else {
-                this.isEditingContract = true;
+                this.isEditingParentDetail = true;
             }
         },
 
-        toEditEducation() {
+        async toEditEducation() {
             if (this.isEditingEducation == true) {
-                this.isEditingEducation = false;
+                if (this.validateEducationEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        school: this.school,
+                        education: this.education,
+                      
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        });
+
+                }
             }
             else {
                 this.isEditingEducation = true;
@@ -862,16 +972,14 @@ export default {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
                 this.studentId = childData.studentId || null;
-
+                this.lastStudentId = childData.lastStudentId || null;
                 this.totalHour = childData.totalHour || 0;
                 this.studyHour = childData.studyHour || 0;
                 this.hourLeft = childData.hourLeft || 0;
 
-
                 this.totalHourDisplay = childData.totalHour || 0;
                 this.studyHourDisplay = childData.studyHour || 0;
                 this.hourLeftDisplay = childData.hourLeft || 0;
-
 
                 this.classType = childData.classType || null;
                 this.courseHour = childData.courseHour || null;
@@ -879,6 +987,8 @@ export default {
                 this.wantedTeacher = childData.wantedTeacher || null;
                 this.annotation = childData.annotation || null;
 
+                this.firstNameEng = childData.firstNameEng || null;
+                this.lastNameEng = childData.lastNameEng || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
                 this.firstNameDisplay = childData.firstName || null;
@@ -888,10 +998,16 @@ export default {
                 this.school = childData.school || null;
                 this.gender = childData.gender || null;
                 this.birthDate = childData.birthDate || null;
-
+                this.email = childData.email || null;
+                this.idCardNumber = childData.idCardNumber || null;
                 this.education = childData.education || null;
                 this.studentMobile = childData.studentMobile || null;
-                this.parentMobile = childData.parentMobile || null;
+
+                this.parentFirstName = childData.parentFirstName || null;
+                this.expectation = childData.expectation || null;
+                this.parentJob = childData.parentJob || null;
+                this.parentMobile = childData.studentMobile || null;
+
 
                 try {
                     this.address.houseNo = childData.address.houseNo || null;
@@ -899,6 +1015,16 @@ export default {
                     this.address.amphoe = childData.address.amphoe || null;
                     this.address.province = childData.address.province || null;
                     this.address.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
+                try {
+                    this.currAddress.houseNo = childData.currAddress.houseNo || null;
+                    this.currAddress.tambon = childData.currAddress.tambon || null;
+                    this.currAddress.amphoe = childData.currAddress.amphoe || null;
+                    this.currAddress.province = childData.currAddress.province || null;
+                    this.currAddress.postal = childData.currAddress.postal || null;
                 } catch (error) {
                     this.isLoading = false;
                 }
@@ -1065,7 +1191,11 @@ export default {
             this.snackbarMessage = message;
             this.snackbarColor = status;
         },
-
+        isLetter(e) {
+            let char = String.fromCharCode(e.keyCode);
+            if (/^[A-Za-z]+$/.test(char)) return true;
+            else e.preventDefault();
+        },
 
     },
 
