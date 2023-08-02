@@ -63,7 +63,8 @@
                                             </v-col>
 
                                             <v-col cols="12" sm="6">
-                                                <v-select :items="time_standart" v-model="editedItem.time_s" label="เวลาเริ่มต้น"
+                                                <v-select :items="time_standart" v-model="editedItem.time_s"
+                                                    label="เวลาเริ่มต้น"
                                                     @change="validateTime(), editedItem.time_e = null"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
@@ -325,13 +326,13 @@ export default {
             this.old_item = item;
             // console.log('item>>', item);
             this.time_standart_stop = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
-            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
-            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
-            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
-            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
-            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
-            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
-            this.date = item.date;
+                , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+                , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+                , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+                , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+                , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+                this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.search_select_location_class(item.key_teacher);
@@ -385,6 +386,9 @@ export default {
         save() {
             // console.log('update>>', this.editedItem ,this.date);
             // this.delete_match();
+            this.validateTime();
+
+            let id = new Date().getTime();
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
                 teacher: this.editedItem.key_teacher,
@@ -398,6 +402,7 @@ export default {
                 stop_tea: this.editedItem.time_e,
                 because: this.editedItem.because,
                 status: "พร้อมเรียน",
+                ID:id
             });
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
                 invite: '1',
@@ -407,7 +412,17 @@ export default {
                 // class: this.editedItem.class,
                 start: this.editedItem.time_s,
                 stop: this.editedItem.time_e,
+                ID:id
             });
+
+            for (const key in this.time_standart_sum) {
+                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
+                    0: this.editedItem.key_student
+                });
+                db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
+                    0: ''
+                });
+            };
             this.close();
         },
 
@@ -433,7 +448,7 @@ export default {
 
         validateTime() {
             // this.time_standart_stop = [];
-            if (true){//this.editedItem.time_e == null) {
+            if (true) {//this.editedItem.time_e == null) {
                 this.time_standart_stop = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
@@ -445,13 +460,13 @@ export default {
                         }
                     }
                 }
-            }if (this.editedItem.time_e != null && this.editedItem.time_s != null) {
+            } if (this.editedItem.time_e != null && this.editedItem.time_s != null) {
                 this.time_standart_sum = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
                     if (this.editedItem.time_e == this.time_standart[key]) {
                         sum = 0;
-                        this.time_standart_sum.push(this.time_standart[key]);
+                        // this.time_standart_sum.push(this.time_standart[key]);
                         break;
                     }
                     else if (this.editedItem.time_s == this.time_standart[key] || (sum != 0)) {
@@ -460,7 +475,7 @@ export default {
                     }
                 }
                 console.log(this.time_standart_sum);
-            } 
+            }
             // else {
             //     alert("ลงเวลาไม่ถูกต้อง");
             // }

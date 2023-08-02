@@ -58,6 +58,11 @@
  */
 
 
+/*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
+
+/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
+
+
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -143,11 +148,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-/*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
-
-/*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
 
 /*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
 

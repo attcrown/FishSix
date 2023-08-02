@@ -195,16 +195,6 @@
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
                                             label="เลิกเรียน"></v-select>
                                     </v-col>
-
-                                    <!-- <v-col cols="12" sm="6">
-                                        <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
-                                            style="font-weight: bold;"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field label="เลิกเรียน" v-model="picker_stop"
-                                            @click="dialog_time_stop = true" style="font-weight: bold;"></v-text-field>
-                                    </v-col> -->
-
                                     <v-col cols="12" sm="12">
                                         <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
                                             style="font-weight: bold;"></v-text-field>
@@ -217,33 +207,29 @@
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
                                             :items="subject_select_tea" @input="search_level_select2()"
-                                            :readonly="save_detail.subject != '00000'"
-                                            ></v-autocomplete>
+                                            :readonly="save_detail.subject != '00000'"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
                                         <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
-                                            label="ชื่อวิชา" item-text="name" item-value="key" 
+                                            label="ชื่อวิชา" item-text="name" item-value="key"
                                             @input="search_level_select2()"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-autocomplete v-model="save_detail.level" :items="level_select_add"
-                                            label="ระดับการศักษา" :disabled="save_detail.subject === undefined"
-                                            ></v-autocomplete>
+                                            label="ระดับการศักษา"
+                                            :disabled="save_detail.subject === undefined"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
-                                            item-text="name" item-value="key" 
-                                            readonly></v-autocomplete>
+                                            item-text="name" item-value="key" readonly></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-autocomplete v-model="value_student" :items="items_student"
-                                            label="Search student" item-text="name" item-value="key"
-                                            ></v-autocomplete>
+                                            label="Search student" item-text="name" item-value="key"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="8">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
-                                            label="ประเภทคลาส" v-model="save_detail.style" readonly
-                                            ></v-select>
+                                            label="ประเภทคลาส" v-model="save_detail.style" readonly></v-select>
                                     </v-col>
                                     <!-- <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
@@ -258,19 +244,9 @@
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
                                             label="เลิกเรียน"></v-select>
                                     </v-col>
-
-                                    <!-- <v-col cols="12" sm="6">
-                                        <v-text-field label="เริ่มเรียน" v-model="picker_start" @click="dialog_time = true"
-                                            ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-text-field label="เลิกเรียน" v-model="picker_stop"
-                                            @click="dialog_time_stop = true" ></v-text-field>
-                                    </v-col> -->
-
                                     <v-col cols="12" sm="12">
-                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
-                                            ></v-text-field>
+                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
+                                            v-model="save_detail.because"></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -455,6 +431,13 @@ export default {
             , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
             , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+        time_full: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+            , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+            , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+            , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+            , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+            , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+            , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
         time_standart_stop: [],
         time_standart_sum: [],
     }),
@@ -497,7 +480,7 @@ export default {
 
     methods: {
         validateTime() {
-            if (true){//this.picker_stop == null) {
+            if (true) {//this.picker_stop == null) {
                 this.time_standart_stop = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
@@ -515,7 +498,7 @@ export default {
                 for (const key in this.time_standart) {
                     if (this.picker_stop == this.time_standart[key]) {
                         sum = 0;
-                        this.time_standart_sum.push(this.time_standart[key]);
+                        // this.time_standart_sum.push(this.time_standart[key]);
                         break;
                     }
                     else if (this.picker_start == this.time_standart[key] || (sum != 0)) {
@@ -524,7 +507,7 @@ export default {
                     }
                 }
                 console.log(this.time_standart_sum);
-            } 
+            }
             // else {
             //     alert("ลงเวลาไม่ถูกต้อง");
             //     this.close();
@@ -604,50 +587,130 @@ export default {
                 this.dialog_save_error = true;
                 return;
             }
+            let id = new Date().getTime();
             const db = this.$fireModule.database();
-            if (this.mode === 'save') {
-                db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
-                    teacher: this.value,
-                    subject: this.save_detail.subject,
-                    style_subject: this.save_detail.style,
-                    level: this.save_detail.level,
-                    start: this.picker_start,
-                    // class: this.save_detail.class,
-                    stop: this.picker_stop,
-                    start_tea: this.picker_start,
-                    stop_tea: this.picker_stop,
-                    because: this.save_detail.because,
-                    status: this.check_status(),
-                });
-            } else if (this.mode === 'edit') {
-                console.log(this.save_detail);
-                db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
-                        db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).update({
-                            invite: parseInt(childData.invite) + 1,
-                        })
-                        db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
-                            teacher: this.value,
-                            subject: this.save_detail.subject,
-                            style_subject: this.save_detail.style,
-                            level: this.save_detail.level,
-                            // class: this.save_detail.class,
-                            start: this.picker_start,
-                            stop: this.picker_stop,
-                            because: this.save_detail.because,
-                            start_tea: this.picker_start_tea,
-                            stop_tea: this.picker_stop_tea,
-                            status: this.check_status(),
-                        });
-                    } else { alert('error'); }
+
+            const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
+            Promise.all([getTimePromise])
+                .then(([timeSnapshot]) => {
+                    if (timeSnapshot.exists()) {
+                        const timeData = timeSnapshot.val();
+                        const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                        if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                            alert('ใส่เวลาไม่ถูกต้องกรุณาลงใหม่อีกครั้ง');
+                        } else {
+                            if (this.mode === 'save') {
+                                db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                                    teacher: this.value,
+                                    subject: this.save_detail.subject,
+                                    style_subject: this.save_detail.style,
+                                    level: this.save_detail.level,
+                                    start: this.picker_start,
+                                    // class: this.save_detail.class,
+                                    stop: this.picker_stop,
+                                    start_tea: this.picker_start,
+                                    stop_tea: this.picker_stop,
+                                    because: this.save_detail.because,
+                                    status: this.check_status(),
+                                    ID: id,
+                                });
+                                for (const key in this.time_standart_sum) {
+                                    db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                        0: ''
+                                    });
+                                };
+                            } else if (this.mode === 'edit') {
+                                console.log(this.save_detail);
+                                db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
+                                    const childData = snapshot.val();
+                                    if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
+                                        db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).update({
+                                            invite: parseInt(childData.invite) + 1,
+                                        })
+                                        db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                                            teacher: this.value,
+                                            subject: this.save_detail.subject,
+                                            style_subject: this.save_detail.style,
+                                            level: this.save_detail.level,
+                                            // class: this.save_detail.class,
+                                            start: this.picker_start,
+                                            stop: this.picker_stop,
+                                            because: this.save_detail.because,
+                                            start_tea: this.picker_start_tea,
+                                            stop_tea: this.picker_stop_tea,
+                                            status: this.check_status(),
+                                        });
+                                        for (const key in this.time_standart_sum) {
+                                            db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                                0: ''
+                                            });
+                                        };
+                                    } else { alert('error'); }
+                                })
+                            } else {
+                                this.dialog_save_error = true;
+                            }
+                            this.clear_item();
+                            this.dialog_detail = false;
+                        }
+                    } else {
+                        if (this.mode === 'save') {
+                            db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                                teacher: this.value,
+                                subject: this.save_detail.subject,
+                                style_subject: this.save_detail.style,
+                                level: this.save_detail.level,
+                                start: this.picker_start,
+                                // class: this.save_detail.class,
+                                stop: this.picker_stop,
+                                start_tea: this.picker_start,
+                                stop_tea: this.picker_stop,
+                                because: this.save_detail.because,
+                                status: this.check_status(),
+                                ID: id,
+                            });
+                            for (const key in this.time_standart_sum) {
+                                db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                    0: ''
+                                });
+                            };
+                        } else if (this.mode === 'edit') {
+                            console.log(this.save_detail);
+                            db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
+                                const childData = snapshot.val();
+                                if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
+                                    db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).update({
+                                        invite: parseInt(childData.invite) + 1,
+                                    })
+                                    db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
+                                        teacher: this.value,
+                                        subject: this.save_detail.subject,
+                                        style_subject: this.save_detail.style,
+                                        level: this.save_detail.level,
+                                        // class: this.save_detail.class,
+                                        start: this.picker_start,
+                                        stop: this.picker_stop,
+                                        because: this.save_detail.because,
+                                        start_tea: this.picker_start_tea,
+                                        stop_tea: this.picker_stop_tea,
+                                        status: this.check_status(),
+                                    });
+                                } else { alert('error'); }
+                            })
+                            for (const key in this.time_standart_sum) {
+                                db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                    0: ''
+                                });
+                            };
+                        } else {
+                            this.dialog_save_error = true;
+                        }
+                        this.clear_item();
+                        this.dialog_detail = false;
+                    }
                 })
-            } else {
-                this.dialog_save_error = true;
-            }
-            this.clear_item();
-            this.dialog_detail = false;
         },
+
         clear_item() {
             this.value = null;
             this.value_student = null;
@@ -1026,16 +1089,6 @@ export default {
                 this.editedIndex = -1
             })
         },
-
-        // save() {
-        //     const db = this.$fireModule.database();
-        //     db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-        //         subject : this.save_detail.subject,
-        //         style_subject : this.save_detail.style,
-        //         start : this.picker_start,
-        //         stop : this.picker_stop,
-        //     });
-        // },
 
     },
 }
