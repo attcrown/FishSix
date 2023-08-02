@@ -152,11 +152,11 @@
                                                 </template>
                                             </v-text-field>
                                         </v-col>
-                                        <v-col cols="12" sm="6">
+                                        <!-- <v-col cols="12" sm="6">
                                             <v-text-field label="ประเภทคลาส" v-model="detail_user.class"
                                                 readonly></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6">
+                                        </v-col> -->
+                                        <v-col cols="12" sm="12">
                                             <v-text-field label="รูปแบบการเรียน" v-model="detail_user.name_style"
                                                 readonly></v-text-field>
                                         </v-col>
@@ -252,7 +252,7 @@ export default {
                 sortable: false,
                 value: 'name_student',
             },
-            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
             { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
@@ -376,7 +376,7 @@ export default {
                                                 key_teacher: timedata.teacher,
                                                 phone_student: studentData.studentMobile,
                                                 phone_teacher: teacherData.mobile,
-                                                class: timedata.class,
+                                                // class: timedata.class,
                                                 level: timedata.level,
                                                 because: timedata.because,
                                             });
@@ -423,7 +423,7 @@ export default {
                 item.status,
                 item.phone_student,
                 item.phone_teacher,
-                item.class,
+                // item.class,
                 item.level,
                 item.because,
             ])];

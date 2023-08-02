@@ -71,25 +71,25 @@
                                     <v-col cols="12" class="mt-5" v-if="mode == 'save'">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key"
-                                            @change="check_time_start(), search_subject_tea(value), search_class_tea(value), search_style_tea(value)"
+                                            @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
                                             @input="check_tea = false"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" class="mt-5" v-if="mode == 'edit'">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key" readonly
-                                            @change="check_time_start(), search_subject_tea(value), search_class_tea(value), search_style_tea(value)"
+                                            @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
                                             @input="check_tea = false"></v-autocomplete>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
+                                    <!-- <v-col cols="12" sm="4">
                                         <v-select :items="class_flip" label="ประเภท" v-model="save_detail.class"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="4">
+                                    </v-col> -->
+                                    <v-col cols="12" sm="8">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
                                             label="สถานที่สอน" v-model="save_detail.style"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนเปิดรับ" v-model="save_detail.sum_people"
-                                        :disabled="mode == 'edit'" inputmode="numeric"></v-text-field>
+                                            :disabled="mode == 'edit'" type="number"></v-text-field>
                                     </v-col>
 
                                     <v-col cols="12" sm="4" v-if="value != null">
@@ -251,8 +251,8 @@ export default {
                 value: 'userid',
             },
             { text: 'ชื่อครู', value: 'name' },
-            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'สถานที่สอน', value: 'style', align: 'center' },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'ประเภทคลาส', value: 'style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
@@ -290,7 +290,7 @@ export default {
         formIsValid() {
             return (
                 this.value &&
-                this.save_detail.class &&
+                // this.save_detail.class &&
                 this.save_detail.style &&
                 this.save_detail.sum_people &&
                 this.save_detail.subject &&
@@ -370,7 +370,7 @@ export default {
             // console.log(this.mode);
             let id = new Date().getTime();
             const db = this.$fireModule.database();
-            if (this.save_detail.class == '' ||
+            if (//this.save_detail.class == '' ||
                 this.save_detail.style == '' ||
                 this.save_detail.subject == '' ||
                 this.picker_start == '' ||
@@ -387,7 +387,7 @@ export default {
                 //     db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
                 // }
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-                    class: this.save_detail.class,
+                    // class: this.save_detail.class,
                     sum_people: this.save_detail.sum_people,
                     subject: this.save_detail.subject,
                     style_subject: this.save_detail.style,
@@ -397,7 +397,7 @@ export default {
                 });
                 this.clear_item();
                 this.dialog_detail = false;
-            } 
+            }
             const getTimePromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise])
                 .then(([timeSnapshot]) => {
@@ -409,7 +409,7 @@ export default {
                         } else {
                             if (this.mode == 'save') {
                                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).set({
-                                    class: this.save_detail.class,
+                                    // class: this.save_detail.class,
                                     style_subject: this.save_detail.style,
                                     sum_people: this.save_detail.sum_people,
                                     invite: '0',
@@ -420,16 +420,9 @@ export default {
                                 });
                                 console.log(this.time_standart_sum);
                                 for (const key in this.time_standart_sum) {
-                                    if (this.save_detail.class == "Flip class") {
-                                        db.ref(`Time_teacher/${this.value}/${this.date1}/F:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                            0: ''
-                                        });
-                                    }
-                                    else if (this.save_detail.class == "Private") {
-                                        db.ref(`Time_teacher/${this.value}/${this.date1}/P:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                            0: ''
-                                        });
-                                    }
+                                    db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
+                                        0: ''
+                                    });
                                 };
                                 this.clear_item();
                                 this.dialog_detail = false;
@@ -438,7 +431,7 @@ export default {
                     } else {
                         if (this.mode == 'save') {
                             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).set({
-                                class: this.save_detail.class,
+                                // class: this.save_detail.class,
                                 style_subject: this.save_detail.style,
                                 sum_people: this.save_detail.sum_people,
                                 invite: '0',
@@ -448,16 +441,9 @@ export default {
                                 ID: id,
                             });
                             for (const key in this.time_standart_sum) {
-                                if (this.save_detail.class == "Flip class") {
-                                    db.ref(`Time_teacher/${this.value}/${this.date1}/F:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                        0: ''
-                                    });
-                                }
-                                else if (this.save_detail.class == "Private") {
-                                    db.ref(`Time_teacher/${this.value}/${this.date1}/P:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                        0: ''
-                                    });
-                                }
+                                db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
+                                    0: ''
+                                });
                             };
                             this.clear_item();
                             this.dialog_detail = false;
@@ -483,13 +469,13 @@ export default {
             return selectedDate >= currentDate;
         },
 
-        search_class_tea(item) {
-            const db = this.$fireModule.database();
-            db.ref(`user/${item}/classType`).on("value", (snapshot) => {
-                const childData = snapshot.val();
-                this.class_flip = childData;
-            })
-        },
+        // search_class_tea(item) {
+        //     const db = this.$fireModule.database();
+        //     db.ref(`user/${item}/classType`).on("value", (snapshot) => {
+        //         const childData = snapshot.val();
+        //         this.class_flip = childData;
+        //     })
+        // },
 
         search_style_tea(item) {
             const db = this.$fireModule.database();
@@ -559,7 +545,7 @@ export default {
                                             time_e: timedata.stop,
                                             style: locationData.name,
                                             keystyle: timedata.style_subject,
-                                            class: timedata.class,
+                                            // class: timedata.class,
                                             subject: namesub,
                                             keySubject: timedata.subject,
                                             people: timedata.sum_people,
@@ -604,7 +590,7 @@ export default {
             console.log(item);
             this.time_standart_stop = this.time_full;
             this.time_standart = this.time_standart_stop;
-            this.search_class_tea(item.key);
+            // this.search_class_tea(item.key);
             this.search_style_tea(item.key);
             this.search_subject_tea(item.key);
             this.delday = item.time_e;
@@ -612,7 +598,7 @@ export default {
             this.value = item.key;
             this.date1 = item.date;
             this.save_detail.subject = item.keySubject;
-            this.save_detail.class = item.class;
+            // this.save_detail.class = item.class;
             this.save_detail.sum_people = item.people;
             this.save_detail.style = item.keystyle;
             this.picker_start = item.time_s;
@@ -634,7 +620,7 @@ export default {
                     const detail = key.split(":");
                     if (detail[4] == this.delcon.IdTime) {
                         db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}/${key}`).remove();
-                        // console.log('ลบ',key,detail[4])
+                        console.log('ลบ',key,detail[4]);
                     }
                 }
             })

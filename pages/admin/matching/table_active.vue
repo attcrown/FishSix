@@ -140,7 +140,7 @@ export default {
                 sortable: false,
                 value: 'name_student',
             },
-            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
             { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
@@ -216,7 +216,7 @@ export default {
                                             key_teacher: timedata.teacher,
                                             phone_student: studentData.studentMobile,
                                             phone_teacher: teacherData.mobile,
-                                            class: timedata.class,
+                                            // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
 
