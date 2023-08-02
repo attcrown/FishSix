@@ -84,12 +84,12 @@
                                                     </template>
                                                 </v-text-field>
                                             </v-col> -->
-                                            <v-col cols="12" sm="6">
+                                            <!-- <v-col cols="12" sm="6">
                                                 <v-select :items="select_class" label="รูปแบบการสอน"
                                                     v-model="editedItem.class"></v-select>
-                                            </v-col>
+                                            </v-col> -->
                                             <v-col cols="12" sm="6">
-                                                <v-select :items="select_location" label="สถานที่สอน"
+                                                <v-select :items="select_location" label="รูปแบบการสอน"
                                                     v-model="editedItem.style" item-text="name" item-value="key"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
@@ -205,7 +205,7 @@ export default {
                 sortable: false,
                 value: 'name_student',
             },
-            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
             { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
@@ -242,7 +242,7 @@ export default {
                 this.editedItem.name &&
                 this.date &&
                 this.editedItem.style &&
-                this.editedItem.class &&
+                // this.editedItem.class &&
                 this.editedItem.subject &&
                 this.editedItem.time_s &&
                 this.editedItem.time_e
@@ -304,7 +304,7 @@ export default {
                                             key_teacher: timedata.teacher,
                                             phone_student: studentData.studentMobile,
                                             phone_teacher: teacherData.mobile,
-                                            class: timedata.class,
+                                            // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
                                         });
@@ -384,14 +384,14 @@ export default {
 
         save() {
             // console.log('update>>', this.editedItem ,this.date);
-            this.delete_match();
+            // this.delete_match();
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
                 teacher: this.editedItem.key_teacher,
                 subject: this.editedItem.subject,
                 style_subject: this.editedItem.style,
                 level: this.editedItem.level,
-                class: this.editedItem.class,
+                // class: this.editedItem.class,
                 start: this.editedItem.time_s,
                 stop: this.editedItem.time_e,
                 start_tea: this.editedItem.time_s,
@@ -404,7 +404,7 @@ export default {
                 sum_people: '1',
                 subject: this.editedItem.subject,
                 style_subject: this.editedItem.style,
-                class: this.editedItem.class,
+                // class: this.editedItem.class,
                 start: this.editedItem.time_s,
                 stop: this.editedItem.time_e,
             });

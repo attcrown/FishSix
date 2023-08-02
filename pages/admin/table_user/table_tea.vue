@@ -177,21 +177,21 @@
                                             style="font-weight: bold;"></v-autocomplete>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="style_subject" label="สถานที่สอน" v-model="save_detail.style"
+                                    <v-col cols="12" sm="8">
+                                        <v-select :items="style_subject" label="ประเภทคลาส" v-model="save_detail.style"
                                             style="font-weight: bold;" item-text="name" item-value="key"></v-select>
                                     </v-col>
 
-                                    <v-col cols="12" sm="6">
+                                    <!-- <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
                                             style="font-weight: bold;"></v-select>
-                                    </v-col>
+                                    </v-col> -->
 
-                                    <v-col cols="12" sm="4">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
                                             @change="validateTime(), picker_stop = null"></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
                                             label="เลิกเรียน"></v-select>
                                     </v-col>
@@ -240,21 +240,21 @@
                                             label="Search student" item-text="name" item-value="key"
                                             ></v-autocomplete>
                                     </v-col>
-                                    <v-col cols="12" sm="6">
+                                    <v-col cols="12" sm="8">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
-                                            label="สถานที่สอน" v-model="save_detail.style" readonly
+                                            label="ประเภทคลาส" v-model="save_detail.style" readonly
                                             ></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="6">
+                                    <!-- <v-col cols="12" sm="6">
                                         <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
                                              readonly></v-select>
-                                    </v-col>
+                                    </v-col> -->
 
-                                    <v-col cols="12" sm="4">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
                                             @change="validateTime(), picker_stop = null"></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
+                                    <v-col cols="12" sm="6">
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
                                             label="เลิกเรียน"></v-select>
                                     </v-col>
@@ -419,8 +419,8 @@ export default {
                 sortable: false,
                 value: 'name',
             },
-            { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'สถานที่สอน', value: 'style', align: 'center' },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'ประเภทคลาส', value: 'style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
@@ -595,7 +595,7 @@ export default {
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
                 this.save_detail.because == null ||
-                this.save_detail.class == null ||
+                // this.save_detail.class == null ||
                 this.picker_start == null ||
                 this.picker_stop == null ||
                 this.value == null ||
@@ -612,7 +612,7 @@ export default {
                     style_subject: this.save_detail.style,
                     level: this.save_detail.level,
                     start: this.picker_start,
-                    class: this.save_detail.class,
+                    // class: this.save_detail.class,
                     stop: this.picker_stop,
                     start_tea: this.picker_start,
                     stop_tea: this.picker_stop,
@@ -632,7 +632,7 @@ export default {
                             subject: this.save_detail.subject,
                             style_subject: this.save_detail.style,
                             level: this.save_detail.level,
-                            class: this.save_detail.class,
+                            // class: this.save_detail.class,
                             start: this.picker_start,
                             stop: this.picker_stop,
                             because: this.save_detail.because,
@@ -826,7 +826,7 @@ export default {
                                                 time_s: timedata.start,
                                                 time_e: timedata.stop,
                                                 style: locationData.name,
-                                                class: timedata.class,
+                                                // class: timedata.class,
                                                 class_all: teacherData.classType,
                                                 subject: namesub,
                                                 keySubject: timedata.subject,
@@ -886,7 +886,7 @@ export default {
             this.style_class = item.class_all;
             this.style_subject = item.full_location;
 
-            this.save_detail.class = item.class;
+            // this.save_detail.class = item.class;
             this.save_detail.style = item.keyLocation;
             this.save_detail.subject = item.keySubject;
             this.save_detail.keysubject = item.keySubject;
