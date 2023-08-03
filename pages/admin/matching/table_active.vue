@@ -219,7 +219,7 @@ export default {
                                             // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
-
+                                            id:timedata.ID
                                         });
                                     })
                                     .catch((error) => {
@@ -230,7 +230,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                // console.log(this.desserts);
+                console.log(this.desserts);
             })
         },
 
@@ -274,24 +274,52 @@ export default {
                 alert("No data to delete");
                 return;
             }
-            // console.log(">>>>",this.editedItem);
+            console.log(">>>>",this.editedItem);
             const db = this.$fireModule.database();
             let sum = 0;
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 sum = childData - 1;
+            }).then(()=>{
+                db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
+                    invite: sum,
+                })
             })
+            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
+            this.delete_time();
+        },
 
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
-                invite: sum,
-            }).then(() => {
-                // console.log("success invite");
+        delete_time(){
+            let idkey = this.editedItem.id;
+            let key_stu = this.editedItem.key_student;
+            let key_tea = this.editedItem.key_teacher;
+            let date = this.editedItem.date
+            console.log(this.editedItem);
+            const db = this.$fireModule.database();
+
+            db.ref(`Time_student/${this.editedItem.key_student}/${this.editedItem.date}`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log('stu',childData,idkey);
+                for (const key in childData) {
+                    const detail = key.split(":");
+                    if (detail[4] == idkey) {
+                        db.ref(`Time_student/${key_stu}/${date}/${key}`).remove();
+                        console.log('ลบ', key, detail[4]);
+                    }
+                }
             });
-
-            db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove()
-                .then(() => {
-                    // console.log("success del");
-                });
+            db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log('tea',childData);
+                for (const key in childData) {
+                    const detail = key.split(":");
+                    if (detail[4] == idkey) {
+                        db.ref(`Time_teacher/${key_tea}/${date}/${key}/${key_stu}`).remove({
+                        });
+                        console.log('ลบ', key, detail[4]);
+                    }
+                }
+            });
         },
 
 

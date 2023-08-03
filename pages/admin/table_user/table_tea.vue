@@ -378,7 +378,9 @@ export default {
         search_value: null,
         search_style_sub: null,
         search_class: null,
+        sum_peoples: null,
         value: null,
+        idTea: null,
         value_student: null,
         style_sub: null,
         arrayEvents: null,
@@ -639,11 +641,14 @@ export default {
                                             start_tea: this.picker_start_tea,
                                             stop_tea: this.picker_stop_tea,
                                             status: this.check_status(),
+                                            ID: this.idTea,
                                         });
                                         for (const key in this.time_standart_sum) {
-                                            db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                            db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}`).update({
                                                 0: ''
                                             });
+                                            // db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}/${this.value_student}`).update({
+                                            // });
                                         };
                                     } else { alert('error'); }
                                 })
@@ -672,7 +677,7 @@ export default {
                             for (const key in this.time_standart_sum) {
                                 db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
                                     0: ''
-                                });
+                                });                               
                             };
                         } else if (this.mode === 'edit') {
                             console.log(this.save_detail);
@@ -694,13 +699,16 @@ export default {
                                         start_tea: this.picker_start_tea,
                                         stop_tea: this.picker_stop_tea,
                                         status: this.check_status(),
+                                        ID: this.idTea,
                                     });
                                 } else { alert('error'); }
                             })
                             for (const key in this.time_standart_sum) {
-                                db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}`).update({
                                     0: ''
                                 });
+                                // db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}/${this.value_student}`).push({
+                                // });
                             };
                         } else {
                             this.dialog_save_error = true;
@@ -712,7 +720,9 @@ export default {
         },
 
         clear_item() {
+            this.idTea = null;
             this.value = null;
+            this.sum_peoples = null;
             this.value_student = null;
             this.hour_tea = 0;
             this.min_tea = 0;
@@ -899,6 +909,7 @@ export default {
                                                 key: key,
                                                 full_location: { name: locationData.name, key: timedata.style_subject },
                                                 keyLocation: timedata.style_subject,
+                                                id: timedata.ID
                                             });
                                             this.events.push(
                                                 {
@@ -941,13 +952,14 @@ export default {
 
         editItem(item) {
             console.log('editadd', item);
-
+            this.idTea = item.id;
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
             this.value = item.key;
             this.date1 = item.date;
             this.style_class = item.class_all;
             this.style_subject = item.full_location;
+            this.sum_peoples = item.people;
 
             // this.save_detail.class = item.class;
             this.save_detail.style = item.keyLocation;

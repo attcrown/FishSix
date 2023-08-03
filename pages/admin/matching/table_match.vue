@@ -308,6 +308,7 @@ export default {
                                             // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
+                                            id: timedata.ID,
                                         });
                                     })
                                     .catch((error) => {
@@ -318,7 +319,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                // console.log(this.desserts);
+                console.log(this.desserts);
             })
         },
 
@@ -385,9 +386,8 @@ export default {
 
         save() {
             // console.log('update>>', this.editedItem ,this.date);
-            // this.delete_match();
+            this.delete_match();
             this.validateTime();
-
             let id = new Date().getTime();
             const db = this.$fireModule.database();
             db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
@@ -402,7 +402,7 @@ export default {
                 stop_tea: this.editedItem.time_e,
                 because: this.editedItem.because,
                 status: "พร้อมเรียน",
-                ID:id
+                ID: id
             });
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
                 invite: '1',
@@ -412,15 +412,15 @@ export default {
                 // class: this.editedItem.class,
                 start: this.editedItem.time_s,
                 stop: this.editedItem.time_e,
-                ID:id
+                ID: id
             });
 
             for (const key in this.time_standart_sum) {
-                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
-                    0: this.editedItem.key_student
-                });
+                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/${this.editedItem.key_student}`).update({ }); 
+            };
+            for (const key in this.time_standart_sum) {
                 db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
-                    0: ''
+                    0: ""
                 });
             };
             this.close();
@@ -433,11 +433,17 @@ export default {
                 .then(() => {
                     console.log("success del");
                 });
-            db.ref(`date_match/${this.old_item.key_teacher}/${this.old_item.date}/${this.old_item.time_e_tea}`).remove()
-                .then(() => {
-                    console.log("success del");
-                    this.close();
-                });
+            db.ref(`Time_student/${this.old_item.key_student}/${this.old_item.date}`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const detail = key.split(":");
+                    if (detail[4] == this.old_item.id) {
+                        db.ref(`Time_student/${this.old_item.key_student}/${this.old_item.date}/${key}`).remove();
+                        console.log('ลบ', key, detail[4]);
+                    }
+                }
+            });
+            this.close();
         },
 
         getColor(stutus) {
