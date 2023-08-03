@@ -60,6 +60,7 @@
                         </v-dialog>
 
                     </template>
+                    <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
                         <v-icon small color="#B6A7A2" class="mr-1 text-h6" @click="viewItem(item)">
                             mdi-eye
