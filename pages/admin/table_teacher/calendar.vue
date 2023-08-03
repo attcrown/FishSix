@@ -137,7 +137,7 @@ export default {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = false))
             }
 
             if (this.selectedOpen) {

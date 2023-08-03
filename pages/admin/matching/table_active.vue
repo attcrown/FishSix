@@ -108,7 +108,7 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)" style="font-size:24px" color="red">
+                    <v-icon small class="mr-2" @click="editItem(item)" style="font-size:24px" color="#B6A7A2">
                         mdi-delete-alert
                     </v-icon>
                 </template>

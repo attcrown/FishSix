@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12">
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
-                    :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
+                :items-per-page="-1" :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
                     <template v-slot:top>
                         <!-- Toolbar section -->
                         <v-toolbar flat style="background-color: #EBE4DE;" class="rounded-t-xl">
@@ -20,13 +20,13 @@
                                         <v-btn text color="primary" @click="menu = false">
                                             Cancel
                                         </v-btn>
-                                        <v-btn text color="primary" @click="$refs.menu.save(date), search_date_input()">
+                                        <v-btn text color="primary" @click="$refs.menu.save(date), search_date_input(), search_date =null ,search_table_student = null">
                                             OK
                                         </v-btn>
                                     </v-date-picker>
                                 </v-menu>
                             </v-toolbar-title>
-                            <v-select :items="items" v-model="search_date" label="Search Date" class="mt-8 ms-5"
+                            <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
                                 @change="search_date_student(), date = null, search_table_student = null"
                                 style="max-width: 250px;">
                             </v-select>
@@ -109,12 +109,11 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <v-btn x-small color="secondary" @click="detail_match(item)">
-                            <v-icon small class="mr-2">
-                                mdi-account-details
+                        <!-- <v-btn text color="secondary"  class="text-center"> -->
+                            <v-icon small class="mr-2 text-h6" color="#B6A7A2" @click="detail_match(item)">
+                                mdi-eye
                             </v-icon>
-                            DETAIL
-                        </v-btn>
+                        <!-- </v-btn> -->
                     </template>
                 </v-data-table>
             </v-col>
@@ -314,9 +313,7 @@ export default {
 
     methods: {
         search_date_input() {
-            this.search_date = 'All';
             this.search_date_student();
-            this.search_table_student = this.date;
         },
         getColor(stutus) {
             if (stutus === 'พร้อมเรียน') return '#29CC39'
@@ -342,7 +339,7 @@ export default {
                 let now = new Date();
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
-                let edit = '';
+                let edit = '';               
                 if (this.search_date == 'Day') {
                     end = now;
                 } else if (this.search_date == 'Week') {
@@ -363,18 +360,76 @@ export default {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
                     now = new Date('2022-01-01');
-                } else {
+                }else {
                     end = now;
-                }
+                }                
 
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
-                        if (datedata) {
+                        if (this.date == null) {
                             if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
                                 new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
+                                for (const time in datedata) {
+                                    const timedata = datedata[time];
+                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                    const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                        .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                            const teacherData = teacherSnapshot.val();
+                                            const studentData = studentSnapshot.val();
+                                            const subjectData = subjectSnapshot.val();
+                                            const locationData = locationSnapshot.val();
+                                            item.push({
+                                                nametea_first: teacherData.firstName,
+                                                nametea_last: teacherData.lastName,
+                                                nickname_tea: teacherData.nickname,
+                                                namestu_first: studentData.firstName,
+                                                namestu_last: studentData.lastName,
+                                                nickname_stu: studentData.nickname,
+                                                name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                subject: timedata.subject,
+                                                name_subject: subjectData.name,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: timedata.style_subject,
+                                                name_style: locationData.name,
+                                                status: timedata.status,
+                                                key_student: key,
+                                                key_teacher: timedata.teacher,
+                                                phone_student: studentData.studentMobile,
+                                                phone_teacher: teacherData.mobile,
+                                                // class: timedata.class,
+                                                level: timedata.level,
+                                                because: timedata.because,
+                                            });
+                                            this.dash_all += 1;
+                                            if (timedata.status === 'พร้อมเรียน') {
+                                                this.dash_active += 1;
+                                            } else if (timedata.status === 'รอยืนยัน') {
+                                                this.dash_notactive += 1;
+                                            } else {
+                                                console.log('Error', timedata.status);
+                                            }
+                                            // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                            if (item.length === Object.keys(datedata).length) {
+                                                this.desserts_student = item;
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                        });
+                                }
+                            }
+                        }else{
+                            if (new Date(date).getTime().toString().substring(0, 5) >= new Date(this.date).getTime().toString().substring(0, 5) &&
+                                new Date(date).getTime().toString().substring(0, 5) <= new Date(this.date).getTime().toString().substring(0, 5)) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");

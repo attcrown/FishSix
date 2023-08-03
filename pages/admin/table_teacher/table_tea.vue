@@ -45,11 +45,11 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" small class="mr-2"
-                                @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                            <v-icon v-if="!(parseInt(item.invite) > 0)" class="mr-2 text-h6"
+                                @click="editItem(item), dialog_detail = true, mode = 'edit'" color="#B6A7A2">
                                 mdi-pencil
                             </v-icon>
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" small @click="deleteItem(item)">
+                            <v-icon v-if="!(parseInt(item.invite) > 0)" @click="deleteItem(item)" class="text-h6" color="#B6A7A2">
                                 mdi-delete
                             </v-icon>
                         </template>

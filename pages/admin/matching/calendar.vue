@@ -132,7 +132,7 @@ export default {
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
                 // console.log(this.selectedElement);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = false))
             }
 
             if (this.selectedOpen) {
@@ -146,7 +146,7 @@ export default {
         },
         search_date_teacher() {
             const db = this.$fireModule.database();
-            db.ref(`date_teacher/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.events = [];
                 const now = new Date();
@@ -157,24 +157,26 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                // console.log(timedata);
+                                console.log(timedata);
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 Promise.all([getSubjectPromise])
                                     .then(([subjectSnapshot]) => {
                                         const sub = subjectSnapshot.val();
-                                        this.events.push(
-                                            {
-                                                name: sub.name,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            },
-                                        );
+                                        if (timedata.status != 'พร้อมเรียน') {
+                                            this.events.push(
+                                                {
+                                                    name: sub.name,
+                                                    start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.start.substring(0, 2),
+                                                        timedata.start.substring(3, 5)),
+                                                    end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                        timedata.stop.substring(3, 5)),
+                                                    color: this.getRandomColor(),
+                                                    timed: true,
+                                                },
+                                            );
+                                        }
                                     })
                             }
                         }

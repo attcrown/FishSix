@@ -64,10 +64,10 @@
 
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <v-icon small color="black" class="mr-1" @click="viewItem(item)">
+                            <v-icon small color="#B6A7A2" class="mr-1 text-h6" @click="viewItem(item)">
                                 mdi-eye
                             </v-icon>
-                            <v-icon small color="red" @click="deleteItem(item)">
+                            <v-icon small color="#B6A7A2" class="text-h6" @click="deleteItem(item)">
                                 mdi-delete
                             </v-icon>
                         </template>

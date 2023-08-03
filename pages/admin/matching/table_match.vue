@@ -1,8 +1,93 @@
 <template>
-    <div class="pt-10">
+    <div class="">
+        <template>
+            <div>
+                <div class="mb-3" style="max-width:100%;"> <!--style="max-width:900px"-->
+                    <v-sheet height="64">
+                        <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
+                            <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
+                                Today
+                            </v-btn>
+                            <v-btn fab text small color="grey lighten-5" @click="prev">
+                                <v-icon small>
+                                    mdi-chevron-left
+                                </v-icon>
+                            </v-btn>
+                            <v-btn fab text small color="grey lighten-5" @click="next">
+                                <v-icon small>
+                                    mdi-chevron-right
+                                </v-icon>
+                            </v-btn>
+
+                            <v-toolbar-title v-if="$refs.calendar" style="color:#FAFAFA">
+                                {{ $refs.calendar.title }}
+                            </v-toolbar-title>
+
+                            <v-spacer></v-spacer>
+                            <v-menu bottom right>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn outlined color="grey lighten-5" v-bind="attrs" v-on="on">
+                                        <span>{{ typeToLabel[type] }}</span>
+                                        <v-icon right>
+                                            mdi-menu-down
+                                        </v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item @click="type = 'day'">
+                                        <v-list-item-title>Day</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="type = 'week'">
+                                        <v-list-item-title>Week</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="type = 'month'">
+                                        <v-list-item-title>Month</v-list-item-title>
+                                    </v-list-item>
+                                    <!-- <v-list-item @click="type = '4day'">
+                                <v-list-item-title>4 days</v-list-item-title>
+                            </v-list-item> -->
+                                </v-list>
+                            </v-menu>
+                        </v-toolbar>
+                    </v-sheet>
+                    <v-sheet height="600">
+                        <v-calendar ref="calendar" v-model="focus" color="primary" :events="events"
+                            :event-color="getEventColor" :type="type" @click:event="showEvent" @click:more="viewDay"
+                            @click:date="viewDay"></v-calendar>
+                        <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
+                            offset-x>
+                            <v-card color="grey lighten-4" min-width="350px" flat>
+                                <v-toolbar :color="selectedEvent.color" dark>
+                                    <v-btn icon>
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn>
+                                    <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                                    <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn icon>
+                                        <v-icon>mdi-heart</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <span v-html="selectedEvent.details"></span>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn text color="secondary" @click="selectedOpen = false">
+                                        Cancel
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-menu>
+                    </v-sheet>
+                </div>
+            </div>
+        </template>
         <template>
             <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date"
-                class="elevation-16 rounded-xl">
+                :items-per-page="-1" class="elevation-16 rounded-xl mt-10">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.status="{ item }">
                     <v-chip :color="getColor(item.status)" dark>
@@ -166,8 +251,8 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)">
-                        mdi-pencil
+                    <v-icon small class="mr-2 text-h6" color="#B6A7A2" @click="editItem(item)">
+                        mdi-eye
                     </v-icon>
                 </template>
                 <template v-slot:no-data>
@@ -182,6 +267,20 @@
 <script>
 export default {
     data: () => ({
+        focus: '',
+        type: 'week',
+        typeToLabel: {
+            month: 'Month',
+            week: 'Week',
+            day: 'Day', '4day': '4 Days',
+        },
+        selectedEvent: {},
+        selectedElement: null,
+        selectedOpen: false,
+        events: [],
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         menu: false,
         modal: false,
@@ -262,15 +361,59 @@ export default {
 
     mounted() {
         this.initialize();
+        this.$refs.calendar.checkChange();
     },
 
     methods: {
+        viewDay({ date }) {
+            this.focus = date
+            this.type = 'day'
+        },
+        getEventColor(event) {
+            return event.color
+        },
+        setToday() {
+            this.focus = ''
+        },
+        prev() {
+            this.$refs.calendar.prev()
+        },
+        next() {
+            this.$refs.calendar.next()
+        },
+        getRandomColor() {
+            const randomIndex = Math.floor(Math.random() * this.colors.length)
+            const randomColor = this.colors[randomIndex]
+            // Remove the color from the array so it won't be used again
+            return randomColor
+        },
+        showEvent({ nativeEvent, event }) {
+            const open = () => {
+                this.selectedEvent = event
+                this.selectedElement = nativeEvent.target
+                // console.log(this.selectedEvent);
+                // console.log(this.selectedElement);
+                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]) ))//this.selectedOpen = false))
+                console.log(this.selectedEvent);
+            }
+
+            if (this.selectedOpen) {
+                this.selectedOpen = false
+                requestAnimationFrame(() => requestAnimationFrame(() => open()))
+            } else {
+                open()
+            }
+
+            nativeEvent.stopPropagation()
+        },
+        
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
+                let index = 0;
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -310,6 +453,21 @@ export default {
                                             because: timedata.because,
                                             id: timedata.ID,
                                         });
+                                        this.events.push(
+                                            {
+                                                array: index,
+                                                name: subjectData.name,
+                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.start.substring(0, 2),
+                                                    timedata.start.substring(3, 5)),
+                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                    timedata.stop.substring(3, 5)),
+                                                color: this.getRandomColor(),
+                                                timed: true,
+                                            }                                            
+                                        );
+                                        index++;
                                     })
                                     .catch((error) => {
                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล", error);
@@ -325,19 +483,19 @@ export default {
 
         editItem(item) {
             this.old_item = item;
-            // console.log('item>>', item);
+            console.log('item>>', item);
             this.time_standart_stop = ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
                 , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
                 , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
                 , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
                 , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
                 , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
-                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
-                this.date = item.date;
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+            this.date = item.date;
+            this.editedIndex = this.desserts.indexOf(item);
+            this.editedItem = Object.assign({}, item);
             this.search_select_location_class(item.key_teacher);
-            this.dialog = true
+            this.dialog = true;
         },
 
         search_select_location_class(key) {
@@ -416,7 +574,7 @@ export default {
             });
 
             for (const key in this.time_standart_sum) {
-                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/${this.editedItem.key_student}`).update({ }); 
+                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/${this.editedItem.key_student}`).update({});
             };
             for (const key in this.time_standart_sum) {
                 db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({

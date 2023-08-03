@@ -54,15 +54,15 @@
                         <v-calendar ref="calendar" v-model="focus" color="primary" :events="events"
                             :event-color="getEventColor" :type="type" @click:event="showEvent" @click:more="viewDay"
                             @click:date="viewDay"></v-calendar>
-                        <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
+                        <!-- <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
                             offset-x>
                             <v-card color="grey lighten-4" min-width="350px" flat>
                                 <v-toolbar :color="selectedEvent.color" dark>
                                     <v-btn icon>
                                         <v-icon>mdi-pencil</v-icon>
-                                    </v-btn>
+                                    </v-btn> -->
                                     <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
-                                    <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                    <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
                                         <v-icon>mdi-heart</v-icon>
@@ -80,7 +80,7 @@
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
-                        </v-menu>
+                        </v-menu> -->
                     </v-sheet>
                 </v-col>
             </v-row>
@@ -553,7 +553,7 @@ export default {
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
                 // console.log(this.selectedElement);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]),this.mode = 'edit' ))//this.selectedOpen = true ))
             }
 
             if (this.selectedOpen) {
@@ -870,6 +870,7 @@ export default {
                 let item = [];
                 this.desserts = [];
                 this.events = [];
+                let index = 0;
                 // this.arrayEvents =[];
                 for (const key in childData) {
                     const keydata = childData[key];
@@ -913,6 +914,7 @@ export default {
                                             });
                                             this.events.push(
                                                 {
+                                                    array: index,
                                                     name: namesub,
                                                     start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
                                                         date.substring(8, 10), timedata.start.substring(0, 2),
@@ -924,6 +926,7 @@ export default {
                                                     timed: true,
                                                 },
                                             );
+                                            index++;
                                         }
                                     })
                             }
