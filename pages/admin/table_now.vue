@@ -9,16 +9,38 @@
                         <v-toolbar flat style="background-color: #EBE4DE;" class="rounded-t-xl">
                             <!-- Search Date Dropdown -->
                             <v-toolbar-title>
-                                <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
-                                    @change="search_date_student()"></v-select>
+                                <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date"
+                                    transition="scale-transition" offset-y min-width="auto">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-text-field v-model="date" label="วันที่เรียน" prepend-icon="mdi-calendar"
+                                            readonly v-bind="attrs" v-on="on" class="mt-10 ms-5"></v-text-field>
+                                    </template>
+                                    <v-date-picker v-model="date" no-title scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="menu = false">
+                                            Cancel
+                                        </v-btn>
+                                        <v-btn text color="primary" @click="$refs.menu.save(date), search_date_input()">
+                                            OK
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
                             </v-toolbar-title>
+                            <v-select :items="items" v-model="search_date" label="Search Date" class="mt-8 ms-5"
+                                @change="search_date_student(), date = null, search_table_student = null"
+                                style="max-width: 250px;">
+                            </v-select>
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <!-- Search Field -->
                             <v-text-field v-model="search_table_student" append-icon="mdi-magnify" label="Search"
-                                class="mt-10" single-line hide-details dense style="max-width: 200px;"></v-text-field>
-                            <v-btn class="ms-10 mt-10 me-4" @click="exportToExcel">
-                                export
+                                class="mt-10" single-line hide-details dense style="max-width: 200px;">
+                                </v-text-field>
+                            
+                            <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white"
+                                type="submit" rounded @click="exportToExcel()">
+                                Export
+                                <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>
                         </v-toolbar>
                         <!-- Hover Cards -->
@@ -54,7 +76,7 @@
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
                                             <p style="font-size: 16px; margin-top: -50px; color:white">
-                                                จำนวนักเรียนที่พร้อมเรียน</p>
+                                                จำนวนนักเรียนที่พร้อมเรียน</p>
                                         </v-col>
                                     </v-row>
                                 </v-card>
@@ -72,7 +94,7 @@
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
                                             <p style="font-size: 16px; margin-top: -50px; color:white">
-                                                จำนวนักเรียนที่รอยืนยัน</p>
+                                                จำนวนนักเรียนที่รอยืนยัน</p>
                                         </v-col>
                                     </v-row>
                                 </v-card>
@@ -231,6 +253,11 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 export default {
     data: () => ({
+        date: null,
+        menu: false,
+        modal: false,
+        menu2: false,
+
         dash_all: 0,
         dash_active: 0,
         dash_notactive: 0,
@@ -286,6 +313,11 @@ export default {
     },
 
     methods: {
+        search_date_input() {
+            this.search_date = 'All';
+            this.search_date_student();
+            this.search_table_student = this.date;
+        },
         getColor(stutus) {
             if (stutus === 'พร้อมเรียน') return '#29CC39'
             else if (stutus === 'รอยืนยัน') return '#FFCB33'
@@ -349,20 +381,20 @@ export default {
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                     const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                    Promise.all([getTeacherPromise, getStudentPromise ,getsubjectPromise,getlocationPromise])
-                                        .then(([teacherSnapshot, studentSnapshot ,subjectSnapshot ,locationSnapshot]) => {
+                                    Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                        .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
                                             const teacherData = teacherSnapshot.val();
                                             const studentData = studentSnapshot.val();
                                             const subjectData = subjectSnapshot.val();
                                             const locationData = locationSnapshot.val();
                                             item.push({
-                                                nametea_first : teacherData.firstName,
-                                                nametea_last : teacherData.lastName,
+                                                nametea_first: teacherData.firstName,
+                                                nametea_last: teacherData.lastName,
                                                 nickname_tea: teacherData.nickname,
-                                                namestu_first : studentData.firstName,
-                                                namestu_last : studentData.lastName,
+                                                namestu_first: studentData.firstName,
+                                                namestu_last: studentData.lastName,
                                                 nickname_stu: studentData.nickname,
-                                                name_student : "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                                 name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
                                                 subject: timedata.subject,
                                                 name_subject: subjectData.name,
@@ -407,7 +439,7 @@ export default {
         },
         exportToExcel() {
             // หัวข้อเอกสาร Excel
-            const headers = ['ชื่อจริงนักเรียน','นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู','วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'Class', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
+            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
 
             // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
             const data = [headers, ...this.desserts_student.map(item => [
