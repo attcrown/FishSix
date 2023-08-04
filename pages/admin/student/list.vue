@@ -4,14 +4,23 @@
         <v-row v-if="!isLoading">
             <div style="display: inline-flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน</v-btn>
+                <p> <v-btn class="text-white" @click="exportData" color="black" router exact>Export
+
+                        <v-icon color="white" x-small>mdi-arrow-down</v-icon>
+                        <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                    </v-btn>
+                    <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน
+                        <v-icon color="white">mdi-plus</v-icon>
+                    </v-btn>
+                </p>
+
             </div>
             <div class="col-sm-12">
                 <v-card-title>
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                         hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers" :items="formattedItems" :search="search">
+                <v-data-table :headers="headers" :items="items" :search="search">
                     <template v-slot:top>
 
 
@@ -65,7 +74,7 @@
                         <v-icon small color="#B6A7A2" class="mr-1 text-h6" @click="viewItem(item)">
                             mdi-eye
                         </v-icon>
-                        <v-icon small color="#B6A7A2" class="text-h6" @click="deleteItem(item)">
+                        <v-icon small color="red" class="text-h6" @click="deleteItem(item)">
                             mdi-delete
                         </v-icon>
                     </template>
@@ -100,19 +109,14 @@ export default {
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
-                { text: 'เวลาที่บันทึก', value: 'formattedCreatedAt' },
+
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
         }
     },
     computed: {
-        formattedItems() {
-            return this.items.map(item => ({
-                ...item,
-                formattedCreatedAt: this.formatDateToYYMMDD(item.stu.createdAt),
-            }));
-        },
+
     },
     watch: {
         dialog(val) {
@@ -134,6 +138,42 @@ export default {
 
         },
 
+        exportData() {
+            // หัวข้อเอกสาร Excel
+            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
+
+            // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
+            const data = [headers, ...this.items.map(item => [
+                item.namestu_first,
+                item.namestu_last,
+                item.nametea_first,
+                item.nametea_last,
+                item.subject,
+                item.date,
+                item.time_s,
+                item.time_e,
+                item.style,
+                item.status,
+                item.phone_student,
+                item.phone_teacher,
+                // item.class,
+                item.level,
+                item.because,
+            ])];
+
+            // สร้างเอกสาร Excel
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+            // แปลงข้อมูลให้เป็นรูปแบบไฟล์ Excel
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+            // สร้าง Blob และบันทึกไฟล์
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, 'data.xlsx');
+        },
+
         searchStudent() {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
@@ -143,7 +183,7 @@ export default {
                     if (childData[key].status == 'user') {
 
                         const stu = {
-                    
+
                             studentId: childData[key].studentId,
                             createdAt: childData[key].createdAt,
                             hourLeft: childData[key].hourLeft,
@@ -152,19 +192,21 @@ export default {
                             lastName: childData[key].lastName,
                             nickname: childData[key].nickname,
                             studentMobile: childData[key].studentMobile,
-                            
+
                             school: childData[key].school,
                             education: childData[key].education,
-                           
+
                             parentFirstName: childData[key].parentFirstName,
                             parentMobile: childData[key].parentMobile,
                             parentJob: childData[key].parentJob,
                             expectation: childData[key].expectation,
                         };
                         item.push({ key: key, stu });
+                        console.log(stu)
 
                     }
                 }
+
                 this.items = item;
                 this.isLoading = false;
             })

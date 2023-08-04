@@ -1006,7 +1006,7 @@ export default {
                 this.parentFirstName = childData.parentFirstName || null;
                 this.expectation = childData.expectation || null;
                 this.parentJob = childData.parentJob || null;
-                this.parentMobile = childData.studentMobile || null;
+                this.parentMobile = childData.parentMobile || null;
 
 
                 try {

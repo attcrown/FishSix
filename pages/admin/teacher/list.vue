@@ -4,7 +4,9 @@
         <v-row v-if="!isLoading">
             <div style="display: inline-flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลครู</h1>
-                <v-btn class="text-white" to="/admin/teacher/register" color="black" router exact>เพิ่มครู</v-btn>
+                <v-btn class="text-white" to="/admin/teacher/register" color="black" router exact>เพิ่มครู
+                    <v-icon color="white">mdi-plus</v-icon>
+                </v-btn>
             </div>
 
             <div class="col-sm-12">
