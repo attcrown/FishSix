@@ -2,8 +2,8 @@
     <div class="mx-5">
         <v-row>
             <v-col cols="12">
-                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date"
-                :items-per-page="-1" :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
+                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="-1"
+                    :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
                     <template v-slot:top>
                         <!-- Toolbar section -->
                         <v-toolbar flat style="background-color: #EBE4DE;" class="rounded-t-xl">
@@ -15,19 +15,20 @@
                                         <v-text-field v-model="date" label="วันที่เรียน" prepend-icon="mdi-calendar"
                                             readonly v-bind="attrs" v-on="on" class="mt-10 ms-5"></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="date" no-title scrollable>
+                                    <v-date-picker v-model="date" :events="arrayEvents" event-color="green lighten-1" no-title scrollable>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="menu = false">
                                             Cancel
                                         </v-btn>
-                                        <v-btn text color="primary" @click="$refs.menu.save(date), search_date_input(), search_date =null ,search_table_student = null">
+                                        <v-btn text color="primary"
+                                            @click="$refs.menu.save(date), search_date_student(), search_date = null, search_table_student = null">
                                             OK
                                         </v-btn>
                                     </v-date-picker>
                                 </v-menu>
                             </v-toolbar-title>
                             <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
-                                @change="search_date_student(), date = null, search_table_student = null"
+                                @input="date = null, search_table_student = null, search_date_student()"
                                 style="max-width: 250px;">
                             </v-select>
                             <v-divider class="mx-4" inset vertical></v-divider>
@@ -35,10 +36,10 @@
                             <!-- Search Field -->
                             <v-text-field v-model="search_table_student" append-icon="mdi-magnify" label="Search"
                                 class="mt-10" single-line hide-details dense style="max-width: 200px;">
-                                </v-text-field>
-                            
-                            <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white"
-                                type="submit" rounded @click="exportToExcel()">
+                            </v-text-field>
+
+                            <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
+                                rounded @click="exportToExcel()">
                                 Export
                                 <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>
@@ -109,11 +110,11 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <!-- <v-btn text color="secondary"  class="text-center"> -->
-                            <v-icon small class="mr-2 text-h6" color="#B6A7A2" @click="detail_match(item)">
+                        <v-btn text icon elevation="5" @click="detail_match(item)">
+                            <v-icon class="text-h5" color="#B6A7A2">
                                 mdi-eye
                             </v-icon>
-                        <!-- </v-btn> -->
+                        </v-btn>
                     </template>
                 </v-data-table>
             </v-col>
@@ -290,6 +291,7 @@ export default {
         ],
         desserts_student: [],
         editedIndex: -1,
+        arrayEvents: [],
     }),
 
     computed: {
@@ -308,7 +310,8 @@ export default {
     },
 
     created() {
-        this.search_date_student()
+        this.search_date_student();
+        this.arrayEvent_search();
     },
 
     methods: {
@@ -327,6 +330,20 @@ export default {
             // console.log(item);
         },
 
+        arrayEvent_search() {
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                this.arrayEvents = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    for (const date in keydata) {
+                        this.arrayEvents.push(date);
+                    }
+                }
+            })
+        },
+
         search_date_student() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -339,7 +356,7 @@ export default {
                 let now = new Date();
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
-                let edit = '';               
+                let edit = '';
                 if (this.search_date == 'Day') {
                     end = now;
                 } else if (this.search_date == 'Week') {
@@ -360,9 +377,9 @@ export default {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
                     now = new Date('2022-01-01');
-                }else {
+                } else {
                     end = now;
-                }                
+                }
 
                 for (const key in childData) {
                     const keydata = childData[key];
@@ -393,6 +410,9 @@ export default {
                                                 nickname_stu: studentData.nickname,
                                                 name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                                 name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                teacherId:teacherData.teacherId,
+                                                studentId: studentData.studentId,
+                                                teachernickname: teacherData.nickname,
                                                 subject: timedata.subject,
                                                 name_subject: subjectData.name,
                                                 date: date,
@@ -427,7 +447,7 @@ export default {
                                         });
                                 }
                             }
-                        }else{
+                        } else {
                             if (new Date(date).getTime().toString().substring(0, 5) >= new Date(this.date).getTime().toString().substring(0, 5) &&
                                 new Date(date).getTime().toString().substring(0, 5) <= new Date(this.date).getTime().toString().substring(0, 5)) {
                                 for (const time in datedata) {
@@ -494,26 +514,23 @@ export default {
         },
         exportToExcel() {
             // หัวข้อเอกสาร Excel
-            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
+            let newdate = new Date().getFullYear()+' '+(parseInt(new Date().getMonth())+1)+' '+new Date().getDate();
+            const headers = [ 'วันที่','เริ่มเรียน','เลิกเรียน','รหัสครู','ชื่อเล่นครู','รหัสนักเรียน','ชื่อจริงน้อง','นามสกุลน้อง','ชื่อเล่นน้อง','วิชาที่เรียน'];
 
             // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
             const data = [headers, ...this.desserts_student.map(item => [
-                item.namestu_first,
-                item.namestu_last,
-                item.nametea_first,
-                item.nametea_last,
-                item.subject,
                 item.date,
                 item.time_s,
                 item.time_e,
-                item.style,
-                item.status,
-                item.phone_student,
-                item.phone_teacher,
-                // item.class,
-                item.level,
-                item.because,
+                item.teacherId,
+                item.teachernickname,
+                item.studentId,
+                item.namestu_first,
+                item.namestu_last,
+                item.nickname_stu,
+                item.name_subject,                
             ])];
+            console.log(data);
 
             // สร้างเอกสาร Excel
             const workbook = XLSX.utils.book_new();
@@ -525,7 +542,7 @@ export default {
 
             // สร้าง Blob และบันทึกไฟล์
             const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, 'data.xlsx');
+            saveAs(blob, `${newdate}-dashboard.xlsx`);
         },
 
     },

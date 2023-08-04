@@ -45,13 +45,18 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" class="mr-2 text-h6"
-                                @click="editItem(item), dialog_detail = true, mode = 'edit'" color="#B6A7A2">
-                                mdi-pencil
-                            </v-icon>
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" @click="deleteItem(item)" class="text-h6" color="#B6A7A2">
-                                mdi-delete
-                            </v-icon>
+                            <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'" v-if="!(parseInt(item.invite) > 0)">
+                                <v-icon  class="text-h5"
+                                    color="#26415B">
+                                    mdi-pencil
+                                </v-icon>
+                            </v-btn>
+                            <v-btn text icon elevation="5" @click="deleteItem(item)" v-if="!(parseInt(item.invite) > 0)">
+                                <v-icon   class="text-h5"
+                                    color="#AD382F">
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -63,7 +68,8 @@
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
                         <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8"><b>{{ mode }} Teach [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'save'"><b>เพิ่มตารางสอน [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'edit'"><b>แก้ไขตารางสอน [{{ date1 }}]</b></span>
                         </v-card-title>
                         <v-card-text>
                             <v-container>
@@ -198,15 +204,14 @@
 
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
-                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.842)">
-                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> <b>เพิ่มตารางสอน</b></v-card-title>
+                <v-card class="px-3 text-center rounded-xl" style="background-color: rgba(247, 245, 245, 0.842)" >
+                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> เลือกวันที่สอน</v-card-title>
                     <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn>
+                        
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -397,6 +402,7 @@ export default {
                 });
                 this.clear_item();
                 this.dialog_detail = false;
+                this.dialog_select_date = false;
             }
             const getTimePromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise])
@@ -426,6 +432,7 @@ export default {
                                 };
                                 this.clear_item();
                                 this.dialog_detail = false;
+                                this.dialog_select_date = false;
                             }
                         }
                     } else {
@@ -447,6 +454,7 @@ export default {
                             };
                             this.clear_item();
                             this.dialog_detail = false;
+                            this.dialog_select_date = false;
                         }
                     }
                 })
@@ -620,7 +628,7 @@ export default {
                     const detail = key.split(":");
                     if (detail[4] == this.delcon.IdTime) {
                         db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}/${key}`).remove();
-                        console.log('ลบ',key,detail[4]);
+                        console.log('ลบ', key, detail[4]);
                     }
                 }
             })

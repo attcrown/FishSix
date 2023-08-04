@@ -56,9 +56,17 @@
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
+            <!-- <v-btn color="amber darken-3" small outlined>
+                <v-icon center class="text-h6" @click="editItem(item)">
+                    mdi-pencil
+                </v-icon>
+            </v-btn> -->
+            <v-btn text icon elevation="5" @click="editItem(item)">
+                <v-icon class="text-h5" color="#26415B" >
                 mdi-pencil
             </v-icon>
+            </v-btn>
+            
             <!-- <v-icon small @click="deleteItem(item)">
                 mdi-delete
             </v-icon> -->

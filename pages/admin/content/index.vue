@@ -47,7 +47,7 @@
 
                 </v-toolbar>
             </template>
-
+            <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2"  @click="viewItem(item)">
                     mdi-eye

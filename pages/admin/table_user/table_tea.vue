@@ -61,8 +61,8 @@
                                     <v-btn icon>
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn> -->
-                                    <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
-                                    <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                        <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
                                         <v-icon>mdi-heart</v-icon>
@@ -135,9 +135,12 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <v-icon xl class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
-                            mdi-plus-box-multiple
-                        </v-icon>
+                        <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                            <v-icon class="text-h5">
+                                mdi-plus-box-multiple
+                            </v-icon>
+                        </v-btn>
+
                     </template>
                 </v-data-table>
             </v-col>
@@ -149,7 +152,8 @@
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
                         <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8"><b>ADD Teach [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'save'"><b>จองเวลาเรียนนอกตาราง [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'edit'"><b>จองเวลาเรียน [{{ date1 }}]</b></span>
                         </v-card-title>
                         <v-card-text>
                             <v-container>
@@ -267,7 +271,7 @@
             </v-row>
         </template>
 
-        <template>
+        <!-- <template>
             <v-row justify="center">
                 <v-dialog v-model="dialog_time" persistent max-width="400px">
                     <v-card class="rounded-xl">
@@ -315,7 +319,7 @@
                     </v-card>
                 </v-dialog>
             </v-row>
-        </template>
+        </template> -->
 
         <template>
             <v-dialog v-model="dialog_save_error" max-width="500px">
@@ -333,15 +337,15 @@
 
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
-                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.842)">
-                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> <b>เพิ่มตารางสอน</b></v-card-title>
+                <v-card class="px-3 text-center rounded-xl" style="background-color: rgba(247, 245, 245, 0.842)">
+                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span>เลือกวันที่เรียน</v-card-title>
                     <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn>
+                        <!-- <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn> -->
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -553,7 +557,7 @@ export default {
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
                 // console.log(this.selectedElement);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]),this.mode = 'edit' ))//this.selectedOpen = true ))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]), this.mode = 'edit'))//this.selectedOpen = true ))
             }
 
             if (this.selectedOpen) {
@@ -594,19 +598,43 @@ export default {
 
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
-            Promise.all([getTimePromise,getTimeTeaPromise])
-                .then(([timeSnapshot ,timeteaSnapshot]) => {
+            Promise.all([getTimePromise, getTimeTeaPromise])
+                .then(([timeSnapshot, timeteaSnapshot]) => {
                     if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
-                        const timeData = timeSnapshot.val();
-                        const timeteaData = timeteaSnapshot.val();
-                        const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                        const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
-                        if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        } else if(this.time_standart_sum.some(time => ed_timeteaData.includes(time))){
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        }else{
+                        // if (timeSnapshot.exists()) {
+                        //     const timeData = timeSnapshot.val();
+                        //     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                        //     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        //         return;
+                        //     }
+                        // } 
+                        // if (timeteaSnapshot.exists()) {
+                        //     const timeteaData = timeteaSnapshot.val();
+                        //     const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                        //     if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
+                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        //         return;
+                        //     }
+                        // }
+                        if (true) {
                             if (this.mode === 'save') {
+                                if (timeSnapshot.exists()) {
+                                    const timeData = timeSnapshot.val();
+                                    const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
+                                if (timeteaSnapshot.exists()) {
+                                    const timeteaData = timeteaSnapshot.val();
+                                    const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
                                 db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                                     teacher: this.value,
                                     subject: this.save_detail.subject,
@@ -627,6 +655,14 @@ export default {
                                     });
                                 };
                             } else if (this.mode === 'edit') {
+                                if (timeSnapshot.exists()) {
+                                    const timeData = timeSnapshot.val();
+                                    const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
                                 console.log(this.save_detail);
                                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
@@ -662,6 +698,7 @@ export default {
                             }
                             this.clear_item();
                             this.dialog_detail = false;
+                            this.dialog_select_date = false;
                         }
                     } else {
                         if (this.mode === 'save') {
@@ -682,7 +719,7 @@ export default {
                             for (const key in this.time_standart_sum) {
                                 db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
                                     0: ''
-                                });                               
+                                });
                             };
                         } else if (this.mode === 'edit') {
                             console.log(this.save_detail);
@@ -720,6 +757,7 @@ export default {
                         }
                         this.clear_item();
                         this.dialog_detail = false;
+                        this.dialog_select_date = false;
                     }
                 })
         },
@@ -876,13 +914,12 @@ export default {
                 this.desserts = [];
                 this.events = [];
                 let index = 0;
-                // this.arrayEvents =[];
+                this.arrayEvents = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
                             const datedata = keydata[date];
-                            // this.arrayEvents.push(date);
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
@@ -932,6 +969,7 @@ export default {
                                                 },
                                             );
                                             index++;
+                                            this.arrayEvents.push(date);
                                         }
                                     })
                             }
