@@ -248,7 +248,7 @@ export default {
                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
-                                        const studentData = studentSnapshot.val();
+                                        const studentData = studentSnapshot.val();ad
                                         const subjectData = subjectSnapshot.val();
                                         const locationData = locationSnapshot.val();
                                         item.push({
