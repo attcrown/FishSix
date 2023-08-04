@@ -591,7 +591,7 @@ export default {
                             status: "พร้อมเรียน",
                             ID: id
                         });
-                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
+                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).set({
                             invite: '1',
                             sum_people: '1',
                             subject: this.editedItem.subject,
