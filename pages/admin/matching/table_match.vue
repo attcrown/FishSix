@@ -576,7 +576,7 @@ export default {
                         }
                     }
                     if (true) {
-                        let id = new Date().getTime();
+                        let id = this.editedItem.id;
                         db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).set({
                             teacher: this.editedItem.key_teacher,
                             subject: this.editedItem.subject,
