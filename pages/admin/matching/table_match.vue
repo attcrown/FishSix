@@ -552,21 +552,21 @@ export default {
         },
 
         save() {
-            // console.log('update>>', this.editedItem ,this.date);
+            console.log('update>>', this.editedItem ,this.date);
             this.validateTime();
             const db = this.$fireModule.database();
             const getTimePromise = db.ref(`Time_student/${this.editedItem.key_student}/${this.date}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}`).once("value");
             Promise.all([getTimePromise, getTimeTeaPromise])
                 .then(([timeSnapshot, timeteaSnapshot]) => {
-                    if (timeSnapshot.exists()) {
-                        const timeData = timeSnapshot.val();
-                        const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                        if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                            return;
-                        }
-                    }
+                    // if (timeSnapshot.exists()) {
+                    //     const timeData = timeSnapshot.val();
+                    //     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                    //     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                    //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                    //         return;
+                    //     }
+                    // }
                     if (timeteaSnapshot.exists()) {
                         const timeteaData = timeteaSnapshot.val();
                         const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
@@ -577,7 +577,7 @@ export default {
                     }
                     if (true) {
                         let id = new Date().getTime();
-                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
+                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).set({
                             teacher: this.editedItem.key_teacher,
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
@@ -612,7 +612,9 @@ export default {
                                 0: ""
                             });
                         };
-                        this.delete_match();
+                        if(this.date != this.old_item.date){
+                            this.delete_match();
+                        }
                         this.close();
                     }
                 })
