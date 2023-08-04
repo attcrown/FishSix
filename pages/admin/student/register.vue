@@ -980,9 +980,8 @@ export default {
            
             for (const key in lastStudent) {
                 
-                
        
-            if (lastStudent[key].status == 'admin' || !lastStudent) {
+            if (lastStudent[key].status == 'admin' ||lastStudent[key].status == 'teacher' || !lastStudent) {
                 const currentYear = new Date().getFullYear().toString().slice(-2);
                 const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
                 this.studentId = `FSS${currentYear}${currentMonth}0001`;
