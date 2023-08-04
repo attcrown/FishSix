@@ -257,11 +257,11 @@
                         </v-icon>
                     </v-btn> -->
                     <v-btn text icon elevation="5" @click="editItem(item)">
-                        <v-icon class="text-h5" color="#26415B" >
-                        mdi-pencil
-                    </v-icon>
+                        <v-icon class="text-h5" color="#26415B">
+                            mdi-pencil
+                        </v-icon>
                     </v-btn>
-                    
+
                 </template>
                 <template v-slot:no-data>
                     <v-btn color="primary" @click="initialize">
@@ -553,46 +553,70 @@ export default {
 
         save() {
             // console.log('update>>', this.editedItem ,this.date);
-            this.delete_match();
             this.validateTime();
-            let id = new Date().getTime();
             const db = this.$fireModule.database();
-            db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
-                teacher: this.editedItem.key_teacher,
-                subject: this.editedItem.subject,
-                style_subject: this.editedItem.style,
-                level: this.editedItem.level,
-                // class: this.editedItem.class,
-                start: this.editedItem.time_s,
-                stop: this.editedItem.time_e,
-                start_tea: this.editedItem.time_s,
-                stop_tea: this.editedItem.time_e,
-                because: this.editedItem.because,
-                status: "พร้อมเรียน",
-                ID: id
-            });
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
-                invite: '1',
-                sum_people: '1',
-                subject: this.editedItem.subject,
-                style_subject: this.editedItem.style,
-                // class: this.editedItem.class,
-                start: this.editedItem.time_s,
-                stop: this.editedItem.time_e,
-                ID: id
-            });
+            const getTimePromise = db.ref(`Time_student/${this.editedItem.key_student}/${this.date}`).once("value");
+            const getTimeTeaPromise = db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}`).once("value");
+            Promise.all([getTimePromise, getTimeTeaPromise])
+                .then(([timeSnapshot, timeteaSnapshot]) => {
+                    if (timeSnapshot.exists()) {
+                        const timeData = timeSnapshot.val();
+                        const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                        if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                            return;
+                        }
+                    }
+                    if (timeteaSnapshot.exists()) {
+                        const timeteaData = timeteaSnapshot.val();
+                        const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                        if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
+                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                            return;
+                        }
+                    }
+                    if (true) {
+                        let id = new Date().getTime();
+                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
+                            teacher: this.editedItem.key_teacher,
+                            subject: this.editedItem.subject,
+                            style_subject: this.editedItem.style,
+                            level: this.editedItem.level,
+                            // class: this.editedItem.class,
+                            start: this.editedItem.time_s,
+                            stop: this.editedItem.time_e,
+                            start_tea: this.editedItem.time_s,
+                            stop_tea: this.editedItem.time_e,
+                            because: this.editedItem.because,
+                            status: "พร้อมเรียน",
+                            ID: id
+                        });
+                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
+                            invite: '1',
+                            sum_people: '1',
+                            subject: this.editedItem.subject,
+                            style_subject: this.editedItem.style,
+                            // class: this.editedItem.class,
+                            start: this.editedItem.time_s,
+                            stop: this.editedItem.time_e,
+                            ID: id
+                        });
 
-            for (const key in this.time_standart_sum) {
-                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
-                    0: this.editedItem.key_student
-                });
-            };
-            for (const key in this.time_standart_sum) {
-                db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
-                    0: ""
-                });
-            };
-            this.close();
+                        for (const key in this.time_standart_sum) {
+                            db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
+                                0: this.editedItem.key_student
+                            });
+                        };
+                        for (const key in this.time_standart_sum) {
+                            db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
+                                0: ""
+                            });
+                        };
+                        this.delete_match();
+                        this.close();
+                    }
+                })
+
         },
 
         delete_match() {
@@ -612,7 +636,7 @@ export default {
                     }
                 }
             });
-            this.close();
+            // this.close();
         },
 
         getColor(stutus) {

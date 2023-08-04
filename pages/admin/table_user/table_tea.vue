@@ -61,8 +61,8 @@
                                     <v-btn icon>
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn> -->
-                                    <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
-                                    <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                        <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
                                         <v-icon>mdi-heart</v-icon>
@@ -136,11 +136,11 @@
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
                         <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'">
-                            <v-icon class="text-h5" >
-                            mdi-plus-box-multiple
-                        </v-icon>
+                            <v-icon class="text-h5">
+                                mdi-plus-box-multiple
+                            </v-icon>
                         </v-btn>
-                        
+
                     </template>
                 </v-data-table>
             </v-col>
@@ -557,7 +557,7 @@ export default {
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
                 // console.log(this.selectedElement);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]),this.mode = 'edit' ))//this.selectedOpen = true ))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]), this.mode = 'edit'))//this.selectedOpen = true ))
             }
 
             if (this.selectedOpen) {
@@ -598,26 +598,43 @@ export default {
 
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
-            Promise.all([getTimePromise,getTimeTeaPromise])
-                .then(([timeSnapshot ,timeteaSnapshot]) => {
+            Promise.all([getTimePromise, getTimeTeaPromise])
+                .then(([timeSnapshot, timeteaSnapshot]) => {
                     if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
-                        if(timeSnapshot.exists()){
-                            const timeData = timeSnapshot.val();
-                            const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                            if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                                alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                                return;
-                            }
-                        }if(timeteaSnapshot.exists()){
-                            const timeteaData = timeteaSnapshot.val();                        
-                            const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
-                            if(this.time_standart_sum.some(time => ed_timeteaData.includes(time))){
-                                alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                                return;
-                            }
-                        }                       
-                        if(true){
+                        // if (timeSnapshot.exists()) {
+                        //     const timeData = timeSnapshot.val();
+                        //     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                        //     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        //         return;
+                        //     }
+                        // } 
+                        // if (timeteaSnapshot.exists()) {
+                        //     const timeteaData = timeteaSnapshot.val();
+                        //     const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                        //     if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
+                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        //         return;
+                        //     }
+                        // }
+                        if (true) {
                             if (this.mode === 'save') {
+                                if (timeSnapshot.exists()) {
+                                    const timeData = timeSnapshot.val();
+                                    const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
+                                if (timeteaSnapshot.exists()) {
+                                    const timeteaData = timeteaSnapshot.val();
+                                    const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
                                 db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                                     teacher: this.value,
                                     subject: this.save_detail.subject,
@@ -638,6 +655,14 @@ export default {
                                     });
                                 };
                             } else if (this.mode === 'edit') {
+                                if (timeSnapshot.exists()) {
+                                    const timeData = timeSnapshot.val();
+                                    const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                                    if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        return;
+                                    }
+                                }
                                 console.log(this.save_detail);
                                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
@@ -694,7 +719,7 @@ export default {
                             for (const key in this.time_standart_sum) {
                                 db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
                                     0: ''
-                                });                               
+                                });
                             };
                         } else if (this.mode === 'edit') {
                             console.log(this.save_detail);
@@ -889,12 +914,12 @@ export default {
                 this.desserts = [];
                 this.events = [];
                 let index = 0;
-                this.arrayEvents =[];
+                this.arrayEvents = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
-                            const datedata = keydata[date];                            
+                            const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
