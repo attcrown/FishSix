@@ -414,6 +414,7 @@ export default {
                 this.desserts_student = [];
                 let item = [];
                 let index = 0;
+                this.events= [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -574,7 +575,9 @@ export default {
             });
 
             for (const key in this.time_standart_sum) {
-                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/${this.editedItem.key_student}`).update({});
+                db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
+                    0: this.editedItem.key_student
+                });
             };
             for (const key in this.time_standart_sum) {
                 db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({

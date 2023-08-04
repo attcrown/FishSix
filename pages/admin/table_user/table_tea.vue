@@ -593,14 +593,19 @@ export default {
             const db = this.$fireModule.database();
 
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
-            Promise.all([getTimePromise])
-                .then(([timeSnapshot]) => {
-                    if (timeSnapshot.exists()) {
+            const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
+            Promise.all([getTimePromise,getTimeTeaPromise])
+                .then(([timeSnapshot ,timeteaSnapshot]) => {
+                    if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
                         const timeData = timeSnapshot.val();
+                        const timeteaData = timeteaSnapshot.val();
                         const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                        const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
                         if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                            alert('ใส่เวลาไม่ถูกต้องกรุณาลงใหม่อีกครั้ง');
-                        } else {
+                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        } else if(this.time_standart_sum.some(time => ed_timeteaData.includes(time))){
+                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                        }else{
                             if (this.mode === 'save') {
                                 db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                                     teacher: this.value,
