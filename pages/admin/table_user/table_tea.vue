@@ -597,15 +597,22 @@ export default {
             Promise.all([getTimePromise,getTimeTeaPromise])
                 .then(([timeSnapshot ,timeteaSnapshot]) => {
                     if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
-                        const timeData = timeSnapshot.val();
-                        const timeteaData = timeteaSnapshot.val();
-                        const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                        const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
-                        if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        } else if(this.time_standart_sum.some(time => ed_timeteaData.includes(time))){
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        }else{
+                        if(timeSnapshot.exists()){
+                            const timeData = timeSnapshot.val();
+                            const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
+                            if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
+                                alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                return;
+                            }
+                        }if(timeteaSnapshot.exists()){
+                            const timeteaData = timeteaSnapshot.val();                        
+                            const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
+                            if(this.time_standart_sum.some(time => ed_timeteaData.includes(time))){
+                                alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                return;
+                            }
+                        }                       
+                        if(true){
                             if (this.mode === 'save') {
                                 db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
                                     teacher: this.value,
