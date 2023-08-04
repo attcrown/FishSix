@@ -410,6 +410,9 @@ export default {
                                                 nickname_stu: studentData.nickname,
                                                 name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                                 name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                teacherId:teacherData.teacherId,
+                                                studentId: studentData.studentId,
+                                                teachernickname: teacherData.nickname,
                                                 subject: timedata.subject,
                                                 name_subject: subjectData.name,
                                                 date: date,
@@ -511,26 +514,23 @@ export default {
         },
         exportToExcel() {
             // หัวข้อเอกสาร Excel
-            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
+            let newdate = new Date().getFullYear()+' '+(parseInt(new Date().getMonth())+1)+' '+new Date().getDate();
+            const headers = [ 'วันที่','เริ่มเรียน','เลิกเรียน','รหัสครู','ชื่อเล่นครู','รหัสนักเรียน','ชื่อจริงน้อง','นามสกุลน้อง','ชื่อเล่นน้อง','วิชาที่เรียน'];
 
             // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
             const data = [headers, ...this.desserts_student.map(item => [
-                item.namestu_first,
-                item.namestu_last,
-                item.nametea_first,
-                item.nametea_last,
-                item.subject,
                 item.date,
                 item.time_s,
                 item.time_e,
-                item.style,
-                item.status,
-                item.phone_student,
-                item.phone_teacher,
-                // item.class,
-                item.level,
-                item.because,
+                item.teacherId,
+                item.teachernickname,
+                item.studentId,
+                item.namestu_first,
+                item.namestu_last,
+                item.nickname_stu,
+                item.name_subject,                
             ])];
+            console.log(data);
 
             // สร้างเอกสาร Excel
             const workbook = XLSX.utils.book_new();
@@ -542,7 +542,7 @@ export default {
 
             // สร้าง Blob และบันทึกไฟล์
             const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, 'data.xlsx');
+            saveAs(blob, `${newdate}-dashboard.xlsx`);
         },
 
     },
