@@ -939,8 +939,8 @@ export default {
 
             const snapshot = await db.ref('user').orderByChild('teacherId').limitToLast(1).once('value');
             const lastTeacher = snapshot.val();
-
-            if (!lastTeacher) {
+            for (const key in lastTeacher) {
+            if (lastTeacher[key].status == 'admin' ||!lastTeacher) {
                 this.teacherId = 'FS0001';
                 return;
             } else {
@@ -950,14 +950,16 @@ export default {
                 const nextId = `FS${String(numericPart).padStart(4, '0')}`;
                 this.teacherId = nextId;
 
-            }
+            }}
 
         },
 
 
         updateUsername() {
             if (this.firstNameEng) {
-                const num = parseInt(this.teacherId.slice(2), 10);
+                
+                const num = this.teacherId.slice(2);
+         
                 this.name = this.firstNameEng + num;
                 this.password = this.firstNameEng + num;
             }

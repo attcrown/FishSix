@@ -319,30 +319,33 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                     </v-col>
 
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_houseNo" label="บ้านเลขที่" :disabled="isAddressSame"
-                                            v-model="currAddress.houseNo"></v-text-field>
+                                        <v-text-field class="black-label" name="curr_houseNo" label="บ้านเลขที่"
+                                            :disabled="isAddressSame" v-model="currAddress.houseNo"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-autocomplete v-if="!isAddressSame" class="black-label" v-model="selectedCurrTambon"
-                                            :items="currTambons" :item-value="currTambonValue" item-text="name_th"
-                                            :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
-                                            @update:search-input="fetchCurrTambons" label="ตำบล"></v-autocomplete>
-                                            <v-text-field  v-if="isAddressSame" class="black-label" name="curr_tambon" label="ตำบล" :disabled="isAddressSame"
+                                        <v-autocomplete v-if="!isAddressSame" class="black-label"
+                                            v-model="selectedCurrTambon" :items="currTambons" :item-value="currTambonValue"
+                                            item-text="name_th" :search-input.sync="searchCurrTambon"
+                                            no-data-text="กรุณากรอกชื่อตำบล" @update:search-input="fetchCurrTambons"
+                                            label="ตำบล"></v-autocomplete>
+                                        <v-text-field v-if="isAddressSame" class="black-label" name="curr_tambon"
+                                            label="ตำบล" :disabled="isAddressSame"
                                             v-model="currAddress.tambon"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_amphoe" label="อำเภอ/เขต" :disabled="isAddressSame"
-                                            v-model="currAddress.amphoe"></v-text-field>
+                                        <v-text-field class="black-label" name="curr_amphoe" label="อำเภอ/เขต"
+                                            :disabled="isAddressSame" v-model="currAddress.amphoe"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
 
-                                        <v-text-field class="black-label" name="province" v-model="currAddress.province" :disabled="isAddressSame"
-                                            readonly label="จังหวัด"></v-text-field>
+                                        <v-text-field class="black-label" name="province" v-model="currAddress.province"
+                                            :disabled="isAddressSame" readonly label="จังหวัด"></v-text-field>
 
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="curr_postal" label="รหัสไปรษณีย์" :disabled="isAddressSame"
-                                            :rules="postalRules" v-model="currAddress.postal"></v-text-field>
+                                        <v-text-field class="black-label" name="curr_postal" label="รหัสไปรษณีย์"
+                                            :disabled="isAddressSame" :rules="postalRules"
+                                            v-model="currAddress.postal"></v-text-field>
                                     </v-col>
 
                                 </v-row>
@@ -476,7 +479,7 @@ export default {
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
-            isAddressSame:false,
+            isAddressSame: false,
             //register field
             createdAt: null,
             status: "user",
@@ -531,7 +534,7 @@ export default {
 
 
             //api
-            
+
             tambons: [],
             currTambons: [],
             amphoes: [],
@@ -591,7 +594,7 @@ export default {
                     { id: "grade12", educationName: "ม.6" },
                 ],
 
-           
+
         }
     },
     mixins: [validationMixin],
@@ -803,18 +806,18 @@ export default {
     },
     methods: {
         updateCurrAddress() {
-            if(this.isAddressSame){
+            if (this.isAddressSame) {
 
-                this.currAddress = {houseNo:null, tambon: null, amphoe: null, province: null, postal: null};
+                this.currAddress = { houseNo: null, tambon: null, amphoe: null, province: null, postal: null };
                 this.isAddressSame = false;
-            
+
             }
-            else{
+            else {
                 this.isAddressSame = true;
             }
 
             if (this.address) {
-              
+
                 this.currAddress = { ...this.address };
 
             } else {
@@ -831,7 +834,7 @@ export default {
         },
         submit() {
             this.$v.$touch()
-          
+
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
                 && this.firstNameEngErrors == 0 && this.lastNameEngErrors == 0
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0
@@ -854,7 +857,7 @@ export default {
 
         updateUsername() {
             if (this.firstNameEng) {
-                const num = parseInt(this.studentId.slice(3), 10);
+                const num = this.studentId.slice(3);
                 this.name = this.firstNameEng + num;
                 this.password = this.firstNameEng + num;
             }
@@ -974,7 +977,12 @@ export default {
 
             const snapshot = await db.ref('user').orderByChild('studentId').limitToLast(1).once('value');
             const lastStudent = snapshot.val();
-            if (!lastStudent) {
+           
+            for (const key in lastStudent) {
+                
+                
+       
+            if (lastStudent[key].status == 'admin' || !lastStudent) {
                 const currentYear = new Date().getFullYear().toString().slice(-2);
                 const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
                 this.studentId = `FSS${currentYear}${currentMonth}0001`;
@@ -992,7 +1000,7 @@ export default {
                 this.studentId = nextId;
 
 
-            }
+            }}
         },
 
         async fetchProvince() {
@@ -1079,7 +1087,7 @@ export default {
                         const tambonsData = snapshot.val();
 
                         this.tambons = [];
-                       
+
                         for (const key in tambonsData) {
                             const tambonData = tambonsData[key];
                             const item = {
@@ -1176,7 +1184,7 @@ export default {
             const tambonsRef = db.ref(`RECORDS_tambons/`);
             if (this.searchCurrTambon) {
                 tambonsRef
-                    .orderByChild("name_th") 
+                    .orderByChild("name_th")
                     .startAt(this.searchCurrTambon)
                     .endAt(this.searchCurrTambon + "\uf8ff")
                     .once("value")
@@ -1265,5 +1273,4 @@ export default {
 .upload-label:hover {
     color: var(--brown-brown-1, #322E2B);
     background-color: #ffffff;
-}
-</style>
+}</style>
