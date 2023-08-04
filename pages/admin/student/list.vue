@@ -4,14 +4,23 @@
         <v-row v-if="!isLoading">
             <div style="display: inline-flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน</v-btn>
+                <p> <v-btn class="text-white" @click="exportData" color="black" router exact>Export
+
+                        <v-icon color="white" x-small>mdi-arrow-down</v-icon>
+                        <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                    </v-btn>
+                    <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน
+                        <v-icon color="white">mdi-plus</v-icon>
+                    </v-btn>
+                </p>
+
             </div>
             <div class="col-sm-12">
                 <v-card-title>
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                         hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers" :items="formattedItems" :search="search">
+                <v-data-table :headers="headers" :items="items" :search="search">
                     <template v-slot:top>
 
 
@@ -105,18 +114,13 @@ export default {
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
                 { text: 'เวลาที่บันทึก', value: 'formattedCreatedAt' },
-                { text: 'Actions', value: 'actions', sortable: false ,align: 'center'},
+                { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
         }
     },
     computed: {
-        formattedItems() {
-            return this.items.map(item => ({
-                ...item,
-                formattedCreatedAt: this.formatDateToYYMMDD(item.stu.createdAt),
-            }));
-        },
+
     },
     watch: {
         dialog(val) {
@@ -136,6 +140,42 @@ export default {
         viewItem(item) {
             this.$router.push({ path: 'student/detail', query: { userId: item.key } });
 
+        },
+
+        exportData() {
+            // หัวข้อเอกสาร Excel
+            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
+
+            // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
+            const data = [headers, ...this.items.map(item => [
+                item.namestu_first,
+                item.namestu_last,
+                item.nametea_first,
+                item.nametea_last,
+                item.subject,
+                item.date,
+                item.time_s,
+                item.time_e,
+                item.style,
+                item.status,
+                item.phone_student,
+                item.phone_teacher,
+                // item.class,
+                item.level,
+                item.because,
+            ])];
+
+            // สร้างเอกสาร Excel
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+            // แปลงข้อมูลให้เป็นรูปแบบไฟล์ Excel
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+            // สร้าง Blob และบันทึกไฟล์
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, 'data.xlsx');
         },
 
         searchStudent() {
@@ -166,9 +206,11 @@ export default {
                             expectation: childData[key].expectation,
                         };
                         item.push({ key: key, stu });
+                        console.log(stu)
 
                     }
                 }
+
                 this.items = item;
                 this.isLoading = false;
             })
