@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-5">
+    <div class="mx-15">
         <h3 style="font-size:32px"><b>รายวิชา</b></h3>
         <v-row class="pt-5">
             <v-col cols="12" sm="12">

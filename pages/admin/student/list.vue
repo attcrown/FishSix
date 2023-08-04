@@ -62,12 +62,16 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <v-icon small color="#B6A7A2" class="mr-1 text-h6" @click="viewItem(item)">
-                            mdi-eye
-                        </v-icon>
-                        <v-icon small color="#B6A7A2" class="text-h6" @click="deleteItem(item)">
-                            mdi-delete
-                        </v-icon>
+                        <v-btn text icon elevation="5" @click="viewItem(item)">
+                            <v-icon color="#B6A7A2" class="text-h5">
+                                mdi-eye
+                            </v-icon>
+                        </v-btn>
+                        <v-btn text icon elevation="5" @click="deleteItem(item)">
+                            <v-icon small color="#AD382F" class="text-h5">
+                                mdi-delete
+                            </v-icon>
+                        </v-btn>
                     </template>
                 </v-data-table>
 
@@ -101,7 +105,7 @@ export default {
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
                 { text: 'เวลาที่บันทึก', value: 'formattedCreatedAt' },
-                { text: 'Actions', value: 'actions', sortable: false },
+                { text: 'Actions', value: 'actions', sortable: false ,align: 'center'},
             ],
             items: [],
         }
@@ -143,7 +147,7 @@ export default {
                     if (childData[key].status == 'user') {
 
                         const stu = {
-                    
+
                             studentId: childData[key].studentId,
                             createdAt: childData[key].createdAt,
                             hourLeft: childData[key].hourLeft,
@@ -152,10 +156,10 @@ export default {
                             lastName: childData[key].lastName,
                             nickname: childData[key].nickname,
                             studentMobile: childData[key].studentMobile,
-                            
+
                             school: childData[key].school,
                             education: childData[key].education,
-                           
+
                             parentFirstName: childData[key].parentFirstName,
                             parentMobile: childData[key].parentMobile,
                             parentJob: childData[key].parentJob,

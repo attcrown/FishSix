@@ -7,8 +7,8 @@
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialog" max-width="800px">
                     <template v-slot:activator="{}">
-                        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-                            hide-details style="max-width: 200px;"></v-text-field>
+                        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details
+                            style="max-width: 200px;"></v-text-field>
                     </template>
                     <!-- <template v-slot:activator="{ on, attrs }">
                         <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
@@ -68,9 +68,17 @@
         </template>
         <!-- eslint-disable-next-line vue/valid-v-slot -->
         <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
-                mdi-pencil
-            </v-icon>
+            <!-- <v-btn color="amber darken-3" small outlined>
+                <v-icon center class="text-h6" @click="editItem(item)">
+                    mdi-pencil
+                </v-icon>
+            </v-btn> -->
+            <v-btn text icon elevation="5" @click="editItem(item)">
+                <v-icon class="text-h5" color="#26415B">
+                    mdi-pencil
+                </v-icon>
+            </v-btn>
+
             <!-- <v-icon small @click="deleteItem(item)">
                 mdi-delete
             </v-icon> -->
@@ -210,7 +218,7 @@ export default {
             // } else {
             //     this.desserts.push(this.editedItem)
             // }
-            
+
         },
     },
 }

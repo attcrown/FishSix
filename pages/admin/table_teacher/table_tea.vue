@@ -45,13 +45,18 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" class="mr-2 text-h6"
-                                @click="editItem(item), dialog_detail = true, mode = 'edit'" color="#B6A7A2">
-                                mdi-pencil
-                            </v-icon>
-                            <v-icon v-if="!(parseInt(item.invite) > 0)" @click="deleteItem(item)" class="text-h6" color="#B6A7A2">
-                                mdi-delete
-                            </v-icon>
+                            <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'" v-if="!(parseInt(item.invite) > 0)">
+                                <v-icon  class="text-h5"
+                                    color="#26415B">
+                                    mdi-pencil
+                                </v-icon>
+                            </v-btn>
+                            <v-btn text icon elevation="5" @click="deleteItem(item)" v-if="!(parseInt(item.invite) > 0)">
+                                <v-icon   class="text-h5"
+                                    color="#AD382F">
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -620,7 +625,7 @@ export default {
                     const detail = key.split(":");
                     if (detail[4] == this.delcon.IdTime) {
                         db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}/${key}`).remove();
-                        console.log('ลบ',key,detail[4]);
+                        console.log('ลบ', key, detail[4]);
                     }
                 }
             })

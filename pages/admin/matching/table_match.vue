@@ -86,8 +86,8 @@
             </div>
         </template>
         <template>
-            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date"
-                :items-per-page="-1" class="elevation-16 rounded-xl mt-10">
+            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" :items-per-page="-1"
+                class="elevation-16 rounded-xl mt-10">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.status="{ item }">
                     <v-chip :color="getColor(item.status)" dark>
@@ -251,9 +251,17 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2 text-h6" color="#B6A7A2" @click="editItem(item)">
-                        mdi-eye
+                    <!-- <v-btn color="amber darken-3" small outlined>
+                        <v-icon center class="text-h6" @click="editItem(item)">
+                            mdi-pencil
+                        </v-icon>
+                    </v-btn> -->
+                    <v-btn text icon elevation="5" @click="editItem(item)">
+                        <v-icon class="text-h5" color="#26415B" >
+                        mdi-pencil
                     </v-icon>
+                    </v-btn>
+                    
                 </template>
                 <template v-slot:no-data>
                     <v-btn color="primary" @click="initialize">
@@ -313,7 +321,7 @@ export default {
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
             { text: 'เวลาเลิกเรียน', value: 'time_e', align: 'center' },
             { text: 'สถานะ', value: 'status', sortable: false, align: 'center' },
-            { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
+            { text: 'ยืนยันคลาส', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts: [],
         editedIndex: -1,
@@ -393,7 +401,7 @@ export default {
                 this.selectedElement = nativeEvent.target
                 // console.log(this.selectedEvent);
                 // console.log(this.selectedElement);
-                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]) ))//this.selectedOpen = false))
+                requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array])))//this.selectedOpen = false))
                 console.log(this.selectedEvent);
             }
 
@@ -406,7 +414,7 @@ export default {
 
             nativeEvent.stopPropagation()
         },
-        
+
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -414,7 +422,7 @@ export default {
                 this.desserts_student = [];
                 let item = [];
                 let index = 0;
-                this.events= [];
+                this.events = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -466,7 +474,7 @@ export default {
                                                     timedata.stop.substring(3, 5)),
                                                 color: this.getRandomColor(),
                                                 timed: true,
-                                            }                                            
+                                            }
                                         );
                                         index++;
                                     })

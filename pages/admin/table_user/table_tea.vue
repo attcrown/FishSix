@@ -135,9 +135,12 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <v-icon xl class="mr-2" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                        <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                            <v-icon class="text-h5" >
                             mdi-plus-box-multiple
                         </v-icon>
+                        </v-btn>
+                        
                     </template>
                 </v-data-table>
             </v-col>
@@ -267,7 +270,7 @@
             </v-row>
         </template>
 
-        <template>
+        <!-- <template>
             <v-row justify="center">
                 <v-dialog v-model="dialog_time" persistent max-width="400px">
                     <v-card class="rounded-xl">
@@ -315,7 +318,7 @@
                     </v-card>
                 </v-dialog>
             </v-row>
-        </template>
+        </template> -->
 
         <template>
             <v-dialog v-model="dialog_save_error" max-width="500px">

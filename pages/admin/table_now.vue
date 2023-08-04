@@ -109,11 +109,11 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <!-- <v-btn text color="secondary"  class="text-center"> -->
-                            <v-icon small class="mr-2 text-h6" color="#B6A7A2" @click="detail_match(item)">
+                        <v-btn text icon elevation="5" @click="detail_match(item)">
+                            <v-icon class="text-h5" color="#B6A7A2">
                                 mdi-eye
                             </v-icon>
-                        <!-- </v-btn> -->
+                        </v-btn>
                     </template>
                 </v-data-table>
             </v-col>

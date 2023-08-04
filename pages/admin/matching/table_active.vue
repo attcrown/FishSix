@@ -1,7 +1,8 @@
 <template>
     <div class="pt-10">
         <template>
-            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" class="elevation-16 rounded-xl">
+            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date"
+                class="elevation-16 rounded-xl">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.status="{ item }">
                     <v-chip :color="getColor(item.status)" dark>
@@ -108,9 +109,17 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2" @click="editItem(item)" style="font-size:24px" color="#B6A7A2">
-                        mdi-delete-alert
+                    <!-- <v-btn color="red" small outlined>
+                        <v-icon center class="text-h6" @click="editItem(item)">
+                            mdi-delete
+                        </v-icon>
+                    </v-btn> -->
+                    <v-btn text icon elevation="5" @click="editItem(item)">
+                        <v-icon class="text-h5"  color="#AD382F">
+                        mdi-delete
                     </v-icon>
+                    </v-btn>
+                    
                 </template>
                 <template v-slot:no-data>
                     <v-btn color="primary" @click="initialize">
@@ -148,7 +157,7 @@ export default {
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
             { text: 'เวลาเลิกเรียน', value: 'time_e', align: 'center' },
             { text: 'สถานะ', value: 'status', sortable: false, align: 'center' },
-            { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
+            { text: 'ยกเลิกคลาส', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts: [],
         editedIndex: -1,
@@ -193,8 +202,8 @@ export default {
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise,getlocationPromise])
-                                    .then(([teacherSnapshot, studentSnapshot ,subjectSnapshot ,locationSnapshot]) => {
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
                                         const subjectData = subjectSnapshot.val();
@@ -219,7 +228,7 @@ export default {
                                             // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
-                                            id:timedata.ID
+                                            id: timedata.ID
                                         });
                                     })
                                     .catch((error) => {
@@ -274,13 +283,13 @@ export default {
                 alert("No data to delete");
                 return;
             }
-            console.log(">>>>",this.editedItem);
+            console.log(">>>>", this.editedItem);
             const db = this.$fireModule.database();
             let sum = 0;
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 sum = childData - 1;
-            }).then(()=>{
+            }).then(() => {
                 db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
                     invite: sum,
                 })
@@ -289,7 +298,7 @@ export default {
             this.delete_time();
         },
 
-        delete_time(){
+        delete_time() {
             let idkey = this.editedItem.id;
             let key_stu = this.editedItem.key_student;
             let key_tea = this.editedItem.key_teacher;
@@ -299,7 +308,7 @@ export default {
 
             db.ref(`Time_student/${this.editedItem.key_student}/${this.editedItem.date}`).once("value", (snapshot) => {
                 const childData = snapshot.val();
-                console.log('stu',childData,idkey);
+                console.log('stu', childData, idkey);
                 for (const key in childData) {
                     const detail = key.split(":");
                     if (detail[4] == idkey) {
@@ -310,7 +319,7 @@ export default {
             });
             db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}`).once("value", (snapshot) => {
                 const childData = snapshot.val();
-                console.log('tea',childData);
+                console.log('tea', childData);
                 for (const key in childData) {
                     const detail = key.split(":");
                     if (detail[4] == idkey) {

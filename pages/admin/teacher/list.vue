@@ -13,7 +13,7 @@
                         hide-details></v-text-field>
                 </v-card-title>
                 <template>
-                    <v-data-table :headers="headers" :items="items" :search="search" >
+                    <v-data-table :headers="headers" :items="items" :search="search">
                         <template v-slot:top>
                             <v-dialog v-model="dialogDetail" max-width="500px">
                                 <v-card>
@@ -65,12 +65,17 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-icon small color="#B6A7A2" class="mr-1 text-h6" @click="viewItem(item)">
-                                mdi-eye
-                            </v-icon>
-                            <v-icon small color="#B6A7A2" class="text-h6" @click="deleteItem(item)">
-                                mdi-delete
-                            </v-icon>
+                            <v-btn text icon elevation="5" @click="viewItem(item)">
+                                <v-icon color="#B6A7A2" class="text-h5">
+                                    mdi-eye
+                                </v-icon>
+                            </v-btn>
+                            <v-btn text icon elevation="5" @click="deleteItem(item)">
+                                <v-icon small color="#AD382F" class="text-h5">
+                                    mdi-delete
+                                </v-icon>
+                            </v-btn>
+
                         </template>
 
                     </v-data-table>
@@ -94,13 +99,13 @@ export default {
             editDetail: '',
             dialogDetail: false,
             headers: [
-            { text: 'รหัสครู', value: 'teacher.teacherId', filterable: true, },
-            { text: 'ชื่อเล่น', value: 'teacher.nickname', filterable: true, },
+                { text: 'รหัสครู', value: 'teacher.teacherId', filterable: true, },
+                { text: 'ชื่อเล่น', value: 'teacher.nickname', filterable: true, },
                 { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'teacher.lastName' },
                 { text: 'สถานศึกษา', value: 'teacher.university' },
                 { text: 'เบอร์โทรศัพท์', value: 'teacher.mobile' },
-                { text: 'Actions', value: 'actions', sortable: false },
+                { text: 'Actions', value: 'actions', sortable: false ,align: 'center' },
             ],
             items: [],
         }
@@ -134,13 +139,13 @@ export default {
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
-        
+
                             teacherId: childData[key].teacherId || null,
                             firstName: childData[key].firstName || null,
                             lastName: childData[key].lastName || null,
                             nickname: childData[key].nickname || null,
                             mobile: childData[key].mobile || null,
-            
+
                             university: childData[key].university || null,
 
                         };
