@@ -152,7 +152,8 @@
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
                         <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8"><b>ADD Teach [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'save'"><b>จองเวลาเรียนนอกตาราง [{{ date1 }}]</b></span>
+                            <span class="text-h8" v-if="mode == 'edit'"><b>จองเวลาเรียน [{{ date1 }}]</b></span>
                         </v-card-title>
                         <v-card-text>
                             <v-container>
@@ -336,15 +337,15 @@
 
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
-                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.842)">
-                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> <b>เพิ่มตารางสอน</b></v-card-title>
+                <v-card class="px-3 text-center rounded-xl" style="background-color: rgba(247, 245, 245, 0.842)">
+                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span>เลือกวันที่เรียน</v-card-title>
                     <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn>
+                        <!-- <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn> -->
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -672,6 +673,7 @@ export default {
                             }
                             this.clear_item();
                             this.dialog_detail = false;
+                            this.dialog_select_date = false;
                         }
                     } else {
                         if (this.mode === 'save') {
@@ -730,6 +732,7 @@ export default {
                         }
                         this.clear_item();
                         this.dialog_detail = false;
+                        this.dialog_select_date = false;
                     }
                 })
         },
@@ -886,13 +889,12 @@ export default {
                 this.desserts = [];
                 this.events = [];
                 let index = 0;
-                // this.arrayEvents =[];
+                this.arrayEvents =[];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
-                            const datedata = keydata[date];
-                            // this.arrayEvents.push(date);
+                            const datedata = keydata[date];                            
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
@@ -942,6 +944,7 @@ export default {
                                                 },
                                             );
                                             index++;
+                                            this.arrayEvents.push(date);
                                         }
                                     })
                             }
