@@ -236,7 +236,32 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-                        <v-dialog v-model="dialogDelete" max-width="500px">
+
+                        <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
+                            <v-card>
+                                <v-card-title>                                    
+                                    <v-spacer></v-spacer>                                       
+                                    <v-btn fab dark small color="#37474F" @click="closeDelete">
+                                        <v-icon dark class="text-h5">
+                                            mdi-close
+                                        </v-icon>
+                                    </v-btn>
+                                </v-card-title>
+                                <div class="text-center">
+                                    <img :src="require('~/assets/Frame.png')">
+                                </div>
+                                <div class="text-center mt-5">                                    
+                                    <b>ยืนยันยกเลิกคลาสหรือไม่</b> 
+                                </div>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>                                    
+                                    <v-btn rounded color="#29CC39" @click="deleteItemConfirm" class="mt-5 mb-5">ยืนยัน</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+
+                        <!-- <v-dialog v-model="dialogDelete" max-width="500px">
                             <v-card>
                                 <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
                                 <v-card-actions>
@@ -246,7 +271,8 @@
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
-                        </v-dialog>
+                        </v-dialog> -->
+                        
                     </v-toolbar>
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -544,7 +570,8 @@ export default {
         },
 
         closeDelete() {
-            this.dialogDelete = false
+            this.dialogDelete = false;
+            this.dialog = false;
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1

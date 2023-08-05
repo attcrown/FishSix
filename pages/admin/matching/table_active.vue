@@ -118,8 +118,8 @@
                         <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
                             <v-card>
                                 <v-card-title>
-                                    
-                                    <v-spacer></v-spacer>                                       
+
+                                    <v-spacer></v-spacer>
                                     <v-btn fab dark small color="#37474F" @click="closeDelete">
                                         <v-icon dark class="text-h5">
                                             mdi-close
@@ -129,12 +129,13 @@
                                 <div class="text-center">
                                     <img :src="require('~/assets/Frame.png')">
                                 </div>
-                                <div class="text-center mt-5">                                    
-                                    <b>ยืนยันยกเลิกคลาสหรือไม่</b> 
+                                <div class="text-center mt-5">
+                                    <b>ยืนยันยกเลิกคลาสหรือไม่</b>
                                 </div>
                                 <v-card-actions>
-                                    <v-spacer></v-spacer>                                    
-                                    <v-btn rounded color="#29CC39" @click="deleteItemConfirm" class="mt-5 mb-5">ยืนยัน</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn rounded color="#29CC39" @click="deleteItemConfirm"
+                                        class="mt-5 mb-5">ยืนยัน</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
@@ -329,16 +330,16 @@ export default {
             }
             console.log(">>>>", this.editedItem);
             const db = this.$fireModule.database();
-            let sum = 0;
+            let sum = 0;            
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 sum = childData - 1;
-            }).then(() => {
-                db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
-                    invite: sum,
-                })
+            })
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
+                invite: sum,
             })
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
+
             this.delete_time();
         },
 
