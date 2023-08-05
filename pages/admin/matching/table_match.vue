@@ -467,8 +467,8 @@ export default {
                                         const subjectData = subjectSnapshot.val();
                                         const locationData = locationSnapshot.val();
                                         item.push({
-                                            name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
-                                            name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                            name_student: studentData.studentId+" น้อง"+studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId+" ครู" + teacherData.nickname,
                                             subject: timedata.subject,
                                             name_subject: subjectData.name,
                                             date: date,
