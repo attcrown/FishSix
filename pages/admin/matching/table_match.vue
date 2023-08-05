@@ -479,7 +479,7 @@ export default {
                                         index++;
                                     })
                                     .catch((error) => {
-                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล", error);
+                                        alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);
                                     });
                             }
                         }
