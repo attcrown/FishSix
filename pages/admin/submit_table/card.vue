@@ -155,8 +155,8 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
-                                <v-col cols="12" style="margin-top:-15px">
-                                    <v-chip color="#29CC39" text-color="white" v-if="check_time">
+                                <v-col cols="12" style="margin-top:-15px" v-if="check_time">
+                                    <v-chip color="#29CC39" text-color="white">
                                         ส่งภายในเวลา
                                     </v-chip>
                                 </v-col>
@@ -231,10 +231,29 @@
                         <v-spacer></v-spacer>
                         <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()">บันทึก <span
                                 class="mdi mdi-content-save text-h6"></span></v-btn>
+                        <v-btn rounded color="#42A5F5" class="mt-5 mb-5" dark @click="img_show = true">ดูรูปภาพ <span
+                                class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
+
                     </v-card-actions>
                 </v-card>
             </v-form>
+        </v-dialog>
+
+        <v-dialog v-model="img_show" hide-overlay persistent width="500">
+            <v-card>
+                <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="img_show = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <img :src="edited.img" width="400px">
+                </v-card-text>
+            </v-card>
         </v-dialog>
 
 
@@ -258,6 +277,8 @@ export default {
     data() {
         return {
             check_time: false,
+
+            img_show: false,
 
             loadsave: false,
 
@@ -363,11 +384,11 @@ export default {
             db.ref(`send_plan/${item.Idsendplan}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
-                if(childData.check_save){
+                if (childData.check_save) {
                     this.check_time = true;
-                }else if(parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date().getTime().toString().substring(0, 5))){
+                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date().getTime().toString().substring(0, 5))) {
                     this.check_time = true;
-                }else{
+                } else {
                     this.check_time = false;
                 }
                 console.log(this.edited);
@@ -436,12 +457,12 @@ export default {
                 learn: this.edited.learn,
                 understand: this.edited.understand,
                 development: this.edited.development,
-                problem:this.edited.problem,
-                method:this.edited.method,
-                to_development:this.edited.to_development,
-                homework:this.edited.homework,
-                status_development:this.edited.status_development,
-                comment:this.edited.comment,
+                problem: this.edited.problem,
+                method: this.edited.method,
+                to_development: this.edited.to_development,
+                homework: this.edited.homework,
+                status_development: this.edited.status_development,
+                comment: this.edited.comment,
                 check_save: this.check_time
             }).then(() => {
                 console.log('save send_plan');
