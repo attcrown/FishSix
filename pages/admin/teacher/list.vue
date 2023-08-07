@@ -371,7 +371,7 @@ export default {
                 const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
                 const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                saveAs(blob, createdAt + '_studentInFo.xlsx');
+                saveAs(blob, createdAt + '_teacherInfo.xlsx');
 
                 return "Data export completed successfully";
             } catch (error) {
