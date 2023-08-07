@@ -909,7 +909,7 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
-                const now = new Date();
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
                 let item = [];
                 this.desserts = [];
                 this.events = [];
@@ -917,8 +917,9 @@ export default {
                 this.arrayEvents = [];
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {
-                        if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
+                    for (const date in keydata) {                       
+                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
+                            console.log('>>>',date);
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];

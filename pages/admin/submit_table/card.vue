@@ -397,12 +397,12 @@ export default {
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
                     this.check_time = true;
-                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date().getTime().toString().substring(0, 5))) {
+                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime().toString().substring(0, 5))) {
                     this.check_time = true;
                 } else {
                     this.check_time = false;
                 }
-                console.log(this.edited);
+                console.log(this.edited , this.check_time );
             });
             this.dialog_confirm = true;
         },
@@ -439,8 +439,7 @@ export default {
                             // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
                             const db = this.$fireModule.database();
                             db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
-                                sendplan: true,
-                                status_study: this.edited.status_study,
+                                sendplan: true,                                
                                 Idsendplan: id,
                             }).then(() => {
                                 console.log('save date_match');
@@ -449,6 +448,7 @@ export default {
                             db.ref(`send_plan/${id}`).set({
                                 img: this.imageURL,                                
                                 hour: this.summ_hour,
+                                status_study: this.edited.status_study,
                             }).then(() => {
                                 console.log('save sendplan');
                                 this.loadsave = false;

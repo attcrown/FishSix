@@ -359,12 +359,13 @@ export default {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let now = new Date();
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
                 let edit = '';
                 if (this.search_date == 'Day') {
                     end = now;
+                    console.log(now);
                 } else if (this.search_date == 'Week') {
                     if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
                         edit = formattedDate.substring(0, 8) + 30;
