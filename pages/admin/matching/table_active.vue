@@ -150,7 +150,7 @@
                             mdi-delete
                         </v-icon>
                     </v-btn> -->
-                    <v-btn text icon elevation="5" @click="editItem(item)">
+                    <v-btn text icon elevation="5" @click="editItem(item)" :disabled="check_date_del(item)">
                         <v-icon class="text-h5" color="#AD382F">
                             mdi-delete
                         </v-icon>
@@ -229,6 +229,14 @@ export default {
     },
 
     methods: {
+        check_date_del(item){
+            console.log(parseInt(new Date(item.date).getTime().toString().substring(0, 5)) , parseInt(new Date().getTime().toString().substring(0, 5)));
+            if(parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date().getTime().toString().substring(0, 5))){
+                return false;
+            }else{
+                return true;
+            }
+        },
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
