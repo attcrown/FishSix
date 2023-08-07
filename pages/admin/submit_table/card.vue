@@ -114,7 +114,12 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="เรื่องที่เรียน" v-model="edited.because" readonly></v-text-field>
-                                </v-col>                                
+                                </v-col>                                        
+                                <v-col cols="12" sm="12">
+                                    <v-select v-model="edited.status_study" :items="because_check_study "
+                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน"
+                                        required></v-select>
+                                </v-col>                       
                                 <v-col cols="12" sm="12">
                                     <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL">
 
@@ -176,6 +181,10 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
                                     <v-text-field label="จุดประสงค์ในการเรียน" v-model="edited.because"
+                                        readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="12" style="margin-top:-30px">
+                                    <v-text-field label="เช็คชื่อเข้าเรียน" v-model="edited.status_study"
                                         readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
@@ -325,6 +334,8 @@ export default {
 
             items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             items_development: ['Pending', 'Rejected', 'Approved'],
+
+            because_check_study:["น้องมาเรียน","น้องลา หักชม.เรียน ของน้อง ให้ชม. ครู","น้องลา ไม่หักชม.เรียน ของน้อง ให้ชม. ครู"],
         }
     },
     mounted() {
@@ -429,6 +440,7 @@ export default {
                             const db = this.$fireModule.database();
                             db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
                                 sendplan: true,
+                                status_study: this.edited.status_study,
                                 Idsendplan: id,
                             }).then(() => {
                                 console.log('save date_match');
