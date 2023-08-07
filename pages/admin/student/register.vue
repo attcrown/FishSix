@@ -463,7 +463,7 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
 </template>
 <script>
 import { validationMixin } from 'vuelidate';
-import { Timestamp, serverTimestamp } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { required, maxLength, minLength, email, numeric } from 'vuelidate/lib/validators';
 import pageLoader from '@/components/loader.vue';
 export default {

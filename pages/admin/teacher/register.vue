@@ -405,6 +405,7 @@
 <script>
 
 import { validationMixin } from 'vuelidate'
+import { Timestamp } from "firebase/firestore";
 import { required, maxLength, minLength, email, numeric } from 'vuelidate/lib/validators'
 import pageLoader from '@/components/loader.vue';
 export default {
@@ -426,7 +427,7 @@ export default {
             status: "teacher",
             profilePic: null,
             teacherId: null,
-
+            createdAt: null,
             password: null,
             firstNameEng: null,
             name: null,
@@ -792,11 +793,15 @@ export default {
                 this.isSubmitting = false;
                 return;
             }
-
+            const timestamp = Timestamp.fromDate(new Date());
+            const jsDate = timestamp.toDate();
+            const isoString = jsDate.toISOString();
+            this.createdAt = isoString;
             await db.ref(`user/${this.encode(this.name)}/`).set({
                 status: this.status,
                 teacherId: this.teacherId,
                 name: this.name,
+                createdAt: this.createdAt,
                 password: this.password,
                 profilePic: this.profilePic,
                 firstNameEng:this.firstNameEng,

@@ -4,7 +4,7 @@
         <v-row v-if="!isLoading">
             <div style="display: inline-flex; justify-content: space-between;">
                 <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                <p> <v-btn class="text-white" @click="exportData" color="black" router exact>Export
+                <p> <v-btn class="text-white" @click="exportDialog" color="black" router exact>Export
 
                         <v-icon color="white" x-small>mdi-arrow-down</v-icon>
                         <v-icon color="white" x-small>mdi-arrow-up</v-icon>
@@ -84,19 +84,92 @@
                     </template>
                 </v-data-table>
 
+
+                <v-dialog v-model="dialog" max-width="600px">
+
+                    <v-card class="p-4 rounded-xl">
+                        <v-card-title>
+                            <span style="font-size: 16px">
+                                <b>กรุณาเลือกข้อมูลที่ต้องการ Export</b>
+                            </span>
+                            <v-spacer></v-spacer>
+                            <v-btn fab dark small color="#37474F" @click="closeDialog">
+                                <v-icon dark class="text-h5">
+                                    mdi-close
+                                </v-icon>
+                            </v-btn>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container>
+                                <v-row no-gutters>
+                                    <v-checkbox class="m-0" v-model="isExportAll" label="ข้อมูลทั้งหมด"
+                                        color="indigo"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="รหัสนักเรียน"
+                                        :disabled="isExportAll" value="รหัสนักเรียน"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อจริงนักเรียน"
+                                        :disabled="isExportAll" value="ชื่อจริงนักเรียน"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="นามสกุลนักเรียน"
+                                        :disabled="isExportAll" value="นามสกุลนักเรียน"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อเล่นนักเรียน"
+                                        :disabled="isExportAll" value="ชื่อเล่น"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="เบอร์โทรศัพท์นักเรียน"
+                                        :disabled="isExportAll" value="เบอร์โทรศัพท์นักเรียน"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="เบอร์โทรศัพท์ผู้ปกครอง"
+                                        :disabled="isExportAll" value="เบอร์โทรศัพท์ผู้ปกครอง"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="สถานศึกษา" value="สถานศึกษา"
+                                        :disabled="isExportAll"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ระดับการศึกษา"
+                                        :disabled="isExportAll" value="ระดับการศึกษา"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ประเภทคลาส"
+                                        :disabled="isExportAll" value="ประเภทคลาส"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนทั้งหมด"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนทั้งหมด"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เรียนไปแล้ว"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เรียนไปแล้ว"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เหลืออยู่"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เหลืออยู่"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่แถม"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่แถม"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อผู้ปกครอง"
+                                        :disabled="isExportAll" value="ชื่อผู้ปกครอง"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="อาชีพผู้ปกครอง"
+                                        :disabled="isExportAll" value="อาชีพผู้ปกครอง"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ความคาดหวัง"
+                                        :disabled="isExportAll" value="ความคาดหวัง"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="เวลาที่บันทึกข้อมูล"
+                                        :disabled="isExportAll" value="เวลาที่บันทึกข้อมูล"></v-checkbox>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+                        <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
+
+                        <v-card-title style="margin-top: -20px;">
+                            <v-btn class="text-white" @click="exportData" color="green" :loading="isExport">ยืนยัน
+
+                                <v-icon color="white" small> mdi-content-save</v-icon>
+                            </v-btn>
+                        </v-card-title>
+
+
+                    </v-card>
+                </v-dialog>
             </div>
         </v-row>
     </div>
 </template>
 <script>
 import pageLoader from '@/components/loader.vue';
-
+import { Timestamp } from "firebase/firestore";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default {
     layout: 'default',
     data() {
         return {
             isLoading: true,
+            isExport: false,
             search: '',
+            dialog: false,
 
             deleteConfirm: [],
             detailDelete: '',
@@ -104,6 +177,9 @@ export default {
             dialogDetail: false,
             dialogDelete: false,
 
+            isExportAll: false,
+            selectedHeaders: [],
+            selectedItems: [],
 
             headers: [
                 { text: 'รหัสนักเรียน', value: 'stu.studentId' },
@@ -113,7 +189,7 @@ export default {
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
                 { text: 'ประเภทคลาส', value: 'stu.classType' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
-                { text: 'เวลาที่บันทึก', value: 'formattedCreatedAt' },
+                { text: 'เวลาที่บันทึก', value: 'stu.createdAt' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
             items: [],
@@ -129,6 +205,17 @@ export default {
         dialogDelete(val) {
             val || this.closeDelete()
         },
+        isExportAll(newValue) {
+            if (!newValue) {
+                this.selectedHeaders = [];
+            } else {
+                this.selectedHeaders = ['รหัสนักเรียน', 'ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อเล่น', 'เบอร์โทรศัพท์นักเรียน', 'เบอร์โทรศัพท์ผู้ปกครอง'
+                    , 'สถานศึกษา', 'ระดับการศึกษา', 'ประเภทคลาส', 'ชั่วโมงเรียนทั้งหมด', 'ชั่วโมงเรียนที่เรียนไปแล้ว', 'ชั่วโมงเรียนที่เหลืออยู่', 'ชั่วโมงเรียนที่แถม',
+                    'ชื่อผู้ปกครอง', 'อาชีพผู้ปกครอง', 'ความคาดหวัง', 'เวลาที่บันทึกข้อมูล'];
+            }
+
+        },
+
     },
     components: {
         pageLoader,
@@ -142,76 +229,159 @@ export default {
 
         },
 
+        exportDialog() {
+            this.dialog = true;
+        },
+        closeDialog() {
+            this.dialog = false;
+
+        },
+
+        async generateFirebaseQuery() {
+            const db = this.$fireModule.database();
+            const query = db.ref("user/").orderByChild("status").equalTo("user");
+
+            await query.on("value", (snapshot) => {
+                const item = [];
+                snapshot.forEach((childSnapshot) => {
+                    const key = childSnapshot.key;
+                    const childData = childSnapshot.val();
+                    const stu = {
+                        studentId: childData.studentId,
+                        createdAt: childData.createdAt,
+                        hourLeft: childData.hourLeft,
+                        totalHour: childData.totalHour,
+                        studyHour: childData.studyHour,
+                        freeHour: childData.freeHour,
+                        classType: childData.classType,
+                        firstName: childData.firstName,
+                        lastName: childData.lastName,
+                        nickname: childData.nickname,
+                        studentMobile: childData.studentMobile,
+                        school: childData.school,
+                        education: childData.education,
+                        parentFirstName: childData.parentFirstName,
+                        parentMobile: childData.parentMobile,
+                        parentJob: childData.parentJob,
+                        expectation: childData.expectation,
+
+                    };
+                    item.push({ key: key, stu });
+                });
+
+                this.selectedItems = item;
+
+                this.isLoading = false;
+            })
+        },
+
+
+        generateRowData(item, selectedHeaders) {
+            return selectedHeaders.map(header => {
+                switch (header) {
+                    case 'รหัสนักเรียน':
+                        return item.stu.studentId;
+                    case 'ชื่อจริงนักเรียน':
+                        return item.stu.firstName;
+                    case 'นามสกุลนักเรียน':
+                        return item.stu.lastName;
+                    case 'ชื่อเล่น':
+                        return item.stu.nickname;
+                    case 'เบอร์โทรศัพท์นักเรียน':
+                        return item.stu.studentMobile;
+                    case 'เบอร์โทรศัพท์ผู้ปกครอง':
+                        return item.stu.parentMobile;
+                    case 'สถานศึกษา':
+                        return item.stu.school;
+                    case 'ระดับการศึกษา':
+                        return item.stu.education;
+                    case 'ชั่วโมงเรียนทั้งหมด':
+                        return item.stu.totalHour;
+                    case 'ชั่วโมงเรียนที่เรียนไปแล้ว':
+                        return item.stu.studyHour;
+                    case 'ชั่วโมงเรียนที่เหลืออยู่':
+                        return item.stu.hourLeft;
+                    case 'ชั่วโมงเรียนที่แถม':
+                        return item.stu.freeHour;
+                    case 'ชื่อผู้ปกครอง':
+                        return item.stu.parentFirstName;
+                    case 'อาชีพผู้ปกครอง':
+                        return item.stu.parentJob;
+                    case 'ความคาดหวัง':
+                        return item.stu.expectation;
+                    case 'เวลาที่บันทึกข้อมูล':
+                        return item.stu.createdAt;
+                    case 'ประเภทคลาส':
+                        return Array.isArray(item.stu.classType) ? item.stu.classType.join(', ') : item.stu.classType;
+
+                    default:
+                        return '';
+                }
+            });
+        },
         exportData() {
+            return new Promise((resolve, reject) => {
+                this.isExport = true;
+                this.generateFirebaseQuery();
 
-            const headers = ['ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อจริงครู', 'นามสกุลครู', 'วิชา', 'วันที่สอน', 'เริ่มเรียน', 'เลิกเรียน', 'สถานที่เรียน', 'สถานะ', 'เบอร์โทรนักเรียน', 'เบอร์โทรครู', 'ระดับการศึกษา', 'ลงเรียนวิชานี้เพราะอะไร'];
-            const data = [headers, ...this.items.map(item => [
-                item.namestu_first,
-                item.namestu_last,
-                item.nametea_first,
-                item.nametea_last,
-                item.subject,
-                item.date,
-                item.time_s,
-                item.time_e,
-                item.style,
-                item.status,
-                item.phone_student,
-                item.phone_teacher,
-                // item.class,
-                item.level,
-                item.because,
-            ])];
+                try {
 
-            // สร้างเอกสาร Excel
-            const workbook = XLSX.utils.book_new();
-            const worksheet = XLSX.utils.aoa_to_sheet(data);
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+                    const selectedData = this.selectedItems.map(item => this.generateRowData(item, this.selectedHeaders));
+                    const data = [this.selectedHeaders, ...selectedData];
+                    console.log(selectedData)
 
-            // แปลงข้อมูลให้เป็นรูปแบบไฟล์ Excel
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                    const createdAt = Timestamp.fromDate(new Date()).toDate().toISOString();
 
-            // สร้าง Blob และบันทึกไฟล์
-            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, 'data.xlsx');
+                    const workbook = XLSX.utils.book_new();
+                    const worksheet = XLSX.utils.aoa_to_sheet(data);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+                    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+                    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    saveAs(blob, createdAt + '_studentInFo.xlsx');
+
+                    setTimeout(() => {
+                        resolve("Data export completed successfully");
+                    }, 1000); // Simulate a 1-second delay
+                } catch (error) {
+                    reject(error);
+                } finally {
+                    this.isExport = false;
+                }
+            });
+
         },
 
         searchStudent() {
             const db = this.$fireModule.database();
-            db.ref("user/").on("value", (snapshot) => {
-                let item = [];
-                const childData = snapshot.val();
-                for (const key in childData) {
-                    if (childData[key].status == 'user') {
+            const query = db.ref("user/").orderByChild("status").equalTo("user");
 
-                        const stu = {
+            query.on("value", (snapshot) => {
+                const item = [];
+                snapshot.forEach((childSnapshot) => {
+                    const key = childSnapshot.key;
+                    const childData = childSnapshot.val();
 
-                            studentId: childData[key].studentId,
-                            createdAt: childData[key].createdAt,
-                            hourLeft: childData[key].hourLeft,
-                            classType: childData[key].classType,
-                            firstName: childData[key].firstName,
-                            lastName: childData[key].lastName,
-                            nickname: childData[key].nickname,
-                            studentMobile: childData[key].studentMobile,
+                    const stu = {
+                        studentId: childData.studentId,
+                        createdAt: childData.createdAt,
+                        hourLeft: childData.hourLeft,
+                        classType: childData.classType,
+                        firstName: childData.firstName,
+                        lastName: childData.lastName,
+                        nickname: childData.nickname,
+                        parentMobile: childData.parentMobile,
 
-                            school: childData[key].school,
-                            education: childData[key].education,
 
-                            parentFirstName: childData[key].parentFirstName,
-                            parentMobile: childData[key].parentMobile,
-                            parentJob: childData[key].parentJob,
-                            expectation: childData[key].expectation,
-                        };
-                        item.push({ key: key, stu });
-                        console.log(stu)
+                    };
 
-                    }
-                }
+                    item.push({ key: key, stu });
+                });
 
                 this.items = item;
                 this.isLoading = false;
-            })
+            });
 
         },
 
