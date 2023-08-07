@@ -114,11 +114,7 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="เรื่องที่เรียน" v-model="edited.because" readonly></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="12">
-                                    <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
-                                        required></v-text-field>
-                                </v-col>
+                                </v-col>                                
                                 <v-col cols="12" sm="12">
                                     <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL">
 
@@ -221,6 +217,10 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
+                                        required></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="12">
+                                    <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
                                         required></v-text-field>
                                 </v-col>
 
@@ -435,8 +435,7 @@ export default {
                             })
 
                             db.ref(`send_plan/${id}`).set({
-                                img: this.imageURL,
-                                rate: this.edited.rate,
+                                img: this.imageURL,                                
                                 hour: this.summ_hour,
                             }).then(() => {
                                 console.log('save sendplan');
@@ -463,7 +462,8 @@ export default {
                 homework: this.edited.homework,
                 status_development: this.edited.status_development,
                 comment: this.edited.comment,
-                check_save: this.check_time
+                check_save: this.check_time,
+                rate: this.edited.rate,
             }).then(() => {
                 console.log('save send_plan');
                 this.clear_dialog();
