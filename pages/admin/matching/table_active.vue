@@ -133,7 +133,7 @@
                                     <b>ยืนยันยกเลิกคลาสหรือไม่</b>
                                 </div>
                                 <v-card-actions>
-                                    <v-spacer></v-spacer>
+                                    <v-spacer></v-spacer>                                    
                                     <v-btn rounded color="#29CC39" @click="deleteItemConfirm"
                                         class="mt-5 mb-5">ยืนยัน</v-btn>
                                     <v-spacer></v-spacer>
@@ -144,13 +144,8 @@
                     </v-toolbar>
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
-                <template v-slot:item.actions="{ item }">
-                    <!-- <v-btn color="red" small outlined>
-                        <v-icon center class="text-h6" @click="editItem(item)">
-                            mdi-delete
-                        </v-icon>
-                    </v-btn> -->
-                    <v-btn text icon elevation="5" @click="editItem(item)" :disabled="check_date_del(item)">
+                <template v-slot:item.actions="{ item }">                    
+                    <v-btn text icon elevation="5" @click="editItem(item)">
                         <v-icon class="text-h5" color="#AD382F">
                             mdi-delete
                         </v-icon>
@@ -228,15 +223,7 @@ export default {
         this.initialize();
     },
 
-    methods: {
-        check_date_del(item){
-            console.log(parseInt(new Date(item.date).getTime().toString().substring(0, 5)) , parseInt(new Date().getTime().toString().substring(0, 5)));
-            if(parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date().getTime().toString().substring(0, 5))){
-                return false;
-            }else{
-                return true;
-            }
-        },
+    methods: {        
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -249,7 +236,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (timedata.status == 'พร้อมเรียน') {
+                            if (timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -261,8 +248,8 @@ export default {
                                         const subjectData = subjectSnapshot.val();
                                         const locationData = locationSnapshot.val();
                                         item.push({
-                                            name_student: studentData.studentId+" น้อง"+studentData.nickname + " " + studentData.firstName,
-                                            name: teacherData.teacherId+" ครู" + teacherData.nickname,
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
                                             subject: timedata.subject,
                                             name_subject: subjectData.name,
                                             date: date,
@@ -296,15 +283,14 @@ export default {
         },
 
         editItem(item) {
-            // console.log('item>>',item);
             this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            console.log('editedItem>>', this.editedItem);
+            this.editedItem = Object.assign({}, item)            
+            console.log(">>>>", this.editedItem);
             this.dialog = true;
         },
 
 
-        deleteItemConfirm() {
+        deleteItemConfirm() {            
             this.delete_match()
             this.closeDelete()
         },
@@ -329,7 +315,7 @@ export default {
         save() {
             // console.log('update>>', this.editedItem);
             this.close()
-        },
+        },       
 
         delete_match() {
             if (!this.editedItem) {
@@ -338,7 +324,7 @@ export default {
             }
             console.log(">>>>", this.editedItem);
             const db = this.$fireModule.database();
-            let sum = 0;            
+            let sum = 0;
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 sum = childData - 1;
@@ -347,7 +333,6 @@ export default {
                 invite: sum,
             })
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
-
             this.delete_time();
         },
 
@@ -382,6 +367,7 @@ export default {
                     }
                 }
             });
+            this.editedItem = [];
         },
 
 

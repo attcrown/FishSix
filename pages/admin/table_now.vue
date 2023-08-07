@@ -143,6 +143,12 @@
                                         {{ detail_user.status }}
                                     </v-chip>
                                 </span>
+                                <span style="font-size: 16px" v-if="detail_user.status === 'ยกเลิกการจอง'">
+                                    <b>รายละเอียดการจองเรียน</b>
+                                    <v-chip class="ma-2" color="#F44336" text-color="white">
+                                        {{ detail_user.status }}
+                                    </v-chip>
+                                </span>
                                 <v-btn fab dark small color="#37474F" @click="dialog_detail = false">
                                     <v-icon dark class="text-h5">
                                         mdi-close
