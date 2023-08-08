@@ -155,43 +155,20 @@
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart_stop" v-model="editedItem.time_e"
                                                     @change="validateTime()" label="เวลาสิ้นสุด"></v-select>
-                                            </v-col>
-
-                                            <!-- <v-col cols="12" sm="6">
-                                                <v-text-field label="เวลาเริ่มต้น" v-model="editedItem.time_s">
-                                                    <template #prepend>
-                                                        <span class="mdi mdi-timer-alert-outline text-h6"></span>
-                                                    </template></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6">
-                                                <v-text-field label="เวลาสิ้นสุด" v-model="editedItem.time_e">
-                                                    <template #prepend>
-                                                        <span class="mdi mdi-timer-cancel-outline text-h6"></span>
-                                                    </template>
-                                                </v-text-field>
-                                            </v-col> -->
-                                            <!-- <v-col cols="12" sm="6">
-                                                <v-select :items="select_class" label="รูปแบบการสอน"
-                                                    v-model="editedItem.class"></v-select>
-                                            </v-col> -->
+                                            </v-col>                                
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
                                                     v-model="editedItem.style" item-text="name" item-value="key"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
-                                                    item-value="key" v-model="editedItem.subject" disabled></v-select>
+                                                    item-value="key" v-model="editedItem.subject"
+                                                   @input="search_select_level(editedItem.subject) ,editedItem.level = null"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
-                                                <v-text-field label="ระดับชั้น" v-model="editedItem.level" disabled>
-                                                </v-text-field>
+                                                <v-select :items="select_level" label="ระดับชั้น" v-model="editedItem.level">
+                                                </v-select>
                                             </v-col>
-                                            <!-- <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.time_s" label="เริ่มเรียน"></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field v-model="editedItem.time_e" label="เลิกเรียน"></v-text-field>
-                                            </v-col> -->
                                         </v-row>
                                     </v-container>
                                 </v-card-text>
@@ -321,7 +298,7 @@ export default {
         menu2: false,
         old_item: [],
         select_location: [],
-        select_class: [],
+        select_level: [],
         select_subject: [],
         search: '',
         dialog: false,
@@ -529,7 +506,7 @@ export default {
             this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item);
             this.editedItem = Object.assign({}, item);
-            this.search_select_location_class(item.key_teacher);
+            this.search_select_location_class(item.key_teacher);            
             this.dialog = true;
         },
 
@@ -551,10 +528,24 @@ export default {
                         this.select_subject.push({ name: subject_data.name, key: subject_key });
                     });
                 }
-                this.select_class = childData.classType;
             });
+            db.ref(`user/${key}/subject_all/${this.editedItem.subject}/level`).on("value", (snapshot) => {
+                this.select_level = [];
+                const childData = snapshot.val();
+                this.select_level = childData;
+            })
+            console.log(">>>>",key,this.select_level);
         },
 
+        search_select_level(key){            
+            const db = this.$fireModule.database();
+            db.ref(`user/${this.editedItem.key_teacher}/subject_all/${key}/level`).on("value", (snapshot) => {
+                this.select_level = [];
+                const childData = snapshot.val();
+                this.select_level = childData;
+            })
+            console.log(key,this.select_level);
+        },
 
         deleteItemConfirm() {
             this.delete_match()
@@ -609,7 +600,7 @@ export default {
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
                             level: this.editedItem.level,
-                            // class: this.editedItem.class,
+                            
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             start_tea: this.editedItem.time_s,
