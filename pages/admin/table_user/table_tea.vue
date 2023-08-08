@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mb-3 hide-on-mobile">
+        <div class="mb-3 "> <!--hide-on-mobile-->
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
@@ -85,16 +85,15 @@
 
 
         <v-row align="center">
-            <v-col cols="12">
+            <!-- <v-col cols="12">
                 <div>
                     <div class="subheading">
-
                     </div>
                     <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
                         :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                 </div>
-            </v-col>
+            </v-col> -->
 
 
             <v-col cols="12">
@@ -328,7 +327,7 @@
                     <v-card-title class="text-h6">
                         <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
                     </v-card-title>
-                    <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
+                    <v-date-picker v-model="date1" multiple :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
@@ -485,14 +484,13 @@ export default {
 
     methods: {
         validateTime() {
-            if (true) {//this.picker_stop == null) {
+            if (true) {
                 this.time_standart_stop = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
                     if (this.picker_start == this.time_standart[key] || (sum != 0)) {
                         sum++;
                         if (sum > 1) {
-                            // console.log(this.time_standart[key]);
                             this.time_standart_stop.push(this.time_standart[key]);
                         }
                     }
@@ -511,32 +509,22 @@ export default {
                         this.time_standart_sum.push(this.time_standart[key]);
                     }
                 }
-                console.log(this.time_standart_sum);
             }
-            // else {
-            //     alert("ลงเวลาไม่ถูกต้อง");
-            //     this.close();
-            //     this.clear_item();
-            // }
         },
         getColor(stutus) {
             if (stutus == 'active') return 'success'
             else if (stutus == 'Not active') return 'orange'
             else return 'red'
         },
-        detail_match(item) {
-            // console.log(item);
-        },
+        
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
             const randomColor = this.colors[randomIndex]
-            // Remove the color from the array so it won't be used again
             return randomColor
         },
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
-            // console.log(this.focus);
         },
         getEventColor(event) {
             return event.color
@@ -554,8 +542,6 @@ export default {
             const open = () => {
                 this.selectedEvent = event
                 this.selectedElement = nativeEvent.target
-                // console.log(this.selectedEvent);
-                // console.log(this.selectedElement);
                 requestAnimationFrame(() => requestAnimationFrame(() => this.editItem(this.desserts[this.selectedEvent.array]), this.mode = 'edit'))//this.selectedOpen = true ))
             }
 
@@ -580,14 +566,12 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-                console.log('SAVE');
                 this.dialog_detail = false;
             }else{this.dialog_save_error = true;}
         },
 
         validate_edit() {
             if (this.$refs.form_edit.validate()) {
-                console.log('EDIT');
                 this.save_detail_data();
                 this.dialog_detail_edit = false;
             }else{this.dialog_save_error = true;}
@@ -660,7 +644,6 @@ export default {
                                         return;
                                     }
                                 }
-                                console.log(this.save_detail);
                                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
@@ -718,7 +701,6 @@ export default {
                                 });
                             };
                         } else if (this.mode === 'edit') {
-                            console.log(this.save_detail);
                             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                 const childData = snapshot.val();
                                 if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
@@ -800,7 +782,6 @@ export default {
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
                             item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
-                            // console.log('items_select_tea', item);
                         }
                     }
                     this.items_select_tea = item;
@@ -828,20 +809,17 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const detail = childData[key];
-                    // console.log('check_sub', detail.name, name);
                     subject.push(detail.name);
                 }
             })
             if (subject.includes(name)) {
-                // console.log('ถูกต้อง>>', subject);
                 return true;
             } else {
                 return false;
             }
         },
 
-        check_level(level, sub, key) {
-            // console.log(level,sub,key);
+        check_level(level, sub, key) {            
             let name;
             let levels = [];
             const db = this.$fireModule.database();
@@ -852,12 +830,9 @@ export default {
             db.ref(`user/${key}/subject_all`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    const detail = childData[key];
-                    // console.log('check_sub', detail.name, detail.level, name);
-                    if (detail.name === name) {
-                        // console.log('หยุด');
-                        levels = detail.level;
-                        // console.log(levels);
+                    const detail = childData[key];                    
+                    if (detail.name === name) {                        
+                        levels = detail.level;                        
                         break;
                     }
                 }
@@ -913,8 +888,7 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
-                            console.log('>>>', date);
+                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {                            
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -972,8 +946,7 @@ export default {
                         }
                     }
                 }
-                this.desserts = item;
-                // console.log(this.desserts);
+                this.desserts = item;                
             })
         },
         check_time_start() {
@@ -984,16 +957,14 @@ export default {
                     this.hour_tea = 0;
                     this.min_tea = 0;
                 }
-                for (const key in childData) {
-                    // console.log(key);
+                for (const key in childData) {                   
                     this.hour_tea = key.substring(0, 2);
                     this.min_tea = key.substring(3, 5);
                 }
             })
         },
 
-        editItem(item) {
-            console.log('editadd', item);
+        editItem(item) {            
             this.idTea = item.id;
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
@@ -1002,15 +973,11 @@ export default {
             this.style_class = item.class_all;
             this.style_subject = item.full_location;
             this.sum_peoples = item.people;
-
-            // this.save_detail.class = item.class;
             this.save_detail.style = item.keyLocation;
             this.save_detail.subject = item.keySubject;
             this.save_detail.keysubject = item.keySubject;
-
             this.picker_start_tea = item.time_s;
             this.picker_stop_tea = item.time_e;
-            // this.dialog_detail = true;
 
             if (item.subject != 'ทุกวิชา') {
                 this.search_level_select_edit(item);
@@ -1044,8 +1011,7 @@ export default {
                     this.time_standart.push(this.time_all[key]);
                     this.time_standart_stop.push(this.time_all[key]);
                 }
-            }
-            console.log(this.time_standart);
+            }            
         },
         search_level_select_edit(item) {
             let level = [];
@@ -1055,8 +1021,7 @@ export default {
                 for (const key in childData) {
                     const detail = childData[key];
                     if (key === item.keySubject) {
-                        level = detail.level;
-                        // console.log(level);
+                        level = detail.level;                        
                         break;
                     }
                 }
@@ -1086,13 +1051,11 @@ export default {
             db.ref(`user/${item.key}/subject_all`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    const detail = childData[key];
-                    // console.log('check_sub', detail.name, name);
+                    const detail = childData[key];                    
                     subject.push({ name: detail.name, key: key });
                 }
                 this.subject_select_tea = subject;
-            })
-            console.log(this.subject_select_tea);
+            })           
         },
 
         search_location() {
@@ -1105,30 +1068,16 @@ export default {
                     const location = teacherSnapshot.val();
                     this.style_class = location.classType;
 
-                    for (const key in location.classLocation) {
-                        // console.log(location.classLocation[key]);
+                    for (const key in location.classLocation) {                       
                         db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
                             const childData = snapshot.val();
                             this.style_subject.push({ name: childData.name, key: location.classLocation[key] });
                         })
                     }
-                    // console.log(this.style_subject);
                 })
 
         },
-
-        deleteItem(item) {
-            this.delcon = item;
-            this.dialogDelete = true
-        },
-
-        deleteItemConfirm() {
-            // console.log(this.delcon);
-            const db = this.$fireModule.database();
-            db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_e}`).remove();
-            this.closeDelete();
-        },
-
+        
         close() {
             this.dialog_detail = false;
             this.dialog_detail_edit = false;
@@ -1137,15 +1086,7 @@ export default {
                 this.editedIndex = -1
             })
         },
-
-        closeDelete() {
-            this.dialogDelete = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.clear_item())
-                this.editedIndex = -1
-            })
-        },
-
+      
     },
 }
 </script>

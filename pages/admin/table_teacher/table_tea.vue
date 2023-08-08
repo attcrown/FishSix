@@ -2,16 +2,16 @@
     <div>
         <div class="pt-5">
             <v-row align="center">
-                <v-col cols="12">
+                <!-- <v-col cols="12">
                     <div>
                         <div class="subheading">
-                            <!-- <h3>Teacher</h3> -->
+                            <h3>Teacher</h3>
                         </div>
                         <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
                             :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
                             @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     </div>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12">
                     <v-data-table :headers="headers" :items="desserts" :search="search_table" sort-by="date"
                         class="elevation-16 rounded-xl">
