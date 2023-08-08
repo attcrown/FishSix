@@ -163,7 +163,8 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                         label="จำนวนชั่วโมง"></v-select>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour"
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" type="number" min="0" max="99999"
+                                    maxlength="5" oninput="validity.valid||(value='');"
                                         @input="updateTotalHour" :disabled="!isFlipClass" label="ชั่วโมงที่แถม">
                                     </v-text-field>
                                 </v-col>

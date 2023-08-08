@@ -59,8 +59,17 @@
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
 
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ formattedExpireFlipClassDate }}หมดวันที่{{ expireFlipClassDate }}</div>
+                                        <div class="des-label">วันเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
                         </v-col>
 
                         <v-col cols="12">
@@ -150,8 +159,17 @@
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                        <v-col cols="2">
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
 
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ formattedExpirePrivateClassDate }}{{ expirePrivateClassDate }}</div>
+                                        <div class="des-label">วันเรียนที่เหลือ</div> 
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
                         </v-col>
 
                         <v-col cols="12">
@@ -238,7 +256,7 @@
                                     </v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="classType" :readonly="!isEditingCourse"
+                                    <v-text-field class="black-label" v-model="classTypes" :readonly="!isEditingCourse"
                                         label="ประเภทคลาส"></v-text-field>
                                 </v-col>
                                 <div class="text-center px-4 py-0">
@@ -630,7 +648,8 @@ export default {
             totalHour: null,
             studyHour: null,
             hourLeft: null,
-
+            expireFlipClassDate: null,
+            expirePrivateClassDate: null,
             totalHourDisplay: null,
             studyHourDisplay: null,
             hourLeftDisplay: null,
@@ -651,7 +670,7 @@ export default {
             privateStudyHourInput: null,
             privateHourLeftInput: null,
 
-            classType: null,
+            classTypes: null,
             courseHour: null,
             freeHour: null,
             wantedTeacher: null,
@@ -686,88 +705,6 @@ export default {
 
             ],
 
-
-            provinceOptions: [
-                'กระบี่',
-                'กรุงเทพมหานคร',
-                'กาญจนบุรี',
-                'กาฬสินธุ์',
-                'กำแพงเพชร',
-                'ขอนแก่น',
-                'จันทบุรี',
-                'ฉะเชิงเทรา',
-                'ชลบุรี',
-                'ชัยนาท',
-                'ชัยภูมิ',
-                'ชุมพร',
-                'เชียงราย',
-                'เชียงใหม่',
-                'ตรัง',
-                'ตราด',
-                'ตาก',
-                'นครนายก',
-                'นครปฐม',
-                'นครพนม',
-                'นครราชสีมา',
-                'นครศรีธรรมราช',
-                'นครสวรรค์',
-                'นนทบุรี',
-                'นราธิวาส',
-                'น่าน',
-                'บึงกาฬ',
-                'บุรีรัมย์',
-                'ปทุมธานี',
-                'ประจวบคีรีขันธ์',
-                'ปราจีนบุรี',
-                'ปัตตานี',
-                'พระนครศรีอยุธยา',
-                'พะเยา',
-                'พังงา',
-                'พัทลุง',
-                'พิจิตร',
-                'พิษณุโลก',
-                'เพชรบุรี',
-                'เพชรบูรณ์',
-                'แพร่',
-                'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม',
-                'มุกดาหาร',
-                'แม่ฮ่องสอน',
-                'ยะลา',
-                'ยโสธร',
-                'ร้อยเอ็ด',
-                'ระนอง',
-                'ระยอง',
-                'ราชบุรี',
-                'ลพบุรี',
-                'ลำปาง',
-                'ลำพูน',
-                'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร',
-                'สงขลา',
-                'สตูล',
-                'สมุทรปราการ',
-                'สมุทรสงคราม',
-                'สมุทรสาคร',
-                'สระแก้ว',
-                'สระบุรี',
-                'สิงห์บุรี',
-                'สุโขทัย',
-                'สุพรรณบุรี',
-                'สุราษฎร์ธานี',
-                'สุรินทร์',
-                'หนองคาย',
-                'หนองบัวลำภู',
-                'อ่างทอง',
-                'อำนาจเจริญ',
-                'อุดรธานี',
-                'อุตรดิตถ์',
-                'อุทัยธานี',
-                'อุบลราชธานี',
-                'อ่างทอง'
-            ],
 
             //rules
 
@@ -915,9 +852,51 @@ export default {
                 return `${hours} ชั่วโมง ${minutes} นาที`;
             }
         },
+        formattedExpireFlipClassDate() {
+            if (this.expireFlipClassDate) {
+                const now = new Date();
+                const expireDate = new Date(this.expireFlipClassDate);
+
+                const yearDiff = expireDate.getFullYear() - now.getFullYear();
+                const monthDiff = expireDate.getMonth() - now.getMonth();
+                const dayDiff = expireDate.getDate() - now.getDate();
+
+                let months = yearDiff * 12 + monthDiff;
+                let days = dayDiff;
+
+                if (dayDiff < 0) {
+                    months -= 1;
+                    const lastMonthDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                    days = lastMonthDays + dayDiff;
+                }
+
+                return { months, days };
+            }
+            return '0 เดือน';
+        },
+        formattedExpirePrivateClassDate() {
+            if (this.expirePrivateClassDate) {
+                const now = new Date();
+                const expireDate = new Date(this.expirePrivateClassDate);
+
+                const yearDiff = expireDate.getFullYear() - now.getFullYear();
+                const monthDiff = expireDate.getMonth() - now.getMonth();
+                const dayDiff = expireDate.getDate() - now.getDate();
+
+                let months = yearDiff * 12 + monthDiff;
+                let days = dayDiff;
+
+                if (dayDiff < 0) {
+                    months -= 1;
+                    const lastMonthDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                    days = lastMonthDays + dayDiff;
+                }
+
+                return { months, days };
+            }
+            return '0 เดือน';
+        },
     },
-
-
 
     methods: {
 
@@ -1054,7 +1033,7 @@ export default {
                     await db.ref(`user/${this.userId}/`).update({
                         school: this.school,
                         education: this.education,
-                      
+
 
                     })
                         .then(() => {
@@ -1127,7 +1106,21 @@ export default {
                 this.studyHourDisplay = childData.studyHour || 0;
                 this.hourLeftDisplay = childData.hourLeft || 0;
 
-                this.classType = childData.classType || null;
+                this.privateTotalHour = childData.privateTotalHour || 0;
+                this.privateStudyHour = childData.privateStudyHour || 0;
+                this.privateHourLeft = childData.privateHourLeft || 0;
+                this.privateTotalHourDisplay = childData.privateTotalHour || 0;
+                this.privateStudyHourDisplay = childData.privateStudyHour || 0;
+                this.privateHourLeftDisplay = childData.privateHourLeft || 0;
+
+                this.expireFlipClassDate = childData.expireFlipClassDate || null;
+                this.expirePrivateClassDate = childData.expirePrivateClassDate || null;
+
+
+                this.privateCourseHour = childData.privateCourseHour || 0;
+                this.privateFreeHour = childData.privateFreeHour || 0;
+
+                this.classTypes = childData.classTypes || null;
                 this.courseHour = childData.courseHour || null;
                 this.freeHour = childData.freeHour || null;
                 this.wantedTeacher = childData.wantedTeacher || null;
