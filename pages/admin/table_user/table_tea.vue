@@ -97,7 +97,7 @@
 
 
             <v-col cols="12">
-                <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
+                <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
                     class="elevation-16 rounded-xl">
                     <template v-slot:top>
                         <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
