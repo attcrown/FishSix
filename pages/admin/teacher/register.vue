@@ -525,8 +525,8 @@ export default {
     mixins: [validationMixin],
     validations: {
         teacherId: { maxLength: maxLength(6), minLength: minLength(6) },
-        name: { required, maxLength: maxLength(6), minLength: minLength(6) },
-        password: { required, maxLength: maxLength(20), minLength: minLength(6) },
+        name: { required, maxLength: maxLength(100), minLength: minLength(1) },
+        password: { required, maxLength: maxLength(100), minLength: minLength(1) },
         firstNameEng: { required },
         lastNameEng: { required },
         firstName: { required },

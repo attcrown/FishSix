@@ -99,7 +99,97 @@
 
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <style>
+                            .time-label {
+                                color: #000;
+                                font-size: 24px;
+                                font-weight: 500;
 
+                            }
+
+                            .des-label {
+                                color: #000;
+                                font-size: 16px;
+                                font-weight: 300;
+
+                            }
+                        </style>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ formattedPrivateTotalHour }}</div>
+                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ formattedPrivateStudyHour }} </div>
+                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ formattedPrivateHourLeft }}</div>
+                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="2">
+
+                        </v-col>
+
+                        <v-col cols="12">
+                            <v-card style="border-radius: 20px;background: #EBE4DE;" elevation="0" class="px-3">
+
+                                <v-card-text class="p-4">
+                                    <v-row style="border-radius: 20px;background: #EBE4DE;">
+                                        <v-col cols="3" class="time-label">
+                                            ปรับชั่วโมงเรียน
+                                        </v-col>
+                                        <v-col cols="3" class="py-0 mt-2">
+                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
+                                                item-text="text" item-value="value" v-model="selectedAddHour"></v-select>
+
+
+
+                                        </v-col>
+                                        <v-col cols="1" class="py-0 mt-2">
+                                            <v-btn color="green text-white" @click="addTime">ยืนยัน</v-btn>
+                                        </v-col>
+
+                                        <v-col cols="3" class="py-0 mt-2">
+                                            <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
+                                                item-text="text" item-value="value"
+                                                v-model="selectedSubtractHour"></v-select>
+
+                                        </v-col>
+                                        <v-col cols="1" class="py-0 mt-2">
+                                            <v-btn color="green text-white" @click="subtractTime">ยืนยัน</v-btn>
+                                        </v-col>
+
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+
+
+                        </v-col>
+                    </v-row>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
@@ -549,6 +639,18 @@ export default {
             studyHourInput: null,
             hourLeftInput: null,
 
+            privateTotalHour: null,
+            privateStudyHour: null,
+            privateHourLeft: null,
+
+            privateTotalHourDisplay: null,
+            privateStudyHourDisplay: null,
+            privateHourLeftDisplay: null,
+
+            privateTotalHourInput: null,
+            privateStudyHourInput: null,
+            privateHourLeftInput: null,
+
             classType: null,
             courseHour: null,
             freeHour: null,
@@ -769,6 +871,50 @@ export default {
                 return `${hours} ชั่วโมง ${minutes} นาที`;
             }
         },
+        formattedPrivateTotalHour() {
+            if (this.privateTotalHourDisplay === null || this.privateTotalHourDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.privateTotalHourDisplay);
+            const minutes = ((this.privateTotalHourDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+
+
+        },
+        formattedPrivateStudyHour() {
+            if (this.privateStudyHourDisplay === null || this.privateStudyHourDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.privateStudyHourDisplay);
+            const minutes = ((this.privateStudyHourDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
+        formattedPrivateHourLeft() {
+            if (this.privateHourLeftDisplay === null || this.privateHourLeftDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.privateHourLeftDisplay);
+            const minutes = ((this.privateHourLeftDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
     },
 
 
@@ -973,10 +1119,10 @@ export default {
                 this.profilePic = childData.profilePic || null;
                 this.studentId = childData.studentId || null;
                 this.lastStudentId = childData.lastStudentId || null;
+
                 this.totalHour = childData.totalHour || 0;
                 this.studyHour = childData.studyHour || 0;
                 this.hourLeft = childData.hourLeft || 0;
-
                 this.totalHourDisplay = childData.totalHour || 0;
                 this.studyHourDisplay = childData.studyHour || 0;
                 this.hourLeftDisplay = childData.hourLeft || 0;

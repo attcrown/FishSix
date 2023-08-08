@@ -10,7 +10,7 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
             </div>
             <div class="col-sm-12">
                 <form ref="registerForms">
-                    <v-row>
+                    <v-row v-if="false">
                         <style>
                             .time-label {
                                 color: #000;
@@ -26,34 +26,104 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
 
                             }
                         </style>
-                        <v-col cols="3">
+
+                        <!-- Flip -->
+                        <v-col cols="3" v-if="isFlipClass">
                             <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ totalHour ? totalHour : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ totalHour ? totalHour : 0 }} ชั่วโมง</div>
                                         <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
                                     </v-row>
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="3" v-if="isFlipClass">
                             <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
 
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ studyHour ? studyHour : 0 }} ชั่วโมง</div>
                                         <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
                                     </v-row>
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                        <v-col cols="3">
+                        <v-col cols="3" v-if="isFlipClass">
                             <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
 
                                 <v-card-text class="p-4">
                                     <v-row>
-                                        <div class="time-label mb-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ hourLeft ? hourLeft : 0 }} ชั่วโมง</div>
                                         <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3" v-if="isFlipClass">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Flip class </div>
+                                        <div class="time-label my-3">{{ flipClassMonth ? flipClassMonth : 0 }} วัน
+                                        </div>
+                                        <div class="des-label">วันเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <!-- Private -->
+                        <v-col cols="3" v-if="isPrivateClass">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-1">
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ privateTotalHour ? privateTotalHour : 0 }}
+                                            ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3" v-if="isPrivateClass">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-1">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ privateStudyHour ? privateStudyHour : 0 }}
+                                            ชั่วโมง</div>
+                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3" v-if="isPrivateClass">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-1">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ privateHourLeft ? privateHourLeft : 0 }} ชั่วโมง
+                                        </div>
+                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
+                        <v-col cols="3" v-if="isPrivateClass">
+                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-1">
+
+                                <v-card-text class="p-4">
+                                    <v-row>
+                                        <div class="des-label">Private class </div>
+                                        <div class="time-label my-3">{{ privateClassMonth ? privateClassMonth : 0 }} วัน
+                                        </div>
+                                        <div class="des-label">วันเรียนที่เหลือ</div>
                                     </v-row>
                                 </v-card-text>
                             </v-card>
@@ -62,41 +132,110 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
-                            <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
+                            <div>ข้อมูลเกี่ยวกับคอร์ส</div>
 
                         </v-card-title>
                         <v-card-text>
                             <v-row>
+                                <p>&#x2022; Flip class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
+                                <v-checkbox label="เพิ่ม Flip class" v-model="classTypes" value="flipClass"
+                                    @click="updateFlipClass()"></v-checkbox>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
-                                        maxlength="5" oninput="validity.valid||(value='');"
-                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                        maxlength="5" oninput="validity.valid||(value='');" @input="updateHourLeft"
+                                        :disabled="!isFlipClass" label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
-                                        maxlength="5" oninput="validity.valid||(value='');"
-                                        label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
+                                        maxlength="5" oninput="validity.valid||(value='');" @input="updateHourLeft"
+                                        :disabled="!isFlipClass" label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
                                         maxlength="5" oninput="validity.valid||(value='');" v-model="hourLeft"
-                                        label="ชั่วโมงเรียนที่เหลือ">
+                                        :disabled="!isFlipClass" :value="hourLeftComputed" label="ชั่วโมงเรียนที่เหลือ">
                                     </v-text-field>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-select class="black-label" v-model="classType" :items="classes" label="ประเภทคลาส"
-                                        multiple :error-messages="classTypeErrors" required @input="$v.classType.$touch()"
-                                        @blur="$v.classType.$touch()"></v-select>
-                                </v-col>
+
                                 <v-col class="py-0" cols="4">
                                     <v-select class="black-label" v-model="courseHour" :items="courseHours"
+                                        :disabled="!isFlipClass" @input="updateFlipClassMonth"
                                         label="จำนวนชั่วโมง"></v-select>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" name="freeHour" v-model="freeHour"
-                                        label="ชั่วโมงที่แถม">
+                                        @input="updateTotalHour" :disabled="!isFlipClass" label="ชั่วโมงที่แถม">
                                     </v-text-field>
                                 </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-menu ref="flipDate" v-model="flipDate" :close-on-content-click="false"
+                                        :disabled="!isFlipClass" transition="scale-transition" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="purchaseFlipClassDate"
+                                                label="วันที่ซื้อคลาส" name="purchaseFlipClassDate"
+                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" required
+                                                v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="purchaseFlipClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="saveDate"></v-date-picker>
+                                    </v-menu>
+                                    <v-text-field class="black-label" v-model="expireFlipClassDate" :disabled="!isFlipClass"
+                                        label="วันที่หมดอายุ">
+                                    </v-text-field>
+                                </v-col>
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+                                <p>&#x2022; Private class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
+                                <v-checkbox label="เพิ่ม Private class" v-model="classTypes" value="privateClass"
+                                    @click="updatePrivateClass()"></v-checkbox>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="privateTotalHour" min="0"
+                                        :disabled="!isPrivateClass" max="99999" maxlength="5"
+                                        oninput="validity.valid||(value='');" label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="privateStudyHour" min="0"
+                                        :disabled="!isPrivateClass" max="99999" maxlength="5"  @input="updatePrivateHourLeft"
+                                        oninput="validity.valid||(value='');" label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" min="0" max="99999" maxlength="5"
+                                        :disabled="!isPrivateClass" oninput="validity.valid||(value='');"
+                                        v-model="privateHourLeft" label="ชั่วโมงเรียนที่เหลือ">
+                                    </v-text-field>
+                                </v-col>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-select class="black-label" v-model="privateCourseHour" :items="courseHours"
+                                        :disabled="!isPrivateClass" @input="updatePrivateClassMonth"
+                                        label="จำนวนชั่วโมง"></v-select>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour"
+                                        @input="updatePrivateTotalHour" :disabled="!isPrivateClass" label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                                        :disabled="!isPrivateClass" transition="scale-transition" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="purchasePrivateClassDate"
+                                                label="วันที่ซื้อคลาส" name="purchasePrivateClassDate"
+                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" required
+                                                v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="purchasePrivateClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="save"></v-date-picker>
+                                    </v-menu>
+                                    <v-text-field class="black-label" v-model="expirePrivateClassDate"
+                                        :disabled="!isFlipClass" label="วันที่หมดอายุ">
+                                    </v-text-field>
+                                </v-col>
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+
                                 <v-col class="py-0" cols="4"> <v-autocomplete class="black-label" v-model="wantedTeacher"
                                         :items="teachers" label="ต้องการเรียนกับครู"
                                         item-text="teacher.firstName"></v-autocomplete>
@@ -473,6 +612,7 @@ export default {
             activePicker: null,
             date: null,
             menu: false,
+            flipDate: false,
             isLoading: true,
             isSubmiting: false,
             isAlreadySubmit: false,
@@ -480,6 +620,8 @@ export default {
             snackbarMessage: '',
             snackbarColor: '',
             isAddressSame: false,
+            isPrivateClass: false,
+            isFlipClass: false,
             //register field
             createdAt: null,
             status: "user",
@@ -523,16 +665,25 @@ export default {
             totalHour: null,
             studyHour: null,
             hourLeft: null,
-
+            privateTotalHour: null,
+            privateStudyHour: null,
+            privateHourLeft: null,
+            purchasePrivateClassDate: null,
+            purchaseFlipClassDate: null,
+            expirePrivateClassDate: null,
+            expireFlipClassDate: null,
+            classTypes: [],
+            privateClassMonth: null,
+            flipClassMonth: null,
             classType: null,
             courseHour: null,
+            privateFreeHour: null,
+            privateCourseHour: null,
             freeHour: null,
             wantedTeacher: null,
             annotation: null,
 
             teachers: [],
-
-
             //api
 
             tambons: [],
@@ -574,8 +725,7 @@ export default {
 
             courseHours: [
                 32,
-                48, 96,
-
+                48, 96
             ],
 
             educationLevels:
@@ -599,8 +749,8 @@ export default {
     },
     mixins: [validationMixin],
     validations: {
-        name: { required, minLength: minLength(6) },
-        password: { required, maxLength: maxLength(20), minLength: minLength(6) },
+        name: { required, minLength: minLength(2) },
+        password: { required, maxLength: maxLength(100), minLength: minLength(2) },
         firstNameEng: { required },
         lastNameEng: { required },
         firstName: { required },
@@ -625,6 +775,10 @@ export default {
         },
     },
     computed: {
+
+        hourLeftComputed() {
+            return this.totalHour - this.studyHour;
+        },
         nameErrors() {
             const errors = []
             if (!this.$v.name.$dirty) return errors
@@ -781,6 +935,9 @@ export default {
         menu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
+        flipDate(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
         'firstNameEng': {
             handler: 'updateUsername',
             immediate: true,
@@ -805,6 +962,38 @@ export default {
         },
     },
     methods: {
+        save(date) {
+            this.$refs.menu.save(date);
+
+            this.updatePrivateExpire();
+
+        },
+        saveDate(date) {
+            this.$refs.flipDate.save(date);
+            this.updateFlipExpire();
+        },
+
+        updatePrivateExpire() {
+
+            if (this.privateCourseHour && this.purchasePrivateClassDate) {
+                const purchaseDate = new Date(this.purchasePrivateClassDate);
+                const expirationDate = new Date(purchaseDate);
+                expirationDate.setMonth(expirationDate.getMonth() + this.privateClassMonth);
+                const formattedExpirationDate = expirationDate.toISOString().slice(0, 10);
+                this.expirePrivateClassDate = formattedExpirationDate;
+            }
+
+        },
+        updateFlipExpire() {
+            if (this.courseHour && this.purchaseFlipClassDate) {
+                const purchaseDate = new Date(this.purchaseFlipClassDate);
+                const expirationDate = new Date(purchaseDate);
+                expirationDate.setMonth(expirationDate.getMonth() + this.flipClassMonth);
+                const formattedExpirationDate = expirationDate.toISOString().slice(0, 10);
+                this.expireFlipClassDate = formattedExpirationDate;
+            }
+        },
+
         updateCurrAddress() {
             if (this.isAddressSame) {
 
@@ -824,6 +1013,84 @@ export default {
                 this.currAddress = null;
             }
         },
+        updateTotalHour() {
+            this.totalHour = (parseInt(this.courseHour || 0) + parseInt(this.freeHour || 0));
+            this.updateHourLeft();
+        },
+        updatePrivateTotalHour() {
+            this.privateTotalHour = (parseInt(this.privateCourseHour || 0) + parseInt(this.privateFreeHour || 0));
+            this.updatePrivateHourLeft();
+        },
+        updateHourLeft() {
+            this.hourLeft = this.totalHour - this.studyHour;
+        },
+
+        updatePrivateHourLeft() {
+            this.privateHourLeft = this.privateTotalHour - this.privateStudyHour;
+        },
+
+        updatePrivateClassMonth() {
+            switch (this.privateCourseHour) {
+                case 32: this.privateClassMonth = 4; break;
+                case 48: this.privateClassMonth = 6; break;
+                case 96: this.privateClassMonth = 12; break;
+                default:
+                    break;
+            }
+            this.privateTotalHour = (parseInt(this.privateCourseHour || 0) + parseInt(this.privateFreeHour || 0));
+            this.updatePrivateHourLeft();
+            this.updatePrivateExpire();
+        },
+        updateFlipClassMonth() {
+            switch (this.courseHour) {
+                case 32:
+                    this.flipClassMonth = 4;
+                    break;
+                case 48:
+                    this.flipClassMonth = 6;
+                    break;
+                case 96:
+                    this.flipClassMonth = 12;
+                    break;
+                default:
+
+                    break;
+            }
+            this.totalHour = (parseInt(this.courseHour || 0) + parseInt(this.freeHour || 0));
+            this.updateHourLeft();
+            this.updateFlipExpire();
+        },
+
+        updateFlipClass() {
+            if (this.isFlipClass) {
+                this.isFlipClass = false;
+                this.totalHour = null;
+                this.studyHour = null;
+                this.hourLeft = null;
+                this.freeHour = null;
+                this.courseHour = null;
+            }
+            else {
+                this.isFlipClass = true;
+            }
+
+        },
+
+        updatePrivateClass() {
+            if (this.isPrivateClass) {
+                this.isPrivateClass = false;
+                this.privateTotalHour = null;
+                this.privateStudyHour = null;
+                this.privateHourLeft = null;
+                this.privateCourseHour = null;
+                this.privateFreeHour = null;
+            }
+            else {
+                this.isPrivateClass = true;
+            }
+
+        },
+
         handleFileUpload() {
             this.$refs.fileInput.click();
 
@@ -886,12 +1153,24 @@ export default {
                 status: this.status,
                 studentId: this.studentId,
                 createdAt: this.createdAt,
+
                 totalHour: this.totalHour || 0,
                 studyHour: this.studyHour || 0,
                 hourLeft: this.hourLeft || 0,
                 courseHour: this.courseHour,
-                classType: this.classType,
                 freeHour: this.freeHour,
+
+                privateTotalHour: this.privateTotalHour || 0,
+                privateStudyHour: this.privateStudyHour || 0,
+                privateHourLeft: this.privateHourLeft || 0,
+                privateCourseHour: this.privateCourseHour,
+                privateFreeHour: this.privateFreeHour,
+
+                expireFlipClassDate:this.expireFlipClassDate,
+                expirePrivateClassDate:this.expirePrivateClassDate,
+              
+                classTypes: this.classTypes,
+               
                 wantedTeacher: this.wantedTeacher,
                 annotation: this.annotation,
                 name: this.name,
@@ -977,29 +1256,30 @@ export default {
 
             const snapshot = await db.ref('user').orderByChild('studentId').limitToLast(1).once('value');
             const lastStudent = snapshot.val();
-           
+
             for (const key in lastStudent) {
-                
-       
-            if (lastStudent[key].status == 'admin' ||lastStudent[key].status == 'teacher' || !lastStudent) {
-                const currentYear = new Date().getFullYear().toString().slice(-2);
-                const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
-                this.studentId = `FSS${currentYear}${currentMonth}0001`;
-                return;
-            } else {
-                const currentYear = new Date().getFullYear().toString().slice(-2);
-                const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
-                const lastStudentId = Object.keys(lastStudent)[0];
-                const lastStudentCode = lastStudent[lastStudentId].studentId;
-                const lastMonth = lastStudentCode.slice(5, 7);
-                const numericPart = parseInt(lastStudentCode.slice(7), 10) + 1;
-                const nextNumericPart = currentMonth !== lastMonth ? 1 : numericPart;
-                const nextId = `FSS${currentYear}${currentMonth}${String(nextNumericPart).padStart(4, '0')}`;
-
-                this.studentId = nextId;
 
 
-            }}
+                if (lastStudent[key].status == 'admin' || lastStudent[key].status == 'teacher' || !lastStudent) {
+                    const currentYear = new Date().getFullYear().toString().slice(-2);
+                    const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
+                    this.studentId = `FSS${currentYear}${currentMonth}0001`;
+                    return;
+                } else {
+                    const currentYear = new Date().getFullYear().toString().slice(-2);
+                    const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
+                    const lastStudentId = Object.keys(lastStudent)[0];
+                    const lastStudentCode = lastStudent[lastStudentId].studentId;
+                    const lastMonth = lastStudentCode.slice(5, 7);
+                    const numericPart = parseInt(lastStudentCode.slice(7), 10) + 1;
+                    const nextNumericPart = currentMonth !== lastMonth ? 1 : numericPart;
+                    const nextId = `FSS${currentYear}${currentMonth}${String(nextNumericPart).padStart(4, '0')}`;
+
+                    this.studentId = nextId;
+
+
+                }
+            }
         },
 
         async fetchProvince() {
@@ -1272,4 +1552,11 @@ export default {
 .upload-label:hover {
     color: var(--brown-brown-1, #322E2B);
     background-color: #ffffff;
-}</style>
+}
+
+hr.solid {
+    border-top: 3px solid black;
+    border-width: 3px;
+    opacity: 1;
+}
+</style>
