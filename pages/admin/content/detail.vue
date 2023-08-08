@@ -10,15 +10,15 @@
                 <h5><b>คลังเนื้อหา</b></h5>
                 <v-row align="center">
                     <v-col cols="12" sm="3">
-                        <v-text-field label="วิชา" v-model="subjectName"
-                           >
+                        <v-text-field label="วิชา" v-model="subjectName" disabled>
                             <template #prepend>
                                 <span class="mdi mdi-book-outline text-h6"></span>
                             </template>
                         </v-text-field>
                     </v-col>
                     <v-col cols="12" sm="3">
-                        <v-text-field label="ระดับชั้น" v-model="level" placeholder="ระดับชั้น" required></v-text-field>
+                        <v-text-field label="ระดับชั้น" v-model="level" disabled placeholder="ระดับชั้น"
+                            required></v-text-field>
                     </v-col>
 
                     <v-col cols="12" sm="3"> </v-col>
@@ -53,8 +53,8 @@
                 <v-icon small class="mr-2" @click="viewItem(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small>
-                    mdi-edit
+                <v-icon small  @click="deleteChapter(item)">
+                    mdi-delete
                 </v-icon>
             </template>
         </v-data-table>
@@ -65,7 +65,7 @@
             <v-card class="p-4 rounded-xl">
                 <v-card-title class="d-flex justify-space-between">
                     <span style="font-size: 16px">
-                        <b>เพิ่มรายละเอียดเนื้อหา</b>
+                        <b>วิชา {{ subjectName }} | {{ level }}</b>
 
                     </span>
 
@@ -77,31 +77,29 @@
 
                 </v-card-title>
                 <v-card-text>
-                    <!-- <v-container>
+                    <v-container>
                         <v-row>
                             <v-col cols="6">
-                                <v-autocomplete label="วิชา" v-model="subject" :items="subjects" item-text="name"
-                                    item-value="key" @input="search_level_select()">
-                                    <template #prepend>
-                                        <span class="mdi mdi-book-outline text-h6"></span>
-                                    </template>
-                                </v-autocomplete>
+                                <v-text-field type="number" min="0" label="บทที่" v-model="subjectChapter"></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-autocomplete v-model="level" :items="level_select" label="ระดับชั้น *"
-                                    :disabled="!level_select"></v-autocomplete>
+                                <v-text-field label="ชื่อบท" v-model="chapterName"></v-text-field>
                             </v-col>
-
+                            <v-col cols="6">
+                                <v-text-field label="รายละเอียดเนื้อหา" v-model="chapterDetail"></v-text-field>
+                            </v-col> <v-col cols="6">
+                                <v-text-field label="หมายเหตุ" v-model="annotation"></v-text-field>
+                            </v-col>
                         </v-row>
-                    </v-container> -->
+                    </v-container>
 
                 </v-card-text>
 
 
                 <v-card-actions class="d-flex justify-center">
 
-                    <v-btn color="#29CC39" @click="addContent" elevation="0" rounded>
-                        <b>ยืนยันการเพิ่มเนื้อหา</b>
+                    <v-btn color=green @click="addContent" elevation="0" rounded>
+                        <b>บันทึก</b>
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -126,20 +124,23 @@ export default {
             subjectName: null,
             level: null,
 
+            subjectChapter: null,
+            chapterName: null,
+            chapterDetail: null,
+            annotation: null,
+
             level_select: [],
             headers: [
-                { text: 'บทที่.', value: 'index' },
-                {
-                    text: 'Subject',
-                    value: 'name',
-                },
-                { text: 'ชื่อบท', value: 'level' },
-                { text: 'รายละเอียดเนื้อหา', value: '' },
+                { text: 'บทที่.', value: 'chapterNumber', width: '5%' },
+
+                { text: 'ชื่อบท', value: 'chapterName' },
+                { text: 'รายละเอียดเนื้อหา', value: 'chapterDetail' },
                 { text: 'ข้อมูล', value: 'actions', sortable: false, align: 'center' },
             ],
 
             subjects: [],
             subjectContents: [],
+            subjectContentsCount: null,
 
         }
     },
@@ -151,6 +152,7 @@ export default {
         const value = this.$route.query.contentId;
         this.contentId = value;
         this.initialize();
+        console.log(this.contentId)
     },
     components: {
 
@@ -177,27 +179,50 @@ export default {
             //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
         },
         async addContent() {
-            let key_item = Math.floor(Math.random() * (1000000)) + 1;
-            console.log(key_item)
             const db = this.$fireModule.database();
-            const contentExists = await this.checkIfContentExists(this.subjectSelected, this.level);
 
-            if (contentExists) {
-                console.log('Content with the same name and level already exists. Not adding to the database.');
-                return;
-            }
-            await db.ref(`contents/${key_item}`).set({
-                name: this.subjectSelected,
-                level: this.level,
-                key_subject: this.subject
-            })
-                .then(() => {
+            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.subjectChapter}/`);
+            const snapshot = await chapterRef.once('value');
+            const chapterExists = snapshot.exists();
+
+            if (!chapterExists) {
+                const chapterData = {
+                    chapterName: this.chapterName,
+                    chapterDetail: this.chapterDetail,
+                    annotation: this.annotation
+                };
+
+                try {
+                    await chapterRef.set(chapterData);
                     console.log('Content added to Firebase successfully!');
-                })
-                .catch((error) => {
+                } catch (error) {
                     console.error('Error adding content to Firebase:', error);
-                });
+                }
+            } else {
+                console.log('Chapter already exists in Firebase. Not adding content.');
+            }
         },
+
+        async deleteChapter(item) {
+            const db = this.$fireModule.database();
+
+            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${item.chapterNumber}/`);
+
+            const snapshot = await chapterRef.once('value');
+            const chapterExists = snapshot.exists();
+
+            if (chapterExists) {
+                try {
+                    await chapterRef.remove();
+                    console.log('Chapter deleted from Firebase successfully!');
+                } catch (error) {
+                    console.error('Error deleting chapter from Firebase:', error);
+                }
+            } else {
+                console.log('Chapter does not exist in Firebase. Nothing to delete.');
+            }
+        },
+
 
         async checkIfContentExists(name, level) {
 
@@ -217,17 +242,42 @@ export default {
             });
             return exists;
         },
-        initialize() {
+        async initialize() {
             const db = this.$fireModule.database();
-            db.ref(`contents/${this.contentId}`).on("value", (snapshot) => {
+            await db.ref(`contents/${this.contentId}`).on("value", (snapshot) => {
                 let item = [];
                 let num = 0;
                 this.subjects = [];
                 const childData = snapshot.val();
                 this.subjectName = childData.name;
                 this.level = childData.level;
+
+
+                //this.subjectContents = childData.subject_contents;
             })
 
+            const snapshot = await db.ref(`contents/${this.contentId}/subject_contents`).once("value");
+            const childContentsData = snapshot.val();
+            const subjects = [];
+
+            for (const key in childContentsData) {
+                const snapshotName = await db.ref(`contents/${this.contentId}/subject_contents/${key}`).once("value");
+
+                const childDataName = snapshotName.val();
+
+
+                const item = {
+                    chapterNumber: key,
+                    chapterName: childDataName.chapterName,
+                    chapterDetail: childDataName.chapterDetail,
+                    annotation: childDataName.annotation
+                };
+
+                subjects.push(item);
+            }
+
+            this.subjectContents = subjects;
+            console.log(this.subjectContents)
 
         },
 

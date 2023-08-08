@@ -49,10 +49,10 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2"  @click="viewItem(item)">
+                <v-icon small class="mr-2" @click="viewItem(item)">
                     mdi-eye
                 </v-icon>
-                <v-icon small >
+                <v-icon small>
                     mdi-edit
                 </v-icon>
             </template>
@@ -130,7 +130,7 @@ export default {
                     value: 'name',
                 },
                 { text: 'Level', value: 'level' },
-                { text: 'จำนวนบท', value: '' },
+                { text: 'จำนวนบท', value: 'chapterCount' },
                 { text: 'จำนวนเอกสาร', value: '' },
                 { text: 'จำนวนวิดีโอ', value: '' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
@@ -175,7 +175,7 @@ export default {
         },
         async addContent() {
             let key_item = Math.floor(Math.random() * (1000000)) + 1;
-            console.log(key_item)
+
             const db = this.$fireModule.database();
             const contentExists = await this.checkIfContentExists(this.subjectSelected, this.level);
 
@@ -228,7 +228,7 @@ export default {
 
                 }
                 this.subjects = item;
-                console.log(this.subjects)
+
             })
 
             db.ref("contents/").on("value", (snapshot) => {
@@ -238,12 +238,19 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const subject = childData[key];
+                 
                     num += 1;
-                    item.push({ name: subject.name, level: subject.level, key: key, index: num });
+                    try {
+                        const chapterCount = Object.keys(subject.subject_contents).length;
+                        item.push({ name: subject.name, level: subject.level, key: key, index: num,chapterCount:chapterCount});
+                    } catch (error) {
+                        item.push({ name: subject.name, level: subject.level, key: key, index: num,chapterCount:0 });
+                    }
+
 
                 }
                 this.subjectContents = item;
-                console.log(this.subjectContents)
+                //console.log(this.subjectContents)
             })
         },
 
