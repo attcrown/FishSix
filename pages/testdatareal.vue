@@ -17,7 +17,7 @@ export default {
     mounted(){
         
     },
-    methods: {
+    methods: {        
         readdata(){
             console.log('ทำงาน');
             const db = this.$fireModule.database();
@@ -30,6 +30,13 @@ export default {
         write(){
             const db = this.$fireModule.database();
             db.ref("test/").set({
+            date: 19,
+            name: 'fff',
+            });
+        },
+        write_genID(){
+            const db = this.$fireModule.database();
+            db.ref("test/").push({
             date: 19,
             name: 'fff',
             });

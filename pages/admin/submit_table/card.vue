@@ -7,7 +7,7 @@
                 <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date"
                     transition="scale-transition" offset-y min-width="auto">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-text-field v-model="date" :rules="rules.name" label="วันที่เรียน" prepend-icon="mdi-calendar"
+                        <v-text-field v-model="date" :rules="rules.date" label="วันที่เรียน" prepend-icon="mdi-calendar"
                             readonly v-bind="attrs" v-on="on" required class="date-picker-field"></v-text-field>
                     </template>
 
@@ -316,6 +316,7 @@ export default {
             rules: {
                 // age: [(val) => val < 10 || `I don't believe you!`],
                 // animal: [(val) => (val || "").length > 0 || "This field is required"],
+                date:[(val) => (val || "").length > 0 || "กรุณาระบุวันที่"],
                 name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
                 (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
                 text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
