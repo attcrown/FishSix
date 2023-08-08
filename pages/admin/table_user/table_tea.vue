@@ -110,7 +110,7 @@
                             <v-dialog v-model="dialogDelete" max-width="500px">
                                 <template v-slot:activator="{}">
                                     <v-btn elevation="10" small dark color="#322E2B" class="mb-2 mt-5"
-                                        @click="dialog_select_date = true">
+                                        @click="dialog_detail = true, clear_item(), mode = 'save'">
                                         จองคิวนอกตาราง<span class="mdi mdi-plus text-h6"></span>
                                     </v-btn>
                                 </template>
@@ -137,7 +137,7 @@
                     <v-form ref="form" v-model="valid" lazy-validation>
                         <v-card class="rounded-xl">
                             <v-card-title class="d-flex justify-space-between">
-                                <span class="text-h8" v-if="mode == 'save'"><b>จองเวลาเรียนนอกตาราง</b></span>                                
+                                <span class="text-h8"><b>จองเวลาเรียนนอกตาราง</b></span>
                                 <v-btn fab dark small color="#37474F"
                                     @click="clear_item(), dialog_detail = false, dialog_select_date = false">
                                     <v-icon dark class="text-h5">
@@ -149,7 +149,8 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12" sm="6" md="12">
-                                            <v-text-field v-model="date1" label="วันที่เรียน" readonly >
+                                            <v-text-field v-model="date1" label="วันที่เรียน"
+                                                @click="dialog_select_date = true" :rules="rules.text" readonly>
                                                 <template #prepend>
                                                     <span class="mdi mdi-calendar-outline text-h6"></span>
                                                 </template>
@@ -172,20 +173,21 @@
                                                 item-text="name" item-value="key"
                                                 @change="check_time_start(), search_location()"
                                                 :disabled="mode === 'edit' || save_detail.level === undefined"
-                                                style="font-weight: bold;"
-                                                :rules="[v => !!v || 'กรุณาเลือกครู']" required></v-autocomplete>
+                                                style="font-weight: bold;" :rules="[v => !!v || 'กรุณาเลือกครู']"
+                                                required></v-autocomplete>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-autocomplete v-model="value_student" :items="items_student"
                                                 label="Search student" item-text="name" item-value="key"
-                                                style="font-weight: bold;"
-                                                :rules="[v => !!v || 'กรุณาเลือกนักเรียน']" required></v-autocomplete>
+                                                style="font-weight: bold;" :rules="[v => !!v || 'กรุณาเลือกนักเรียน']"
+                                                required></v-autocomplete>
                                         </v-col>
 
                                         <v-col cols="12" sm="12">
                                             <v-select :items="style_subject" label="ประเภทคลาส" v-model="save_detail.style"
-                                                style="font-weight: bold;" item-text="name" 
-                                                :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" required item-value="key"></v-select>
+                                                style="font-weight: bold;" item-text="name"
+                                                :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" required
+                                                item-value="key"></v-select>
                                         </v-col>
 
                                         <v-col cols="12" sm="6">
@@ -203,12 +205,12 @@
                                                 v-model="save_detail.because" style="font-weight: bold;"
                                                 :rules="rules.text"></v-text-field>
                                         </v-col>
-                                    </v-row>                                    
+                                    </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()">
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()" dark>
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -224,7 +226,7 @@
                 <v-dialog v-model="dialog_detail_edit" persistent max-width="600px">
                     <v-form ref="form_edit" v-model="valid_edit" lazy-validation>
                         <v-card class="rounded-xl">
-                            <v-card-title class="d-flex justify-space-between">                                
+                            <v-card-title class="d-flex justify-space-between">
                                 <span class="text-h8"><b>จองเวลาเรียน</b></span>
                                 <v-btn fab dark small color="#37474F"
                                     @click="clear_item(), dialog_detail_edit = false, dialog_select_date = false">
@@ -234,8 +236,15 @@
                                 </v-btn>
                             </v-card-title>
                             <v-card-text>
-                                <v-container>                                
+                                <v-container>
                                     <v-row>
+                                        <v-col cols="12" sm="6" md="12">
+                                            <v-text-field v-model="date1" label="วันที่เรียน" :rules="rules.text" readonly>
+                                                <template #prepend>
+                                                    <span class="mdi mdi-calendar-outline text-h6"></span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
                                         <v-col cols="12" sm="6" :hidden="save_detail.subject === '00000'">
                                             <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
                                                 :items="subject_select_tea" @input="search_level_select2()"
@@ -244,14 +253,13 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" :hidden="save_detail.subject !== '00000'">
                                             <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
-                                                label="ชื่อวิชา" item-text="name" item-value="key"                                                
-                                                @input="search_level_select2()"
-                                                :rules="[v => !!v || 'กรุณาเลือกวิชา']" required></v-autocomplete>
+                                                label="ชื่อวิชา" item-text="name" item-value="key"
+                                                @input="search_level_select2()" :rules="[v => !!v || 'กรุณาเลือกวิชา']"
+                                                required></v-autocomplete>
                                         </v-col>
                                         <v-col cols="12" sm="6">
                                             <v-autocomplete v-model="save_detail.level" :items="level_select_add"
-                                                label="ระดับการศักษา"
-                                                :disabled="save_detail.subject === undefined"
+                                                label="ระดับการศักษา" :disabled="save_detail.subject === undefined"
                                                 :rules="[v => !!v || 'กรุณาเลือก']" required></v-autocomplete>
                                         </v-col>
                                         <v-col cols="12">
@@ -268,7 +276,7 @@
                                             <v-select :items="style_subject" item-text="name" item-value="key"
                                                 label="ประเภทคลาส" v-model="save_detail.style" readonly
                                                 :rules="[v => !!v || 'กรุณาเลือก']" required></v-select>
-                                        </v-col>                                      
+                                        </v-col>
                                         <v-col cols="12" sm="6">
                                             <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
                                                 @change="validateTime(), picker_stop = null"
@@ -281,15 +289,14 @@
                                         </v-col>
                                         <v-col cols="12" sm="12">
                                             <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
-                                                v-model="save_detail.because"
-                                                :rules="rules.text" required></v-text-field>
+                                                v-model="save_detail.because" :rules="rules.text" required></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()">
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()" dark>
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -321,18 +328,36 @@
             </v-dialog>
         </template>
 
+        <!-- <template>
+            <v-dialog v-model="dialog_select_date" max-width="350px">
+                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.212)">
+                    <v-card-title class="text-h6">
+                        <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน
+                    </v-card-title>
+                    <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
+                        event-color="green lighten-1"
+                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </template> -->
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
                 <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.212)">
                     <v-card-title class="text-h6">
                         <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
                     </v-card-title>
-                    <v-date-picker v-model="date1" multiple :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
-                        event-color="green lighten-1"
-                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                    <v-date-picker v-model="date1" multiple :events="arrayEvents" :allowed-dates="allowedDates"
+                        show-adjacent-months event-color="green lighten-1"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-
+                        <v-btn rounded color="#29CC39" dark class="mb-5" @click="dialog_select_date = false, mode = 'save'">
+                            ยืนยัน
+                        </v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -348,7 +373,7 @@ export default {
         form: [],
         valid_edit: false,
         form_edit: [],
-        rules: {           
+        rules: {
             name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
             (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
             text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
@@ -370,6 +395,7 @@ export default {
         dialog_time_stop: false,
         dialog_save_error: false,
         dialog_select_date: false,
+        dialog_select_date_multiple: false,
         items: [],
         items_select_tea: [],
         items_student: [],
@@ -386,8 +412,8 @@ export default {
         value_student: null,
         style_sub: null,
         arrayEvents: null,
-        date1: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-
+        // date1: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        date1: [],
         dialog: false,
         dialogDelete: false,
 
@@ -444,6 +470,9 @@ export default {
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
         time_standart_stop: [],
         time_standart_sum: [],
+        menu: false,
+        modal: false,
+        menu2: false,
     }),
 
     computed: {
@@ -516,7 +545,7 @@ export default {
             else if (stutus == 'Not active') return 'orange'
             else return 'red'
         },
-        
+
         getRandomColor() {
             const randomIndex = Math.floor(Math.random() * this.colors.length)
             const randomColor = this.colors[randomIndex]
@@ -567,17 +596,37 @@ export default {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
                 this.dialog_detail = false;
-            }else{this.dialog_save_error = true;}
+                // console.log(this.save_detail.subject,
+                //     this.save_detail.level,
+                //     this.save_detail.style,
+                //     this.save_detail.because,
+                //     this.picker_start,
+                //     this.picker_stop,
+                //     this.value,
+                //     this.value_student,
+                //     this.date1,
+                //     this.mode);
+            } else { this.dialog_save_error = true; }
         },
 
         validate_edit() {
             if (this.$refs.form_edit.validate()) {
+                // console.log(this.save_detail.subject,
+                //     this.save_detail.level,
+                //     this.save_detail.style,
+                //     this.save_detail.because,
+                //     this.picker_start,
+                //     this.picker_stop,
+                //     this.value,
+                //     this.value_student,
+                //     this.date1,
+                //     this.mode);
                 this.save_detail_data();
                 this.dialog_detail_edit = false;
-            }else{this.dialog_save_error = true;}
+            } else { this.dialog_save_error = true; }
         },
 
-        save_detail_data() {            
+        save_detail_data() {
             if (this.save_detail.subject == null ||
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
@@ -597,7 +646,7 @@ export default {
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise, getTimeTeaPromise])
                 .then(([timeSnapshot, timeteaSnapshot]) => {
-                    if (timeSnapshot.exists() || timeteaSnapshot.exists()) {                        
+                    if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
                         if (true) {
                             if (this.mode === 'save') {
                                 if (timeSnapshot.exists()) {
@@ -616,25 +665,28 @@ export default {
                                         return;
                                     }
                                 }
-                                db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
-                                    teacher: this.value,
-                                    subject: this.save_detail.subject,
-                                    style_subject: this.save_detail.style,
-                                    level: this.save_detail.level,
-                                    start: this.picker_start,
-                                    // class: this.save_detail.class,
-                                    stop: this.picker_stop,
-                                    start_tea: this.picker_start,
-                                    stop_tea: this.picker_stop,
-                                    because: this.save_detail.because,
-                                    status: this.check_status(),
-                                    ID: id,
-                                });
-                                for (const key in this.time_standart_sum) {
-                                    db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
-                                        0: ''
+                                for (const keydate in this.date1) {
+                                    db.ref(`date_match/${this.value_student}/${this.date1[keydate]}/${this.picker_stop}`).update({
+                                        teacher: this.value,
+                                        subject: this.save_detail.subject,
+                                        style_subject: this.save_detail.style,
+                                        level: this.save_detail.level,
+                                        start: this.picker_start,
+                                        // class: this.save_detail.class,
+                                        stop: this.picker_stop,
+                                        start_tea: this.picker_start,
+                                        stop_tea: this.picker_stop,
+                                        because: this.save_detail.because,
+                                        status: this.check_status(),
+                                        ID: id,
                                     });
-                                };
+                                    for (const key in this.time_standart_sum) {
+                                        db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                            0: ''
+                                        });
+                                    };
+                                }
+
                             } else if (this.mode === 'edit') {
                                 if (timeSnapshot.exists()) {
                                     const timeData = timeSnapshot.val();
@@ -676,30 +728,32 @@ export default {
                             } else {
                                 this.dialog_save_error = true;
                             }
-                            this.clear_item();                            
+                            this.clear_item();
                             this.dialog_select_date = false;
                         }
                     } else {
                         if (this.mode === 'save') {
-                            db.ref(`date_match/${this.value_student}/${this.date1}/${this.picker_stop}`).update({
-                                teacher: this.value,
-                                subject: this.save_detail.subject,
-                                style_subject: this.save_detail.style,
-                                level: this.save_detail.level,
-                                start: this.picker_start,
-                                // class: this.save_detail.class,
-                                stop: this.picker_stop,
-                                start_tea: this.picker_start,
-                                stop_tea: this.picker_stop,
-                                because: this.save_detail.because,
-                                status: this.check_status(),
-                                ID: id,
-                            });
-                            for (const key in this.time_standart_sum) {
-                                db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:1:${id}`).update({
-                                    0: ''
+                            for (const keydate in this.date1) {
+                                db.ref(`date_match/${this.value_student}/${this.date1[keydate]}/${this.picker_stop}`).update({
+                                    teacher: this.value,
+                                    subject: this.save_detail.subject,
+                                    style_subject: this.save_detail.style,
+                                    level: this.save_detail.level,
+                                    start: this.picker_start,
+                                    // class: this.save_detail.class,
+                                    stop: this.picker_stop,
+                                    start_tea: this.picker_start,
+                                    stop_tea: this.picker_stop,
+                                    because: this.save_detail.because,
+                                    status: this.check_status(),
+                                    ID: id,
                                 });
-                            };
+                                for (const key in this.time_standart_sum) {
+                                    db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
+                                        0: ''
+                                    });
+                                };
+                            }
                         } else if (this.mode === 'edit') {
                             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                 const childData = snapshot.val();
@@ -733,7 +787,7 @@ export default {
                         } else {
                             this.dialog_save_error = true;
                         }
-                        this.clear_item();                        
+                        this.clear_item();
                         this.dialog_select_date = false;
                     }
                 })
@@ -762,7 +816,7 @@ export default {
                 , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
             this.time_standart_stop = [];
             this.time_standart_sum = [];
-
+            this.date1 = [];
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -819,7 +873,7 @@ export default {
             }
         },
 
-        check_level(level, sub, key) {            
+        check_level(level, sub, key) {
             let name;
             let levels = [];
             const db = this.$fireModule.database();
@@ -830,9 +884,9 @@ export default {
             db.ref(`user/${key}/subject_all`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    const detail = childData[key];                    
-                    if (detail.name === name) {                        
-                        levels = detail.level;                        
+                    const detail = childData[key];
+                    if (detail.name === name) {
+                        levels = detail.level;
                         break;
                     }
                 }
@@ -888,7 +942,7 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {                            
+                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -946,7 +1000,7 @@ export default {
                         }
                     }
                 }
-                this.desserts = item;                
+                this.desserts = item;
             })
         },
         check_time_start() {
@@ -957,14 +1011,14 @@ export default {
                     this.hour_tea = 0;
                     this.min_tea = 0;
                 }
-                for (const key in childData) {                   
+                for (const key in childData) {
                     this.hour_tea = key.substring(0, 2);
                     this.min_tea = key.substring(3, 5);
                 }
             })
         },
 
-        editItem(item) {            
+        editItem(item) {
             this.idTea = item.id;
             this.delday = item.time_e;
             this.editedIndex = this.desserts.indexOf(item);
@@ -1011,7 +1065,7 @@ export default {
                     this.time_standart.push(this.time_all[key]);
                     this.time_standart_stop.push(this.time_all[key]);
                 }
-            }            
+            }
         },
         search_level_select_edit(item) {
             let level = [];
@@ -1021,7 +1075,7 @@ export default {
                 for (const key in childData) {
                     const detail = childData[key];
                     if (key === item.keySubject) {
-                        level = detail.level;                        
+                        level = detail.level;
                         break;
                     }
                 }
@@ -1051,11 +1105,11 @@ export default {
             db.ref(`user/${item.key}/subject_all`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    const detail = childData[key];                    
+                    const detail = childData[key];
                     subject.push({ name: detail.name, key: key });
                 }
                 this.subject_select_tea = subject;
-            })           
+            })
         },
 
         search_location() {
@@ -1068,7 +1122,7 @@ export default {
                     const location = teacherSnapshot.val();
                     this.style_class = location.classType;
 
-                    for (const key in location.classLocation) {                       
+                    for (const key in location.classLocation) {
                         db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
                             const childData = snapshot.val();
                             this.style_subject.push({ name: childData.name, key: location.classLocation[key] });
@@ -1077,7 +1131,7 @@ export default {
                 })
 
         },
-        
+
         close() {
             this.dialog_detail = false;
             this.dialog_detail_edit = false;
@@ -1086,7 +1140,7 @@ export default {
                 this.editedIndex = -1
             })
         },
-      
+
     },
 }
 </script>

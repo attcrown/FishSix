@@ -27,7 +27,7 @@
                                 <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
                                     <template v-slot:activator="{}">
                                         <v-btn elevation="10" small dark color="#322E2B" class="mb-2 mt-5 hide-on-mobile"
-                                            @click="dialog_select_date = true">
+                                            @click="dialog_detail = true, mode = 'save', clear_item()">
                                             เพิ่มตารางสอน<span class="mdi mdi-plus text-h6"></span>
                                         </v-btn>
                                     </template>
@@ -93,7 +93,15 @@
                         <v-card-text>
                             <v-container>
                                 <v-row>
-                                    <v-col cols="12" sm="6" md="12">
+                                    <v-col cols="12" sm="6" md="12" v-if="mode == 'save'">
+                                        <v-text-field v-model="date1" label="วันที่เรียน" @click="dialog_select_date = true"
+                                            :rules="rules.text" readonly>
+                                            <template #prepend>
+                                                <span class="mdi mdi-calendar-outline text-h6"></span>
+                                            </template>
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="12" v-if="mode == 'edit'">
                                         <v-text-field v-model="date1" label="วันที่เรียน" readonly>
                                             <template #prepend>
                                                 <span class="mdi mdi-calendar-outline text-h6"></span>
@@ -104,36 +112,35 @@
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key" :readonly="mode == 'edit'"
                                             @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
-                                            @input="check_tea = false" 
-                                            :rules="[v => !!v || 'กรุณาเลือกครู']"
+                                            @input="check_tea = false" :rules="[v => !!v || 'กรุณาเลือกครู']"
                                             required></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="time_standart" v-model="picker_start" label="เวลาเริ่มต้น"
                                             @change="validateTime(), picker_stop = null"
-                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']"
-                                            :disabled="mode == 'edit'" required></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']" :disabled="mode == 'edit'"
+                                            required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
-                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']"
-                                            label="เวลาสิ้นสุด" :disabled="mode == 'edit'" required></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']" label="เวลาสิ้นสุด"
+                                            :disabled="mode == 'edit'" required></v-select>
                                     </v-col>
 
                                     <v-col cols="12" sm="12">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
-                                            :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']"
-                                            label="ประเภทคลาส" v-model="save_detail.style" required></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" label="ประเภทคลาส"
+                                            v-model="save_detail.style" required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="8">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
-                                            :rules="[v => !!v || 'กรุณาเลือกวิชา']"
-                                            v-model="save_detail.subject" required></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกวิชา']" v-model="save_detail.subject"
+                                            required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนที่รับสูงสุดต่อชม." v-model="save_detail.sum_people"
-                                            :rules="rules.text"
-                                            :disabled="mode == 'edit'" type="number" required></v-text-field>
+                                            :rules="rules.text" :disabled="mode == 'edit'" type="number"
+                                            required></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -177,12 +184,13 @@
                     <v-card-title class="text-h6">
                         <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
                     </v-card-title>
-                    <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
-                        event-color="green lighten-1"
-                        @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
+                    <v-date-picker v-model="date1" :events="arrayEvents" multiple :allowed-dates="allowedDates"
+                        show-adjacent-months event-color="green lighten-1"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-
+                        <v-btn rounded color="#29CC39" dark class="mb-5" @click="dialog_select_date = false, mode = 'save'">
+                            ยืนยัน
+                        </v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -217,7 +225,7 @@ export default {
         value: null,
         style_sub: null,
         arrayEvents: [],
-        date1: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        date1:[],
 
         dialog: false,
         dialogDelete: false,
@@ -256,7 +264,7 @@ export default {
         picker_start: null,
         picker_stop: null,
 
-        rules: {           
+        rules: {
             name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
             (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
             text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
@@ -341,10 +349,10 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-            }else{this.dialog_save_error = true;}
+            } else { this.dialog_save_error = true; }
         },
-        
-        save_detail_data() {           
+
+        save_detail_data() {
             console.log('บันทึก');
             let id = new Date().getTime();
             const db = this.$fireModule.database();
@@ -387,7 +395,34 @@ export default {
                             alert('ใส่เวลาไม่ถูกต้องกรุณาลงใหม่อีกครั้ง');
                         } else {
                             if (this.mode == 'save') {
-                                db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).set({
+                                for (const keydate in this.date1) {
+                                    db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
+                                        // class: this.save_detail.class,
+                                        style_subject: this.save_detail.style,
+                                        sum_people: this.save_detail.sum_people,
+                                        invite: '0',
+                                        subject: this.save_detail.subject,
+                                        start: this.picker_start,
+                                        stop: this.picker_stop,
+                                        ID: id,
+                                    });
+                                    console.log(this.time_standart_sum);
+                                    for (const key in this.time_standart_sum) {
+                                        db.ref(`Time_teacher/${this.value}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
+                                            0: ''
+                                        });
+                                    };
+                                }
+                                this.clear_item();
+                                this.dialog_detail = false;
+                                this.dialog_select_date = false;
+                                this.search_date_teacher();
+                            }
+                        }
+                    } else {
+                        if (this.mode == 'save') {
+                            for (const keydate in this.date1) {
+                                db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
                                     // class: this.save_detail.class,
                                     style_subject: this.save_detail.style,
                                     sum_people: this.save_detail.sum_people,
@@ -397,37 +432,16 @@ export default {
                                     stop: this.picker_stop,
                                     ID: id,
                                 });
-                                console.log(this.time_standart_sum);
                                 for (const key in this.time_standart_sum) {
-                                    db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
+                                    db.ref(`Time_teacher/${this.value}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
                                         0: ''
                                     });
                                 };
-                                this.clear_item();
-                                this.dialog_detail = false;
-                                this.dialog_select_date = false;
                             }
-                        }
-                    } else {
-                        if (this.mode == 'save') {
-                            db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).set({
-                                // class: this.save_detail.class,
-                                style_subject: this.save_detail.style,
-                                sum_people: this.save_detail.sum_people,
-                                invite: '0',
-                                subject: this.save_detail.subject,
-                                start: this.picker_start,
-                                stop: this.picker_stop,
-                                ID: id,
-                            });
-                            for (const key in this.time_standart_sum) {
-                                db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                    0: ''
-                                });
-                            };
                             this.clear_item();
                             this.dialog_detail = false;
                             this.dialog_select_date = false;
+                            this.search_date_teacher();
                         }
                     }
                 })
@@ -443,6 +457,7 @@ export default {
             this.time_standart_sum = [];
             this.picker_start = null;
             this.picker_stop = null;
+            this.date1 = [];
         },
         allowedDates: val => {
             const currentDate = new Date();
@@ -585,15 +600,18 @@ export default {
         },
 
         deleteItemConfirm() {
-            // console.log(this.delcon);
+            let delcon_key = this.delcon.key;
+            let delcon_date = this.delcon.date;
+            let delcon_IdTime = this.delcon.IdTime;
+            console.log(this.delcon);
             const db = this.$fireModule.database();
             db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const detail = key.split(":");
-                    if (detail[4] == this.delcon.IdTime) {
-                        db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}/${key}`).remove();
-                        // console.log('ลบ', key, detail[4]);
+                    if (detail[4] == delcon_IdTime) {
+                        db.ref(`Time_teacher/${delcon_key}/${delcon_date}/${key}`).remove();
+                        console.log('ลบ', key, detail[4],delcon_key,delcon_date);
                     }
                 }
             })
