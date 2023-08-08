@@ -23,7 +23,8 @@
                                 <v-spacer></v-spacer>
                                 <v-text-field class="me-10" v-model="search_table" append-icon="mdi-magnify" label="Search"
                                     single-line hide-details style="max-width: 200px;"></v-text-field>
-                                <v-dialog v-model="dialogDelete" max-width="500px">
+
+                                <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
                                     <template v-slot:activator="{}">
                                         <v-btn elevation="10" small dark color="#322E2B" class="mb-2 mt-5 hide-on-mobile"
                                             @click="dialog_select_date = true">
@@ -31,29 +32,41 @@
                                         </v-btn>
                                     </template>
                                     <v-card>
-                                        <v-card-title class="text-h5">Are you sure you want to delete this
-                                            item?</v-card-title>
+                                        <v-card-title>
+                                            <v-spacer></v-spacer>
+                                            <v-btn fab dark small color="#37474F" @click="closeDelete">
+                                                <v-icon dark class="text-h5">
+                                                    mdi-close
+                                                </v-icon>
+                                            </v-btn>
+                                        </v-card-title>
+                                        <div class="text-center">
+                                            <img :src="require('~/assets/Frame.png')">
+                                        </div>
+                                        <div class="text-center mt-5">
+                                            <b>ยืนยันลบตารางสอนหรือไม่</b>
+                                        </div>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                                            <v-btn rounded color="#29CC39" @click="deleteItemConfirm"
+                                                class="mt-5 mb-5">ยืนยัน</v-btn>
                                             <v-spacer></v-spacer>
                                         </v-card-actions>
                                     </v-card>
                                 </v-dialog>
+
                             </v-toolbar>
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'" v-if="!(parseInt(item.invite) > 0)">
-                                <v-icon  class="text-h5"
-                                    color="#26415B">
+                            <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'"
+                                v-if="!(parseInt(item.invite) > 0)">
+                                <v-icon class="text-h5" color="#26415B">
                                     mdi-pencil
                                 </v-icon>
                             </v-btn>
                             <v-btn text icon elevation="5" @click="deleteItem(item)" v-if="!(parseInt(item.invite) > 0)">
-                                <v-icon   class="text-h5"
-                                    color="#AD382F">
+                                <v-icon class="text-h5" color="#AD382F">
                                     mdi-delete
                                 </v-icon>
                             </v-btn>
@@ -67,126 +80,71 @@
             <v-row justify="center">
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
                     <v-card class="rounded-xl">
-                        <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8" v-if="mode == 'save'"><b>เพิ่มตารางสอน [{{ date1 }}]</b></span>
-                            <span class="text-h8" v-if="mode == 'edit'"><b>แก้ไขตารางสอน [{{ date1 }}]</b></span>
+                        <v-card-title class="d-flex justify-space-between">
+                            <span v-if="mode == 'save'"><b>เพิ่มตารางสอน</b></span>
+                            <span v-if="mode == 'edit'"><b>แก้ไขตารางสอน</b></span>
+                            <v-btn fab dark small color="#37474F"
+                                @click="dialog_detail = false, dialog_select_date = false, clear_item()">
+                                <v-icon dark class="text-h5">
+                                    mdi-close
+                                </v-icon>
+                            </v-btn>
                         </v-card-title>
                         <v-card-text>
                             <v-container>
                                 <v-row>
-                                    <v-col cols="12" class="mt-5" v-if="mode == 'save'">
+                                    <v-col cols="12" sm="6" md="12">
+                                        <v-text-field v-model="date1" label="วันที่เรียน" readonly>
+                                            <template #prepend>
+                                                <span class="mdi mdi-calendar-outline text-h6"></span>
+                                            </template>
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" class="mt-5">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
-                                            item-text="name" item-value="key"
+                                            item-text="name" item-value="key" :readonly="mode == 'edit'"
                                             @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
                                             @input="check_tea = false"></v-autocomplete>
                                     </v-col>
-                                    <v-col cols="12" class="mt-5" v-if="mode == 'edit'">
-                                        <v-autocomplete v-model="value" :items="items" label="Search teacher"
-                                            item-text="name" item-value="key" readonly
-                                            @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
-                                            @input="check_tea = false"></v-autocomplete>
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="time_standart" v-model="picker_start" label="เวลาเริ่มต้น"
+                                            @change="validateTime(), picker_stop = null"
+                                            :disabled="mode == 'edit'"></v-select>
                                     </v-col>
-                                    <!-- <v-col cols="12" sm="4">
-                                        <v-select :items="class_flip" label="ประเภท" v-model="save_detail.class"></v-select>
-                                    </v-col> -->
-                                    <v-col cols="12" sm="8">
-                                        <v-select :items="style_subject" item-text="name" item-value="key"
-                                            label="สถานที่สอน" v-model="save_detail.style"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="4">
-                                        <v-text-field label="จำนวนคนเปิดรับ" v-model="save_detail.sum_people"
-                                            :disabled="mode == 'edit'" type="number"></v-text-field>
+                                    <v-col cols="12" sm="6">
+                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
+                                            label="เวลาสิ้นสุด" :disabled="mode == 'edit'"></v-select>
                                     </v-col>
 
-                                    <v-col cols="12" sm="4" v-if="value != null">
+                                    <v-col cols="12" sm="12">
+                                        <v-select :items="style_subject" item-text="name" item-value="key"
+                                            label="ประเภทคลาส" v-model="save_detail.style"></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="8">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
                                             v-model="save_detail.subject"></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="4">
-                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มสอน"
-                                            @change="validateTime(), picker_stop = null"
-                                            :disabled="mode == 'edit'"></v-select>
+                                        <v-text-field label="จำนวนคนที่รับสูงสุดต่อชม." v-model="save_detail.sum_people"
+                                            :disabled="mode == 'edit'" type="number"></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
-                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
-                                            label="หยุดสอน" :disabled="mode == 'edit'"></v-select>
-                                    </v-col>
-
-                                    <!-- <v-col cols="12" sm="4">
-                                        <v-text-field label="เริ่มสอน" v-model="picker_start"
-                                            @click="dialog_time = true"></v-text-field>
-                                    </v-col> -->
-                                    <!-- <v-col cols="12" sm="4">
-                                        <v-text-field label="หยุดสอน" v-model="picker_stop"
-                                            @click="dialog_time_stop = true"></v-text-field>
-                                    </v-col> -->
                                 </v-row>
                             </v-container>
-                            <small>*การลงเวลามีผลต่อการแสดงผลฝั่งลูกค้ากรุณาใช้ความชัวในกแารลงเวลา</small>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text
-                                @click="dialog_detail = false; dialog_select_date = false; clear_item()">
-                                Close
-                            </v-btn>
-                            <v-btn color="blue darken-1" text @click="save_detail_data()" :disabled="!formIsValid">
-                                Save
-                            </v-btn>
+                            <v-btn rounded color="#29CC39" class="mt-5 mb-5" @click="save_detail_data()"
+                                :disabled="!formIsValid">บันทึก <span class="mdi mdi-content-save text-h6"></span></v-btn>
+                            <v-spacer></v-spacer>
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
             </v-row>
         </template>
 
-        <template>
-            <v-row justify="center">
-                <v-dialog v-model="dialog_time" persistent max-width="400px">
-                    <v-card class="rounded-xl">
-                        <v-card-title>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_start" :allowed-hours="allowedHours" format="24hr"
-                                        :max="picker_stop"></v-time-picker>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_time = false">
-                                Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-row>
-        </template>
 
-        <template>
-            <v-row justify="center">
-                <v-dialog v-model="dialog_time_stop" persistent max-width="400px">
-                    <v-card class="rounded-xl">
-                        <v-card-title>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_stop" format="24hr" :min="picker_start"></v-time-picker>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialog_time_stop = false">
-                                Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-row>
-        </template>
+
+
 
         <template>
             <v-dialog v-model="dialog_save_error" max-width="500px">
@@ -204,14 +162,16 @@
 
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
-                <v-card class="px-3 text-center rounded-xl" style="background-color: rgba(247, 245, 245, 0.842)" >
-                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span> เลือกวันที่สอน</v-card-title>
+                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.212)">
+                    <v-card-title class="text-h6">
+                        <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
+                    </v-card-title>
                     <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        
+
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
