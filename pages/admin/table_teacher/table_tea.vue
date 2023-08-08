@@ -77,8 +77,8 @@
         </div>
 
         <template>
-            <v-row justify="center">
-                <v-dialog v-model="dialog_detail" persistent max-width="600px">
+            <v-dialog v-model="dialog_detail" persistent max-width="600px">
+                <v-form ref="form" v-model="valid" lazy-validation>
                     <v-card class="rounded-xl">
                         <v-card-title class="d-flex justify-space-between">
                             <span v-if="mode == 'save'"><b>เพิ่มตารางสอน</b></span>
@@ -100,60 +100,71 @@
                                             </template>
                                         </v-text-field>
                                     </v-col>
-                                    <v-col cols="12" class="mt-5">
+                                    <v-col cols="12">
                                         <v-autocomplete v-model="value" :items="items" label="Search teacher"
                                             item-text="name" item-value="key" :readonly="mode == 'edit'"
                                             @change="check_time_start(), search_subject_tea(value), search_style_tea(value)"
-                                            @input="check_tea = false"></v-autocomplete>
+                                            @input="check_tea = false" 
+                                            :rules="[v => !!v || 'กรุณาเลือกครู']"
+                                            required></v-autocomplete>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="time_standart" v-model="picker_start" label="เวลาเริ่มต้น"
                                             @change="validateTime(), picker_stop = null"
-                                            :disabled="mode == 'edit'"></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']"
+                                            :disabled="mode == 'edit'" required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="6">
                                         <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
-                                            label="เวลาสิ้นสุด" :disabled="mode == 'edit'"></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกเวลา']"
+                                            label="เวลาสิ้นสุด" :disabled="mode == 'edit'" required></v-select>
                                     </v-col>
 
                                     <v-col cols="12" sm="12">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
-                                            label="ประเภทคลาส" v-model="save_detail.style"></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']"
+                                            label="ประเภทคลาส" v-model="save_detail.style" required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="8">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
-                                            v-model="save_detail.subject"></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกวิชา']"
+                                            v-model="save_detail.subject" required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนที่รับสูงสุดต่อชม." v-model="save_detail.sum_people"
-                                            :disabled="mode == 'edit'" type="number"></v-text-field>
+                                            :rules="rules.text"
+                                            :disabled="mode == 'edit'" type="number" required></v-text-field>
                                     </v-col>
                                 </v-row>
                             </v-container>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn rounded color="#29CC39" class="mt-5 mb-5" @click="save_detail_data()"
-                                :disabled="!formIsValid">บันทึก <span class="mdi mdi-content-save text-h6"></span></v-btn>
+                            <v-btn rounded color="#29CC39" class="mt-5 mb-5" @click="validate()">
+                                บันทึก <span class="mdi mdi-content-save text-h6"></span>
+                            </v-btn>
                             <v-spacer></v-spacer>
                         </v-card-actions>
                     </v-card>
-                </v-dialog>
-            </v-row>
+                </v-form>
+            </v-dialog>
         </template>
 
-
-
-
-
         <template>
-            <v-dialog v-model="dialog_save_error" max-width="500px">
+            <v-dialog v-model="dialog_save_error" max-width="300px" class="text-center">
                 <v-card>
-                    <v-card-title class="text-h5">กรุณากรอกข้อมูลให้ครบ</v-card-title>
+                    <v-card-title>
+                    </v-card-title>
+                    <div class="text-center">
+                        <img :src="require('~/assets/Frame.png')">
+                    </div>
+                    <div class="text-center mt-5">
+                        <b>กรุณากรอกข้อมูลให้ถูกต้อง</b>
+                    </div>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog_save_error = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_save_error = false">OK</v-btn>
+                        <v-btn rounded color="#322E2B" @click="dialog_save_error = false" dark
+                            class="mt-5 mb-5">ตกลง</v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -183,6 +194,8 @@
 <script>
 export default {
     data: () => ({
+        valid: false,
+        form: [],
         check_tea: true,
         search_table: '',
         search: '',
@@ -243,6 +256,11 @@ export default {
         picker_start: null,
         picker_stop: null,
 
+        rules: {           
+            name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
+            (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
+            text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
+        },
     }),
     components: {
 
@@ -251,17 +269,6 @@ export default {
     computed: {
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-        },
-        formIsValid() {
-            return (
-                this.value &&
-                // this.save_detail.class &&
-                this.save_detail.style &&
-                this.save_detail.sum_people &&
-                this.save_detail.subject &&
-                this.picker_start &&
-                this.picker_stop
-            );
         },
         allowedHours() {
             return v => v > this.hour_tea;
@@ -331,8 +338,14 @@ export default {
             return randomColor
         },
 
-        save_detail_data() {
-            // console.log(this.mode);
+        validate() {
+            if (this.$refs.form.validate()) {
+                this.save_detail_data();
+            }else{this.dialog_save_error = true;}
+        },
+        
+        save_detail_data() {           
+            console.log('บันทึก');
             let id = new Date().getTime();
             const db = this.$fireModule.database();
             if (//this.save_detail.class == '' ||
@@ -436,14 +449,6 @@ export default {
             const selectedDate = new Date(val);
             return selectedDate >= currentDate;
         },
-
-        // search_class_tea(item) {
-        //     const db = this.$fireModule.database();
-        //     db.ref(`user/${item}/classType`).on("value", (snapshot) => {
-        //         const childData = snapshot.val();
-        //         this.class_flip = childData;
-        //     })
-        // },
 
         search_style_tea(item) {
             const db = this.$fireModule.database();
@@ -588,7 +593,7 @@ export default {
                     const detail = key.split(":");
                     if (detail[4] == this.delcon.IdTime) {
                         db.ref(`Time_teacher/${this.delcon.key}/${this.delcon.date}/${key}`).remove();
-                        console.log('ลบ', key, detail[4]);
+                        // console.log('ลบ', key, detail[4]);
                     }
                 }
             })

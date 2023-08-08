@@ -43,9 +43,6 @@
                                     <v-list-item @click="type = 'month'">
                                         <v-list-item-title>Month</v-list-item-title>
                                     </v-list-item>
-                                    <!-- <v-list-item @click="type = '4day'">
-                                <v-list-item-title>4 days</v-list-item-title>
-                            </v-list-item> -->
                                 </v-list>
                             </v-menu>
                         </v-toolbar>
@@ -91,7 +88,7 @@
             <v-col cols="12">
                 <div>
                     <div class="subheading">
-                        <!-- <h3>Student</h3> -->
+
                     </div>
                     <v-date-picker class="hide-on-desktop" v-model="date1" :events="arrayEvents"
                         :allowed-dates="allowedDates" show-adjacent-months event-color="green lighten-1"
@@ -99,18 +96,6 @@
                 </div>
             </v-col>
 
-            <!-- <v-col cols="4">
-                <v-autocomplete v-model="search_value" :items="items" label="Search teacher" @change="search_date_teacher()"
-                    item-text="name" item-value="key"></v-autocomplete>
-            </v-col>
-            <v-col cols="4">
-                <v-autocomplete v-model="search_class" :items="style_class" @change="search_date_teacher()"
-                    label="Search Class"></v-autocomplete>
-            </v-col>
-            <v-col cols="4">
-                <v-autocomplete v-model="search_style_sub" :items="style_subject" @change="search_date_teacher()"
-                    label="Search Style"></v-autocomplete>
-            </v-col> -->
 
             <v-col cols="12">
                 <v-data-table :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
@@ -135,7 +120,7 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        <v-btn text icon elevation="5" @click="editItem(item), dialog_detail = true, mode = 'edit'">
+                        <v-btn text icon elevation="5" @click="editItem(item), dialog_detail_edit = true, mode = 'edit'">
                             <v-icon class="text-h5">
                                 mdi-plus-box-multiple
                             </v-icon>
@@ -150,185 +135,187 @@
         <template>
             <v-row justify="center">
                 <v-dialog v-model="dialog_detail" persistent max-width="600px">
-                    <v-card class="rounded-xl">
-                        <v-card-title style="background-color:rgba(32, 124, 4, 0.733)">
-                            <span class="text-h8" v-if="mode == 'save'"><b>จองเวลาเรียนนอกตาราง [{{ date1 }}]</b></span>
-                            <span class="text-h8" v-if="mode == 'edit'"><b>จองเวลาเรียน [{{ date1 }}]</b></span>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row :hidden="mode === 'edit'">
-                                    <v-col cols="12" sm="6">
-                                        <v-autocomplete v-model="save_detail.subject" :items="subject_select"
-                                            label="ชื่อวิชา*" item-text="name" item-value="key" style="font-weight: bold;"
-                                            @input="search_level_select()"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-autocomplete v-model="save_detail.level" :items="level_select"
-                                            label="ระดับการศักษา*" :disabled="save_detail.subject === undefined"
-                                            style="font-weight: bold;" @input="search_teacher()"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-autocomplete v-model="value" :items="items_select_tea" label="Search teacher"
-                                            item-text="name" item-value="key"
-                                            @change="check_time_start(), search_location()"
-                                            :disabled="mode === 'edit' || save_detail.level === undefined"
-                                            style="font-weight: bold;"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-autocomplete v-model="value_student" :items="items_student"
-                                            label="Search student" item-text="name" item-value="key"
-                                            style="font-weight: bold;"></v-autocomplete>
-                                    </v-col>
+                    <v-form ref="form" v-model="valid" lazy-validation>
+                        <v-card class="rounded-xl">
+                            <v-card-title class="d-flex justify-space-between">
+                                <span class="text-h8" v-if="mode == 'save'"><b>จองเวลาเรียนนอกตาราง</b></span>                                
+                                <v-btn fab dark small color="#37474F"
+                                    @click="clear_item(), dialog_detail = false, dialog_select_date = false">
+                                    <v-icon dark class="text-h5">
+                                        mdi-close
+                                    </v-icon>
+                                </v-btn>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12" sm="6" md="12">
+                                            <v-text-field v-model="date1" label="วันที่เรียน" readonly >
+                                                <template #prepend>
+                                                    <span class="mdi mdi-calendar-outline text-h6"></span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-autocomplete v-model="save_detail.subject" :items="subject_select"
+                                                label="ชื่อวิชา*" item-text="name" item-value="key"
+                                                style="font-weight: bold;" @input="search_level_select()"
+                                                :rules="[v => !!v || 'กรุณาเลือกวิชา']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-autocomplete v-model="save_detail.level" :items="level_select"
+                                                label="ระดับการศักษา*" :disabled="save_detail.subject === undefined"
+                                                style="font-weight: bold;" @input="search_teacher()"
+                                                :rules="[v => !!v || 'กรุณาเลือกระดับการศักษา']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-autocomplete v-model="value" :items="items_select_tea" label="Search teacher"
+                                                item-text="name" item-value="key"
+                                                @change="check_time_start(), search_location()"
+                                                :disabled="mode === 'edit' || save_detail.level === undefined"
+                                                style="font-weight: bold;"
+                                                :rules="[v => !!v || 'กรุณาเลือกครู']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-autocomplete v-model="value_student" :items="items_student"
+                                                label="Search student" item-text="name" item-value="key"
+                                                style="font-weight: bold;"
+                                                :rules="[v => !!v || 'กรุณาเลือกนักเรียน']" required></v-autocomplete>
+                                        </v-col>
 
-                                    <v-col cols="12" sm="8">
-                                        <v-select :items="style_subject" label="ประเภทคลาส" v-model="save_detail.style"
-                                            style="font-weight: bold;" item-text="name" item-value="key"></v-select>
-                                    </v-col>
+                                        <v-col cols="12" sm="12">
+                                            <v-select :items="style_subject" label="ประเภทคลาส" v-model="save_detail.style"
+                                                style="font-weight: bold;" item-text="name" 
+                                                :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" required item-value="key"></v-select>
+                                        </v-col>
 
-                                    <!-- <v-col cols="12" sm="6">
-                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
-                                            style="font-weight: bold;"></v-select>
-                                    </v-col> -->
-
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
-                                            @change="validateTime(), picker_stop = null"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
-                                            label="เลิกเรียน"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="12">
-                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้" v-model="save_detail.because"
-                                            style="font-weight: bold;"></v-text-field>
-                                    </v-col>
-                                </v-row>
-
-
-                                <!-- ---------------------------EDIT------------------------  -->
-                                <v-row :hidden="mode === 'save'">
-                                    <v-col cols="12" sm="6" :hidden="save_detail.subject === 'ทุกวิชา'">
-                                        <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
-                                            :items="subject_select_tea" @input="search_level_select2()"
-                                            :readonly="save_detail.subject != '00000'"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" sm="6" :hidden="save_detail.subject !== 'ทุกวิชา'">
-                                        <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
-                                            label="ชื่อวิชา" item-text="name" item-value="key"
-                                            @input="search_level_select2()"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-autocomplete v-model="save_detail.level" :items="level_select_add"
-                                            label="ระดับการศักษา"
-                                            :disabled="save_detail.subject === undefined"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-autocomplete v-model="value" :items="items" label="Search teacher"
-                                            item-text="name" item-value="key" readonly></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-autocomplete v-model="value_student" :items="items_student"
-                                            label="Search student" item-text="name" item-value="key"></v-autocomplete>
-                                    </v-col>
-                                    <v-col cols="12" sm="8">
-                                        <v-select :items="style_subject" item-text="name" item-value="key"
-                                            label="ประเภทคลาส" v-model="save_detail.style" readonly></v-select>
-                                    </v-col>
-                                    <!-- <v-col cols="12" sm="6">
-                                        <v-select :items="style_class" label="รูปแบบการสอน" v-model="save_detail.class"
-                                             readonly></v-select>
-                                    </v-col> -->
-
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
-                                            @change="validateTime(), picker_stop = null"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="6">
-                                        <v-select :items="time_standart_stop" v-model="picker_stop" @change="validateTime()"
-                                            label="เลิกเรียน"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" sm="12">
-                                        <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
-                                            v-model="save_detail.because"></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                            <small>*หากกดบันทึกแล้วไม่สามารถแก้ไขได้</small>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text
-                                @click="clear_item(), dialog_detail = false, dialog_select_date = false">
-                                Close
-                            </v-btn>
-                            <v-btn color="blue darken-1" text @click="save_detail_data()">
-                                Save
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-row>
-        </template>
-
-        <!-- <template>
-            <v-row justify="center">
-                <v-dialog v-model="dialog_time" persistent max-width="400px">
-                    <v-card class="rounded-xl">
-                        <v-card-title>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_start" :allowed-hours="allowedHours" format="24hr"
-                                        :max="picker_stop"></v-time-picker>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click=" dialog_time = false">
-                                Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
+                                        <v-col cols="12" sm="6">
+                                            <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
+                                                @change="validateTime(), picker_stop = null"
+                                                :rules="[v => !!v || 'กรุณาเลือกเวลา']" required></v-select>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-select :items="time_standart_stop" v-model="picker_stop"
+                                                @change="validateTime()" label="เลิกเรียน"
+                                                :rules="[v => !!v || 'กรุณาเลือกเวลา']" required></v-select>
+                                        </v-col>
+                                        <v-col cols="12" sm="12">
+                                            <v-text-field label="จุดประสงค์ในการเรียนครั้งนี้/หัวข้อในการเรียน"
+                                                v-model="save_detail.because" style="font-weight: bold;"
+                                                :rules="rules.text"></v-text-field>
+                                        </v-col>
+                                    </v-row>                                    
+                                </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()">
+                                    บันทึก<span class="mdi mdi-content-save text-h6"></span>
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </v-form>
                 </v-dialog>
             </v-row>
         </template>
 
         <template>
             <v-row justify="center">
-                <v-dialog v-model="dialog_time_stop" persistent max-width="400px">
-                    <v-card class="rounded-xl">
-                        <v-card-title>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container>
-                                <v-row justify="space-around" align="center">
-                                    <v-time-picker v-model="picker_stop" format="24hr" :allowed-hours="allowedHours"
-                                        :min="picker_start"></v-time-picker>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click=" dialog_time_stop = false">
-                                Close
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
+                <v-dialog v-model="dialog_detail_edit" persistent max-width="600px">
+                    <v-form ref="form_edit" v-model="valid_edit" lazy-validation>
+                        <v-card class="rounded-xl">
+                            <v-card-title class="d-flex justify-space-between">                                
+                                <span class="text-h8"><b>จองเวลาเรียน</b></span>
+                                <v-btn fab dark small color="#37474F"
+                                    @click="clear_item(), dialog_detail_edit = false, dialog_select_date = false">
+                                    <v-icon dark class="text-h5">
+                                        mdi-close
+                                    </v-icon>
+                                </v-btn>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-container>                                
+                                    <v-row>
+                                        <v-col cols="12" sm="6" :hidden="save_detail.subject === '00000'">
+                                            <v-autocomplete v-model="save_detail.subject" item-text="name" item-value="key"
+                                                :items="subject_select_tea" @input="search_level_select2()"
+                                                :readonly="save_detail.subject != '00000'"
+                                                :rules="[v => !!v || 'กรุณาเลือกวิชา']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" sm="6" :hidden="save_detail.subject !== '00000'">
+                                            <v-autocomplete v-model="save_detail.subject" :items="subject_select_tea"
+                                                label="ชื่อวิชา" item-text="name" item-value="key"                                                
+                                                @input="search_level_select2()"
+                                                :rules="[v => !!v || 'กรุณาเลือกวิชา']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-autocomplete v-model="save_detail.level" :items="level_select_add"
+                                                label="ระดับการศักษา"
+                                                :disabled="save_detail.subject === undefined"
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-autocomplete v-model="value" :items="items" label="Search teacher"
+                                                item-text="name" item-value="key" readonly
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-autocomplete v-model="value_student" :items="items_student"
+                                                label="Search student" item-text="name" item-value="key"
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-autocomplete>
+                                        </v-col>
+                                        <v-col cols="12" sm="8">
+                                            <v-select :items="style_subject" item-text="name" item-value="key"
+                                                label="ประเภทคลาส" v-model="save_detail.style" readonly
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-select>
+                                        </v-col>                                      
+                                        <v-col cols="12" sm="6">
+                                            <v-select :items="time_standart" v-model="picker_start" label="เริ่มเรียน"
+                                                @change="validateTime(), picker_stop = null"
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-select>
+                                        </v-col>
+                                        <v-col cols="12" sm="6">
+                                            <v-select :items="time_standart_stop" v-model="picker_stop"
+                                                @change="validateTime()" label="เลิกเรียน"
+                                                :rules="[v => !!v || 'กรุณาเลือก']" required></v-select>
+                                        </v-col>
+                                        <v-col cols="12" sm="12">
+                                            <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
+                                                v-model="save_detail.because"
+                                                :rules="rules.text" required></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()">
+                                    บันทึก<span class="mdi mdi-content-save text-h6"></span>
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </v-form>
                 </v-dialog>
             </v-row>
-        </template> -->
+        </template>
 
         <template>
-            <v-dialog v-model="dialog_save_error" max-width="500px">
+            <v-dialog v-model="dialog_save_error" max-width="300px" class="text-center">
                 <v-card>
-                    <v-card-title class="text-h5">กรุณากรอกข้อมูลให้ครบ</v-card-title>
+                    <v-card-title>
+                    </v-card-title>
+                    <div class="text-center">
+                        <img :src="require('~/assets/Frame.png')">
+                    </div>
+                    <div class="text-center mt-5">
+                        <b>กรุณากรอกข้อมูลให้ถูกต้อง</b>
+                    </div>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="dialog_save_error = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_save_error = false">OK</v-btn>
+                        <v-btn rounded color="#322E2B" @click="dialog_save_error = false" dark
+                            class="mt-5 mb-5">ตกลง</v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -337,15 +324,16 @@
 
         <template>
             <v-dialog v-model="dialog_select_date" max-width="350px">
-                <v-card class="px-3 text-center rounded-xl" style="background-color: rgba(247, 245, 245, 0.842)">
-                    <v-card-title class="text-h6"><span class="mdi mdi-plus-box"></span>เลือกวันที่เรียน</v-card-title>
+                <v-card class="px-3 text-center" style="background-color: rgba(247, 245, 245, 0.212)">
+                    <v-card-title class="text-h6">
+                        <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
+                    </v-card-title>
                     <v-date-picker v-model="date1" :events="arrayEvents" :allowed-dates="allowedDates" show-adjacent-months
                         event-color="green lighten-1"
                         @input="dialog_detail = true, mode = 'save', clear_item()"></v-date-picker>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <!-- <v-btn color="blue darken-1" text @click="dialog_select_date = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text @click="dialog_select_date = false">OK</v-btn> -->
+
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -357,6 +345,16 @@
 <script>
 export default {
     data: () => ({
+        valid: false,
+        form: [],
+        valid_edit: false,
+        form_edit: [],
+        rules: {           
+            name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
+            (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
+            text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
+        },
+
         subject_select: [],
         subject_select_teacher: [],
         subject_select_tea: [],
@@ -368,6 +366,7 @@ export default {
         delday: '',
         save_detail: [],
         dialog_detail: false,
+        dialog_detail_edit: false,
         dialog_time: false,
         dialog_time_stop: false,
         dialog_save_error: false,
@@ -578,13 +577,27 @@ export default {
             } else { return 'error'; }
         },
 
-        save_detail_data() {
-            // console.log(this.mode);
+        validate() {
+            if (this.$refs.form.validate()) {
+                this.save_detail_data();
+                console.log('SAVE');
+                this.dialog_detail = false;
+            }else{this.dialog_save_error = true;}
+        },
+
+        validate_edit() {
+            if (this.$refs.form_edit.validate()) {
+                console.log('EDIT');
+                this.save_detail_data();
+                this.dialog_detail_edit = false;
+            }else{this.dialog_save_error = true;}
+        },
+
+        save_detail_data() {            
             if (this.save_detail.subject == null ||
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
                 this.save_detail.because == null ||
-                // this.save_detail.class == null ||
                 this.picker_start == null ||
                 this.picker_stop == null ||
                 this.value == null ||
@@ -600,23 +613,7 @@ export default {
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise, getTimeTeaPromise])
                 .then(([timeSnapshot, timeteaSnapshot]) => {
-                    if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
-                        // if (timeSnapshot.exists()) {
-                        //     const timeData = timeSnapshot.val();
-                        //     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                        //     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        //         return;
-                        //     }
-                        // } 
-                        // if (timeteaSnapshot.exists()) {
-                        //     const timeteaData = timeteaSnapshot.val();
-                        //     const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
-                        //     if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
-                        //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                        //         return;
-                        //     }
-                        // }
+                    if (timeSnapshot.exists() || timeteaSnapshot.exists()) {                        
                         if (true) {
                             if (this.mode === 'save') {
                                 if (timeSnapshot.exists()) {
@@ -696,8 +693,7 @@ export default {
                             } else {
                                 this.dialog_save_error = true;
                             }
-                            this.clear_item();
-                            this.dialog_detail = false;
+                            this.clear_item();                            
                             this.dialog_select_date = false;
                         }
                     } else {
@@ -755,8 +751,7 @@ export default {
                         } else {
                             this.dialog_save_error = true;
                         }
-                        this.clear_item();
-                        this.dialog_detail = false;
+                        this.clear_item();                        
                         this.dialog_select_date = false;
                     }
                 })
@@ -909,7 +904,7 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
-                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 let item = [];
                 this.desserts = [];
                 this.events = [];
@@ -917,9 +912,9 @@ export default {
                 this.arrayEvents = [];
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {                       
+                    for (const date in keydata) {
                         if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
-                            console.log('>>>',date);
+                            console.log('>>>', date);
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -1015,7 +1010,8 @@ export default {
 
             this.picker_start_tea = item.time_s;
             this.picker_stop_tea = item.time_e;
-            this.dialog_detail = true;
+            // this.dialog_detail = true;
+
             if (item.subject != 'ทุกวิชา') {
                 this.search_level_select_edit(item);
                 this.search_subject_teacher(item);
@@ -1134,7 +1130,8 @@ export default {
         },
 
         close() {
-            this.dialog_detail = false
+            this.dialog_detail = false;
+            this.dialog_detail_edit = false;
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.clear_item())
                 this.editedIndex = -1

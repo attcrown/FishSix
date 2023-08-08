@@ -118,7 +118,6 @@
                         <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
                             <v-card>
                                 <v-card-title>
-
                                     <v-spacer></v-spacer>
                                     <v-btn fab dark small color="#37474F" @click="closeDelete">
                                         <v-icon dark class="text-h5">
