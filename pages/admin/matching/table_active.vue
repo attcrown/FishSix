@@ -323,14 +323,12 @@ export default {
             }
             console.log(">>>>", this.editedItem);
             const db = this.$fireModule.database();
-            let sum = 0;
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
-                const childData = snapshot.val();
-                sum = childData - 1;
-            })
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
-                invite: sum,
-            })
+            // let sum = 0;
+            // db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
+            //     const childData = snapshot.val();
+            //     sum = childData - 1;
+            // })
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).remove();
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
             this.delete_time();
         },
@@ -360,8 +358,7 @@ export default {
                 for (const key in childData) {
                     const detail = key.split(":");
                     if (detail[4] == idkey) {
-                        db.ref(`Time_teacher/${key_tea}/${date}/${key}/${key_stu}`).remove({
-                        });
+                        db.ref(`Time_teacher/${key_tea}/${date}/${key}`).remove();
                         console.log('ลบ', key, detail[4]);
                     }
                 }

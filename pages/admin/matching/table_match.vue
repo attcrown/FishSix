@@ -578,7 +578,6 @@ export default {
         },
 
         save() {
-            console.log('update>>', this.editedItem, this.date);
             this.validateTime();
             const db = this.$fireModule.database();
             const getTimePromise = db.ref(`Time_student/${this.editedItem.key_student}/${this.date}`).once("value");
@@ -597,18 +596,19 @@ export default {
                         const timeteaData = timeteaSnapshot.val();
                         const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
                         if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
-                            alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                            alert('เวลาทับกับของครูกรุณาลงใหม่อีกครั้ง');
                             return;
                         }
                     }
                     if (true) {
+                        console.log('update>>', this.editedItem, this.date);
                         let id = this.editedItem.id;
                         db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).set({
                             teacher: this.editedItem.key_teacher,
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
                             level: this.editedItem.level,
-
+                            createAt:this.editedItem.createAt,
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             start_tea: this.editedItem.time_s,
@@ -622,7 +622,7 @@ export default {
                             sum_people: '1',
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
-                            // class: this.editedItem.class,
+                            createAt:this.editedItem.createAt,
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             ID: id
