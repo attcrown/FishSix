@@ -200,6 +200,7 @@
     </div>
 </template>
 <script>
+import { Timestamp } from "firebase/firestore";
 export default {
     data: () => ({
         valid: false,
@@ -354,6 +355,10 @@ export default {
 
         save_detail_data() {
             console.log('บันทึก');
+            const timestamp = Timestamp.fromDate(new Date());
+            const jsDate = timestamp.toDate();
+            const isoString = jsDate.toISOString();
+
             let id = new Date().getTime();
             const db = this.$fireModule.database();
             if (//this.save_detail.class == '' ||
@@ -368,17 +373,11 @@ export default {
                 return;
             }
             if (this.mode == 'edit') {
-                console.log('ทำๆ');
-                // if (this.delday != this.picker_stop) {
-                //     db.ref(`date_teacher/${this.value}/${this.date1}/${this.delday}`).remove();
-                // }
+                console.log('ทำๆ');                
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
-                    // class: this.save_detail.class,
                     sum_people: this.save_detail.sum_people,
                     subject: this.save_detail.subject,
-                    style_subject: this.save_detail.style,
-                    // start: this.picker_start,
-                    // stop: this.picker_stop,
+                    style_subject: this.save_detail.style,                 
                     invite: '0',
                 });
                 this.clear_item();
@@ -396,8 +395,8 @@ export default {
                         } else {
                             if (this.mode == 'save') {
                                 for (const keydate in this.date1) {
-                                    db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
-                                        // class: this.save_detail.class,
+                                    db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({                                       
+                                        createAt: isoString,
                                         style_subject: this.save_detail.style,
                                         sum_people: this.save_detail.sum_people,
                                         invite: '0',
@@ -424,6 +423,7 @@ export default {
                             for (const keydate in this.date1) {
                                 db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
                                     // class: this.save_detail.class,
+                                    createAt: isoString,
                                     style_subject: this.save_detail.style,
                                     sum_people: this.save_detail.sum_people,
                                     invite: '0',
@@ -643,7 +643,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
+                        item.push({ key: key, name: childData[key].teacherId+" ครู"+childData[key].nickname});
                     }
                 }
                 this.items = item;

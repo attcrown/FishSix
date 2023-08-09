@@ -367,6 +367,7 @@
     </div>
 </template>
 <script>
+import { Timestamp } from "firebase/firestore";
 export default {
     data: () => ({
         valid: false,
@@ -595,34 +596,12 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-                this.dialog_detail = false;
-                // console.log(this.save_detail.subject,
-                //     this.save_detail.level,
-                //     this.save_detail.style,
-                //     this.save_detail.because,
-                //     this.picker_start,
-                //     this.picker_stop,
-                //     this.value,
-                //     this.value_student,
-                //     this.date1,
-                //     this.mode);
             } else { this.dialog_save_error = true; }
         },
 
         validate_edit() {
             if (this.$refs.form_edit.validate()) {
-                // console.log(this.save_detail.subject,
-                //     this.save_detail.level,
-                //     this.save_detail.style,
-                //     this.save_detail.because,
-                //     this.picker_start,
-                //     this.picker_stop,
-                //     this.value,
-                //     this.value_student,
-                //     this.date1,
-                //     this.mode);
                 this.save_detail_data();
-                this.dialog_detail_edit = false;
             } else { this.dialog_save_error = true; }
         },
 
@@ -641,7 +620,9 @@ export default {
             }
             let id = new Date().getTime();
             const db = this.$fireModule.database();
-
+            const timestamp = Timestamp.fromDate(new Date());
+            const jsDate = timestamp.toDate();
+            const isoString = jsDate.toISOString();
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise, getTimeTeaPromise])
@@ -665,6 +646,7 @@ export default {
                                         return;
                                     }
                                 }
+                                this.dialog_detail = false;
                                 for (const keydate in this.date1) {
                                     db.ref(`date_match/${this.value_student}/${this.date1[keydate]}/${this.picker_stop}`).update({
                                         teacher: this.value,
@@ -678,6 +660,7 @@ export default {
                                         stop_tea: this.picker_stop,
                                         because: this.save_detail.because,
                                         status: this.check_status(),
+                                        createAt: isoString,
                                         ID: id,
                                     });
                                     for (const key in this.time_standart_sum) {
@@ -696,6 +679,7 @@ export default {
                                         return;
                                     }
                                 }
+                                this.dialog_detail_edit = false;
                                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                     const childData = snapshot.val();
                                     if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
@@ -707,7 +691,7 @@ export default {
                                             subject: this.save_detail.subject,
                                             style_subject: this.save_detail.style,
                                             level: this.save_detail.level,
-                                            // class: this.save_detail.class,
+                                            createAt: isoString,
                                             start: this.picker_start,
                                             stop: this.picker_stop,
                                             because: this.save_detail.because,
@@ -733,6 +717,7 @@ export default {
                         }
                     } else {
                         if (this.mode === 'save') {
+                            this.dialog_detail = false;
                             for (const keydate in this.date1) {
                                 db.ref(`date_match/${this.value_student}/${this.date1[keydate]}/${this.picker_stop}`).update({
                                     teacher: this.value,
@@ -746,6 +731,7 @@ export default {
                                     stop_tea: this.picker_stop,
                                     because: this.save_detail.because,
                                     status: this.check_status(),
+                                    createAt: isoString,
                                     ID: id,
                                 });
                                 for (const key in this.time_standart_sum) {
@@ -755,6 +741,7 @@ export default {
                                 };
                             }
                         } else if (this.mode === 'edit') {
+                            this.dialog_detail_edit = false;
                             db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop_tea}`).once("value", (snapshot) => {
                                 const childData = snapshot.val();
                                 if (parseInt(childData.invite) < parseInt(childData.sum_people)) {
@@ -774,6 +761,7 @@ export default {
                                         stop_tea: this.picker_stop_tea,
                                         status: this.check_status(),
                                         ID: this.idTea,
+                                        createAt: isoString,
                                     });
                                 } else { alert('error'); }
                             })
@@ -835,7 +823,7 @@ export default {
                             this.check_sub(this.save_detail.subject, key) &&
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
-                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
+                            item.push({ key: key, name: childData[key].teacherId +" ครู"+childData[key].nickname});
                         }
                     }
                     this.items_select_tea = item;
@@ -843,7 +831,7 @@ export default {
                 } else {
                     for (const key in childData) {
                         if (childData[key].status == 'teacher') {
-                            item.push({ key: key, name: childData[key].nickname + " " + childData[key].teacherId });
+                            item.push({ key: key, name: childData[key].teacherId +" ครู"+childData[key].nickname});
                         }
                     }
                     this.items = item;
@@ -923,7 +911,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-                        item.push({ key: key, name: childData[key].nickname + " " + childData[key].firstName });
+                        item.push({ key: key, name: childData[key].studentId+" น้อง"+childData[key].nickname});
                     }
                 }
                 this.items_student = item;
@@ -957,7 +945,7 @@ export default {
                                         const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const locationData = locationSnapshot.val();
-                                        const nametea = "ครู" + teacherData.nickname + " " + teacherData.teacherId;
+                                        const nametea = teacherData.teacherId+" ครู" + teacherData.nickname;
                                         const namesub = subjectData.name;
                                         if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({

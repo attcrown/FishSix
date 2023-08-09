@@ -155,7 +155,7 @@
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart_stop" v-model="editedItem.time_e"
                                                     @change="validateTime()" label="เวลาสิ้นสุด"></v-select>
-                                            </v-col>                                
+                                            </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
                                                     v-model="editedItem.style" item-text="name" item-value="key"></v-select>
@@ -163,10 +163,11 @@
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
                                                     item-value="key" v-model="editedItem.subject"
-                                                   @input="search_select_level(editedItem.subject) ,editedItem.level = null"></v-select>
+                                                    @input="search_select_level(editedItem.subject), editedItem.level = null"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
-                                                <v-select :items="select_level" label="ระดับชั้น" v-model="editedItem.level">
+                                                <v-select :items="select_level" label="ระดับชั้น"
+                                                    v-model="editedItem.level">
                                                 </v-select>
                                             </v-col>
                                         </v-row>
@@ -216,8 +217,8 @@
 
                         <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
                             <v-card>
-                                <v-card-title>                                    
-                                    <v-spacer></v-spacer>                                       
+                                <v-card-title>
+                                    <v-spacer></v-spacer>
                                     <v-btn fab dark small color="#37474F" @click="closeDelete">
                                         <v-icon dark class="text-h5">
                                             mdi-close
@@ -227,12 +228,13 @@
                                 <div class="text-center">
                                     <img :src="require('~/assets/Frame.png')">
                                 </div>
-                                <div class="text-center mt-5">                                    
-                                    <b>ยืนยันยกเลิกคลาสหรือไม่</b> 
+                                <div class="text-center mt-5">
+                                    <b>ยืนยันยกเลิกคลาสหรือไม่</b>
                                 </div>
                                 <v-card-actions>
-                                    <v-spacer></v-spacer>                                    
-                                    <v-btn rounded color="#29CC39" @click="deleteItemConfirm" class="mt-5 mb-5">ยืนยัน</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn rounded color="#29CC39" @click="deleteItemConfirm"
+                                        class="mt-5 mb-5">ยืนยัน</v-btn>
                                     <v-spacer></v-spacer>
                                 </v-card-actions>
                             </v-card>
@@ -249,7 +251,7 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog> -->
-                        
+
                     </v-toolbar>
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -323,6 +325,7 @@ export default {
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มเรียน', value: 'time_s', align: 'center' },
             { text: 'เวลาเลิกเรียน', value: 'time_e', align: 'center' },
+            { text: 'เวลาคำร้อง', value: 'createAt', align: 'center' },
             { text: 'สถานะ', value: 'status', sortable: false, align: 'center' },
             { text: 'ยืนยันคลาส', value: 'actions', sortable: false, align: 'center' },
         ],
@@ -426,66 +429,71 @@ export default {
                 let item = [];
                 let index = 0;
                 this.events = [];
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        const datedata = keydata[date];
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            if (timedata.status == 'รอยืนยัน') {
-                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                                const getStudentPromise = db.ref(`user/${key}`).once("value");
-                                const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-                                        const teacherData = teacherSnapshot.val();
-                                        const studentData = studentSnapshot.val();
-                                        const subjectData = subjectSnapshot.val();
-                                        const locationData = locationSnapshot.val();
-                                        item.push({
-                                            name_student: studentData.studentId+" น้อง"+studentData.nickname + " " + studentData.firstName,
-                                            name: teacherData.teacherId+" ครู" + teacherData.nickname,
-                                            subject: timedata.subject,
-                                            name_subject: subjectData.name,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            time_s_tea: timedata.start_tea,
-                                            time_e_tea: timedata.stop_tea,
-                                            style: timedata.style_subject,
-                                            name_style: locationData.name,
-                                            status: timedata.status,
-                                            key_student: key,
-                                            key_teacher: timedata.teacher,
-                                            phone_student: studentData.studentMobile,
-                                            phone_teacher: teacherData.mobile,
-                                            // class: timedata.class,
-                                            level: timedata.level,
-                                            because: timedata.because,
-                                            id: timedata.ID,
+                        // if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                if (timedata.status == 'รอยืนยัน') {
+                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                    const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                        .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                            const teacherData = teacherSnapshot.val();
+                                            const studentData = studentSnapshot.val();
+                                            const subjectData = subjectSnapshot.val();
+                                            const locationData = locationSnapshot.val();
+                                            item.push({
+                                                name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                                subject: timedata.subject,
+                                                name_subject: subjectData.name,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                time_s_tea: timedata.start_tea,
+                                                time_e_tea: timedata.stop_tea,
+                                                style: timedata.style_subject,
+                                                name_style: locationData.name,
+                                                status: timedata.status,
+                                                key_student: key,
+                                                key_teacher: timedata.teacher,
+                                                phone_student: studentData.studentMobile,
+                                                phone_teacher: teacherData.mobile,
+                                                // class: timedata.class,
+                                                level: timedata.level,
+                                                because: timedata.because,
+                                                id: timedata.ID,
+                                                createAt:timedata.createAt
+                                            });
+                                            this.events.push(
+                                                {
+                                                    array: index,
+                                                    name: subjectData.name,
+                                                    start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.start.substring(0, 2),
+                                                        timedata.start.substring(3, 5)),
+                                                    end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                        timedata.stop.substring(3, 5)),
+                                                    color: this.getRandomColor(),
+                                                    timed: true,
+                                                }
+                                            );
+                                            index++;
+                                        })
+                                        .catch((error) => {
+                                            alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);
                                         });
-                                        this.events.push(
-                                            {
-                                                array: index,
-                                                name: subjectData.name,
-                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.start.substring(0, 2),
-                                                    timedata.start.substring(3, 5)),
-                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
-                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
-                                                    timedata.stop.substring(3, 5)),
-                                                color: this.getRandomColor(),
-                                                timed: true,
-                                            }
-                                        );
-                                        index++;
-                                    })
-                                    .catch((error) => {
-                                        alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);
-                                    });
+                                }
                             }
-                        }
+                        // }
+
                     }
                 }
                 this.desserts = item;
@@ -506,7 +514,7 @@ export default {
             this.date = item.date;
             this.editedIndex = this.desserts.indexOf(item);
             this.editedItem = Object.assign({}, item);
-            this.search_select_location_class(item.key_teacher);            
+            this.search_select_location_class(item.key_teacher);
             this.dialog = true;
         },
 
@@ -534,17 +542,17 @@ export default {
                 const childData = snapshot.val();
                 this.select_level = childData;
             })
-            console.log(">>>>",key,this.select_level);
+            console.log(">>>>", key, this.select_level);
         },
 
-        search_select_level(key){            
+        search_select_level(key) {
             const db = this.$fireModule.database();
             db.ref(`user/${this.editedItem.key_teacher}/subject_all/${key}/level`).on("value", (snapshot) => {
                 this.select_level = [];
                 const childData = snapshot.val();
                 this.select_level = childData;
             })
-            console.log(key,this.select_level);
+            console.log(key, this.select_level);
         },
 
         deleteItemConfirm() {
@@ -570,7 +578,7 @@ export default {
         },
 
         save() {
-            console.log('update>>', this.editedItem ,this.date);
+            console.log('update>>', this.editedItem, this.date);
             this.validateTime();
             const db = this.$fireModule.database();
             const getTimePromise = db.ref(`Time_student/${this.editedItem.key_student}/${this.date}`).once("value");
@@ -600,7 +608,7 @@ export default {
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
                             level: this.editedItem.level,
-                            
+
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             start_tea: this.editedItem.time_s,
@@ -630,7 +638,7 @@ export default {
                                 0: ""
                             });
                         };
-                        if(this.date != this.old_item.date){
+                        if (this.date != this.old_item.date) {
                             this.delete_match();
                         }
                         this.close();

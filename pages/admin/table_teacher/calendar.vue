@@ -154,7 +154,7 @@ export default {
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.events = [];
-                const now = new Date();
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
