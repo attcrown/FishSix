@@ -396,7 +396,7 @@ export default {
                             if (this.mode == 'save') {
                                 for (const keydate in this.date1) {
                                     db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({                                       
-                                        createAt: isoString,
+                                        createAt: new Date(),
                                         style_subject: this.save_detail.style,
                                         sum_people: this.save_detail.sum_people,
                                         invite: '0',
@@ -423,7 +423,7 @@ export default {
                             for (const keydate in this.date1) {
                                 db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
                                     // class: this.save_detail.class,
-                                    createAt: isoString,
+                                    createAt: new Date(),
                                     style_subject: this.save_detail.style,
                                     sum_people: this.save_detail.sum_people,
                                     invite: '0',

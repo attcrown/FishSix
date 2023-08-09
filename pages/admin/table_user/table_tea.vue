@@ -660,7 +660,7 @@ export default {
                                         stop_tea: this.picker_stop,
                                         because: this.save_detail.because,
                                         status: this.check_status(),
-                                        createAt: isoString,
+                                        createAt: new Date(),
                                         ID: id,
                                     });
                                     for (const key in this.time_standart_sum) {
@@ -691,7 +691,7 @@ export default {
                                             subject: this.save_detail.subject,
                                             style_subject: this.save_detail.style,
                                             level: this.save_detail.level,
-                                            createAt: isoString,
+                                            createAt: new Date(),
                                             start: this.picker_start,
                                             stop: this.picker_stop,
                                             because: this.save_detail.because,
@@ -731,7 +731,7 @@ export default {
                                     stop_tea: this.picker_stop,
                                     because: this.save_detail.because,
                                     status: this.check_status(),
-                                    createAt: isoString,
+                                    createAt: new Date(),
                                     ID: id,
                                 });
                                 for (const key in this.time_standart_sum) {
@@ -761,7 +761,7 @@ export default {
                                         stop_tea: this.picker_stop_tea,
                                         status: this.check_status(),
                                         ID: this.idTea,
-                                        createAt: isoString,
+                                        createAt: new Date(),
                                     });
                                 } else { alert('error'); }
                             })

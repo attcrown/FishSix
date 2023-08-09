@@ -393,7 +393,7 @@ export default {
         check_confirm(item) {
             this.edited = item;
             const db = this.$fireModule.database();
-            db.ref(`send_plan/${item.Idsendplan}`).on("value", (snapshot) => {
+            db.ref(`send_plan/${item.keyTeacher}/${item.Idsendplan}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
@@ -446,7 +446,7 @@ export default {
                                 console.log('save date_match');
                             })
 
-                            db.ref(`send_plan/${id}`).set({
+                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).set({
                                 img: this.imageURL,                                
                                 hour: this.summ_hour,
                                 status_study: this.edited.status_study,
@@ -465,7 +465,7 @@ export default {
         },
         save_confirm() {
             const db = this.$fireModule.database();
-            db.ref(`send_plan/${this.edited.Idsendplan}/`).update({
+            db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/`).update({
                 learn: this.edited.learn,
                 understand: this.edited.understand,
                 development: this.edited.development,
