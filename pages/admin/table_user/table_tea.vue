@@ -596,7 +596,7 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-            } else { this.dialog_save_error = true; }
+            } else { this.dialog_save_error = true;}
         },
 
         validate_edit() {
@@ -605,7 +605,7 @@ export default {
             } else { this.dialog_save_error = true; }
         },
 
-        save_detail_data() {
+        save_detail_data() {            
             if (this.save_detail.subject == null ||
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
@@ -617,12 +617,9 @@ export default {
                 this.date1 == null) {
                 this.dialog_save_error = true;
                 return;
-            }
+            }            
             let id = new Date().getTime();
             const db = this.$fireModule.database();
-            const timestamp = Timestamp.fromDate(new Date());
-            const jsDate = timestamp.toDate();
-            const isoString = jsDate.toISOString();
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             Promise.all([getTimePromise, getTimeTeaPromise])

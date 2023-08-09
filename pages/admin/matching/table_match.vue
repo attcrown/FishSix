@@ -448,6 +448,11 @@ export default {
                                             const studentData = studentSnapshot.val();
                                             const subjectData = subjectSnapshot.val();
                                             const locationData = locationSnapshot.val();
+                                            let sumx_date = "-";
+                                            if(timedata.createAt){
+                                                let sum_date = new Date(timedata.createAt).toString().split(" ");
+                                                sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
+                                            }
                                             item.push({
                                                 name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
                                                 name: teacherData.teacherId + " ครู" + teacherData.nickname,
@@ -469,7 +474,7 @@ export default {
                                                 level: timedata.level,
                                                 because: timedata.because,
                                                 id: timedata.ID,
-                                                createAt:timedata.createAt
+                                                createAt: sumx_date
                                             });
                                             this.events.push(
                                                 {
@@ -608,7 +613,7 @@ export default {
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
                             level: this.editedItem.level,
-                            createAt:this.editedItem.createAt,
+                            createAt:new Date(),
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             start_tea: this.editedItem.time_s,
@@ -622,7 +627,7 @@ export default {
                             sum_people: '1',
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
-                            createAt:this.editedItem.createAt,
+                            createAt: new Date(),
                             start: this.editedItem.time_s,
                             stop: this.editedItem.time_e,
                             ID: id
