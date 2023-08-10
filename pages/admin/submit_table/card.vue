@@ -220,7 +220,7 @@
                                         <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
                                         <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
                                     </v-radio-group>
-                                </v-col>                                
+                                </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
                                     <v-radio-group v-model="edited.status_study_column_tea" column1 readonly>
                                         <p>เช็คชื่อครูเข้าสอน</p>
@@ -230,13 +230,15 @@
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark @click="img_show = true">ดูรูปภาพนักเรียน <span
-                                    class="mdi mdi-image-area text-h6"></span></v-btn>
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
+                                        @click="img_show = true">ดูรูปภาพนักเรียน <span
+                                            class="mdi mdi-image-area text-h6"></span></v-btn>
                                 </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark @click="img_show_1 = true">ดูรูปภาพครู <span
-                                    class="mdi mdi-image-area text-h6"></span></v-btn>
-                                </v-col>                                
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
+                                        @click="img_show_1 = true">ดูรูปภาพครู <span
+                                            class="mdi mdi-image-area text-h6"></span></v-btn>
+                                </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt_OP">
                                     <v-text-field label="เวลาส่งเช็คชื่อ (OP บันทึก)" v-model="edited.createAt_OP"
                                         readonly></v-text-field>
@@ -297,7 +299,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()">บันทึก <span
-                                class="mdi mdi-content-save text-h6"></span></v-btn>                       
+                                class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
 
                     </v-card-actions>
@@ -465,7 +467,7 @@ export default {
             this.dialog = true;
             this.edited = item;
             this.summ_hour = this.sum_hour(this.edited.time_s, this.edited.time_e);
-            // console.log(this.edited);
+            console.log(this.edited, this.summ_hour);
         },
         check_confirm(item) {
             this.edited = item;
@@ -553,10 +555,66 @@ export default {
                                                 status_study_column_tea: this.edited.status_study_column_tea,
                                                 createAt_OP: new Date(),
                                             }).then(() => {
-                                                console.log('save sendplan');
+                                                console.log('save send_plan');
+                                            })
+
+                                            if (this.edited.match_test) {
+                                                const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
+                                                Promise.all([getTeacherPromise])
+                                                    .then(([teacherSnapshot]) => {
+                                                        const studentData = teacherSnapshot.val();
+                                                        console.log(studentData);
+                                                        if (studentData.freeHour && studentData.privateFreeHour) {
+                                                            if (this.edited.style.substring(0, 4) === "Flip") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    freeHour: parseInt(studentData.freeHour) - this.summ_hour,
+                                                                })
+                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    privateFreeHour: parseInt(studentData.privateFreeHour) - this.summ_hour,
+                                                                })
+                                                            } else {
+                                                                console.log("Error");
+                                                            }
+                                                            console.log('ลบ ชม. ทดลอง');
+                                                            this.loadsave = false;
+                                                            this.clear_dialog();
+                                                        } else {
+                                                            console.log('freeHour privateFreeHour No DATA');
+                                                        }
+                                                    })
+                                            } else if (this.edited.status_study_column == "true3") {
+                                                const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
+                                                Promise.all([getTeacherPromise])
+                                                    .then(([teacherSnapshot]) => {
+                                                        const studentData = teacherSnapshot.val();
+                                                        console.log(studentData);
+                                                        if (studentData.studyHour && studentData.privateStudyHour) {
+                                                            if (this.edited.style.substring(0, 4) === "Flip") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    studyHour: parseInt(studentData.studyHour) - this.summ_hour,
+                                                                    hourLeft: parseInt(studentData.studyHour) + this.summ_hour,
+                                                                })
+                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    privateStudyHour: parseInt(studentData.privateStudyHour) - this.summ_hour,
+                                                                    privateHourLeft: parseInt(studentData.privateStudyHour) + this.summ_hour,
+                                                                })
+                                                            } else {
+                                                                console.log("Error");
+                                                            }
+                                                            console.log('ลบ ชม. class จริง',this.edited.style);
+                                                            this.loadsave = false;
+                                                            this.clear_dialog();
+                                                        } else {
+                                                            console.log('Hour privateHour No DATA');
+                                                        }
+                                                    })
+                                            } else {
+                                                console.log("ไม่มีการลบ ชม.");
                                                 this.loadsave = false;
                                                 this.clear_dialog();
-                                            })
+                                            }
                                         })
                                 }).catch((error) => {
                                     console.log("รูปสอง", error);
@@ -677,6 +735,7 @@ export default {
                                             sendplan: timedata.sendplan,
                                             because: timedata.because,
                                             Idsendplan: timedata.Idsendplan,
+                                            match_test: timedata.match_test
                                         });
                                         // this.arrayEvents.push(date);
                                     }
@@ -685,7 +744,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                // console.log(this.desserts);
+                console.log(this.desserts);
             })
         },
 
@@ -741,6 +800,7 @@ export default {
                                             sendplan: timedata.sendplan,
                                             because: timedata.because,
                                             Idsendplan: timedata.Idsendplan,
+                                            match_test: timedata.match_test
                                         });
                                         // this.arrayEvents.push(date);
                                     }
@@ -749,7 +809,7 @@ export default {
                     }
                 }
                 this.desserts = item;
-                // console.log(this.desserts);
+                console.log(this.desserts);
             })
         },
 
