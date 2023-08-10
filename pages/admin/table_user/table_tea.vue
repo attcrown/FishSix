@@ -97,8 +97,8 @@
 
 
             <v-col cols="12">
-                <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table_teacher" sort-by="date"
-                    class="elevation-16 rounded-xl">
+                <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table_teacher"
+                    sort-by="date" class="elevation-16 rounded-xl">
                     <template v-slot:top>
                         <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
                             <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
@@ -148,6 +148,7 @@
                             <v-card-text>
                                 <v-container>
                                     <v-row>
+                                        
                                         <v-col cols="12" sm="6" md="12">
                                             <v-text-field v-model="date1" label="วันที่เรียน"
                                                 @click="dialog_select_date = true" :rules="rules.text" readonly>
@@ -205,12 +206,16 @@
                                                 v-model="save_detail.because" style="font-weight: bold;"
                                                 :rules="rules.text"></v-text-field>
                                         </v-col>
+                                        <v-col cols="12" sm="6" md="12" style="margin-top:-40px">
+                                            <v-checkbox v-model="checkbox"
+                                            label="ทดลองเรียน"></v-checkbox>
+                                        </v-col> 
                                     </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()" dark>
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()" dark style="margin-top:-40px">
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -237,7 +242,7 @@
                             </v-card-title>
                             <v-card-text>
                                 <v-container>
-                                    <v-row>
+                                    <v-row>                                                                               
                                         <v-col cols="12" sm="6" md="12">
                                             <v-text-field v-model="date1" label="วันที่เรียน" :rules="rules.text" readonly>
                                                 <template #prepend>
@@ -291,12 +296,16 @@
                                             <v-text-field label="วัตถุประสงค์ในการเรียนครั้งนี้"
                                                 v-model="save_detail.because" :rules="rules.text" required></v-text-field>
                                         </v-col>
+                                        <v-col cols="12" sm="6" md="12" style="margin-top:-40px">
+                                            <v-checkbox v-model="checkbox"
+                                            label="ทดลองเรียน"></v-checkbox>
+                                        </v-col> 
                                     </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()" dark>
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()" dark style="margin-top:-40px">
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -370,6 +379,8 @@
 import { Timestamp } from "firebase/firestore";
 export default {
     data: () => ({
+        checkbox: false,
+
         valid: false,
         form: [],
         valid_edit: false,
@@ -596,7 +607,7 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-            } else { this.dialog_save_error = true;}
+            } else { this.dialog_save_error = true; }
         },
 
         validate_edit() {
@@ -605,7 +616,7 @@ export default {
             } else { this.dialog_save_error = true; }
         },
 
-        save_detail_data() {            
+        save_detail_data() {
             if (this.save_detail.subject == null ||
                 this.save_detail.level == null ||
                 this.save_detail.style == null ||
@@ -617,7 +628,7 @@ export default {
                 this.date1 == null) {
                 this.dialog_save_error = true;
                 return;
-            }            
+            }
             let id = new Date().getTime();
             const db = this.$fireModule.database();
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
@@ -659,6 +670,7 @@ export default {
                                         status: this.check_status(),
                                         createAt: new Date(),
                                         ID: id,
+                                        match_test:this.checkbox,
                                     });
                                     for (const key in this.time_standart_sum) {
                                         db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
@@ -696,6 +708,7 @@ export default {
                                             stop_tea: this.picker_stop_tea,
                                             status: this.check_status(),
                                             ID: this.idTea,
+                                            match_test:this.checkbox,
                                         });
                                         for (const key in this.time_standart_sum) {
                                             db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}`).update({
@@ -730,6 +743,7 @@ export default {
                                     status: this.check_status(),
                                     createAt: new Date(),
                                     ID: id,
+                                    match_test:this.checkbox,
                                 });
                                 for (const key in this.time_standart_sum) {
                                     db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
@@ -759,6 +773,7 @@ export default {
                                         status: this.check_status(),
                                         ID: this.idTea,
                                         createAt: new Date(),
+                                        match_test:this.checkbox,
                                     });
                                 } else { alert('error'); }
                             })
@@ -820,7 +835,7 @@ export default {
                             this.check_sub(this.save_detail.subject, key) &&
                             this.check_level(this.save_detail.level, this.save_detail.subject, key)
                         ) {
-                            item.push({ key: key, name: childData[key].teacherId +" ครู"+childData[key].nickname});
+                            item.push({ key: key, name: childData[key].teacherId + " ครู" + childData[key].nickname });
                         }
                     }
                     this.items_select_tea = item;
@@ -828,7 +843,7 @@ export default {
                 } else {
                     for (const key in childData) {
                         if (childData[key].status == 'teacher') {
-                            item.push({ key: key, name: childData[key].teacherId +" ครู"+childData[key].nickname});
+                            item.push({ key: key, name: childData[key].teacherId + " ครู" + childData[key].nickname });
                         }
                     }
                     this.items = item;
@@ -908,7 +923,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'user') {
-                        item.push({ key: key, name: childData[key].studentId+" น้อง"+childData[key].nickname});
+                        item.push({ key: key, name: childData[key].studentId + " น้อง" + childData[key].nickname });
                     }
                 }
                 this.items_student = item;
@@ -942,7 +957,7 @@ export default {
                                         const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const locationData = locationSnapshot.val();
-                                        const nametea = teacherData.teacherId+" ครู" + teacherData.nickname;
+                                        const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
                                         const namesub = subjectData.name;
                                         if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({
