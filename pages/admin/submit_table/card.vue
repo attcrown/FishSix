@@ -138,10 +138,13 @@
                                         <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
                                     </v-radio-group>
                                 </v-col>
-                                <v-col cols="12" sm="12">
-                                    <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL" >
-
+                                <v-col cols="12" sm="6">
                                     <v-file-input :rules="rules.img" v-model="fileToUpload"
+                                        accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
+                                        label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <v-file-input :rules="rules.img" v-model="fileToUpload1"
                                         accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
                                         label="รูปภาพ Check-In เข้าสอน" required></v-file-input>
                                 </v-col>
@@ -210,24 +213,30 @@
                                         readonly></v-text-field>
                                 </v-col> -->
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-radio-group v-model="edited.status_study_column" column
-                                        readonly>
+                                    <v-radio-group v-model="edited.status_study_column" column readonly>
                                         <p>เช็คชื่อนักเรียนเข้าเรียน</p>
                                         <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
                                         <v-radio label="น้องมาสาย" value="true2"></v-radio>
                                         <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
                                         <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
                                     </v-radio-group>
-                                </v-col>
+                                </v-col>                                
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-radio-group v-model="edited.status_study_column_tea" column1
-                                        readonly>
+                                    <v-radio-group v-model="edited.status_study_column_tea" column1 readonly>
                                         <p>เช็คชื่อครูเข้าสอน</p>
                                         <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
                                         <v-radio label="ครูมาสาย" value="true2"></v-radio>
                                         <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
                                     </v-radio-group>
                                 </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark @click="img_show = true">ดูรูปภาพนักเรียน <span
+                                    class="mdi mdi-image-area text-h6"></span></v-btn>
+                                </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark @click="img_show_1 = true">ดูรูปภาพครู <span
+                                    class="mdi mdi-image-area text-h6"></span></v-btn>
+                                </v-col>                                
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt_OP">
                                     <v-text-field label="เวลาส่งเช็คชื่อ (OP บันทึก)" v-model="edited.createAt_OP"
                                         readonly></v-text-field>
@@ -288,9 +297,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()">บันทึก <span
-                                class="mdi mdi-content-save text-h6"></span></v-btn>
-                        <v-btn rounded color="#42A5F5" class="mt-5 mb-5" dark @click="img_show = true">ดูรูปภาพ <span
-                                class="mdi mdi-content-save text-h6"></span></v-btn>
+                                class="mdi mdi-content-save text-h6"></span></v-btn>                       
                         <v-spacer></v-spacer>
 
                     </v-card-actions>
@@ -310,6 +317,21 @@
                 </v-card-title>
                 <v-card-text>
                     <img :src="edited.img" width="400px">
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="img_show_1" hide-overlay persistent width="500">
+            <v-card>
+                <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="img_show_1 = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <img :src="edited.img_1" width="400px">
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -340,6 +362,7 @@ export default {
             check_time: false,
 
             img_show: false,
+            img_show_1: false,
 
             loadsave: false,
 
@@ -350,6 +373,7 @@ export default {
 
             imageURL: '', // เก็บ URL ของรูปภาพ
             fileToUpload: null,
+            fileToUpload1: null,
 
             dialog: false,
             dialog_confirm: false,
@@ -427,7 +451,7 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.upload();
-            } else { console.log(this.edited ,this.column,this.column1); }
+            } else { console.log(this.edited, this.column, this.column1); }
         },
 
         validate_confirm() {
@@ -477,6 +501,7 @@ export default {
             this.imageURL = '';
             this.edited = [];
             this.fileToUpload = null;
+            this.fileToUpload1 = null;
             this.dialog = false;
         },
 
@@ -486,44 +511,58 @@ export default {
             let id = new Date().getTime();
             const storageRef = firebase.storage().ref();
             const file = this.fileToUpload;
-            const imageRef = storageRef.child(`send_check/${id}.jpg`);
+            const file1 = this.fileToUpload1;
 
-            // อัปโหลดรูปภาพเสร็จสมบูรณ์ก่อนทำการอัพเดตค่าใน Firebase Realtime Database
+            const imageRef = storageRef.child(`send_check/${id}.jpg`);
             imageRef
                 .put(file)
                 .then(() => {
                     console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
                     const storage = firebase.storage();
                     const image = storage.ref(`send_check/${id}.jpg`);
-
-                    image
-                        .getDownloadURL()
+                    image.getDownloadURL()
                         .then((url) => {
                             this.imageURL = url;
                             console.log(this.imageURL);
 
-                            // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
-                            const db = this.$fireModule.database();
-                            db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
-                                sendplan: true,
-                                Idsendplan: id,
-                            }).then(() => {
-                                console.log('save date_match');
-                            })
+                            const imageRef1 = storageRef.child(`send_check/${id}_1.jpg`);
+                            imageRef1
+                                .put(file1)
+                                .then(() => {
+                                    console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
+                                    const storage = firebase.storage();
+                                    const image1 = storage.ref(`send_check/${id}_1.jpg`);
+                                    image1.getDownloadURL()
+                                        .then((url_1) => {
+                                            this.imageURL_1 = url_1;
+                                            console.log(this.imageURL_1);
+                                            // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
+                                            const db = this.$fireModule.database();
+                                            db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
+                                                sendplan: true,
+                                                Idsendplan: id,
+                                            }).then(() => {
+                                                console.log('save date_match');
+                                            })
 
-                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
-                                img: this.imageURL,
-                                hour: this.summ_hour,
-                                status_study_column: this.edited.status_study_column,
-                                status_study_column_tea: this.edited.status_study_column_tea,
-                                createAt_OP: new Date(),
-                            }).then(() => {
-                                console.log('save sendplan');
-                                this.loadsave = false;
-                                this.clear_dialog();
-                            })
+                                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
+                                                img: this.imageURL,
+                                                img_1: this.imageURL_1,
+                                                hour: this.summ_hour,
+                                                status_study_column: this.edited.status_study_column,
+                                                status_study_column_tea: this.edited.status_study_column_tea,
+                                                createAt_OP: new Date(),
+                                            }).then(() => {
+                                                console.log('save sendplan');
+                                                this.loadsave = false;
+                                                this.clear_dialog();
+                                            })
+                                        })
+                                }).catch((error) => {
+                                    console.log("รูปสอง", error);
+                                });
                         }).catch((error) => {
-                            console.log(error);
+                            console.log("รูปหนึ่ง", error);
                         });
                 })
                 .catch((error) => {
