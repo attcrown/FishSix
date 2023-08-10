@@ -362,10 +362,14 @@ export default {
                 snapshot.forEach((childSnapshot) => {
                     const key = childSnapshot.key;
                     const childData = childSnapshot.val();
-
+                    let sumx_date = "-";
+                    if (childData.createdAt) {
+                        let sum_date = new Date(childData.createdAt).toString().split(" ");
+                        sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
+                    }
                     const stu = {
                         studentId: childData.studentId,
-                        createdAt: childData.createdAt,
+                        createdAt: sumx_date,
                         hourLeft: childData.hourLeft,
                         classType: childData.classType,
                         firstName: childData.firstName,

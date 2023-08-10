@@ -415,7 +415,7 @@ export default {
                                 this.clear_item();
                                 this.dialog_detail = false;
                                 this.dialog_select_date = false;
-                                this.search_date_teacher();
+                                // this.search_date_teacher();
                             }
                         }
                     } else {
@@ -441,7 +441,7 @@ export default {
                             this.clear_item();
                             this.dialog_detail = false;
                             this.dialog_select_date = false;
-                            this.search_date_teacher();
+                            // this.search_date_teacher();
                         }
                     }
                 })
