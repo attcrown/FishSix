@@ -187,7 +187,7 @@ export default {
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'stu.lastName' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
-                { text: 'ประเภทคลาส', value: 'stu.classType' },
+                { text: 'ประเภทคลาส', value: 'stu.classTypes' },
                 { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
                 { text: 'เวลาที่บันทึก', value: 'stu.createdAt' },
                 { text: 'Actions', value: 'actions', sortable: false },
@@ -253,7 +253,7 @@ export default {
                         totalHour: childData.totalHour,
                         studyHour: childData.studyHour,
                         freeHour: childData.freeHour,
-                        classType: childData.classType,
+                        classTypes: childData.classTypes,
                         firstName: childData.firstName,
                         lastName: childData.lastName,
                         nickname: childData.nickname,
@@ -312,7 +312,7 @@ export default {
                     case 'เวลาที่บันทึกข้อมูล':
                         return item.stu.createdAt;
                     case 'ประเภทคลาส':
-                        return Array.isArray(item.stu.classType) ? item.stu.classType.join(', ') : item.stu.classType;
+                        return Array.isArray(item.stu.classTypes) ? item.stu.classTypes.join(', ') : item.stu.classTypes;
 
                     default:
                         return '';
@@ -371,7 +371,7 @@ export default {
                         studentId: childData.studentId,
                         createdAt: sumx_date,
                         hourLeft: childData.hourLeft,
-                        classType: childData.classType,
+                        classTypes: childData.classTypes,
                         firstName: childData.firstName,
                         lastName: childData.lastName,
                         nickname: childData.nickname,

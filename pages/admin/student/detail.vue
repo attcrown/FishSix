@@ -8,206 +8,248 @@
                     <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
                 </div>
                 <v-col cols="12">
-                    <v-row>
-                        <style>
-                            .time-label {
-                                color: #000;
-                                font-size: 24px;
-                                font-weight: 500;
+                    <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
+                        class=" mt-5">
+                        <v-row justify="center">
+                            <style>
+                                .time-label {
+                                    color: var(--label-color, #FFF);
+                                    /* Default to white (#FFF) if --label-color is not set */
+                                    font-size: 24px;
+                                    font-weight: 500;
 
-                            }
+                                }
 
-                            .des-label {
-                                color: #000;
-                                font-size: 16px;
-                                font-weight: 300;
+                                .des-label {
+                                    color: var(--label-color, #FFF);
+                                    /* Default to white (#FFF) if --label-color is not set */
+                                    font-size: 16px;
+                                    font-weight: 300;
 
-                            }
-                        </style>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Flip class </div>
-                                        <div class="time-label my-3">{{ formattedTotalHour }}</div>
-                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                }
 
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Flip class </div>
-                                        <div class="time-label my-3">{{ formattedStudyHour }} </div>
-                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                .small-button {
+                                    font-size: 12px;
+                                    padding: 1px 2px;
+                                    border-radius: 10px;
+                                    border: 1px solid var(--green, #29CC39);
+                                    background: var(--green, #29CC39);
+                                }
+                            </style>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Flip class </div>
-                                        <div class="time-label my-3">{{ formattedHourLeft }}</div>
-                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Flip class </div>
+                                            <div class="time-label my-3">{{
+                                                trialFlipclassHour }} ชั่วโมง</div>
+                                            <div class="des-label">ชั่วโมงทดลองเรียน</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Flip class </div>
+                                            <div class="time-label my-3">{{ formattedTotalHour }}</div>
+                                            <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Private class </div>
-                                        <div class="time-label my-3">{{ formattedExpireFlipClassDate }}หมดวันที่{{ expireFlipClassDate }}</div>
-                                        <div class="des-label">วันเรียนที่เหลือ</div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Flip class </div>
+                                            <div class="time-label my-3">{{ formattedStudyHour }} </div>
+                                            <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
-                        <v-col cols="12">
-                            <v-card style="border-radius: 20px;background: #EBE4DE;" elevation="0" class="px-3">
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Flip class </div>
+                                            <div class="time-label my-3">{{ formattedHourLeft }}</div>
+                                            <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
-                                <v-card-text class="p-4">
-                                    <v-row style="border-radius: 20px;background: #EBE4DE;">
-                                        <v-col cols="3" class="time-label">
-                                            ปรับชั่วโมงเรียน
-                                        </v-col>
-                                        <v-col cols="3" class="py-0 mt-2">
-                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
-                                                item-text="text" item-value="value" v-model="selectedAddHour"></v-select>
-
-
-
-                                        </v-col>
-                                        <v-col cols="1" class="py-0 mt-2">
-                                            <v-btn color="green text-white" @click="addTime">ยืนยัน</v-btn>
-                                        </v-col>
-
-                                        <v-col cols="3" class="py-0 mt-2">
-                                            <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
-                                                item-text="text" item-value="value"
-                                                v-model="selectedSubtractHour"></v-select>
-
-                                        </v-col>
-                                        <v-col cols="1" class="py-0 mt-2">
-                                            <v-btn color="green text-white" @click="subtractTime">ยืนยัน</v-btn>
-                                        </v-col>
-
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-
-
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <style>
-                            .time-label {
-                                color: #000;
-                                font-size: 24px;
-                                font-weight: 500;
-
-                            }
-
-                            .des-label {
-                                color: #000;
-                                font-size: 16px;
-                                font-weight: 300;
-
-                            }
-                        </style>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Private class </div>
-                                        <div class="time-label my-3">{{ formattedPrivateTotalHour }}</div>
-                                        <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
-
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Private class </div>
-                                        <div class="time-label my-3">{{ formattedPrivateStudyHour }} </div>
-                                        <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
-
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Private class </div>
-                                        <div class="time-label my-3">{{ formattedPrivateHourLeft }}</div>
-                                        <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-                        <v-col cols="3">
-                            <v-card style="border-radius: 20px;background: #D8CABF;" elevation="0" class="px-3 mt-5">
-
-                                <v-card-text class="p-4">
-                                    <v-row>
-                                        <div class="des-label">Private class </div>
-                                        <div class="time-label my-3">{{ formattedExpirePrivateClassDate }}{{ expirePrivateClassDate }}</div>
-                                        <div class="des-label">วันเรียนที่เหลือ</div> 
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
-                        </v-col>
-
-                        <v-col cols="12">
-                            <v-card style="border-radius: 20px;background: #EBE4DE;" elevation="0" class="px-3">
-
-                                <v-card-text class="p-4">
-                                    <v-row style="border-radius: 20px;background: #EBE4DE;">
-                                        <v-col cols="3" class="time-label">
-                                            ปรับชั่วโมงเรียน
-                                        </v-col>
-                                        <v-col cols="3" class="py-0 mt-2">
-                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
-                                                item-text="text" item-value="value" v-model="selectedAddHour"></v-select>
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{ formattedExpireFlipClassDate }}</div>
+                                            <div class="des-label">วันเรียนที่เหลือ</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
 
 
 
-                                        </v-col>
-                                        <v-col cols="1" class="py-0 mt-2">
-                                            <v-btn color="green text-white" @click="addTime">ยืนยัน</v-btn>
-                                        </v-col>
+                            <v-col cols="7" class="mb-3">
+                                <v-card style="border-radius: 20px;" elevation="0" class="px-3">
 
-                                        <v-col cols="3" class="py-0 mt-2">
-                                            <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
-                                                item-text="text" item-value="value"
-                                                v-model="selectedSubtractHour"></v-select>
-
-                                        </v-col>
-                                        <v-col cols="1" class="py-0 mt-2">
-                                            <v-btn color="green text-white" @click="subtractTime">ยืนยัน</v-btn>
-                                        </v-col>
-
-                                    </v-row>
-                                </v-card-text>
-                            </v-card>
+                                    <v-card-text class="p-4">
+                                        <v-row style="border-radius: 20px;">
+                                            <v-col cols="3" class="time-label" style="color: var(--label-color, #000000);">
+                                                ปรับชั่วโมงเรียน
+                                            </v-col>
+                                            <v-col cols="3" class="p-0 mt-2">
+                                                <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedAddHour"></v-select>
 
 
-                        </v-col>
-                    </v-row>
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2 ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="addTime">ยืนยัน</v-btn>
+                                            </v-col>
+
+                                            <v-col cols="3" class="p-0 mt-2  ms-3">
+                                                <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedSubtractHour"></v-select>
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2  ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="subtractTime">ยืนยัน</v-btn>
+                                            </v-col>
+
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+
+
+                            </v-col>
+                            <v-col cols="3" class="mb-3">
+
+                            </v-col>
+                        </v-row>
+                    </v-card>
+
+                    <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
+                        class=" mt-5">
+                        <v-row justify="center">
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{
+                                                trialPrivateClassHour }} ชั่วโมง</div>
+                                            <div class="des-label">ชั่วโมงทดลองเรียน</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{ formattedPrivateTotalHour }}</div>
+                                            <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{ formattedPrivateStudyHour }} </div>
+                                            <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{ formattedPrivateHourLeft }}</div>
+                                            <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class </div>
+                                            <div class="time-label my-3">{{ formattedExpirePrivateClassDate }}</div>
+                                            <div class="des-label">วันเรียนที่เหลือ</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+
+
+
+
+                            <v-col cols="7">
+                                <v-card style="border-radius: 20px;" elevation="0" class="px-3">
+                                    <v-card-text class="p-4">
+                                        <v-row style="border-radius: 20px;">
+                                            <v-col cols="3" class="time-label" style="color: var(--label-color, #000000);">
+                                                ปรับชั่วโมงเรียน
+                                            </v-col>
+                                            <v-col cols="3" class="p-0 mt-2">
+                                                <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedAddPrivateHour"></v-select>
+
+
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2 ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="addTime">ยืนยัน</v-btn>
+                                            </v-col>
+
+                                            <v-col cols="3" class="p-0 mt-2  ms-3">
+                                                <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedSubtractPrivateHour"></v-select>
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2  ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="subtractTime">ยืนยัน</v-btn>
+                                            </v-col>
+
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+
+
+                            </v-col>
+                            <v-col cols="3"></v-col>
+                        </v-row>
+                    </v-card>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
@@ -602,8 +644,10 @@ export default {
             snackbarColor: '',
 
             selectedAddHour: null,
-
             selectedSubtractHour: null,
+
+            selectedAddPrivateHour: null,
+            selectedSubtractPrivateHour: null,
 
             lastStudentId: null,
             //data
@@ -870,9 +914,9 @@ export default {
                     days = lastMonthDays + dayDiff;
                 }
 
-                return { months, days };
+                return `${months} เดือน ${days} วัน`;
             }
-            return '0 เดือน';
+            return 'หมดอายุแล้ว';
         },
         formattedExpirePrivateClassDate() {
             if (this.expirePrivateClassDate) {
@@ -892,9 +936,9 @@ export default {
                     days = lastMonthDays + dayDiff;
                 }
 
-                return { months, days };
+                return `${months} เดือน ${days} วัน`;
             }
-            return '0 เดือน';
+            return 'หมดอายุแล้ว';
         },
     },
 
@@ -1120,6 +1164,10 @@ export default {
                 this.privateCourseHour = childData.privateCourseHour || 0;
                 this.privateFreeHour = childData.privateFreeHour || 0;
 
+                
+                this.trialFlipclassHour = childData.trialFlipclassHour || 0;
+                this.trialPrivateClassHour = childData.trialPrivateClassHour     || 0;
+
                 this.classTypes = childData.classTypes || null;
                 this.courseHour = childData.courseHour || null;
                 this.freeHour = childData.freeHour || null;
@@ -1275,7 +1323,6 @@ export default {
 
 
         async addTime() {
-
 
             if (this.selectedAddHour !== null) {
 

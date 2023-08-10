@@ -287,9 +287,10 @@
                                             oninput="validity.valid||(value='');" v-model="rate"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="classLocation"
-                                            v-model="classLocationDisplay" :readonly="!isEditingContract"
-                                            label="สาขาที่สามารถสอนได้"></v-text-field>
+                                        <v-select v-if="!isEditingContract" class="black-label" v-model="classLocation"
+                                            :items="classLocations" item-text="name" item-value="key" :readonly="!isEditingContract"
+                                            label="สาขาที่สามารถสอนได้" multiple></v-select>
+                                      
                                         <v-select v-if="isEditingContract" class="black-label" v-model="classLocation"
                                             :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
@@ -779,6 +780,7 @@ export default {
                         .then(() => {
 
                             this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.getTeacherLocation();
                             this.isSubmitting = false;
                             this.isEditingContract = false;
                         })
