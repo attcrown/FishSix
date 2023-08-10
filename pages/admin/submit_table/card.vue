@@ -114,12 +114,30 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="เรื่องที่เรียน" v-model="edited.because" readonly></v-text-field>
-                                </v-col>                                        
-                                <v-col cols="12" sm="12">
-                                    <v-select v-model="edited.status_study" :items="because_check_study "
-                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน"
-                                        required></v-select>
-                                </v-col>                       
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <!-- <v-select v-model="edited.status_study" :items="because_check_study"
+                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
+                                    <v-radio-group v-model="edited.status_study_column" column
+                                        :rules="[v => !!v || 'กรุณาเลือก']">
+                                        <p>เช็คชื่อนักเรียนเข้าเรียน</p>
+                                        <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
+                                        <v-radio label="น้องมาสาย" value="true2"></v-radio>
+                                        <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
+                                        <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+                                <v-col cols="12" sm="6">
+                                    <!-- <v-select v-model="edited.status_study_tea" :items="because_check_study_tea"
+                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
+                                    <v-radio-group v-model="edited.status_study_column_tea" column1
+                                        :rules="[v => !!v || 'กรุณาเลือก']">
+                                        <p>เช็คชื่อครูเข้าสอน</p>
+                                        <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
+                                        <v-radio label="ครูมาสาย" value="true2"></v-radio>
+                                        <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
                                 <v-col cols="12" sm="12">
                                     <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL">
 
@@ -183,8 +201,39 @@
                                     <v-text-field label="จุดประสงค์ในการเรียน" v-model="edited.because"
                                         readonly></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12" style="margin-top:-30px">
-                                    <v-text-field label="เช็คชื่อเข้าเรียน" v-model="edited.status_study"
+                                <!-- <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-text-field label="เช็คชื่อนักเรียน" v-model="edited.status_study"
+                                        readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-text-field label="เช็คชื่อครู" v-model="edited.status_study_tea"
+                                        readonly></v-text-field>
+                                </v-col> -->
+                                <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-radio-group v-model="edited.status_study_column" column
+                                        readonly>
+                                        <p>เช็คชื่อนักเรียนเข้าเรียน</p>
+                                        <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
+                                        <v-radio label="น้องมาสาย" value="true2"></v-radio>
+                                        <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
+                                        <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px">
+                                    <v-radio-group v-model="edited.status_study_column_tea" column1
+                                        readonly>
+                                        <p>เช็คชื่อครูเข้าสอน</p>
+                                        <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
+                                        <v-radio label="ครูมาสาย" value="true2"></v-radio>
+                                        <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt_OP">
+                                    <v-text-field label="เวลาส่งเช็คชื่อ (OP บันทึก)" v-model="edited.createAt_OP"
+                                        readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt">
+                                    <v-text-field label="เวลาส่งเช็คชื่อ (ครูบันทึก)" v-model="edited.createAt"
                                         readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
@@ -285,6 +334,9 @@ import 'firebase/compat/storage';
 export default {
     data() {
         return {
+            column: null,
+            column1: null,
+
             check_time: false,
 
             img_show: false,
@@ -316,7 +368,7 @@ export default {
             rules: {
                 // age: [(val) => val < 10 || `I don't believe you!`],
                 // animal: [(val) => (val || "").length > 0 || "This field is required"],
-                date:[(val) => (val || "").length > 0 || "กรุณาระบุวันที่"],
+                date: [(val) => (val || "").length > 0 || "กรุณาระบุวันที่"],
                 name: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล",
                 (val) => /^[0-9]+$/.test(val) || "กรุณากรอกตัวเลขเท่านั้น",],
                 text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
@@ -336,7 +388,8 @@ export default {
             items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             items_development: ['Pending', 'Rejected', 'Approved'],
 
-            because_check_study:["น้องมาเรียน","น้องลา หักชม.เรียน ของน้อง ให้ชม. ครู","น้องลา ไม่หักชม.เรียน ของน้อง ให้ชม. ครู"],
+            because_check_study: ["น้องมาตรงเวลา", "น้องมาสาย", "น้องลา หักชม.เรียน ของน้อง ให้ชม. ครู", "น้องลา ไม่หักชม.เรียน ของน้อง ให้ชม. ครู"],
+            because_check_study_tea: ["ครูมาสอนตรงเวลา", "ครูมาสาย", "ครูลากระทันหัน"],
         }
     },
     mounted() {
@@ -374,7 +427,7 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.upload();
-            }
+            } else { console.log(this.edited ,this.column,this.column1); }
         },
 
         validate_confirm() {
@@ -388,22 +441,34 @@ export default {
             this.dialog = true;
             this.edited = item;
             this.summ_hour = this.sum_hour(this.edited.time_s, this.edited.time_e);
-            // console.log(this.edited ,this.summ_hour);
+            // console.log(this.edited);
         },
         check_confirm(item) {
             this.edited = item;
             const db = this.$fireModule.database();
             db.ref(`send_plan/${item.keyTeacher}/${item.Idsendplan}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
+                let sumx_date = "-";
+                let sumx_date_tea = "-";
+                if (childData.createAt_OP) {
+                    let sum_date = new Date(childData.createAt_OP).toString().split(" ");
+                    sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
+                    childData.createAt_OP = sumx_date;
+                }
+                if (childData.createAt) {
+                    let sum_date_tea = new Date(childData.createAt).toString().split(" ");
+                    sumx_date_tea = `${sum_date_tea[1]} ${sum_date_tea[2]} ${sum_date_tea[3]} ${sum_date_tea[4]}`
+                    childData.createAt = sumx_date_tea;
+                }
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
                     this.check_time = true;
-                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime().toString().substring(0, 5))) {
+                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime().toString().substring(0, 5))) {
                     this.check_time = true;
                 } else {
                     this.check_time = false;
                 }
-                console.log(this.edited , this.check_time );
+                console.log(this.edited, this.check_time);
             });
             this.dialog_confirm = true;
         },
@@ -440,16 +505,18 @@ export default {
                             // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
                             const db = this.$fireModule.database();
                             db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
-                                sendplan: true,                                
+                                sendplan: true,
                                 Idsendplan: id,
                             }).then(() => {
                                 console.log('save date_match');
                             })
 
-                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).set({
-                                img: this.imageURL,                                
+                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
+                                img: this.imageURL,
                                 hour: this.summ_hour,
-                                status_study: this.edited.status_study,
+                                status_study_column: this.edited.status_study_column,
+                                status_study_column_tea: this.edited.status_study_column_tea,
+                                createAt_OP: new Date(),
                             }).then(() => {
                                 console.log('save sendplan');
                                 this.loadsave = false;
