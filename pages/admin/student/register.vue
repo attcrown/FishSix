@@ -138,12 +138,12 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                         <v-card-text>
                             <v-row>
                                 <p>&#x2022; Flip class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
-                                <v-checkbox label="เพิ่ม Flip class" v-model="classTypes" value="flipClass"
+                                <v-checkbox label="เพิ่ม Flip class" v-model="classTypes" value="Flip class"
                                     @click="updateFlipClass()"></v-checkbox>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
-                                        maxlength="5" oninput="validity.valid||(value='');" @input="updateHourLeft"
-                                        :disabled="!isFlipClass" label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                        maxlength="5" oninput="validity.valid||(value='');" @input="updateHourLeft" disabled
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="studyHour" min="0" max="99999"
@@ -157,47 +157,49 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                     </v-text-field>
                                 </v-col>
 
-                                <v-col class="py-0" cols="4">
+                                <v-col class="py-0" cols="3">
                                     <v-select class="black-label" v-model="courseHour" :items="courseHours"
                                         :disabled="!isFlipClass" @input="updateFlipClassMonth"
                                         label="จำนวนชั่วโมง"></v-select>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" type="number" min="0" max="99999"
-                                    maxlength="5" oninput="validity.valid||(value='');"
+                                <v-col class="py-0" cols="3">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" type="number"
+                                        min="0" max="99999" maxlength="5" oninput="validity.valid||(value='');"
                                         @input="updateTotalHour" :disabled="!isFlipClass" label="ชั่วโมงที่แถม">
                                     </v-text-field>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
+                                <v-col class="py-0" cols="3">
                                     <v-menu ref="flipDate" v-model="flipDate" :close-on-content-click="false"
                                         :disabled="!isFlipClass" transition="scale-transition" offset-y min-width="auto">
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field class="black-label" v-model="purchaseFlipClassDate"
                                                 label="วันที่ซื้อคลาส" name="purchaseFlipClassDate"
-                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" required
+                                                prepend-icon="mdi-calendar" :disabled="!isFlipClass" v-bind="attrs" required
                                                 v-on="on"></v-text-field>
                                         </template>
                                         <v-date-picker v-model="purchaseFlipClassDate" :active-picker.sync="activePicker"
                                             min="1950-01-01" @change="saveDate"></v-date-picker>
                                     </v-menu>
-                                    <v-text-field class="black-label" v-model="expireFlipClassDate" :disabled="!isFlipClass"
-                                        label="วันที่หมดอายุ">
-                                    </v-text-field>
+
                                 </v-col>
+                                <!-- <v-col class="py-0" cols="3">
+                                    <v-text-field class="black-label" name="trialFlipclassHour" v-model="trialFlipclassHour"
+                                        :disabled="!isFlipClass" label="ชั่วโมงที่ทดลองเรียนได้">
+                                    </v-text-field></v-col> -->
                                 <div class="text-center px-4 py-0">
                                     <hr class=" solid">
                                 </div>
                                 <p>&#x2022; Private class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
-                                <v-checkbox label="เพิ่ม Private class" v-model="classTypes" value="privateClass"
+                                <v-checkbox label="เพิ่ม Private class" v-model="classTypes" value="Private class"
                                     @click="updatePrivateClass()"></v-checkbox>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="privateTotalHour" min="0"
-                                        :disabled="!isPrivateClass" max="99999" maxlength="5"
-                                        oninput="validity.valid||(value='');" label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                        disabled max="99999" maxlength="5" oninput="validity.valid||(value='');"
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="privateStudyHour" min="0"
-                                        :disabled="!isPrivateClass" max="99999" maxlength="5"  @input="updatePrivateHourLeft"
+                                        :disabled="!isPrivateClass" max="99999" maxlength="5" @input="updatePrivateHourLeft"
                                         oninput="validity.valid||(value='');" label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
@@ -207,32 +209,77 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                     </v-text-field>
                                 </v-col>
 
-                                <v-col class="py-0" cols="4">
+                                <v-col class="py-0" cols="3">
                                     <v-select class="black-label" v-model="privateCourseHour" :items="courseHours"
                                         :disabled="!isPrivateClass" @input="updatePrivateClassMonth"
                                         label="จำนวนชั่วโมง"></v-select>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
+                                <v-col class="py-0" cols="3">
                                     <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour"
                                         @input="updatePrivateTotalHour" :disabled="!isPrivateClass" label="ชั่วโมงที่แถม">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col class="py-0" cols="4">
+                                    </v-text-field></v-col>
+                                <v-col class="py-0" cols="3">
                                     <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                         :disabled="!isPrivateClass" transition="scale-transition" offset-y min-width="auto">
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field class="black-label" v-model="purchasePrivateClassDate"
-                                                label="วันที่ซื้อคลาส" name="purchasePrivateClassDate"
-                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" required
+                                                label="วันที่เริ่มซื้อคลาส" name="trialDate" prepend-icon="mdi-calendar"
+                                                :disabled="!isPrivateClass" v-bind="attrs" required
                                                 v-on="on"></v-text-field>
                                         </template>
                                         <v-date-picker v-model="purchasePrivateClassDate" :active-picker.sync="activePicker"
                                             min="1950-01-01" @change="save"></v-date-picker>
                                     </v-menu>
-                                    <v-text-field class="black-label" v-model="expirePrivateClassDate"
-                                        :disabled="!isFlipClass" label="วันที่หมดอายุ">
+
+                                </v-col>
+                                <!-- <v-col class="py-0" cols="3">
+                                    <v-text-field class="black-label" name="trialPrivateClassHour"
+                                        v-model="trialPrivateClassHour" :disabled="!isPrivateClass"
+                                        label="ชั่วโมงที่ทดลองเรียนได้">
+                                    </v-text-field></v-col> -->
+                                <!-- ทดลองเรียน -->
+                                <!-- <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+
+                                <p>&#x2022; Class ทดลองเรียน</p>
+                                <v-checkbox label="มี Class ทดลองเรียน" v-model="isTrial" value="Trial class"
+                                    @click="updateTrial()"></v-checkbox>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="trialTotalHour" min="0"
+                                        :disabled="!isTrial" max="99999" maxlength="5" @input="updateTrialHourLeft"
+                                        label="ชั่วโมงทดลองทั้งหมด"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" v-model="trialStudyHour" min="0"
+                                        :disabled="!isTrial" max="99999" maxlength="5" @input="updateTrialHourLeft"
+                                        label="ชั่วโมงที่ทดลองไปแล้ว"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" min="0" max="99999" maxlength="5"
+                                        :disabled="!isTrial" v-model="trialHourLeft" label="ชั่วโมงทดลองที่เหลือ">
                                     </v-text-field>
                                 </v-col>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-select class="black-label" v-model="trialCourseHour" :items="courseHours"
+                                        :disabled="!isTrial" label="จำนวนชั่วโมง"></v-select>
+                                </v-col>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-menu ref="trialMenu" v-model="trialMenu" :close-on-content-click="false"
+                                        :disabled="!isTrial" transition="scale-transition" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="trailDate" label="วันที่เริ่มทดลอง"
+                                                name="trailDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                required v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="trailDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="saveTrialDate"></v-date-picker>
+                                    </v-menu>
+
+                                </v-col> -->
+
                                 <div class="text-center px-4 py-0">
                                     <hr class=" solid">
                                 </div>
@@ -614,6 +661,7 @@ export default {
             date: null,
             menu: false,
             flipDate: false,
+            trialMenu: false,
             isLoading: true,
             isSubmiting: false,
             isAlreadySubmit: false,
@@ -674,6 +722,10 @@ export default {
             expirePrivateClassDate: null,
             expireFlipClassDate: null,
             classTypes: [],
+
+            trialFlipclassHour: null,
+            trialPrivateClassHour: null,
+
             privateClassMonth: null,
             flipClassMonth: null,
             classType: null,
@@ -939,6 +991,9 @@ export default {
         flipDate(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
+        trialMenu(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
         'firstNameEng': {
             handler: 'updateUsername',
             immediate: true,
@@ -973,6 +1028,10 @@ export default {
             this.$refs.flipDate.save(date);
             this.updateFlipExpire();
         },
+        saveTrialDate(date) {
+            this.$refs.trialMenu.save(date);
+            this.updateTrialExpire();
+        },
 
         updatePrivateExpire() {
 
@@ -992,6 +1051,16 @@ export default {
                 expirationDate.setMonth(expirationDate.getMonth() + this.flipClassMonth);
                 const formattedExpirationDate = expirationDate.toISOString().slice(0, 10);
                 this.expireFlipClassDate = formattedExpirationDate;
+            }
+        },
+
+        updateTrialExpire() {
+            if (this.trialCourseHour && this.trailDate) {
+                const purchaseDate = new Date(this.trailDate);
+                const expirationDate = new Date(purchaseDate);
+                expirationDate.setMonth(expirationDate.getMonth() + this.flipClassMonth);
+                const formattedExpirationDate = expirationDate.toISOString().slice(0, 10);
+                this.expiretrailDate = formattedExpirationDate;
             }
         },
 
@@ -1028,6 +1097,10 @@ export default {
 
         updatePrivateHourLeft() {
             this.privateHourLeft = this.privateTotalHour - this.privateStudyHour;
+        },
+
+        updateTrialHourLeft() {
+            this.trialHourLeft = this.trialTotalHour - this.trialStudyHour;
         },
 
         updatePrivateClassMonth() {
@@ -1070,6 +1143,8 @@ export default {
                 this.hourLeft = null;
                 this.freeHour = null;
                 this.courseHour = null;
+                this.expireFlipClassDate = null;
+                this.purchaseFlipClassDate = null;
             }
             else {
                 this.isFlipClass = true;
@@ -1085,9 +1160,28 @@ export default {
                 this.privateHourLeft = null;
                 this.privateCourseHour = null;
                 this.privateFreeHour = null;
+                this.expirePrivateClassDate = null;
+                this.purchasePrivateClassDate = null;
             }
             else {
                 this.isPrivateClass = true;
+            }
+
+        },
+
+
+        updateTrial() {
+            if (this.isTrial) {
+
+                this.trialTotalHour = null;
+                this.trialStudyHour = null;
+                this.trialHourLeft = null;
+                this.trialCourseHour = null;
+                this.trailDate = null;
+                this.expiretrailDate = null;
+            }
+            else {
+
             }
 
         },
@@ -1167,11 +1261,14 @@ export default {
                 privateCourseHour: this.privateCourseHour,
                 privateFreeHour: this.privateFreeHour,
 
-                expireFlipClassDate:this.expireFlipClassDate,
-                expirePrivateClassDate:this.expirePrivateClassDate,
-              
+                expireFlipClassDate: this.expireFlipClassDate,
+                expirePrivateClassDate: this.expirePrivateClassDate,
+
+                 trialFlipclassHour: 0,
+                 trialPrivateClassHour: 0,
+
                 classTypes: this.classTypes,
-               
+
                 wantedTeacher: this.wantedTeacher,
                 annotation: this.annotation,
                 name: this.name,
