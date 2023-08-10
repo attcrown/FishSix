@@ -119,7 +119,7 @@
                                     <!-- <v-select v-model="edited.status_study" :items="because_check_study"
                                         :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
                                     <v-radio-group v-model="edited.status_study_column" column
-                                        :rules="[v => !!v || 'กรุณาเลือก']">
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
                                         <p>เช็คชื่อนักเรียนเข้าเรียน</p>
                                         <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
                                         <v-radio label="น้องมาสาย" value="true2"></v-radio>
@@ -131,7 +131,7 @@
                                     <!-- <v-select v-model="edited.status_study_tea" :items="because_check_study_tea"
                                         :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
                                     <v-radio-group v-model="edited.status_study_column_tea" column1
-                                        :rules="[v => !!v || 'กรุณาเลือก']">
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
                                         <p>เช็คชื่อครูเข้าสอน</p>
                                         <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
                                         <v-radio label="ครูมาสาย" value="true2"></v-radio>
@@ -139,11 +139,11 @@
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="12" sm="12">
-                                    <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL">
+                                    <img :src="imageURL" width="300" height="auto" alt="Image" v-if="imageURL" >
 
                                     <v-file-input :rules="rules.img" v-model="fileToUpload"
                                         accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
-                                        label="รูปภาพ Check-In เข้าสอน"></v-file-input>
+                                        label="รูปภาพ Check-In เข้าสอน" required></v-file-input>
                                 </v-col>
                             </v-row>
                         </v-container>
