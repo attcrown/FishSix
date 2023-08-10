@@ -608,7 +608,7 @@ export default {
                     if (true) {
                         console.log('update>>', this.editedItem, this.date);
                         let id = this.editedItem.id;
-                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).set({
+                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
                             teacher: this.editedItem.key_teacher,
                             subject: this.editedItem.subject,
                             style_subject: this.editedItem.style,
@@ -622,7 +622,7 @@ export default {
                             status: "พร้อมเรียน",
                             ID: id
                         });
-                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).set({
+                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
                             invite: '1',
                             sum_people: '1',
                             subject: this.editedItem.subject,
