@@ -1263,9 +1263,11 @@ export default {
 
                 expireFlipClassDate: this.expireFlipClassDate,
                 expirePrivateClassDate: this.expirePrivateClassDate,
+                purchaseFlipClassDate: this.purchaseFlipClassDate,
+                purchasePrivateClassDate: this.purchasePrivateClassDate,
 
-                 trialFlipclassHour: 0,
-                 trialPrivateClassHour: 0,
+                trialFlipclassHour: 0,
+                trialPrivateClassHour: 0,
 
                 classTypes: this.classTypes,
 

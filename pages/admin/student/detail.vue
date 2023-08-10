@@ -10,20 +10,31 @@
                 <v-col cols="12">
                     <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
                         class=" mt-5">
-                        <v-row justify="center">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div>ข้อมูล Flip class</div>
+                            <div>
+                                <v-btn class="text-white" @click="openFlipClassTransactionsDialog()"
+                                    color="black">ดูประวัติการปรับชั่วโมง
+
+                                    <v-icon color="white" x-small>mdi-arrow-down</v-icon>
+                                    <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                                </v-btn>
+
+                            </div>
+                        </v-card-title>
+                        <v-row justify="space-between" class="px-2">
                             <style>
                                 .time-label {
-                                    color: var(--label-color, #FFF);
-                                    /* Default to white (#FFF) if --label-color is not set */
-                                    font-size: 24px;
+                                    color: #FFF;
+
+                                    font-size: 20px;
                                     font-weight: 500;
 
                                 }
 
                                 .des-label {
-                                    color: var(--label-color, #FFF);
-                                    /* Default to white (#FFF) if --label-color is not set */
-                                    font-size: 16px;
+                                    color: #FFF;
+                                    font-size: 14px;
                                     font-weight: 300;
 
                                 }
@@ -36,7 +47,7 @@
                                     background: var(--green, #29CC39);
                                 }
                             </style>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -49,7 +60,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -60,7 +71,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -72,8 +83,8 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                            <v-col>
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -84,7 +95,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -99,7 +110,7 @@
 
 
 
-                            <v-col cols="7" class="mb-3">
+                            <v-col cols="9" class="mb-3">
                                 <v-card style="border-radius: 20px;" elevation="0" class="px-3">
 
                                     <v-card-text class="p-4">
@@ -113,14 +124,13 @@
                                                     v-model="selectedAddHour"></v-select>
 
 
-
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2 ms-3">
                                                 <v-btn class="small-button" color="green text-white"
-                                                    @click="addTime">ยืนยัน</v-btn>
+                                                    @click="addTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
 
-                                            <v-col cols="3" class="p-0 mt-2  ms-3">
+                                            <v-col cols="3" class="p-0 mt-2  ms-4">
                                                 <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedSubtractHour"></v-select>
@@ -128,7 +138,7 @@
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2  ms-3">
                                                 <v-btn class="small-button" color="green text-white"
-                                                    @click="subtractTime">ยืนยัน</v-btn>
+                                                    @click="subtractTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
 
                                         </v-row>
@@ -137,7 +147,7 @@
 
 
                             </v-col>
-                            <v-col cols="3" class="mb-3">
+                            <v-col cols="1" class="mb-3">
 
                             </v-col>
                         </v-row>
@@ -145,8 +155,20 @@
 
                     <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
                         class=" mt-5">
-                        <v-row justify="center">
-                            <v-col cols="2">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div>ข้อมูล Private class</div>
+                            <div>
+                                <v-btn class="text-white" @click="openPrivateClassTransactionsDialog()"
+                                    color="black">ดูประวัติการปรับชั่วโมง
+
+                                    <v-icon color="white" x-small>mdi-arrow-down</v-icon>
+                                    <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                                </v-btn>
+
+                            </div>
+                        </v-card-title>
+                        <v-row justify="space-between" class="px-2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -159,7 +181,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -170,7 +192,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -182,8 +204,8 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                            <v-col>
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -194,7 +216,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col cols="2">
+                            <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -210,7 +232,7 @@
 
 
 
-                            <v-col cols="7">
+                            <v-col cols="9">
                                 <v-card style="border-radius: 20px;" elevation="0" class="px-3">
                                     <v-card-text class="p-4">
                                         <v-row style="border-radius: 20px;">
@@ -227,10 +249,10 @@
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2 ms-3">
                                                 <v-btn class="small-button" color="green text-white"
-                                                    @click="addTime">ยืนยัน</v-btn>
+                                                    @click="addTime('private')">ยืนยัน</v-btn>
                                             </v-col>
 
-                                            <v-col cols="3" class="p-0 mt-2  ms-3">
+                                            <v-col cols="3" class="p-0 mt-2  ms-4">
                                                 <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedSubtractPrivateHour"></v-select>
@@ -238,7 +260,7 @@
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2  ms-3">
                                                 <v-btn class="small-button" color="green text-white"
-                                                    @click="subtractTime">ยืนยัน</v-btn>
+                                                    @click="subtractTime('private')">ยืนยัน</v-btn>
                                             </v-col>
 
                                         </v-row>
@@ -247,7 +269,7 @@
 
 
                             </v-col>
-                            <v-col cols="3"></v-col>
+                            <v-col cols="1"></v-col>
                         </v-row>
                     </v-card>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
@@ -268,20 +290,35 @@
                         <v-card-text>
                             <v-row>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="totalHourInput" min="0"
-                                        max="99999" :readonly="!isEditingCourse" maxlength="5"
-                                        oninput="validity.valid||(value='');" step="0.01"
-                                        hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
+                                    <v-text-field class="black-label" readonly value="Flip class"
+                                        label="ประเภทคลาส"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+
+                                    <v-text-field class="black-label" type="number" v-model="courseHour" min="0" max="99999"
+                                        v-if="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                        step="0.01" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
                                         label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                    <v-select class="black-label" v-if="isEditingCourse" v-model="totalHourInput"
+                                        :items="courseHours" label="ชั่วโมงเรียนทั้งหมด"></v-select>
+
+                                </v-col>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour"
+                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="purchaseFlipClassDate"
+                                        :readonly="!isEditingCourse" label="วันที่ซื้อคอร์ส"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" type="number" v-model="studyHourInput" min="0"
-                                        max="99999" :readonly="!isEditingCourse" maxlength="5"
-                                        oninput="validity.valid||(value='');" step="0.01"
-                                        hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
-                                        label="ชั่วโมงที่เรียนไปแล้ว"></v-text-field>
+                                    <v-text-field class="black-label" v-model="expireFlipClassDate"
+                                        :readonly="!isEditingCourse" label="วันที่คอร์สหมดอายุ"></v-text-field>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
+                                <!-- <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
                                         :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
                                         step="0.01" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
@@ -300,10 +337,66 @@
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="classTypes" :readonly="!isEditingCourse"
                                         label="ประเภทคลาส"></v-text-field>
-                                </v-col>
+                                </v-col> -->
                                 <div class="text-center px-4 py-0">
                                     <hr class=" solid">
                                 </div>
+
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" readonly value="Private class"
+                                        label="ประเภทคลาส"></v-text-field></v-col>
+                                <v-col class="py-0" cols="4">
+
+                                    <v-text-field class="black-label" type="number" v-model="privateCourseHour" min="0"
+                                        max="99999" v-if="!isEditingCourse" maxlength="5"
+                                        oninput="validity.valid||(value='');" step="0.01"
+                                        hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
+                                    <v-select class="black-label" v-if="isEditingCourse" v-model="privateTotalHourInput"
+                                        :items="courseHours" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-select>
+
+                                </v-col>
+
+
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour"
+                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="purchasePrivateClassDate"
+                                        :readonly="!isEditingCourse" label="วันที่ซื้อคอร์ส"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="expirePrivateClassDate"
+                                        :readonly="!isEditingCourse" label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                </v-col>
+                                <!-- <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
+                                        :readonly="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
+                                        step="0.01" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
+                                        v-model="hourLeftInput" label="ชั่วโมงเรียนที่เหลือ">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="courseHour" :readonly="!isEditingCourse"
+                                        label="ชั่วโมงเรียน"></v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour"
+                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="classTypes" :readonly="!isEditingCourse"
+                                        label="ประเภทคลาส"></v-text-field>
+                                </v-col> -->
+                                <div class="text-center px-4 py-0">
+                                    <hr class=" solid">
+                                </div>
+
+
                                 <v-col class="py-0" cols="4"> <v-text-field class="black-label" v-model="wantedTeacher"
                                         :readonly="!isEditingCourse" label="ต้องการเรียนกับครู"
                                         item-text="teacher.firstName"></v-text-field>
@@ -491,15 +584,17 @@
                                     </v-col>
                                     <v-row class="px-4">
                                         <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน <v-checkbox label="ที่อยู่ตามบัตรประชาชน "
-                                                :input-value="isSameAddress()" :disabled="!isEditingAddress"
-                                                @click="updateCurrAddress()"></v-checkbox></p>
+                                                :disabled="!isEditingAddress" @click="updateCurrAddress()"></v-checkbox></p>
 
                                         <v-col cols="4">
                                             <v-text-field name="curr_houseNo" label="บ้านเลขที่"
                                                 :readonly="!isEditingAddress" v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field name="curr_tambon" label="ตำบล/แขวง" :readonly="!isEditingAddress"
+                                            <v-text-field v-if="!isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
+                                                :readonly="!isEditingAddress" v-model="currAddress.tambon"></v-text-field>
+                                            <v-text-field v-if="isAddressSame" class="black-label" name="curr_tambon"
+                                                label="ตำบล" :disabled="isAddressSame"
                                                 v-model="currAddress.tambon"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
@@ -617,6 +712,78 @@
 
         </div>
         <!-- dialog -->
+
+        <v-dialog v-model="flipClassTransactionsDialog" max-width="60%">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>ประวัติการปรับชั่วโมง</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="closeFlipClassTransactionsDialog">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <hr style="border: 2px solid #000; background-color: #000;">
+                <v-card-text>
+                    <v-container>
+
+                        <v-data-table :headers="headers" :items="transactionHistories" item-key="transactionId"
+                            hide-default-footer>
+                            <template v-slot:top>
+                                <v-toolbar flat>
+                                    <v-toolbar-title>Transaction History</v-toolbar-title>
+                                </v-toolbar>
+                            </template>
+                        </v-data-table>
+                    </v-container>
+                </v-card-text>
+
+
+
+
+
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="privateClassTransactionsDialog" max-width="60%">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>ประวัติการปรับชั่วโมง</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="closePrivateClassTransactionsDialog">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <hr style="border: 2px solid #000; background-color: #000;">
+                <v-card-text>
+                    <v-container>
+
+                        <v-data-table :headers="headers" :items="transactionHistories" item-key="transactionId"
+                            hide-default-footer>
+                            <template v-slot:top>
+                                <v-toolbar flat>
+                                    <v-toolbar-title>Transaction History</v-toolbar-title>
+                                </v-toolbar>
+                            </template>
+                        </v-data-table>
+                    </v-container>
+                </v-card-text>
+
+
+
+
+
+            </v-card>
+        </v-dialog>
         <!-- snackbar -->
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
             <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
@@ -642,7 +809,15 @@ export default {
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
-
+            flipClassTransactionsDialog: false,
+            privateClassTransactionsDialog: false,
+            headers: [
+                { text: 'Transaction ID', value: 'transactionId' },
+                { text: 'เวลาที่บันทึก', value: 'transactionHistory.timestamp' },
+                { text: 'จำนวนที่เปลี่ยน', value: 'transactionHistory.amount' },
+                { text: 'รูปแบบ', value: 'transactionHistory.type' },
+            ],
+            //temporary
             selectedAddHour: null,
             selectedSubtractHour: null,
 
@@ -692,13 +867,17 @@ export default {
             totalHour: null,
             studyHour: null,
             hourLeft: null,
+            purchaseFlipClassDate: null,
+            purchasePrivateClassDate: null,
             expireFlipClassDate: null,
             expirePrivateClassDate: null,
             totalHourDisplay: null,
             studyHourDisplay: null,
             hourLeftDisplay: null,
+            isAddressSame: false,
 
             totalHourInput: null,
+            privateTotalHourInput: null,
             studyHourInput: null,
             hourLeftInput: null,
 
@@ -719,6 +898,8 @@ export default {
             freeHour: null,
             wantedTeacher: null,
             annotation: null,
+
+            transactionHistories: [],
             //static
             genders: [
                 'ชาย',
@@ -727,15 +908,10 @@ export default {
                 'ไม่มีเพศ',
                 'อื่นๆ'
             ],
-            contracts: [
-                'พนักงานประจำ',
-                'ครูสาขา',
-                'ครูออนไลน์',
 
-            ],
-            workTypes: [
-                'Full Time',
-                'Part Time',
+            courseHours: [
+                32,
+                48, 96
             ],
 
             hours: [
@@ -746,13 +922,13 @@ export default {
                 { value: 2, text: "2 ชั่วโมง" },
                 { value: 2.5, text: "2.30 ชั่วโมง" },
                 { value: 3, text: "3 ชั่วโมง" },
+                { value: 32, text: "32 ชั่วโมง" },
+                { value: 48, text: "48 ชั่วโมง" },
+                { value: 96, text: "96 ชั่วโมง" },
 
             ],
 
-
             //rules
-
-
             firstNameEngRules: [
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 100) || 'Name must be less than 100 characters',
@@ -943,7 +1119,22 @@ export default {
     },
 
     methods: {
+        openFlipClassTransactionsDialog() {
+            this.flipClassTransactionsDialog = true;
+            this.fetchTransactionHistory('Flip class');
+        },
+        closeFlipClassTransactionsDialog() {
+            this.flipClassTransactionsDialog = false;
 
+        },
+        openPrivateClassTransactionsDialog() {
+            this.privateClassTransactionsDialog = true;
+            this.fetchTransactionHistory('Private class');
+        },
+        closePrivateClassTransactionsDialog() {
+            this.privateClassTransactionsDialog = false;
+
+        },
         validateDetailEdit() {
             return this.$refs[`detailForm`].validate();
         },
@@ -1100,11 +1291,21 @@ export default {
             }
         },
 
-
-
         updateCurrAddress() {
+            if (this.isAddressSame) {
+
+                this.currAddress = { houseNo: null, tambon: null, amphoe: null, province: null, postal: null };
+                this.isAddressSame = false;
+
+            }
+            else {
+                this.isAddressSame = true;
+            }
+
             if (this.address) {
+
                 this.currAddress = { ...this.address };
+
             } else {
                 this.currAddress = null;
             }
@@ -1120,19 +1321,7 @@ export default {
             return selectedSubject && selectedSubject.level.includes(level);
         },
 
-        isSameAddress() {
-            if (this.address.length !== this.currAddress.length) {
-                return false;
-            }
 
-            for (let i = 0; i < this.address.length; i++) {
-                if (this.address[i] !== this.currAddress[i]) {
-                    return false;
-                }
-            }
-
-            return true && !this.isEditingAddress;
-        },
 
         async readdata() {
 
@@ -1159,14 +1348,16 @@ export default {
 
                 this.expireFlipClassDate = childData.expireFlipClassDate || null;
                 this.expirePrivateClassDate = childData.expirePrivateClassDate || null;
+                this.purchaseFlipClassDate = this.purchaseFlipClassDate || null;
+                this.purchasePrivateClassDate = this.purchasePrivateClassDate || null;
 
 
                 this.privateCourseHour = childData.privateCourseHour || 0;
                 this.privateFreeHour = childData.privateFreeHour || 0;
 
-                
+
                 this.trialFlipclassHour = childData.trialFlipclassHour || 0;
-                this.trialPrivateClassHour = childData.trialPrivateClassHour     || 0;
+                this.trialPrivateClassHour = childData.trialPrivateClassHour || 0;
 
                 this.classTypes = childData.classTypes || null;
                 this.courseHour = childData.courseHour || null;
@@ -1215,7 +1406,6 @@ export default {
                 } catch (error) {
                     this.isLoading = false;
                 }
-
 
 
                 this.isLoading = false;
@@ -1288,73 +1478,193 @@ export default {
 
         },
 
+        async fetchTransactionHistory(type) {
+            try {
+                const db = this.$fireModule.database();
+                db.ref("studentTransactions/").on("value", (snapshot) => {
+                    let item = [];
+                    const childData = snapshot.val();
+                    for (const key in childData) {
+
+                        for (const transactionId in childData[key]) {
+
+                            const transaction = childData[key][transactionId];
+
+                            if (transaction.class === type) {
+
+                                const gmtOffset = 7 * 60 * 60 * 1000;
+                                //const date = new Date(transaction.timestamp).getTime()+ gmtOffset;
+
+                                // const gmtPlus7Date = new Date(date);
+                                const date = new Date(transaction.timestamp);
+
+
+                                const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
+
+                                const transactionHistory = {
+                                    amount: transaction.amount,
+                                    timestamp: formattedDate,
+                                    class: transaction.class,
+                                    type: transaction.type,
+                                };
+                                item.push({ transactionId, transactionHistory });
+                            }
+                        }
+
+                    }
+
+                    this.transactionHistories = item;
+                    this.isLoading = false;
+                });
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+            }
+        },
+
         async updateCourse() {
             if (this.totalHourInput !== null) {
                 this.totalHourInput = this.convertHourMinuteToMinutes(this.totalHourInput);
             }
-            if (this.studyHourInput !== null) {
-                this.studyHourInput = this.convertHourMinuteToMinutes(this.studyHourInput);
+            if (this.privateTotalHourInput !== null) {
+                this.privateTotalHourInput = this.convertHourMinuteToMinutes(this.privateTotalHourInput);
             }
-            if (this.hourLeftInput !== null) {
-                this.hourLeftInput = this.convertHourMinuteToMinutes(this.hourLeftInput);
-            }
+
             const db = this.$fireModule.database();
             const updates = {};
             if (this.totalHourInput !== null) {
                 updates.totalHour = parseFloat(this.totalHourInput);
+                updates.hourLeft = parseFloat(this.totalHourInput) - parseFloat(this.studyHour);
+                updates.courseHour = this.totalHourInput;
             }
 
-            if (this.studyHourInput !== null) {
-                updates.studyHour = parseFloat(this.studyHourInput);
+            if (this.privateTotalHourInput !== null) {
+                updates.privateTotalHour = parseFloat(this.privateTotalHourInput);
+                updates.privateHourLeft = parseFloat(this.privateTotalHourInput) - parseFloat(this.privateStudyHour);
+                updates.privateCourseHour = this.privateTotalHourInput;
             }
 
-            if (this.hourLeftInput !== null) {
-                updates.hourLeft = parseFloat(this.hourLeftInput);
-            }
+
 
             await db.ref(`user/${this.userId}/`).update(updates);
             this.totalHourInput = null;
-            this.studyHourInput = null;
-            this.hourLeftInput = null;
+            this.privateTotalHour = null;
+
+
+
             this.openSnackbar("success", 'แก้ไขชั่วโมงสำเร็จ!');
             return;
         },
 
+        async addTime(value) {
 
-
-        async addTime() {
-
-            if (this.selectedAddHour !== null) {
+            if (this.selectedAddHour !== null && value == 'flip') {
 
                 console.log(this.selectedAddHour)
                 const selectedValue = parseFloat(this.selectedAddHour, 10);
 
+                this.hourLeft = parseFloat(this.totalHour, 10) + selectedValue;
                 this.totalHour = parseFloat(this.totalHour, 10) + selectedValue;
-                console.log(this.userId)
+
                 const db = this.$fireModule.database();
+
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
+                const transactionData = {
+                    timestamp: Date.now(),
+                    amount: selectedValue,
+                    type: 'เพิ่มเวลา',
+                    class: "Flip class"
+                };
+
                 await db.ref(`user/${this.userId}/`).update({
                     totalHour: this.totalHour,
+                    hourLeft: this.hourLeft,
 
-                })
+                });
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
+                return;
+            }
+            if (this.selectedAddPrivateHour !== null && value == 'private') {
+
+                console.log(this.selectedAddPrivateHour)
+                const selectedValue = parseFloat(this.selectedAddPrivateHour, 10);
+
+                this.privateHourLeft = parseFloat(this.privateTotalHour, 10) + selectedValue;
+                this.privateTotalHour = parseFloat(this.privateTotalHour, 10) + selectedValue;
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
+                const transactionData = {
+                    timestamp: Date.now(),
+                    amount: selectedValue,
+                    type: 'เพิ่มเวลา',
+                    class: "Private class"
+                };
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    privateTotalHour: this.privateTotalHour,
+                    privateHourLeft: this.privateHourLeft,
+                });
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
             }
         },
 
-        async subtractTime() {
+        async subtractTime(value) {
 
-            if (this.selectedSubtractHour !== null) {
+            if (this.selectedSubtractHour !== null && value == 'flip') {
 
                 console.log(this.selectedSubtractHour)
                 const selectedValue = parseFloat(this.selectedSubtractHour, 10);
 
+                this.hourLeft = parseFloat(this.totalHour, 10) - selectedValue;
                 this.totalHour = parseFloat(this.totalHour, 10) - selectedValue;
 
                 const db = this.$fireModule.database();
                 await db.ref(`user/${this.userId}/`).update({
                     totalHour: this.totalHour,
-
+                    hourLeft: this.hourLeft,
                 })
+
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
+                const transactionData = {
+                    timestamp: Date.now(),
+                    amount: selectedValue,
+                    type: 'ลดเวลา',
+                    class: "Flip class"
+                };
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+                this.openSnackbar("success", 'ลดชั่วโมงสำเร็จ!');
+                return;
+            }
+
+            if (this.selectedSubtractPrivateHour !== null && value == 'private') {
+
+                console.log(this.selectedSubtractPrivateHour)
+                const selectedValue = parseFloat(this.selectedSubtractPrivateHour, 10);
+                this.privateHourLeft = parseFloat(this.privateTotalHour, 10) - selectedValue;
+                this.privateTotalHour = parseFloat(this.privateTotalHour, 10) - selectedValue;
+
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    privateTotalHour: this.privateTotalHour,
+                    privateHourLeft: this.privateHourLeft,
+                })
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
+                const transactionData = {
+                    timestamp: Date.now(),
+                    amount: selectedValue,
+                    type: 'ลดเวลา',
+                    class: "Private class"
+                };
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'ลดชั่วโมงสำเร็จ!');
                 return;
             }

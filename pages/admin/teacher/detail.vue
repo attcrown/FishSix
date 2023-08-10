@@ -59,19 +59,18 @@
                                         </v-col>
                                         <v-col cols="9"></v-col>
                                         <v-col cols="6" class="py-0 ">
-                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng" 
-                                            :rules="firstNameEngRules" :readonly="!isEditingDetail"
-                                                label="ชื่อ (ภาษาอังกฤษ)" required
-                                                v-on:keypress="isLetter($event)">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                                :rules="firstNameEngRules" :readonly="!isEditingDetail"
+                                                label="ชื่อ (ภาษาอังกฤษ)" required v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                             label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" :readonly="!isEditingDetail"
-                                                v-on:keypress="isLetter($event)" >
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules"
+                                                :readonly="!isEditingDetail" v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
-                                      
+
                                         <v-col cols="6" class="py-0">
                                             <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
@@ -198,9 +197,10 @@
                                                 v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-if="!isEditingAddress" name="curr_tambon" label="ตำบล/แขวง"
-                                                readonly v-model="currAddress.tambon"></v-text-field>
-                                            <v-autocomplete v-if="isEditingAddress" class="black-label"
+                                            <v-text-field v-if="!isEditingAddress|| isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
+                                                readonly :disabled="isAddressSame" v-model="currAddress.tambon"></v-text-field>
+                                           
+                                            <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
                                                 :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
                                                 :item-value="currTambonValue" item-text="name_th"
                                                 :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
@@ -288,9 +288,9 @@
                                     </v-col>
                                     <v-col cols="4">
                                         <v-select v-if="!isEditingContract" class="black-label" v-model="classLocation"
-                                            :items="classLocations" item-text="name" item-value="key" :readonly="!isEditingContract"
-                                            label="สาขาที่สามารถสอนได้" multiple></v-select>
-                                      
+                                            :items="classLocations" item-text="name" item-value="key"
+                                            :readonly="!isEditingContract" label="สาขาที่สามารถสอนได้" multiple></v-select>
+
                                         <v-select v-if="isEditingContract" class="black-label" v-model="classLocation"
                                             :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
@@ -702,24 +702,23 @@ export default {
             return !!existingTeacher;
         },
         updateCurrAddress() {
-
             if (this.isAddressSame) {
 
                 this.currAddress = { houseNo: null, tambon: null, amphoe: null, province: null, postal: null };
                 this.isAddressSame = false;
-                if (this.address) {
 
-                    this.currAddress = { ...this.address };
-
-                } else {
-                    this.currAddress = null;
-                }
             }
             else {
                 this.isAddressSame = true;
             }
 
+            if (this.address) {
 
+                this.currAddress = { ...this.address };
+
+            } else {
+                this.currAddress = null;
+            }
         },
         async toEditAddress() {
             if (this.isEditingAddress == true) {
@@ -744,7 +743,7 @@ export default {
                         })
                         .catch((error) => {
 
-                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ', error);
                             this.isSubmitting = false;
                             this.isEditingAddress = false;
                         });

@@ -387,6 +387,7 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
+                    console.log(childData[key])
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
