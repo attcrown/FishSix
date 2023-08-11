@@ -112,8 +112,11 @@
                                     <span style="font-size: 16px">
                                         <b>ยืนยันครูกับนักเรียน</b>
                                     </span>
+                                    <v-chip color="#FFA726" text-color="white" dark v-if="editedItem.match_test" class="ms-3">
+                                        ทดลองเรียน
+                                    </v-chip>
                                     <v-spacer></v-spacer>
-                                    <v-btn fab dark small color="#37474F" @click="close">
+                                    <v-btn fab dark small color="#37474F" @click="close" >
                                         <v-icon dark class="text-h5">
                                             mdi-close
                                         </v-icon>
@@ -474,7 +477,8 @@ export default {
                                                 level: timedata.level,
                                                 because: timedata.because,
                                                 id: timedata.ID,
-                                                createAt: sumx_date
+                                                createAt: sumx_date,
+                                                match_test:timedata.match_test
                                             });
                                             this.events.push(
                                                 {

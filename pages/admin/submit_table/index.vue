@@ -1,6 +1,6 @@
 <template>
     <div class="mx-15">
-        <h3 style="font-size:32px"><b>เช็คชื่อ/ส่งพัฒนการ</b></h3>
+        <h3 style="font-size:32px"><b>เช็คชื่อ/ส่งพัฒนาการ</b></h3>
         <card></card>
     </div>
 </template>

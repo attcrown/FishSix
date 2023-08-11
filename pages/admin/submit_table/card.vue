@@ -564,14 +564,14 @@ export default {
                                                     .then(([teacherSnapshot]) => {
                                                         const studentData = teacherSnapshot.val();
                                                         console.log(studentData);
-                                                        if (studentData.freeHour && studentData.privateFreeHour) {
+                                                        if (studentData.trialFlipclassHour && studentData.trialPrivateClassHour) {
                                                             if (this.edited.style.substring(0, 4) === "Flip") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    freeHour: parseInt(studentData.freeHour) - this.summ_hour,
+                                                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) - this.summ_hour,
                                                                 })
                                                             } else if (this.edited.style.substring(0, 7) === "Private") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    privateFreeHour: parseInt(studentData.privateFreeHour) - this.summ_hour,
+                                                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) - this.summ_hour,
                                                                 })
                                                             } else {
                                                                 console.log("Error");
@@ -589,16 +589,16 @@ export default {
                                                     .then(([teacherSnapshot]) => {
                                                         const studentData = teacherSnapshot.val();
                                                         console.log(studentData);
-                                                        if (studentData.studyHour && studentData.privateStudyHour) {
+                                                        if (studentData.studyHour != undefined && studentData.privateStudyHour != undefined) {
                                                             if (this.edited.style.substring(0, 4) === "Flip") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    studyHour: parseInt(studentData.studyHour) - this.summ_hour,
-                                                                    hourLeft: parseInt(studentData.studyHour) + this.summ_hour,
+                                                                    studyHour: parseInt(studentData.studyHour) + this.summ_hour,                                                                  
+                                                                    hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
                                                                 })
                                                             } else if (this.edited.style.substring(0, 7) === "Private") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    privateStudyHour: parseInt(studentData.privateStudyHour) - this.summ_hour,
-                                                                    privateHourLeft: parseInt(studentData.privateStudyHour) + this.summ_hour,
+                                                                    privateStudyHour: parseInt(studentData.privateStudyHour) + this.summ_hour,
+                                                                    privateHourLeft: parseInt(studentData.privateHourLeft) - this.summ_hour,
                                                                 })
                                                             } else {
                                                                 console.log("Error");
