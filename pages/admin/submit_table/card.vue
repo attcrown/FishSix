@@ -8,10 +8,11 @@
                     transition="scale-transition" offset-y min-width="auto">
                     <template v-slot:activator="{ on, attrs }">
                         <v-text-field v-model="date" :rules="rules.date" label="วันที่เรียน" prepend-icon="mdi-calendar"
-                            readonly v-bind="attrs" v-on="on" required class="date-picker-field"></v-text-field>
+                            readonly v-bind="attrs" v-on="on" class="date-picker-field" required></v-text-field>
                     </template>
 
-                    <v-date-picker v-model="date" no-title scrollable :events="arrayEvents" event-color="green lighten-1">
+                    <v-date-picker v-model="date" no-title scrollable :events="arrayEvents" event-color="green lighten-1"
+                        :max="date_now">
                         <v-btn text color="primary" @click="menu = false">
                             Cancel
                         </v-btn>
@@ -41,6 +42,7 @@
                     <table class="text-center" style="width: 100%;">
                         <thead style="background-color:#D4C1B2;">
                             <tr>
+                                <th class="p-2">วันที่</th>
                                 <th class="p-2">รหัสนักเรียน</th>
                                 <th class="p-2">ชื่อนักเรียน</th>
                                 <th class="p-2">ประเภทคลาส</th>
@@ -54,6 +56,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="item in items" :key="item.keyStudent">
+                                <td class="p-2">{{ item.date }}</td>
                                 <td class="p-2">{{ item.studentId }}</td>
                                 <td class="p-2">{{ item.namestu }}</td>
                                 <td class="p-2">{{ item.style }}</td>
@@ -276,6 +279,10 @@
                                     <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
                                         v-model="edited.homework" :rules="rules.text" required></v-text-field>
                                 </v-col>
+                                <v-col cols="12" sm="12">
+                                    <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
+                                        v-model="edited.link_url" :rules="rules.text" required></v-text-field>
+                                </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
@@ -385,6 +392,7 @@ export default {
             panel: [],
             readonly: false,
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            date_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             menu: false,
             modal: false,
             menu2: false,
@@ -567,11 +575,11 @@ export default {
                                                         if (studentData.trialFlipclassHour && studentData.trialPrivateClassHour) {
                                                             if (this.edited.style.substring(0, 4) === "Flip") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) - this.summ_hour,
+                                                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) + this.summ_hour,
                                                                 })
                                                             } else if (this.edited.style.substring(0, 7) === "Private") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) - this.summ_hour,
+                                                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) + this.summ_hour,
                                                                 })
                                                             } else {
                                                                 console.log("Error");
@@ -583,7 +591,7 @@ export default {
                                                             console.log('freeHour privateFreeHour No DATA');
                                                         }
                                                     })
-                                            } else if (this.edited.status_study_column == "true3") {
+                                            } else if (this.edited.status_study_column == "true3" || this.edited.status_study_column == "true2" || this.edited.status_study_column == "true1") {
                                                 const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
                                                 Promise.all([getTeacherPromise])
                                                     .then(([teacherSnapshot]) => {
@@ -592,7 +600,7 @@ export default {
                                                         if (studentData.studyHour != undefined && studentData.privateStudyHour != undefined) {
                                                             if (this.edited.style.substring(0, 4) === "Flip") {
                                                                 db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    studyHour: parseInt(studentData.studyHour) + this.summ_hour,                                                                  
+                                                                    studyHour: parseInt(studentData.studyHour) + this.summ_hour,
                                                                     hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
                                                                 })
                                                             } else if (this.edited.style.substring(0, 7) === "Private") {
@@ -603,7 +611,7 @@ export default {
                                                             } else {
                                                                 console.log("Error");
                                                             }
-                                                            console.log('ลบ ชม. class จริง',this.edited.style);
+                                                            console.log('ลบ ชม. class จริง', this.edited.style);
                                                             this.loadsave = false;
                                                             this.clear_dialog();
                                                         } else {
@@ -641,6 +649,7 @@ export default {
                 comment: this.edited.comment,
                 check_save: this.check_time,
                 rate: this.edited.rate,
+                link_url: this.edited.link_url
             }).then(() => {
                 console.log('save send_plan');
                 this.clear_dialog();
@@ -756,55 +765,58 @@ export default {
                 this.desserts = [];
                 // this.arrayEvents = [];
                 let item = [];
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        const datedata = keydata[date];
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                            const getStudentPromise = db.ref(`user/${key}`).once("value");
-                            const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                            const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                            Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise])
-                                .then((snapshots) => {
-                                    const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
-                                    const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
-                                    const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
-                                    const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                        if (new Date(date).getTime().toString().substring(0, 5) <= now.getTime().toString().substring(0, 5)) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise])
+                                    .then((snapshots) => {
+                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                        const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
 
-                                    const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const locationData = locationSnapshot.val();
-                                    const studentData = studentSnapshot.val();
+                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const locationData = locationSnapshot.val();
+                                        const studentData = studentSnapshot.val();
 
-                                    const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
-                                    const namestu = `${studentData.nickname} (${studentData.firstName})`;
-                                    const namesub = subjectData.name;
-                                    if (timedata.status === "พร้อมเรียน") {
-                                        item.push({
-                                            level: timedata.level,
-                                            name: nametea,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: locationData.name,
-                                            keystyle: timedata.style_subject,
-                                            // class: timedata.class,
-                                            subject: namesub,
-                                            keySubject: timedata.subject,
-                                            keyStudent: key,
-                                            keyTeacher: timedata.teacher,
-                                            studentId: studentData.studentId || "-",
-                                            namestu: namestu,
-                                            sendplan: timedata.sendplan,
-                                            because: timedata.because,
-                                            Idsendplan: timedata.Idsendplan,
-                                            match_test: timedata.match_test
-                                        });
-                                        // this.arrayEvents.push(date);
-                                    }
-                                })
+                                        const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                        const namestu = `${studentData.nickname} (${studentData.firstName})`;
+                                        const namesub = subjectData.name;
+                                        if (timedata.status === "พร้อมเรียน") {
+                                            item.push({
+                                                level: timedata.level,
+                                                name: nametea,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: locationData.name,
+                                                keystyle: timedata.style_subject,
+                                                // class: timedata.class,
+                                                subject: namesub,
+                                                keySubject: timedata.subject,
+                                                keyStudent: key,
+                                                keyTeacher: timedata.teacher,
+                                                studentId: studentData.studentId || "-",
+                                                namestu: namestu,
+                                                sendplan: timedata.sendplan,
+                                                because: timedata.because,
+                                                Idsendplan: timedata.Idsendplan,
+                                                match_test: timedata.match_test
+                                            });
+                                            // this.arrayEvents.push(date);
+                                        }
+                                    })
+                            }
                         }
                     }
                 }
