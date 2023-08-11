@@ -22,12 +22,11 @@
 
                             </div>
                         </v-card-title>
-                        <v-row justify="space-between" class="px-2">
+                        <v-row justify="space-between" class="px-5">
                             <style>
                                 .time-label {
                                     color: #FFF;
-
-                                    font-size: 20px;
+                                    font-size: 18px;
                                     font-weight: 500;
 
                                 }
@@ -48,7 +47,7 @@
                                 }
                             </style>
                             <v-col>
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-2 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -60,19 +59,9 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
+
                             <v-col>
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
-                                    <v-card-text class="p-4">
-                                        <v-row>
-                                            <div class="des-label">Flip class </div>
-                                            <div class="time-label my-3">{{ formattedTotalHour }}</div>
-                                            <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
-                                        </v-row>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                            <v-col>
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-2 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -84,7 +73,7 @@
                                 </v-card>
                             </v-col>
                             <v-col>
-                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-2 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -96,7 +85,7 @@
                                 </v-card>
                             </v-col>
                             <v-col>
-                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
+                                <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-2 mt-5">
 
                                     <v-card-text class="p-4">
                                         <v-row>
@@ -140,11 +129,7 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
-                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงทดลองเรียน" :items="hours"
-                                                item-text="text" item-value="value"
-                                                v-model="selectedAddTrialFlipHour"></v-select>
-                                            <v-btn class="small-button" color="green text-white"
-                                                @click="addTime('trialFlip')">ยืนยัน</v-btn>
+
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -171,7 +156,7 @@
 
                             </div>
                         </v-card-title>
-                        <v-row justify="space-between" class="px-2">
+                        <v-row justify="space-between" class="px-5">
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
@@ -185,17 +170,7 @@
                                     </v-card-text>
                                 </v-card>
                             </v-col>
-                            <v-col>
-                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
-                                    <v-card-text class="p-4">
-                                        <v-row>
-                                            <div class="des-label">Private class </div>
-                                            <div class="time-label my-3">{{ formattedPrivateTotalHour }}</div>
-                                            <div class="des-label">ชั่วโมงเรียนทั้งหมด </div>
-                                        </v-row>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
+
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
@@ -248,8 +223,6 @@
                                                     item-text="text" item-value="value"
                                                     v-model="selectedAddPrivateHour"></v-select>
 
-
-
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2 ms-3">
                                                 <v-btn class="small-button" color="green text-white"
@@ -266,11 +239,7 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('private')">ยืนยัน</v-btn>
                                             </v-col>
-                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงทดลองเรียน" :items="hours"
-                                                item-text="text" item-value="value"
-                                                v-model="selectedAddTrialPrivateHour"></v-select>
-                                            <v-btn class="small-button" color="green text-white"
-                                                @click="addTime('trialPrivate')">ยืนยัน</v-btn>
+
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -301,7 +270,7 @@
                                     <v-text-field class="black-label" readonly value="Flip class"
                                         label="ประเภทคลาส"></v-text-field>
                                 </v-col>
-                                <v-col class="py-0" cols="4">
+                                <!-- <v-col class="py-0" cols="4">
 
                                     <v-text-field class="black-label" type="number" v-model="courseHour" min="0" max="99999"
                                         v-if="!isEditingCourse" maxlength="5" oninput="validity.valid||(value='');"
@@ -310,17 +279,33 @@
                                     <v-select class="black-label" v-if="isEditingCourse" v-model="totalHourInput"
                                         :items="courseHours" label="ชั่วโมงเรียนทั้งหมด"></v-select>
 
-                                </v-col>
+                                </v-col> -->
 
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour"
-                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
+                                    <v-text-field class="black-label" name="freeHour" v-model="freeHour" disabled
+                                        label="ชั่วโมงที่แถม">
                                     </v-text-field>
                                 </v-col>
+                                <v-col class="py-0" cols="4">
 
+                                </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="purchaseFlipClassDate"
-                                        :readonly="!isEditingCourse" label="วันที่ซื้อคอร์ส"></v-text-field>
+                                        v-if="!isEditingCourse" :readonly="!isEditingCourse"
+                                        label="วันที่ซื้อคอร์ส"></v-text-field>
+
+
+                                    <v-menu ref="flipDate" v-model="flipDate" :close-on-content-click="false"
+                                        v-if="isEditingCourse" transition="scale-transition" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="purchaseFlipClassDate"
+                                                label="วันที่ซื้อคอร์ส" name="purchaseFlipClassDate"
+                                                prepend-icon="mdi-calendar" :disabled="!isEditingCourse" v-bind="attrs"
+                                                required v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="purchaseFlipClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="saveDate"></v-date-picker>
+                                    </v-menu>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="expireFlipClassDate"
@@ -354,27 +339,38 @@
                                     <v-text-field class="black-label" readonly value="Private class"
                                         label="ประเภทคลาส"></v-text-field></v-col>
                                 <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour" disabled
+                                        label="ชั่วโมงที่แถม">
+                                    </v-text-field>
+                                </v-col>
+                                <v-col class="py-0" cols="4">
 
-                                    <v-text-field class="black-label" type="number" v-model="privateCourseHour" min="0"
+                                    <!-- <v-text-field class="black-label" type="number" v-model="privateCourseHour" min="0"
                                         max="99999" v-if="!isEditingCourse" maxlength="5"
                                         oninput="validity.valid||(value='');" step="0.01"
                                         hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
                                         label="ชั่วโมงเรียนทั้งหมด"></v-text-field>
                                     <v-select class="black-label" v-if="isEditingCourse" v-model="privateTotalHourInput"
                                         :items="courseHours" hint="รูปแบบการกรอก hh.mm เช่น 1.30 คือ 1 ชั่วโมง 30 นาที"
-                                        label="ชั่วโมงเรียนทั้งหมด"></v-select>
+                                        label="ชั่วโมงเรียนทั้งหมด"></v-select> -->
 
                                 </v-col>
 
 
+
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour"
-                                        :readonly="!isEditingCourse" label="ชั่วโมงที่แถม">
-                                    </v-text-field>
-                                </v-col>
-                                <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="purchasePrivateClassDate"
-                                        :readonly="!isEditingCourse" label="วันที่ซื้อคอร์ส"></v-text-field>
+                                    <v-text-field class="black-label" v-model="purchasePrivateClassDate" readonly
+                                        v-if="!isEditingCourse" label="วันที่ซื้อคอร์ส"></v-text-field>
+                                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false" v-if="isEditingCourse"
+                                        transition="scale-transition" offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="purchasePrivateClassDate"
+                                                label="วันที่ซื้อคอร์ส" name="purchasePrivateClassDate"
+                                                prepend-icon="mdi-calendar" :disabled="!isEditingCourse" v-bind="attrs"
+                                                required v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="purchasePrivateClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="save"></v-date-picker></v-menu>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="expirePrivateClassDate"
@@ -405,9 +401,13 @@
                                 </div>
 
 
-                                <v-col class="py-0" cols="4"> <v-text-field class="black-label" v-model="wantedTeacher"
+                                <v-col class="py-0" cols="4">
+                                    <v-text-field class="black-label" v-model="wantedTeacher" v-if="!isEditingCourse"
                                         :readonly="!isEditingCourse" label="ต้องการเรียนกับครู"
                                         item-text="teacher.firstName"></v-text-field>
+                                    <v-autocomplete class="black-label" v-model="wantedTeacher" :items="teachers"
+                                        v-if="isEditingCourse" label="ต้องการเรียนกับครู"
+                                        item-text='teacher.nickname'></v-autocomplete>
 
                                 </v-col>
                                 <v-col class="py-0" cols="4">
@@ -526,8 +526,8 @@
                                     </v-col>
                                     <v-col cols="4" class="py-0">
                                         <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
-                                            :rules="idCardRules" :counter="isEditingDetail" :readonly="!isEditingDetail"
-                                            required></v-text-field>
+                                            :rules="idCardRules" :counter="isEditingDetail"
+                                            :readonly="!isEditingDetail"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
                                         <!-- <label>สำเนาบัตรประชาชน</label><br> -->
@@ -567,18 +567,22 @@
                                             v-model="address.houseNo"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field name="tambon" label="ตำบล/แขวง" :readonly="!isEditingAddress"
-                                            v-model="address.tambon"></v-text-field>
+                                        <v-text-field v-if="!isEditingAddress" name="tambon" label="ตำบล/แขวง"
+                                            :readonly="!isEditingAddress" v-model="address.tambon"></v-text-field>
+
+                                        <v-autocomplete v-if="isEditingAddress" class="black-label" v-model="selectedTambon"
+                                            :items="tambons" :item-value="tambonValue" item-text="name_th"
+                                            :search-input.sync="searchTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                            @update:search-input="fetchTambons" label="ตำบล"></v-autocomplete>
                                     </v-col>
                                     <v-col cols="4">
                                         <v-text-field name="amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
                                             v-model="address.amphoe"></v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field v-if="!isEditingAddress" name="province" label="จังหวัด"
-                                            :readonly="!isEditingAddress" v-model="address.province"></v-text-field>
-                                        <v-autocomplete v-if="isEditingAddress" name="province" v-model="address.province"
-                                            :items="provinceOptions" autocomplete label="จังหวัด"></v-autocomplete>
+                                        <v-text-field name="province" label="จังหวัด" :readonly="!isEditingAddress"
+                                            v-model="address.province"></v-text-field>
+
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field name="postal" label="รหัสไปรษณีย์" :rules="postalRules"
@@ -591,35 +595,40 @@
 
                                     </v-col>
                                     <v-row class="px-4">
-                                        <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน <v-checkbox label="ที่อยู่ตามบัตรประชาชน "
-                                                :disabled="!isEditingAddress" @click="updateCurrAddress()"></v-checkbox></p>
+                                        <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน
+                                            <v-checkbox label="ที่อยู่ตามบัตรประชาชน " :disabled="!isEditingAddress"
+                                                @click="updateCurrAddress()"></v-checkbox>
+                                        </p>
 
                                         <v-col cols="4">
                                             <v-text-field name="curr_houseNo" label="บ้านเลขที่"
-                                                :readonly="!isEditingAddress" v-model="currAddress.houseNo"></v-text-field>
+                                                :readonly="!isEditingAddress" :disabled="isAddressSame"
+                                                v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-if="!isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
-                                                :readonly="!isEditingAddress" v-model="currAddress.tambon"></v-text-field>
-                                            <v-text-field v-if="isAddressSame" class="black-label" name="curr_tambon"
-                                                label="ตำบล" :disabled="isAddressSame"
-                                                v-model="currAddress.tambon"></v-text-field>
+                                            <v-text-field v-if="!isEditingAddress|| isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
+                                                readonly :disabled="isAddressSame" v-model="currAddress.tambon"></v-text-field>
+                                           
+                                            <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
+                                                :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
+                                                :item-value="currTambonValue" item-text="name_th"
+                                                :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                                @update:search-input="fetchCurrTambons" label="ตำบล"></v-autocomplete>
+
                                         </v-col>
                                         <v-col cols="4">
                                             <v-text-field name="curr_amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
-                                                v-model="currAddress.amphoe"></v-text-field>
+                                                :disabled="isAddressSame" v-model="currAddress.amphoe"></v-text-field>
                                         </v-col>
                                         <v-col cols="6">
-                                            <v-text-field v-if="!isEditingAddress" name="curr_province" label="จังหวัด"
-                                                :readonly="!isEditingAddress" v-model="currAddress.province"></v-text-field>
-                                            <v-autocomplete v-if="isEditingAddress" name="curr_province"
-                                                v-model="currAddress.province" :items="provinceOptions" autocomplete
-                                                label="จังหวัด"></v-autocomplete>
+                                            <v-text-field name="curr_province" label="จังหวัด" :readonly="!isEditingAddress"
+                                                :disabled="isAddressSame" v-model="currAddress.province"></v-text-field>
 
                                         </v-col>
                                         <v-col cols="6">
                                             <v-text-field name="curr_postal" label="รหัสไปรษณีย์" :rules="postalRules"
-                                                :readonly="!isEditingAddress" v-model="currAddress.postal"></v-text-field>
+                                                :disabled="isAddressSame" :readonly="!isEditingAddress"
+                                                v-model="currAddress.postal"></v-text-field>
                                         </v-col>
 
                                     </v-row>
@@ -740,11 +749,9 @@
                     <v-container>
 
                         <v-data-table :headers="headers" :items="transactionHistories" item-key="transactionId"
-                            hide-default-footer>
-                            <template v-slot:top>
-                                <v-toolbar flat>
-                                    <v-toolbar-title>Transaction History</v-toolbar-title>
-                                </v-toolbar>
+                            :options="{ sortBy: ['transactionHistory.timestamp'], sortDesc: [true] }">
+                            <template v-slot:footer>
+
                             </template>
                         </v-data-table>
                     </v-container>
@@ -776,11 +783,9 @@
                     <v-container>
 
                         <v-data-table :headers="headers" :items="transactionHistories" item-key="transactionId"
-                            hide-default-footer>
-                            <template v-slot:top>
-                                <v-toolbar flat>
-                                    <v-toolbar-title>Transaction History</v-toolbar-title>
-                                </v-toolbar>
+                            :options="{ sortBy: ['transactionHistory.timestamp'], sortDesc: [true] }">
+                            <template v-slot:footer>
+
                             </template>
                         </v-data-table>
                     </v-container>
@@ -807,8 +812,13 @@ export default {
     data() {
         return {
             //status
+            activePicker: null,
+            date: null,
+            menu: false,
+            flipDate: false,
             isLoading: true,
             userId: null,
+
             isEditingCourse: false,
             isEditingDetail: false,
             isEditingAddress: false,
@@ -820,7 +830,7 @@ export default {
             flipClassTransactionsDialog: false,
             privateClassTransactionsDialog: false,
             headers: [
-                { text: 'Transaction ID', value: 'key' },
+                { text: 'Transaction ID', value: 'key', sort: 'true' },
                 { text: 'เวลาที่บันทึก', value: 'transactionHistory.timestamp' },
                 { text: 'จำนวนที่เปลี่ยน', value: 'transactionHistory.amount' },
                 { text: 'รูปแบบ', value: 'transactionHistory.type' },
@@ -908,6 +918,20 @@ export default {
             wantedTeacher: null,
             annotation: null,
 
+            //api
+            tambons: [],
+            currTambons: [],
+            amphoes: [],
+            provinces: [],
+            selectedTambon: '',
+            selectedCurrTambon: '',
+            selectedAmphoes: '',
+            selectedCurrAmphoes: '',
+            selectedProvince: '',
+            searchTambon: '',
+            searchCurrTambon: '',
+
+            teachers: [],
             transactionHistories: [],
             //static
             genders: [
@@ -924,16 +948,17 @@ export default {
             ],
 
             hours: [
+                { value: 0.25, text: "15 นาที" },
                 { value: 0.5, text: "30 นาที" },
-                { value: 0.75, text: "45 นาที" },
+
                 { value: 1, text: "1 ชั่วโมง" },
                 { value: 1.5, text: "1.30 ชั่วโมง" },
                 { value: 2, text: "2 ชั่วโมง" },
                 { value: 2.5, text: "2.30 ชั่วโมง" },
                 { value: 3, text: "3 ชั่วโมง" },
-                { value: 32, text: "32 ชั่วโมง" },
-                { value: 48, text: "48 ชั่วโมง" },
-                { value: 96, text: "96 ชั่วโมง" },
+                { value: 32, text: "32 ชั่วโมง (ต่ออายุ 4 เดือน)" },
+                { value: 48, text: "48 ชั่วโมง (ต่ออายุ 6 เดือน)" },
+                { value: 96, text: "96 ชั่วโมง (ต่ออายุ 12 เดือน)" },
 
             ],
 
@@ -990,6 +1015,32 @@ export default {
         this.fetchData();
         this.readSubject();
 
+
+    },
+    watch: {
+        menu(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
+        flipDate(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
+        'selectedTambon': {
+            handler: 'fetchAmphoe',
+            immediate: true,
+        },
+        'selectedAmphoes': {
+            handler: 'fetchProvince',
+            immediate: true,
+        },
+
+        'selectedCurrTambon': {
+            handler: 'fetchCurrAmphoe',
+            immediate: true,
+        },
+        'selectedCurrAmphoes': {
+            handler: 'fetchCurrProvince',
+            immediate: true,
+        },
     },
 
     computed: {
@@ -1128,6 +1179,16 @@ export default {
     },
 
     methods: {
+
+        saveDate(date) {
+            this.$refs.flipDate.save(date);
+
+        },
+        save(date) {
+            this.$refs.menu.save(date);
+
+        },
+
         openFlipClassTransactionsDialog() {
             this.flipClassTransactionsDialog = true;
             this.fetchTransactionHistory('Flip class');
@@ -1144,6 +1205,7 @@ export default {
             this.privateClassTransactionsDialog = false;
 
         },
+
         validateDetailEdit() {
             return this.$refs[`detailForm`].validate();
         },
@@ -1164,11 +1226,13 @@ export default {
                 this.isEditingCourse = false;
             }
             else {
+                this.search_teacher();
                 this.isEditingCourse = true;
             }
         },
 
         async toEditDetail() {
+            console.log(this.isEditingDetail)
             if (this.isEditingDetail == true) {
 
                 if (this.validateDetailEdit()) {
@@ -1196,16 +1260,16 @@ export default {
 
                     })
                         .then(() => {
-
+                            this.isEditingDetail = false;
                             this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
                             this.isSubmitting = false;
-                            this.isEditingDetail = false;
+
                         })
                         .catch((error) => {
-
+                            this.isEditingDetail = false;
                             this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
                             this.isSubmitting = false;
-                            this.isEditingDetail = false;
+
                         });
 
                 }
@@ -1357,8 +1421,8 @@ export default {
 
                 this.expireFlipClassDate = childData.expireFlipClassDate || null;
                 this.expirePrivateClassDate = childData.expirePrivateClassDate || null;
-                this.purchaseFlipClassDate = this.purchaseFlipClassDate || null;
-                this.purchasePrivateClassDate = this.purchasePrivateClassDate || null;
+                this.purchaseFlipClassDate = childData.purchaseFlipClassDate || null;
+                this.purchasePrivateClassDate = childData.purchasePrivateClassDate || null;
 
 
                 this.privateCourseHour = childData.privateCourseHour || 0;
@@ -1486,6 +1550,27 @@ export default {
             })
 
         },
+        async search_teacher() {
+            const db = this.$fireModule.database();
+            await db.ref("user/").on("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    if (childData[key].status == 'teacher') {
+
+                        const teacher = {
+                            nickname: childData[key].teacherId + ' ' + childData[key].nickname,
+
+                        };
+                        item.push({ teacher });
+
+                    }
+                }
+                this.teachers = item;
+                this.isLoading = false;
+            })
+            //console.log(this.teachers)
+        },
 
         async fetchTransactionHistory(type) {
             try {
@@ -1538,25 +1623,27 @@ export default {
 
             const db = this.$fireModule.database();
             const updates = {};
-            if (this.totalHourInput !== null) {
-                updates.totalHour = parseFloat(this.totalHourInput);
-                updates.hourLeft = parseFloat(this.totalHourInput) - parseFloat(this.studyHour);
-                updates.courseHour = this.totalHourInput;
-            }
 
-            if (this.privateTotalHourInput !== null) {
-                updates.privateTotalHour = parseFloat(this.privateTotalHourInput);
-                updates.privateHourLeft = parseFloat(this.privateTotalHourInput) - parseFloat(this.privateStudyHour);
-                updates.privateCourseHour = this.privateTotalHourInput;
-            }
+            updates.purchasePrivateClassDate = this.purchasePrivateClassDate;
+            updates.purchaseFlipClassDate = this.purchaseFlipClassDate;
+            updates.expireFlipClassDate = this.expireFlipClassDate;
+            updates.expirePrivateClassDate = this.expirePrivateClassDate;
+            updates.annotation = this.annotation;
+            updates.wantedTeacher = this.wantedTeacher;
+            // if (this.totalHourInput !== null) {
+            //     updates.totalHour = parseFloat(this.totalHourInput);
+            //     updates.hourLeft = parseFloat(this.totalHourInput) - parseFloat(this.studyHour);
+            //     //updates.courseHour = this.totalHourInput;
+            // }
 
+            // if (this.privateTotalHourInput !== null) {
+            //     updates.privateTotalHour = parseFloat(this.privateTotalHourInput);
+            //     updates.privateHourLeft = parseFloat(this.privateTotalHourInput) - parseFloat(this.privateStudyHour);
+            //     //updates.privateCourseHour = this.privateTotalHourInput;
+            // }
 
-
+            console.log(updates)
             await db.ref(`user/${this.userId}/`).update(updates);
-            this.totalHourInput = null;
-            this.privateTotalHour = null;
-
-
 
             this.openSnackbar("success", 'แก้ไขชั่วโมงสำเร็จ!');
             return;
@@ -1586,6 +1673,7 @@ export default {
                 await db.ref(`user/${this.userId}/`).update({
                     totalHour: this.totalHour,
                     hourLeft: this.hourLeft,
+                    expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate),
 
                 });
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
@@ -1611,41 +1699,43 @@ export default {
                 await db.ref(`user/${this.userId}/`).update({
                     privateTotalHour: this.privateTotalHour,
                     privateHourLeft: this.privateHourLeft,
+                    expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate),
                 });
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
             }
 
-            if (this.selectedAddTrialPrivateHour !== null && value == 'trialPrivate') {
 
-                const selectedValue = parseFloat(this.selectedAddTrialPrivateHour, 10);
+        },
 
-                this.trialPrivateClassHour = parseFloat(this.trialPrivateClassHour, 10) + selectedValue;
-                const db = this.$fireModule.database();
-                await db.ref(`user/${this.userId}/`).update({
-                    trialPrivateClassHour: this.trialPrivateClassHour,
+        updateExpire(selectedValue, currentExpireDate) {
+            const currentDate = new Date();
+            const formattedDate = new Date(currentExpireDate);
+            let expireDate;
 
-                });
-
-                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
-                return;
+            if (currentExpireDate === null) {
+                if (selectedValue === 32) {
+                    expireDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate());
+                } else if (selectedValue === 48) {
+                    expireDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                } else if (selectedValue === 96) {
+                    expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+                }
+            } else {
+                if (selectedValue === 32) {
+                    expireDate = new Date(formattedDate.getFullYear(), formattedDate.getMonth() + 4, formattedDate.getDate());
+                } else if (selectedValue === 48) {
+                    expireDate = new Date(formattedDate.getFullYear(), formattedDate.getMonth() + 6, formattedDate.getDate());
+                } else if (selectedValue === 96) {
+                    expireDate = new Date(formattedDate.getFullYear() + 1, formattedDate.getMonth(), formattedDate.getDate());
+                }
             }
 
-            if (this.selectedAddTrialFlipHour !== null && value == 'trialFlip') {
+            return expireDate.toISOString().slice(0, 10);
 
-                const selectedValue = parseFloat(this.selectedAddTrialFlipHour, 10);
 
-                this.trialFlipclassHour = parseFloat(this.trialFlipclassHour, 10) + selectedValue;
-                const db = this.$fireModule.database();
-                await db.ref(`user/${this.userId}/`).update({
-                    trialFlipclassHour: this.trialFlipclassHour,
 
-                });
-
-                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
-                return;
-            }
         },
 
         async subtractTime(value) {
@@ -1704,7 +1794,244 @@ export default {
             }
         },
 
+        isSameAddress() {
+            if (this.address.length !== this.currAddress.length) {
+                return false;
+            }
 
+            for (let i = 0; i < this.address.length; i++) {
+                if (this.address[i] !== this.currAddress[i]) {
+                    return false;
+                }
+            }
+
+            return true && !this.isEditingAddress;
+        },
+
+        async fetchProvince() {
+            if (this.selectedAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedAmphoes.province_id;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.address.province = item.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchAmphoe() {
+            if (this.selectedTambon) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedTambon.amphure_id;
+                this.address.tambon = this.selectedTambon.name_th;
+                this.address.postal = this.selectedTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedAmphoes = item;
+                        this.address.amphoe = this.selectedAmphoes.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchTambon) {
+                tambonsRef
+                    .orderByChild("name_th") // Replace 'name' with the relevant field you want to filter by
+                    .startAt(this.searchTambon)
+                    .endAt(this.searchTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.tambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.tambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        async fetchCurrProvince() {
+            if (this.selectedCurrAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedCurrAmphoes.province_id;
+
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
+
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
+
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.currAddress.province = item.name_th;
+                    }
+
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+
+        },
+
+        async fetchCurrAmphoe() {
+            if (this.selectedCurrTambon) {
+                console.log(this.selectedCurrTambon)
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedCurrTambon.amphure_id;
+                this.currAddress.tambon = this.selectedCurrTambon.name_th;
+                this.currAddress.postal = this.selectedCurrTambon.zip_code;
+
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
+
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
+
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedCurrAmphoes = item;
+                        this.currAddress.amphoe = this.selectedCurrTambon.name_th;
+                    }
+
+
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
+                }
+            }
+        },
+
+        async fetchCurrTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchCurrTambon) {
+                tambonsRef
+                    .orderByChild("name_th")
+                    .startAt(this.searchCurrTambon)
+                    .endAt(this.searchCurrTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.currTambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.currTambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        tambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+        currTambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
         convertHourMinuteToMinutes(input) {
             const timeStr = input.toString();
             const [hours, minutes] = timeStr.split('.');
@@ -1716,11 +2043,13 @@ export default {
             const formattedMinutes = (remainingMinutes / 60).toFixed(2).slice(2);
             return `${hours}.${formattedMinutes}`;
         },
+
         openSnackbar(status, message) {
             this.showSnackbar = true;
             this.snackbarMessage = message;
             this.snackbarColor = status;
         },
+
         isLetter(e) {
             let char = String.fromCharCode(e.keyCode);
             if (/^[A-Za-z]+$/.test(char)) return true;

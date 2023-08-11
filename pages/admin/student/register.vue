@@ -1338,8 +1338,8 @@ export default {
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
-                            firstName: childData[key].firstName || null,
-                            lastName: childData[key].lastName || null,
+                            firstName:  childData[key].teacherId +' '+ childData[key].nickname ,
+                        
                         };
                         item.push({ teacher });
 
