@@ -1568,7 +1568,7 @@ export default {
 
                 const selectedValue = parseFloat(this.selectedAddHour, 10);
 
-                this.hourLeft = parseFloat(this.totalHour, 10) + selectedValue;
+                this.hourLeft = parseFloat(this.hourLeft, 10) + selectedValue;
                 this.totalHour = parseFloat(this.totalHour, 10) + selectedValue;
 
                 const db = this.$fireModule.database();
@@ -1596,7 +1596,7 @@ export default {
 
                 const selectedValue = parseFloat(this.selectedAddPrivateHour, 10);
 
-                this.privateHourLeft = parseFloat(this.privateTotalHour, 10) + selectedValue;
+                this.privateHourLeft = parseFloat(this.privateHourLeft, 10) + selectedValue;
                 this.privateTotalHour = parseFloat(this.privateTotalHour, 10) + selectedValue;
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
@@ -1625,27 +1625,27 @@ export default {
                 const db = this.$fireModule.database();
                 await db.ref(`user/${this.userId}/`).update({
                     trialPrivateClassHour: this.trialPrivateClassHour,
-            
+
                 });
-                
+
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
             }
 
             if (this.selectedAddTrialFlipHour !== null && value == 'trialFlip') {
 
-const selectedValue = parseFloat(this.selectedAddTrialFlipHour, 10);
+                const selectedValue = parseFloat(this.selectedAddTrialFlipHour, 10);
 
-this.trialFlipclassHour = parseFloat(this.trialFlipclassHour, 10) + selectedValue;
-const db = this.$fireModule.database();
-await db.ref(`user/${this.userId}/`).update({
-    trialFlipclassHour: this.trialFlipclassHour,
+                this.trialFlipclassHour = parseFloat(this.trialFlipclassHour, 10) + selectedValue;
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    trialFlipclassHour: this.trialFlipclassHour,
 
-});
+                });
 
-this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
-return;
-}
+                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
+                return;
+            }
         },
 
         async subtractTime(value) {
@@ -1654,7 +1654,7 @@ return;
 
                 const selectedValue = parseFloat(this.selectedSubtractHour, 10);
 
-                this.hourLeft = parseFloat(this.totalHour, 10) - selectedValue;
+                this.hourLeft = parseFloat(this.hourLeft, 10) - selectedValue;
                 this.totalHour = parseFloat(this.totalHour, 10) - selectedValue;
 
                 const db = this.$fireModule.database();
@@ -1681,7 +1681,7 @@ return;
 
 
                 const selectedValue = parseFloat(this.selectedSubtractPrivateHour, 10);
-                this.privateHourLeft = parseFloat(this.privateTotalHour, 10) - selectedValue;
+                this.privateHourLeft = parseFloat(this.privateHourLeft, 10) - selectedValue;
                 this.privateTotalHour = parseFloat(this.privateTotalHour, 10) - selectedValue;
 
                 const db = this.$fireModule.database();
