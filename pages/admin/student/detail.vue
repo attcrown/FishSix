@@ -1673,7 +1673,7 @@ export default {
                 await db.ref(`user/${this.userId}/`).update({
                     totalHour: this.totalHour,
                     hourLeft: this.hourLeft,
-                    expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate),
+                    expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate) || null,
 
                 });
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
@@ -1699,7 +1699,7 @@ export default {
                 await db.ref(`user/${this.userId}/`).update({
                     privateTotalHour: this.privateTotalHour,
                     privateHourLeft: this.privateHourLeft,
-                    expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate),
+                    expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate) || null,
                 });
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
@@ -1714,7 +1714,7 @@ export default {
             const formattedDate = new Date(currentExpireDate);
             let expireDate;
 
-            if (currentExpireDate === null) {
+            if (currentExpireDate === null || selectedValue>=32) {
                 if (selectedValue === 32) {
                     expireDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate());
                 } else if (selectedValue === 48) {
@@ -1722,6 +1722,7 @@ export default {
                 } else if (selectedValue === 96) {
                     expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
                 }
+               
             } else {
                 if (selectedValue === 32) {
                     expireDate = new Date(formattedDate.getFullYear(), formattedDate.getMonth() + 4, formattedDate.getDate());
@@ -1730,10 +1731,12 @@ export default {
                 } else if (selectedValue === 96) {
                     expireDate = new Date(formattedDate.getFullYear() + 1, formattedDate.getMonth(), formattedDate.getDate());
                 }
+                
             }
 
-            return expireDate.toISOString().slice(0, 10);
-
+            if(expireDate){
+                return expireDate.toISOString().slice(0, 10);
+            }
 
 
         },
