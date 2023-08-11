@@ -551,6 +551,7 @@ export default {
                     }
                 }
             }
+            // console.log(this.sum_hour(this.picker_start, this.picker_stop));
         },
         getColor(stutus) {
             if (stutus == 'active') return 'success'
@@ -607,13 +608,31 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-            } else { this.dialog_save_error = true; }
+            } else { this.dialog_save_error = true; 
+            console.log(this.save_detail);}
         },
 
         validate_edit() {
             if (this.$refs.form_edit.validate()) {
                 this.save_detail_data();
             } else { this.dialog_save_error = true; }
+        },
+
+        sum_hour(start, end) {
+            // console.log('ทำsum',start,end);
+            let sum = 0;
+            let set = 0;
+            for (const key in this.time_full) {
+                // console.log(this.time_full[key])
+                if (end == this.time_full[key]) {
+                    set = 0;
+                    return sum;
+                } else if (start == this.time_full[key] || set > 0) {
+                    set++;
+                    sum = sum + 0.5;
+                    // console.log(sum);
+                }
+            }
         },
 
         save_detail_data() {
@@ -629,12 +648,46 @@ export default {
                 this.dialog_save_error = true;
                 return;
             }
+            let sum_hour = this.sum_hour(this.picker_start, this.picker_stop);
             let id = new Date().getTime();
             const db = this.$fireModule.database();
             const getTimePromise = db.ref(`Time_student/${this.value_student}/${this.date1}`).once("value");
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
-            Promise.all([getTimePromise, getTimeTeaPromise])
-                .then(([timeSnapshot, timeteaSnapshot]) => {
+            const getStudentPromise = db.ref(`user/${this.value_student}`).once("value");
+            const getlocationPromise = db.ref(`location/${this.save_detail.style}`).once("value");
+            Promise.all([getTimePromise, getTimeTeaPromise ,getStudentPromise,getlocationPromise])
+                .then(([timeSnapshot, timeteaSnapshot ,studentData ,locationName]) => {
+                    const Student_data = studentData.val();
+                    const location_data = locationName.val();
+                    let plan_hour = Student_data.hourLeft.toString().split(".");
+                    let plan_min = 0;
+                    if(plan_hour[1] == 5){
+                        plan_min = 50*60/100;
+                    }else if(plan_hour[1]){
+                        plan_min = plan_hour[1]*60/100;
+                    }else{
+                        plan_min = 0;
+                    }
+
+                    let plan_hour_private = Student_data.privateHourLeft.toString().split(".");
+                    let plan_min_private = 0;
+                    if(plan_hour_private[1] == 5){
+                        plan_min_private = 50*60/100;
+                    }else if(plan_hour_private[1]){
+                        plan_min_private = plan_hour_private[1]*60/100;
+                    }else{
+                        plan_min_private = 0;
+                    }
+
+                    console.log(location_data.name.includes("Flip"),location_data.name.includes("Private"));
+                    if(location_data.name.includes("Flip") && Student_data.hourLeft < sum_hour){
+                        alert("เวลา Flip Class ไม่พอ \n Flip Class เหลือ "+ plan_hour[0]+"ชม."+plan_min+"นาที");
+                        return;
+                    }
+                    if(location_data.name.includes("Private") && Student_data.privateHourLeft < sum_hour){
+                        alert("เวลา Private Class ไม่พอ \n Private Class เหลือ"+ plan_hour_private[0]+"ชม."+plan_min_private+"นาที");
+                        return;
+                    }
                     if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
                         if (true) {
                             if (this.mode === 'save') {
