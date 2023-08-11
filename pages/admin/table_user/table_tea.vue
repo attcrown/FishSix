@@ -680,11 +680,12 @@ export default {
                     }
 
                     console.log(location_data.name.includes("Flip"),location_data.name.includes("Private"));
-                    if(location_data.name.includes("Flip") && Student_data.hourLeft < sum_hour){
+
+                    if(location_data.name.includes("Flip") && Student_data.hourLeft < sum_hour && !this.checkbox){
                         alert("เวลา Flip Class ไม่พอ \n Flip Class เหลือ "+ plan_hour[0]+"ชม."+plan_min+"นาที");
                         return;
                     }
-                    if(location_data.name.includes("Private") && Student_data.privateHourLeft < sum_hour){
+                    if(location_data.name.includes("Private") && Student_data.privateHourLeft < sum_hour  && !this.checkbox){
                         alert("เวลา Private Class ไม่พอ \n Private Class เหลือ"+ plan_hour_private[0]+"ชม."+plan_min_private+"นาที");
                         return;
                     }
