@@ -140,7 +140,11 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
-
+                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงทดลองเรียน" :items="hours"
+                                                item-text="text" item-value="value"
+                                                v-model="selectedAddTrialFlipHour"></v-select>
+                                            <v-btn class="small-button" color="green text-white"
+                                                @click="addTime('trialFlip')">ยืนยัน</v-btn>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -262,7 +266,11 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('private')">ยืนยัน</v-btn>
                                             </v-col>
-
+                                            <v-select class="py-0 black-label" label="เพิ่มชั่วโมงทดลองเรียน" :items="hours"
+                                                item-text="text" item-value="value"
+                                                v-model="selectedAddTrialPrivateHour"></v-select>
+                                            <v-btn class="small-button" color="green text-white"
+                                                @click="addTime('trialPrivate')">ยืนยัน</v-btn>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -812,7 +820,7 @@ export default {
             flipClassTransactionsDialog: false,
             privateClassTransactionsDialog: false,
             headers: [
-                { text: 'Transaction ID', value: 'transactionId' },
+                { text: 'Transaction ID', value: 'key' },
                 { text: 'เวลาที่บันทึก', value: 'transactionHistory.timestamp' },
                 { text: 'จำนวนที่เปลี่ยน', value: 'transactionHistory.amount' },
                 { text: 'รูปแบบ', value: 'transactionHistory.type' },
@@ -823,7 +831,8 @@ export default {
 
             selectedAddPrivateHour: null,
             selectedSubtractPrivateHour: null,
-
+            selectedAddTrialPrivateHour: null,
+            selectedAddTrialFlipHour: null,
             lastStudentId: null,
             //data
             profilePic: null,
@@ -1481,35 +1490,33 @@ export default {
         async fetchTransactionHistory(type) {
             try {
                 const db = this.$fireModule.database();
-                db.ref("studentTransactions/").on("value", (snapshot) => {
+                db.ref(`studentTransactions/${this.userId}`).on("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
+
                     for (const key in childData) {
 
-                        for (const transactionId in childData[key]) {
 
-                            const transaction = childData[key][transactionId];
+                        const transaction = childData[key];
 
-                            if (transaction.class === type) {
+                        if (transaction.class === type) {
 
-                                const gmtOffset = 7 * 60 * 60 * 1000;
-                                //const date = new Date(transaction.timestamp).getTime()+ gmtOffset;
+                            const gmtOffset = 7 * 60 * 60 * 1000;
 
-                                // const gmtPlus7Date = new Date(date);
-                                const date = new Date(transaction.timestamp);
+                            const date = new Date(transaction.timestamp);
 
 
-                                const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
+                            const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
 
-                                const transactionHistory = {
-                                    amount: transaction.amount,
-                                    timestamp: formattedDate,
-                                    class: transaction.class,
-                                    type: transaction.type,
-                                };
-                                item.push({ transactionId, transactionHistory });
-                            }
+                            const transactionHistory = {
+                                amount: transaction.amount,
+                                timestamp: formattedDate,
+                                class: transaction.class,
+                                type: transaction.type,
+                            };
+                            item.push({ key, transactionHistory });
                         }
+
 
                     }
 
@@ -1559,7 +1566,6 @@ export default {
 
             if (this.selectedAddHour !== null && value == 'flip') {
 
-                console.log(this.selectedAddHour)
                 const selectedValue = parseFloat(this.selectedAddHour, 10);
 
                 this.hourLeft = parseFloat(this.totalHour, 10) + selectedValue;
@@ -1588,7 +1594,6 @@ export default {
             }
             if (this.selectedAddPrivateHour !== null && value == 'private') {
 
-                console.log(this.selectedAddPrivateHour)
                 const selectedValue = parseFloat(this.selectedAddPrivateHour, 10);
 
                 this.privateHourLeft = parseFloat(this.privateTotalHour, 10) + selectedValue;
@@ -1611,13 +1616,42 @@ export default {
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
             }
+
+            if (this.selectedAddTrialPrivateHour !== null && value == 'trialPrivate') {
+
+                const selectedValue = parseFloat(this.selectedAddTrialPrivateHour, 10);
+
+                this.trialPrivateClassHour = parseFloat(this.trialPrivateClassHour, 10) + selectedValue;
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    trialPrivateClassHour: this.trialPrivateClassHour,
+            
+                });
+                
+                this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
+                return;
+            }
+
+            if (this.selectedAddTrialFlipHour !== null && value == 'trialFlip') {
+
+const selectedValue = parseFloat(this.selectedAddTrialFlipHour, 10);
+
+this.trialFlipclassHour = parseFloat(this.trialFlipclassHour, 10) + selectedValue;
+const db = this.$fireModule.database();
+await db.ref(`user/${this.userId}/`).update({
+    trialFlipclassHour: this.trialFlipclassHour,
+
+});
+
+this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
+return;
+}
         },
 
         async subtractTime(value) {
 
             if (this.selectedSubtractHour !== null && value == 'flip') {
 
-                console.log(this.selectedSubtractHour)
                 const selectedValue = parseFloat(this.selectedSubtractHour, 10);
 
                 this.hourLeft = parseFloat(this.totalHour, 10) - selectedValue;
@@ -1645,7 +1679,7 @@ export default {
 
             if (this.selectedSubtractPrivateHour !== null && value == 'private') {
 
-                console.log(this.selectedSubtractPrivateHour)
+
                 const selectedValue = parseFloat(this.selectedSubtractPrivateHour, 10);
                 this.privateHourLeft = parseFloat(this.privateTotalHour, 10) - selectedValue;
                 this.privateTotalHour = parseFloat(this.privateTotalHour, 10) - selectedValue;
