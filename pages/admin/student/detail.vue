@@ -606,9 +606,10 @@
                                                 v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-if="!isEditingAddress|| isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
-                                                readonly :disabled="isAddressSame" v-model="currAddress.tambon"></v-text-field>
-                                           
+                                            <v-text-field v-if="!isEditingAddress || isAddressSame" name="curr_tambon"
+                                                label="ตำบล/แขวง" readonly :disabled="isAddressSame"
+                                                v-model="currAddress.tambon"></v-text-field>
+
                                             <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
                                                 :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
                                                 :item-value="currTambonValue" item-text="name_th"
@@ -806,7 +807,7 @@
   
 <script>
 import pageLoader from '@/components/loader.vue';
-
+import { Timestamp } from "firebase/firestore";
 export default {
 
     data() {
@@ -1136,10 +1137,10 @@ export default {
             if (this.expireFlipClassDate) {
                 const now = new Date();
                 const expireDate = new Date(this.expireFlipClassDate);
-
-                const yearDiff = expireDate.getFullYear() - now.getFullYear();
-                const monthDiff = expireDate.getMonth() - now.getMonth();
-                const dayDiff = expireDate.getDate() - now.getDate();
+                const courseStartDate = new Date(this.purchaseFlipClassDate);
+                const yearDiff = expireDate.getFullYear() - courseStartDate.getFullYear();
+                const monthDiff = expireDate.getMonth() - courseStartDate.getMonth();
+                const dayDiff = expireDate.getDate() - courseStartDate.getDate();
 
                 let months = yearDiff * 12 + monthDiff;
                 let days = dayDiff;
@@ -1587,12 +1588,10 @@ export default {
                         if (transaction.class === type) {
 
                             const gmtOffset = 7 * 60 * 60 * 1000;
-
-                            const date = new Date(transaction.timestamp);
-
-
-                            const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
-
+                            const adjustedTimestamp = transaction.timestamp + gmtOffset;
+                            const date = new Date(adjustedTimestamp);
+                            const formattedDate=date.toISOString().slice(0, 19).replace('T',' ');
+                           // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
                             const transactionHistory = {
                                 amount: transaction.amount,
                                 timestamp: formattedDate,
@@ -1662,21 +1661,23 @@ export default {
 
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
-
+               // const timestamp = Date.now();
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
                 const transactionData = {
-                    timestamp: Date.now(),
+                    timestamp: timestamp,
                     amount: selectedValue,
                     type: 'เพิ่มเวลา',
                     class: "Flip class"
                 };
-
                 await db.ref(`user/${this.userId}/`).update({
                     totalHour: this.totalHour,
                     hourLeft: this.hourLeft,
-                    expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate) || null,
+                    expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate) || this.expireFlipClassDate,
 
                 });
-                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+               await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
             }
@@ -1689,8 +1690,10 @@ export default {
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
 
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
                 const transactionData = {
-                    timestamp: Date.now(),
+                    timestamp: timestamp,
                     amount: selectedValue,
                     type: 'เพิ่มเวลา',
                     class: "Private class"
@@ -1699,8 +1702,9 @@ export default {
                 await db.ref(`user/${this.userId}/`).update({
                     privateTotalHour: this.privateTotalHour,
                     privateHourLeft: this.privateHourLeft,
-                    expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate) || null,
+                    expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate) || this.expirePrivateClassDate,
                 });
+              
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
@@ -1711,35 +1715,47 @@ export default {
 
         updateExpire(selectedValue, currentExpireDate) {
             const currentDate = new Date();
-            const formattedDate = new Date(currentExpireDate);
+            const formattedDate = currentExpireDate ? new Date(currentExpireDate) : null;
             let expireDate;
 
-            if (currentExpireDate === null || selectedValue>=32) {
+            const addMonths = (date, months) => {
+                const newDate = new Date(date);
+                newDate.setMonth(newDate.getMonth() + months);
+                return newDate;
+            };
+
+            const addYears = (date, years) => {
+                const newDate = new Date(date);
+                newDate.setFullYear(newDate.getFullYear() + years);
+                return newDate;
+            };
+            //expire
+            if (currentExpireDate === null && selectedValue >= 32) {
                 if (selectedValue === 32) {
-                    expireDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 4, currentDate.getDate());
+                    expireDate = addMonths(currentDate, 4);
                 } else if (selectedValue === 48) {
-                    expireDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                    expireDate = addMonths(currentDate, 6);
                 } else if (selectedValue === 96) {
-                    expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+                    expireDate = addYears(currentDate, 1);
                 }
-               
             } else {
                 if (selectedValue === 32) {
-                    expireDate = new Date(formattedDate.getFullYear(), formattedDate.getMonth() + 4, formattedDate.getDate());
+                    expireDate = addMonths(formattedDate, 4);
                 } else if (selectedValue === 48) {
-                    expireDate = new Date(formattedDate.getFullYear(), formattedDate.getMonth() + 6, formattedDate.getDate());
+                    expireDate = addMonths(formattedDate, 6);
                 } else if (selectedValue === 96) {
-                    expireDate = new Date(formattedDate.getFullYear() + 1, formattedDate.getMonth(), formattedDate.getDate());
+                    expireDate = addYears(formattedDate, 1);
                 }
-                
             }
 
-            if(expireDate){
-                return expireDate.toISOString().slice(0, 10);
+            if (expireDate) {
+                this.expireFlipClassDate = expireDate.toISOString().slice(0, 10);
+                // console.log(expireDate)
+                // console.log(this.expireFlipClassDate)
+                return this.expireFlipClassDate;
             }
-
-
         },
+
 
         async subtractTime(value) {
 
@@ -1759,8 +1775,10 @@ export default {
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
 
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
                 const transactionData = {
-                    timestamp: Date.now(),
+                    timestamp: timestamp,
                     amount: selectedValue,
                     type: 'ลดเวลา',
                     class: "Flip class"
@@ -1785,8 +1803,10 @@ export default {
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
 
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
                 const transactionData = {
-                    timestamp: Date.now(),
+                    timestamp: timestamp,
                     amount: selectedValue,
                     type: 'ลดเวลา',
                     class: "Private class"
