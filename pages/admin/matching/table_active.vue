@@ -132,7 +132,7 @@
                                     <b>ยืนยันยกเลิกคลาสหรือไม่</b>
                                 </div>
                                 <v-card-actions>
-                                    <v-spacer></v-spacer>                                    
+                                    <v-spacer></v-spacer>
                                     <v-btn rounded color="#29CC39" @click="deleteItemConfirm"
                                         class="mt-5 mb-5">ยืนยัน</v-btn>
                                     <v-spacer></v-spacer>
@@ -143,7 +143,7 @@
                     </v-toolbar>
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
-                <template v-slot:item.actions="{ item }">                    
+                <template v-slot:item.actions="{ item }">
                     <v-btn text icon elevation="5" @click="editItem(item)">
                         <v-icon class="text-h5" color="#AD382F">
                             mdi-delete
@@ -222,7 +222,7 @@ export default {
         this.initialize();
     },
 
-    methods: {        
+    methods: {
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -266,7 +266,8 @@ export default {
                                             // class: timedata.class,
                                             level: timedata.level,
                                             because: timedata.because,
-                                            id: timedata.ID,                                            
+                                            id: timedata.ID,
+                                            hour: timedata.hour
                                         });
                                     })
                                     .catch((error) => {
@@ -283,13 +284,13 @@ export default {
 
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)            
+            this.editedItem = Object.assign({}, item)
             console.log(">>>>", this.editedItem);
             this.dialog = true;
         },
 
 
-        deleteItemConfirm() {            
+        deleteItemConfirm() {
             this.delete_match()
             this.closeDelete()
         },
@@ -314,7 +315,7 @@ export default {
         save() {
             // console.log('update>>', this.editedItem);
             this.close()
-        },       
+        },
 
         delete_match() {
             if (!this.editedItem) {
@@ -322,6 +323,7 @@ export default {
                 return;
             }
             console.log(">>>>", this.editedItem);
+            let keystudent = this.editedItem;
             const db = this.$fireModule.database();
             // let sum = 0;
             // db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
@@ -330,6 +332,24 @@ export default {
             // })
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).remove();
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
+            if (this.editedItem.name_style.includes("Flip")) {
+                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.key_student}`).update({
+                        hour: childData.hour - keystudent.hour,
+                    });
+                })
+            }
+            if (this.editedItem.name_style.includes("Private")) {
+                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.key_student}`).update({
+                        hourprivate: childData.hourprivate - keystudent.hour,
+                    });
+                })
+            }
+
+
             this.delete_time();
         },
 

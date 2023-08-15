@@ -13,8 +13,8 @@
                     </div>
                 </v-col> -->
                 <v-col cols="12">
-                    <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table" sort-by="date"
-                        class="elevation-16 rounded-xl">
+                    <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table"
+                        sort-by="date" class="elevation-16 rounded-xl">
                         <!--:search="search"-->
                         <template v-slot:top>
                             <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
@@ -226,7 +226,7 @@ export default {
         value: null,
         style_sub: null,
         arrayEvents: [],
-        date1:[],
+        date1: [],
 
         dialog: false,
         dialogDelete: false,
@@ -373,11 +373,11 @@ export default {
                 return;
             }
             if (this.mode == 'edit') {
-                console.log('ทำๆ');                
+                console.log('ทำๆ');
                 db.ref(`date_teacher/${this.value}/${this.date1}/${this.picker_stop}`).update({
                     sum_people: this.save_detail.sum_people,
                     subject: this.save_detail.subject,
-                    style_subject: this.save_detail.style,                 
+                    style_subject: this.save_detail.style,
                     invite: '0',
                 });
                 this.clear_item();
@@ -395,7 +395,7 @@ export default {
                         } else {
                             if (this.mode == 'save') {
                                 for (const keydate in this.date1) {
-                                    db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({                                       
+                                    db.ref(`date_teacher/${this.value}/${this.date1[keydate]}/${this.picker_stop}`).set({
                                         createAt: new Date(),
                                         style_subject: this.save_detail.style,
                                         sum_people: this.save_detail.sum_people,
@@ -500,51 +500,54 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 this.desserts = [];
                 this.arrayEvents = [];
                 let item = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        const datedata = keydata[date];
-                        for (const time in datedata) {
-                            const timedata = datedata[time];
-                            const getTeacherPromise = db.ref(`user/${key}`).once("value");
-                            const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                            const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                            Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
-                                .then((snapshots) => {
-                                    const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
-                                    const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
-                                    const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
+                                    .then((snapshots) => {
+                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
 
-                                    const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const locationData = locationSnapshot.val();
+                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const locationData = locationSnapshot.val();
 
-                                    const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
-                                    const namesub = subjectData.name;
-                                    if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
-                                        item.push({
-                                            userid: teacherData.teacherId,
-                                            name: nametea,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: locationData.name,
-                                            keystyle: timedata.style_subject,
-                                            // class: timedata.class,
-                                            subject: namesub,
-                                            keySubject: timedata.subject,
-                                            people: timedata.sum_people,
-                                            sum_people: timedata.invite + "/" + timedata.sum_people,
-                                            invite: timedata.invite,
-                                            key: key,
-                                            IdTime: timedata.ID,
-                                        });
-                                        this.arrayEvents.push(date);
-                                    } else { }
-                                })
+                                        const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                        const namesub = subjectData.name;
+                                        if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
+                                            item.push({
+                                                userid: teacherData.teacherId,
+                                                name: nametea,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: locationData.name,
+                                                keystyle: timedata.style_subject,
+                                                // class: timedata.class,
+                                                subject: namesub,
+                                                keySubject: timedata.subject,
+                                                people: timedata.sum_people,
+                                                sum_people: timedata.invite + "/" + timedata.sum_people,
+                                                invite: timedata.invite,
+                                                key: key,
+                                                IdTime: timedata.ID,
+                                            });
+                                            this.arrayEvents.push(date);
+                                        } else { }
+                                    })
+                            }
                         }
                     }
                 }
@@ -611,7 +614,7 @@ export default {
                     const detail = key.split(":");
                     if (detail[4] == delcon_IdTime) {
                         db.ref(`Time_teacher/${delcon_key}/${delcon_date}/${key}`).remove();
-                        console.log('ลบ', key, detail[4],delcon_key,delcon_date);
+                        console.log('ลบ', key, detail[4], delcon_key, delcon_date);
                     }
                 }
             })
@@ -643,7 +646,7 @@ export default {
                 let item = [];
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].teacherId+" ครู"+childData[key].nickname});
+                        item.push({ key: key, name: childData[key].teacherId + " ครู" + childData[key].nickname });
                     }
                 }
                 this.items = item;

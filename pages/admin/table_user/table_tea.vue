@@ -148,7 +148,7 @@
                             <v-card-text>
                                 <v-container>
                                     <v-row>
-                                        
+
                                         <v-col cols="12" sm="6" md="12">
                                             <v-text-field v-model="date1" label="วันที่เรียน"
                                                 @click="dialog_select_date = true" :rules="rules.text" readonly>
@@ -207,15 +207,15 @@
                                                 :rules="rules.text"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="12" style="margin-top:-40px">
-                                            <v-checkbox v-model="checkbox"
-                                            label="ทดลองเรียน"></v-checkbox>
-                                        </v-col> 
+                                            <v-checkbox v-model="checkbox" label="ทดลองเรียน"></v-checkbox>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()" dark style="margin-top:-40px">
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate()" dark
+                                    style="margin-top:-40px">
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -242,7 +242,7 @@
                             </v-card-title>
                             <v-card-text>
                                 <v-container>
-                                    <v-row>                                                                               
+                                    <v-row>
                                         <v-col cols="12" sm="6" md="12">
                                             <v-text-field v-model="date1" label="วันที่เรียน" :rules="rules.text" readonly>
                                                 <template #prepend>
@@ -297,15 +297,15 @@
                                                 v-model="save_detail.because" :rules="rules.text" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="12" style="margin-top:-40px">
-                                            <v-checkbox v-model="checkbox"
-                                            label="ทดลองเรียน"></v-checkbox>
-                                        </v-col> 
+                                            <v-checkbox v-model="checkbox" label="ทดลองเรียน"></v-checkbox>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()" dark style="margin-top:-40px">
+                                <v-btn rounded color="#29CC39" class="mb-5" @click="validate_edit()" dark
+                                    style="margin-top:-40px">
                                     บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -608,8 +608,10 @@ export default {
         validate() {
             if (this.$refs.form.validate()) {
                 this.save_detail_data();
-            } else { this.dialog_save_error = true; 
-            console.log(this.save_detail);}
+            } else {
+                this.dialog_save_error = true;
+                console.log(this.save_detail);
+            }
         },
 
         validate_edit() {
@@ -655,38 +657,73 @@ export default {
             const getTimeTeaPromise = db.ref(`Time_teacher/${this.value}/${this.date1}`).once("value");
             const getStudentPromise = db.ref(`user/${this.value_student}`).once("value");
             const getlocationPromise = db.ref(`location/${this.save_detail.style}`).once("value");
-            Promise.all([getTimePromise, getTimeTeaPromise ,getStudentPromise,getlocationPromise])
-                .then(([timeSnapshot, timeteaSnapshot ,studentData ,locationName]) => {
+            const getHourPromise = db.ref(`hour_match/${this.value_student}`).once("value");
+            Promise.all([getTimePromise, getTimeTeaPromise, getStudentPromise, getlocationPromise, getHourPromise])
+                .then(([timeSnapshot, timeteaSnapshot, studentData, locationName, hourmatchData]) => {
                     const Student_data = studentData.val();
                     const location_data = locationName.val();
-                    let plan_hour = Student_data.hourLeft.toString().split(".");
+                    const hourmatch_data = hourmatchData.val();
+                    console.log(">>>hourmatchData", hourmatch_data);
                     let plan_min = 0;
-                    if(plan_hour[1] == 5){
-                        plan_min = 50*60/100;
-                    }else if(plan_hour[1]){
-                        plan_min = plan_hour[1]*60/100;
-                    }else{
-                        plan_min = 0;
-                    }
-
-                    let plan_hour_private = Student_data.privateHourLeft.toString().split(".");
                     let plan_min_private = 0;
-                    if(plan_hour_private[1] == 5){
-                        plan_min_private = 50*60/100;
-                    }else if(plan_hour_private[1]){
-                        plan_min_private = plan_hour_private[1]*60/100;
-                    }else{
-                        plan_min_private = 0;
+                    let plan_hour = 0;
+                    let plan_hour_private = 0;
+                    if (Student_data.hourLeft != undefined) {
+                        plan_hour = Student_data.hourLeft.toString().split(".");
+                        if (plan_hour[1] == 5) {
+                            plan_min = 50 * 60 / 100;
+                        } else if (plan_hour[1]) {
+                            plan_min = plan_hour[1] * 60 / 100;
+                        } else {
+                            plan_min = 0;
+                        }
+                    }
+                    if (Student_data.privateHourLeft != undefined) {
+                        plan_hour_private = Student_data.privateHourLeft.toString().split(".");
+                        if (plan_hour_private[1] == 5) {
+                            plan_min_private = 50 * 60 / 100;
+                        } else if (plan_hour_private[1]) {
+                            plan_min_private = plan_hour_private[1] * 60 / 100;
+                        } else {
+                            plan_min_private = 0;
+                        }
+                    }
+                    if (hourmatchData.exists()) {
+                        const data = hourmatchData.val();
+                        let sum_hour_match = 0;
+                        let sum_hour_match_pri = 0;
+                        if (data.hour != undefined && location_data.name.includes("Flip")) {
+                            sum_hour_match = sum_hour + data.hour;
+                            if (Student_data.hourLeft < sum_hour_match) {
+                                alert("ชั่วโมง Flip ไม่พอเนื่องจากมีการจองไปแล้ว" + data.hour + "Hour" + " และมีเวลาในตัวเหลืออยู่" + Student_data.hourLeft + "Hour");
+                                return;
+                            }
+                        }
+                        if (data.hourprivate != undefined && location_data.name.includes("Private")) {
+                            sum_hour_match_pri = sum_hour + data.hourprivate;
+                            if (Student_data.privateHourLeft < sum_hour_match_pri) {
+                                alert("ชั่วโมง Private ไม่พอเนื่องจากมีการจองไปแล้ว" + data.hourprivate + "Hour" + " และมีเวลาในตัวเหลืออยู่" + Student_data.privateHourLeft + "Hour");
+                                return;
+                            }
+                        }
                     }
 
-                    console.log(location_data.name.includes("Flip"),location_data.name.includes("Private"));
-
-                    if(location_data.name.includes("Flip") && Student_data.hourLeft < sum_hour && !this.checkbox){
-                        alert("เวลา Flip Class ไม่พอ \n Flip Class เหลือ "+ plan_hour[0]+"ชม."+plan_min+"นาที");
+                    console.log(location_data.name.includes("Flip"), location_data.name.includes("Private"), Student_data.hourLeft, Student_data.privateHourLeft);
+                    if (Student_data.privateHourLeft == undefined && location_data.name.includes("Private")) {
+                        alert("ไม่มี Private Class");
                         return;
                     }
-                    if(location_data.name.includes("Private") && Student_data.privateHourLeft < sum_hour  && !this.checkbox){
-                        alert("เวลา Private Class ไม่พอ \n Private Class เหลือ"+ plan_hour_private[0]+"ชม."+plan_min_private+"นาที");
+                    if (Student_data.hourLeft == undefined && location_data.name.includes("Flip")) {
+                        alert("ไม่มี Flip Class");
+                        return;
+                    }
+
+                    if (location_data.name.includes("Flip") && Student_data.hourLeft < sum_hour && !this.checkbox) {
+                        alert("เวลา Flip Class ไม่พอ \n Flip Class เหลือ " + plan_hour[0] + "ชม." + plan_min + "นาที");
+                        return;
+                    }
+                    if (location_data.name.includes("Private") && Student_data.privateHourLeft < sum_hour && !this.checkbox) {
+                        alert("เวลา Private Class ไม่พอ \n Private Class เหลือ" + plan_hour_private[0] + "ชม." + plan_min_private + "นาที");
                         return;
                     }
                     if (timeSnapshot.exists() || timeteaSnapshot.exists()) {
@@ -724,8 +761,38 @@ export default {
                                         status: this.check_status(),
                                         createAt: new Date(),
                                         ID: id,
-                                        match_test:this.checkbox,
+                                        match_test: this.checkbox,
+                                        hour: sum_hour,
                                     });
+
+                                    if (hourmatch_data.hour != undefined && location_data.name.includes("Flip")) {
+                                        const hourmatch_data = hourmatchData.val();
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hour: hourmatch_data.hour + sum_hour,
+                                        });
+                                    } else if (hourmatch_data.hour == undefined && location_data.name.includes("Flip")) {
+                                        console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hour: sum_hour,
+                                        });
+                                    } else {
+                                        console.log("Not Save hour");
+                                    }
+
+                                    if (hourmatch_data.hourprivate != undefined && location_data.name.includes("Private")) {
+                                        const hourmatch_data = hourmatchData.val();
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hourprivate: hourmatch_data.hourprivate + sum_hour,
+                                        });
+                                    } else if (hourmatch_data.hourprivate == undefined && location_data.name.includes("Private")) {
+                                        console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hourprivate: sum_hour,
+                                        });
+                                    } else {
+                                        console.log("Not Save hourprivate");
+                                    }
+
                                     for (const key in this.time_standart_sum) {
                                         db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
                                             0: ''
@@ -762,7 +829,8 @@ export default {
                                             stop_tea: this.picker_stop_tea,
                                             status: this.check_status(),
                                             ID: this.idTea,
-                                            match_test:this.checkbox,
+                                            match_test: this.checkbox,
+                                            hour: sum_hour,
                                         });
                                         for (const key in this.time_standart_sum) {
                                             db.ref(`Time_student/${this.value_student}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}`).update({
@@ -771,6 +839,35 @@ export default {
                                             // db.ref(`Time_teacher/${this.value}/${this.date1}/S:${this.time_standart_sum[key]}:${this.sum_peoples}:${this.idTea}/${this.value_student}`).update({
                                             // });
                                         };
+
+                                        if (hourmatch_data.hour != undefined && location_data.name.includes("Flip")) {
+                                            const hourmatch_data = hourmatchData.val();
+                                            db.ref(`hour_match/${this.value_student}/`).update({
+                                                hour: hourmatch_data.hour + sum_hour,
+                                            });
+                                        } else if (hourmatch_data.hour == undefined && location_data.name.includes("Flip")) {
+                                            console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                            db.ref(`hour_match/${this.value_student}/`).update({
+                                                hour: sum_hour,
+                                            });
+                                        } else {
+                                            console.log("Not Save hour");
+                                        }
+
+                                        if (hourmatch_data.hourprivate != undefined && location_data.name.includes("Private")) {
+                                            const hourmatch_data = hourmatchData.val();
+                                            db.ref(`hour_match/${this.value_student}/`).update({
+                                                hourprivate: hourmatch_data.hourprivate + sum_hour,
+                                            });
+                                        } else if (hourmatch_data.hourprivate == undefined && location_data.name.includes("Private")) {
+                                            console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                            db.ref(`hour_match/${this.value_student}/`).update({
+                                                hourprivate: sum_hour,
+                                            });
+                                        } else {
+                                            console.log("Not Save hourprivate");
+                                        }
+
                                     } else { alert('error'); }
                                 })
                             } else {
@@ -797,13 +894,43 @@ export default {
                                     status: this.check_status(),
                                     createAt: new Date(),
                                     ID: id,
-                                    match_test:this.checkbox,
+                                    match_test: this.checkbox,
+                                    hour: sum_hour,
                                 });
                                 for (const key in this.time_standart_sum) {
                                     db.ref(`Time_student/${this.value_student}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:1:${id}`).update({
                                         0: ''
                                     });
                                 };
+
+                                if (hourmatch_data.hour != undefined && location_data.name.includes("Flip")) {
+                                    const hourmatch_data = hourmatchData.val();
+                                    db.ref(`hour_match/${this.value_student}/`).update({
+                                        hour: hourmatch_data.hour + sum_hour,
+                                    });
+                                } else if (hourmatch_data.hour == undefined && location_data.name.includes("Flip")) {
+                                    console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                    db.ref(`hour_match/${this.value_student}/`).update({
+                                        hour: sum_hour,
+                                    });
+                                } else {
+                                    console.log("Not Save hour");
+                                }
+
+                                if (hourmatch_data.hourprivate != undefined && location_data.name.includes("Private")) {
+                                    const hourmatch_data = hourmatchData.val();
+                                    db.ref(`hour_match/${this.value_student}/`).update({
+                                        hourprivate: hourmatch_data.hourprivate + sum_hour,
+                                    });
+                                } else if (hourmatch_data.hourprivate == undefined && location_data.name.includes("Private")) {
+                                    console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                    db.ref(`hour_match/${this.value_student}/`).update({
+                                        hourprivate: sum_hour,
+                                    });
+                                } else {
+                                    console.log("Not Save hourprivate");
+                                }
+
                             }
                         } else if (this.mode === 'edit') {
                             this.dialog_detail_edit = false;
@@ -827,8 +954,37 @@ export default {
                                         status: this.check_status(),
                                         ID: this.idTea,
                                         createAt: new Date(),
-                                        match_test:this.checkbox,
+                                        match_test: this.checkbox,
+                                        hour: sum_hour,
                                     });
+
+                                    if (hourmatch_data.hour != undefined && location_data.name.includes("Flip")) {
+                                        const hourmatch_data = hourmatchData.val();
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hour: hourmatch_data.hour + sum_hour,
+                                        });
+                                    } else if (hourmatch_data.hour == undefined && location_data.name.includes("Flip")) {
+                                        console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hour: sum_hour,
+                                        });
+                                    } else {
+                                        console.log("Not Save hour");
+                                    }
+
+                                    if (hourmatch_data.hourprivate != undefined && location_data.name.includes("Private")) {
+                                        const hourmatch_data = hourmatchData.val();
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hourprivate: hourmatch_data.hourprivate + sum_hour,
+                                        });
+                                    } else if (hourmatch_data.hourprivate == undefined && location_data.name.includes("Private")) {
+                                        console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
+                                        db.ref(`hour_match/${this.value_student}/`).update({
+                                            hourprivate: sum_hour,
+                                        });
+                                    } else {
+                                        console.log("Not Save hourprivate");
+                                    }
                                 } else { alert('error'); }
                             })
                             for (const key in this.time_standart_sum) {

@@ -478,7 +478,8 @@ export default {
                                                 because: timedata.because,
                                                 id: timedata.ID,
                                                 createAt: sumx_date,
-                                                match_test:timedata.match_test
+                                                match_test:timedata.match_test,
+                                                hour:timedata.hour
                                             });
                                             this.events.push(
                                                 {
@@ -659,6 +660,7 @@ export default {
         delete_match() {
             // console.log('del>>', this.editedItem);
             const db = this.$fireModule.database();
+            let keystudent = this.editedItem;
             db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
                 .then(() => {
                     console.log("success del");
@@ -673,6 +675,23 @@ export default {
                     }
                 }
             });
+            if (this.editedItem.name_style.includes("Flip")) {
+                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.key_student}`).update({
+                        hour: childData.hour - keystudent.hour,
+                    });
+                })
+            }
+            if (this.editedItem.name_style.includes("Private")) {
+                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.key_student}`).update({
+                        hourprivate: childData.hourprivate - keystudent.hour,
+                    });
+                })
+            }
+            
             // this.close();
         },
 

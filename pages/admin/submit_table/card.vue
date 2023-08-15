@@ -566,6 +566,24 @@ export default {
                                                 console.log('save send_plan');
                                             })
 
+                                            let keystudent = this.edited;
+                                            if (keystudent.style.includes("Flip")) {
+                                                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                                                    const childData = snapshot.val();
+                                                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                                                        hour: childData.hour - keystudent.hour,
+                                                    });
+                                                })
+                                            }
+                                            if (keystudent.style.includes("Private")) {
+                                                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                                                    const childData = snapshot.val();
+                                                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                                                        hourprivate: childData.hourprivate - keystudent.hour,
+                                                    });
+                                                })
+                                            }
+
                                             if (this.edited.match_test) {
                                                 const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
                                                 Promise.all([getTeacherPromise])
@@ -588,7 +606,7 @@ export default {
                                                             this.loadsave = false;
                                                             this.clear_dialog();
                                                         } else {
-                                                            console.log('freeHour privateFreeHour No DATA');
+                                                            console.log('>>> freeHour privateFreeHour No DATA');
                                                         }
                                                     })
                                             } else if (this.edited.status_study_column == "true3" || this.edited.status_study_column == "true2" || this.edited.status_study_column == "true1") {
@@ -597,25 +615,47 @@ export default {
                                                     .then(([teacherSnapshot]) => {
                                                         const studentData = teacherSnapshot.val();
                                                         console.log(studentData);
-                                                        if (studentData.studyHour != undefined && studentData.privateStudyHour != undefined) {
-                                                            if (this.edited.style.substring(0, 4) === "Flip") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                        let data_edit = this.edited;
+                                                        if (studentData.studyHour != undefined) {
+                                                            if (data_edit.style.substring(0, 4) === "Flip") {
+                                                                db.ref(`user/${data_edit.keyStudent}/`).update({
                                                                     studyHour: parseInt(studentData.studyHour) + this.summ_hour,
                                                                     hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
                                                                 })
-                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                            } else {
+                                                                console.log("Error");
+                                                            }
+                                                            console.log('ลบ ชม. class จริง', data_edit.style);
+                                                            this.loadsave = false;
+                                                            this.clear_dialog();
+                                                        } else if (studentData.studyHour == undefined) {
+                                                            db.ref(`user/${data_edit.keyStudent}/`).update({
+                                                                studyHour: this.summ_hour,
+                                                                hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
+                                                            })
+                                                        } else {
+                                                            console.log('>>>Hour flipHour No DATA Flip');
+                                                        }
+
+                                                        if (studentData.privateStudyHour != undefined) {
+                                                            if (data_edit.style.substring(0, 7) === "Private") {
+                                                                db.ref(`user/${data_edit.keyStudent}/`).update({
                                                                     privateStudyHour: parseInt(studentData.privateStudyHour) + this.summ_hour,
                                                                     privateHourLeft: parseInt(studentData.privateHourLeft) - this.summ_hour,
                                                                 })
                                                             } else {
                                                                 console.log("Error");
                                                             }
-                                                            console.log('ลบ ชม. class จริง', this.edited.style);
+                                                            console.log('ลบ ชม. class จริง', data_edit.style);
                                                             this.loadsave = false;
                                                             this.clear_dialog();
+                                                        } else if (studentData.privateStudyHour == undefined) {
+                                                            db.ref(`user/${data_edit.keyStudent}/`).update({
+                                                                privateStudyHour: this.summ_hour,
+                                                                privateHourLeft: parseInt(studentData.privateHourLeft) - this.summ_hour,
+                                                            })
                                                         } else {
-                                                            console.log('Hour privateHour No DATA');
+                                                            console.log('>>>Hour privateHour No DATA Private');
                                                         }
                                                     })
                                             } else {
@@ -744,7 +784,8 @@ export default {
                                             sendplan: timedata.sendplan,
                                             because: timedata.because,
                                             Idsendplan: timedata.Idsendplan,
-                                            match_test: timedata.match_test
+                                            match_test: timedata.match_test,
+                                            hour: timedata.hour
                                         });
                                         // this.arrayEvents.push(date);
                                     }
@@ -811,7 +852,8 @@ export default {
                                                 sendplan: timedata.sendplan,
                                                 because: timedata.because,
                                                 Idsendplan: timedata.Idsendplan,
-                                                match_test: timedata.match_test
+                                                match_test: timedata.match_test,
+                                                hour: timedata.hour
                                             });
                                             // this.arrayEvents.push(date);
                                         }
