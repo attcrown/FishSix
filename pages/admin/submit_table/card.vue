@@ -27,7 +27,8 @@
 
                 <v-spacer></v-spacer>
                 <v-btn elevation="10" color="#322E2B" class="me-5 mt-3" style="color:white" :disabled="!formIsValid"
-                    type="submit" rounded>Export<span class="mdi mdi-microsoft-excel text-h6"></span></v-btn>
+                    type="submit" @click="dialog_excel = true" rounded>Export<span
+                        class="mdi mdi-microsoft-excel text-h6"></span></v-btn>
 
 
             </div>
@@ -355,6 +356,71 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog_excel" max-width="600px">
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 16px">
+                        <b>กรุณาเลือกข้อมูลที่ต้องการ Export</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="dialog_excel = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row no-gutters>
+                            <v-checkbox class="m-0" v-model="isExportAll" label="ข้อมูลทั้งหมด" color="indigo"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="รหัสครู" :disabled="isExportAll"
+                                value="รหัสครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อจริงครู" :disabled="isExportAll"
+                                value="ชื่อจริงครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="นามสกุลครู" :disabled="isExportAll"
+                                value="นามสกุลครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อเล่นครู" :disabled="isExportAll"
+                                value="ชื่อเล่นครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เบอร์โทรศัพท์" :disabled="isExportAll"
+                                value="เบอร์โทรศัพท์"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เพศ" :disabled="isExportAll"
+                                value="เพศ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="อาชีพปัจจุบัน" value="อาชีพปัจจุบัน"
+                                :disabled="isExportAll"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="email" :disabled="isExportAll"
+                                value="email"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สัญญาจ้าง" :disabled="isExportAll"
+                                value="สัญญาจ้าง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ประเภทการทำงาน" :disabled="isExportAll"
+                                value="ประเภทการทำงาน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่เริ่มงาน" :disabled="isExportAll"
+                                value="วันที่เริ่มงาน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เรทค่าสอน" :disabled="isExportAll"
+                                value="เรทค่าสอน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สาขาที่สามารถสอนได้"
+                                :disabled="isExportAll" value="สาขาที่สามารถสอนได้"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="มหาวิทยาลัย" :disabled="isExportAll"
+                                value="มหาวิทยาลัย"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="คณะ" :disabled="isExportAll"
+                                value="คณะ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สาขา" :disabled="isExportAll"
+                                value="สาขา"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="วิชาที่สอนได้" :disabled="isExportAll"
+                                value="วิชาที่สอนได้"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เวลาที่บันทึกข้อมูล"
+                                :disabled="isExportAll" value="เวลาที่บันทึกข้อมูล"></v-checkbox>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
+                <v-card-title style="margin-top: -20px;">
+                    <v-btn class="text-white" @click="exportToExcel" color="green" :loading="isExport">ยืนยัน
+                        <v-icon color="white" small> mdi-content-save</v-icon>
+                    </v-btn>
+                </v-card-title>
+            </v-card>
+        </v-dialog>
+
 
     </div>
 </template>
@@ -362,9 +428,16 @@
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 export default {
     data() {
         return {
+            dialog_excel: false,
+            isExportAll: false,
+            selectedHeaders: [],
+
+
             column: null,
             column1: null,
 
@@ -865,6 +938,62 @@ export default {
                 this.desserts = item;
                 console.log(this.desserts);
             })
+        },
+
+        exportToExcel() {
+            console.log(this.selectedHeaders);
+            // หัวข้อเอกสาร Excel
+            let newdate = new Date().getFullYear() + ' ' + (parseInt(new Date().getMonth()) + 1) + ' ' + new Date().getDate();
+            let headers = [];
+            if(this.isExportAll){
+                headers = ["รหัสครู","ชื่อจริงครู","นามสกุลครู","ชื่อเล่นครู","เบอร์โทรศัพท์","เพศ"];
+            }else{
+                headers = this.selectedHeaders;
+            }            
+            const data = [headers, ...this.desserts.map(item => {
+                const row = [];
+                if (this.isExportAll) {
+                    row.push(
+                        item.level,
+                        item.name,
+                        item.date,
+                        item.time_s,
+                        item.time_e,
+                        item.style,
+                        item.keystyle,                        
+                        item.subject,
+                        item.keySubject,
+                        item.keyStudent,
+                        item.keyTeacher,
+                        item.studentId,
+                        item.namestu,
+                        item.sendplan,
+                        item.because,
+                        item.Idsendplan,
+                        item.match_test,
+                        item.hour
+                    );
+                } else {
+                    if (this.selectedHeaders[1]) row.push(item.name);
+                    if (this.selectedHeaders[2]) row.push(item.namestu);
+                    if (this.selectedHeaders[3]) row.push(item.date);
+                }
+
+                // ... เพิ่มตามลำดับ
+                return row;
+            })];
+            console.log(data);
+            // สร้างเอกสาร Excel
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+
+            // แปลงข้อมูลให้เป็นรูปแบบไฟล์ Excel
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+            // สร้าง Blob และบันทึกไฟล์
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `${newdate}-UpdateSTU.xlsx`);
         },
 
     },
