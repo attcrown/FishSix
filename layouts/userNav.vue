@@ -1,9 +1,9 @@
 <template>
   <v-app class="fonts500">
-    <v-navigation-drawer v-model="drawer"  :width="drawerWidth" :max-width="drawerMaxWidth" 
-    :mini-variant="miniVariant" :clipped-left="clipped"  fixed app color="#B6A7A2">
+    <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
+      :clipped-left="clipped" fixed app color="#B6A7A2">
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
-      
+
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
@@ -18,7 +18,7 @@
       <template v-slot:append>
         <v-list-item to="/" router exact @click="getout()">
           <v-list-item-action>
-            <v-icon >mdi-login</v-icon>
+            <v-icon>mdi-login</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>ออกจากระบบ</v-list-item-title>
@@ -26,22 +26,28 @@
         </v-list-item>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
+    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
-    
+
       <v-spacer />
-      <p class=" dark">
-        {{email}}
-      </p>  
-      <v-avatar class="ms-2">
-        <img :src=profilePic alt="โปรไฟล์">
+      <p class=" dark" style="">
+        {{ email }}
+      </p>
+
+      
+      <v-avatar  class="ms-1">
+        <img v-if="profilePic"  :src="profilePic" alt="รูปโปรไฟล์">
+        <v-icon   v-if="!profilePic"  color="black">
+        mdi-account-circle 
+      </v-icon>
       </v-avatar>
+
 
       <v-btn icon to="/admin/basket" router exact>
         <v-icon>mdi-logout</v-icon>
       </v-btn>
     </v-app-bar>
- 
+
 
 
 
@@ -96,16 +102,16 @@ export default {
           title: 'คลังเนื้อหา',
           to: '/user/content',
         },
-       
+
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: "",
       status: "",
-      keyuser:null,
+      keyuser: null,
       profilePic: null,
-      email:null,
+      email: null,
     }
   },
   mounted() {
@@ -169,14 +175,17 @@ export default {
   top: 50%;
   transform: translateY(0%);
 }
+
 @media (max-width: 600px) {
   .drawer-responsive {
     --mini-variant-width: 56px;
     --mini-variant-max-width: 56px;
   }
 }
+
 .fonts500 {
-  font-family: 'Prompt', sans-serif;  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+  font-family: 'Prompt', sans-serif;
+  /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
   font-weight: 500;
 }
 </style>

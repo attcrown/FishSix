@@ -253,7 +253,9 @@
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
+                            
                             <div>
+                             
                                 <button v-if="!isEditingCourse" class="editButton " @click="toEditCourse()">
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
@@ -262,10 +264,18 @@
                                     <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
 
                                 </button>
+                                <v-btn class="text-white mt-2" @click="openFlipClassTransactionsDialog()"
+                                    color="black">วิชาที่สามารถเรียนได้
+
+                                
+                                    <v-icon color="white" x-small>mdi-book</v-icon>
+                                </v-btn>
                             </div>
                         </v-card-title>
                         <v-card-text>
+                            
                             <v-row>
+                                 
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" readonly value="Flip class"
                                         label="ประเภทคลาส"></v-text-field>
@@ -471,13 +481,13 @@
                                         <v-col cols="8" class="py-0"></v-col>
                                         <v-col cols="6" class="py-0 ">
                                             <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required
+                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required :readonly="!isEditingDetail"
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules"
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" :readonly="!isEditingDetail"
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
@@ -711,12 +721,15 @@
                                 <v-row>
 
                                     <v-col cols="4">
-                                        <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation"
+                                        <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation" 
                                             v-model="school"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation"
+                                        <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation" v-if="!isEditingEducation" 
                                             v-model="education"></v-text-field>
+                                            <v-select class="black-label" label="ระดับชั้น" name="education" v-model="education" v-if="isEditingEducation" 
+                                        :items="educationLevels" item-text="educationName" 
+                                       ></v-select>
                                     </v-col>
 
 
@@ -946,8 +959,22 @@ export default {
             courseHours: [
                 32,
                 48, 96
-            ],
-
+            ], 
+            educationLevels:
+                [
+                    { id: "grade1", educationName: "ป.1" },
+                    { id: "grade2", educationName: "ป.2" },
+                    { id: "grade3", educationName: "ป.3" },
+                    { id: "grade4", educationName: "ป.4" },
+                    { id: "grade5", educationName: "ป.5" },
+                    { id: "grade6", educationName: "ป.6" },
+                    { id: "grade7", educationName: "ม.1" },
+                    { id: "grade8", educationName: "ม.2" },
+                    { id: "grade9", educationName: "ม.3" },
+                    { id: "grade10", educationName: "ม.4" },
+                    { id: "grade11", educationName: "ม.5" },
+                    { id: "grade12", educationName: "ม.6" },
+                ],
             hours: [
                 { value: 0.25, text: "15 นาที" },
                 { value: 0.5, text: "30 นาที" },
@@ -1013,9 +1040,6 @@ export default {
         const value = this.$route.query.userId;
         this.userId = value;
         this.readdata();
-        this.fetchData();
-        this.readSubject();
-
 
     },
     watch: {
@@ -1233,7 +1257,7 @@ export default {
         },
 
         async toEditDetail() {
-            console.log(this.isEditingDetail)
+
             if (this.isEditingDetail == true) {
 
                 if (this.validateDetailEdit()) {
@@ -1289,6 +1313,35 @@ export default {
         async toEditAddress() {
             if (this.isEditingAddress == true) {
                 this.isEditingAddress = false;
+
+                if (this.validateAddressEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        address: this.address,
+                        currAddress: this.currAddress,
+                        ...(this.isAddressSame ? { currAddress: this.address } : {}),
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลที่อยู่เสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ', error);
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        });
+
+                }
+
+
+
             }
             else {
                 this.isEditingAddress = true;
@@ -1390,10 +1443,6 @@ export default {
         },
 
 
-        isChecked(subjectName, level, key) {
-            const selectedSubject = this.selectedSubjects.find(subject => subject.name === subjectName);
-            return selectedSubject && selectedSubject.level.includes(level);
-        },
 
 
 
@@ -1488,69 +1537,7 @@ export default {
 
         },
 
-        async fetchData() {
-            const db = this.$fireModule.database();
-            const snapshot = await db.ref(`user/${this.teacherId}/subject_all`).once("value");
-            const childData = snapshot.val();
-            const selectedItems = [];
 
-            for (const key in childData) {
-                const snapshotName = await db.ref(`user/${this.teacherId}/subject_all/${key}`).once("value");
-                const snapshotLevel = await db.ref(`user/${this.teacherId}/subject_all/${key}/level`).once("value");
-
-                const childDataName = snapshotName.val();
-                const childDataLevel = snapshotLevel.val();
-
-                const item = {
-                    key: key,
-                    level: childDataLevel,
-                    name: childDataName.name
-                };
-
-                selectedItems.push(item);
-            }
-
-            this.selectedSubjects = selectedItems;
-
-
-        },
-
-        async readSubject() {
-            const db = this.$fireModule.database();
-            await db.ref(`subject_all/`).on("value", (snapshot) => {
-                const childData = snapshot.val();
-                this.subjects = [];
-                let items = [];
-                let subjectName = '';
-                let levelData = '';
-
-
-                for (const key in childData) {
-
-                    db.ref(`subject_all/${key}`).on("value", (snapshot) => {
-                        const childData = snapshot.val();
-                        subjectName = childData.name;
-
-                    })
-                    db.ref(`subject_all/${key}/level`).on("value", (snapshot) => {
-                        const childData = snapshot.val();
-                        levelData = childData;
-                        //console.log(levelData)
-                    })
-                    const item = {
-                        key: key,
-                        level: levelData,
-                        name: subjectName
-                    };
-
-                    items.push(item);
-                }
-                this.subjects = items;
-                this.isLoading = false;
-
-            })
-
-        },
         async search_teacher() {
             const db = this.$fireModule.database();
             await db.ref("user/").on("value", (snapshot) => {
@@ -1973,7 +1960,7 @@ export default {
 
         async fetchCurrAmphoe() {
             if (this.selectedCurrTambon) {
-                console.log(this.selectedCurrTambon)
+             
                 const db = this.$fireModule.database();
                 const amphoeRef = db.ref(`RECORDS_amp/`);
                 const amp_id = this.selectedCurrTambon.amphure_id;

@@ -3,33 +3,9 @@
         <pageLoader v-if="isLoading"></pageLoader>
         <v-row  v-if="!isLoading">
             <v-col cols="12">
-                <p class="text-h3 font-weight-bold">สวัสดี คุณ {{ firstName }} !</p>
+                <p class="text-h3 font-weight-bold">สวัสดี  {{ firstName }} !</p>
             </v-col>
-            <v-col cols="12">
-                <v-card class="mt-2">
-                    <v-card-title class="font-weight-bold header justify-center">ชั่วโมงเรียนที่เหลือ</v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text>
-                        <v-row>
-                            <v-col class="text-h4 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{formattedTotalHour}}</span>
-                                <span class="text-h6  font-semibold text-black"></span>
-                                <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนทั้งหมด</div>
-                            </v-col>
-                            <v-col class="text-h4 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{formattedStudyHour}}</span>
-                                <span class="text-h6  font-semibold text-black"></span>
-                                <div class="text-h6 font-semibold text-black">ชั่วโมงที่เรียนไปแล้ว</div>
-                            </v-col>
-                            <v-col class="text-h4 text-center" cols="4">
-                                <span class=" font-weight-black text-black">{{formattedHourLeft}}</span>
-                                <span class="text-h6  font-semibold text-black"></span>
-                                <div class="text-h6 font-semibold text-black">ชั่วโมงเรียนที่เหลือ</div>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-card>
-            </v-col>
+           
             <v-col cols="12"><v-spacer></v-spacer></v-col>
 
             <!-- <v-col cols="12">
@@ -123,22 +99,8 @@ export default {
             await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
-                this.totalHour = childData.totalHour || 0;
-                this.studyHour = childData.studyHour || 0;
-                this.hourLeft = childData.hourLeft || 0;
                 this.firstName = childData.firstName || null;
-                this.lastName = childData.lastName || null;
-                this.firstName = childData.firstName || null;
-                this.lastName = childData.lastName || null;
-                this.nickname = childData.nickname || null;
-                this.nickname = childData.nickname || null;
-                this.school = childData.school || null;
-                this.gender = childData.gender || null;
-                this.birthDate = childData.birthDate || null;
-                this.address = childData.address || null;
-                this.education = childData.education || null;
-                this.studentMobile = childData.studentMobile || null;
-                this.parentMobile = childData.parentMobile || null;
+   
                 this.isLoading = false;
 
             })
