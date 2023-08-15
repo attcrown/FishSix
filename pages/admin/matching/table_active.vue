@@ -263,7 +263,7 @@ export default {
                                             key_teacher: timedata.teacher,
                                             phone_student: studentData.studentMobile,
                                             phone_teacher: teacherData.mobile,
-                                            // class: timedata.class,
+                                            match_test:timedata.match_test,
                                             level: timedata.level,
                                             because: timedata.because,
                                             id: timedata.ID,
@@ -325,14 +325,16 @@ export default {
             console.log(">>>>", this.editedItem);
             let keystudent = this.editedItem;
             const db = this.$fireModule.database();
-            // let sum = 0;
-            // db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
-            //     const childData = snapshot.val();
-            //     sum = childData - 1;
-            // })
-            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).remove();
+            let sum = 0;
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}/invite`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                sum = childData - 1;
+            })
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
+                invite : sum
+            }); 
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
-            if (this.editedItem.name_style.includes("Flip")) {
+            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {
                 db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.key_student}`).update({
@@ -340,7 +342,7 @@ export default {
                     });
                 })
             }
-            if (this.editedItem.name_style.includes("Private")) {
+            if (this.editedItem.name_style.includes("Private") && !this.editedItem.match_test) {
                 db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.key_student}`).update({
@@ -348,8 +350,6 @@ export default {
                     });
                 })
             }
-
-
             this.delete_time();
         },
 

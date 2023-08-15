@@ -1,6 +1,6 @@
 <template>
     <div class="mx-16">
-        <calendar hidden></calendar>
+        <!-- <calendar hidden></calendar> -->
         <tablematch></tablematch>
         <tableactive></tableactive>
     </div>
@@ -19,7 +19,7 @@ export default {
 
     components: {
         tablematch,
-        calendar,
+        // calendar,
         tableactive
     },
     mounted() {
