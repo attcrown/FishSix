@@ -758,7 +758,7 @@ export default {
                                             hourprivate: data.hourprivate + sum_hour,
                                         });
                                     }
-                                    
+
                                 } else if (!hourmatchData.exists() && !this.checkbox) {
                                     if (location_data.name.includes("Flip")) {
                                         console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
@@ -844,12 +844,14 @@ export default {
                                         console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                         db.ref(`hour_match/${this.value_student}/`).update({
                                             hour: sum_hour,
+                                            hourprivate: 0,
                                         });
                                     }
                                     if (location_data.name.includes("Private")) {
                                         console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                         db.ref(`hour_match/${this.value_student}/`).update({
                                             hourprivate: sum_hour,
+                                            hour: 0,
                                         });
                                     }
                                 }
@@ -927,12 +929,14 @@ export default {
                                     console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                     db.ref(`hour_match/${this.value_student}/`).update({
                                         hour: sum_hour,
+                                        hourprivate: 0,
                                     });
                                 }
                                 if (location_data.name.includes("Private")) {
                                     console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                     db.ref(`hour_match/${this.value_student}/`).update({
                                         hourprivate: sum_hour,
+                                        hour: 0,
                                     });
                                 }
                             }
@@ -995,12 +999,14 @@ export default {
                                     console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                     db.ref(`hour_match/${this.value_student}/`).update({
                                         hour: sum_hour,
+                                        hourprivate: 0,
                                     });
                                 }
                                 if (location_data.name.includes("Private")) {
                                     console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                     db.ref(`hour_match/${this.value_student}/`).update({
                                         hourprivate: sum_hour,
+                                        hour: 0,
                                     });
                                 }
                             }
