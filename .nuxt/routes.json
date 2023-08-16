@@ -63,6 +63,13 @@
     "_name": "_f241b398"
   },
   {
+    "name": "testimportExcel",
+    "path": "/testimportExcel",
+    "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\testimportExcel.vue",
+    "chunkName": "pages/testimportExcel",
+    "_name": "_413b22ab"
+  },
+  {
     "name": "user",
     "path": "/user",
     "component": "C:\\\\Users\\\\ATT-Vong2022\\\\Desktop\\\\Fishsix_Pro\\\\fishsix\\\\pages\\\\user\\\\index.vue",

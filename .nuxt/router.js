@@ -13,6 +13,7 @@ const _47d718c6 = () => interopDefault(import('..\\pages\\testbase64.vue' /* web
 const _30411f7f = () => interopDefault(import('..\\pages\\testdatareal.vue' /* webpackChunkName: "pages/testdatareal" */))
 const _133fc190 = () => interopDefault(import('..\\pages\\testexcel.vue' /* webpackChunkName: "pages/testexcel" */))
 const _f241b398 = () => interopDefault(import('..\\pages\\testimage.vue' /* webpackChunkName: "pages/testimage" */))
+const _413b22ab = () => interopDefault(import('..\\pages\\testimportExcel.vue' /* webpackChunkName: "pages/testimportExcel" */))
 const _824854dc = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _00845de9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
 const _411899b3 = () => interopDefault(import('..\\pages\\admin\\content\\index.vue' /* webpackChunkName: "pages/admin/content/index" */))
@@ -100,6 +101,10 @@ export const routerOptions = {
     path: "/testimage",
     component: _f241b398,
     name: "testimage"
+  }, {
+    path: "/testimportExcel",
+    component: _413b22ab,
+    name: "testimportExcel"
   }, {
     path: "/user",
     component: _824854dc,
