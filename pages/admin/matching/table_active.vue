@@ -290,7 +290,7 @@ export default {
         },
 
 
-        deleteItemConfirm() {
+        deleteItemConfirm() {            
             this.delete_match()
             this.closeDelete()
         },
@@ -334,7 +334,8 @@ export default {
                 invite : sum
             }); 
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
-            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {
+
+            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {                
                 db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.key_student}`).update({
@@ -372,17 +373,17 @@ export default {
                     }
                 }
             });
-            db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}`).once("value", (snapshot) => {
-                const childData = snapshot.val();
-                console.log('tea', childData);
-                for (const key in childData) {
-                    const detail = key.split(":");
-                    if (detail[4] == idkey) {
-                        db.ref(`Time_teacher/${key_tea}/${date}/${key}`).remove();
-                        console.log('ลบ', key, detail[4]);
-                    }
-                }
-            });
+            // db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}`).once("value", (snapshot) => {
+            //     const childData = snapshot.val();
+            //     console.log('tea', childData);
+            //     for (const key in childData) {
+            //         const detail = key.split(":");
+            //         if (detail[4] == idkey) {
+            //             db.ref(`Time_teacher/${key_tea}/${date}/${key}`).remove();
+            //             console.log('ลบ', key, detail[4]);
+            //         }
+            //     }
+            // });
             this.editedItem = [];
         },
 

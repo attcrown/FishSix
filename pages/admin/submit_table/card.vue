@@ -640,7 +640,7 @@ export default {
                                             })
 
                                             let keystudent = this.edited;
-                                            if (keystudent.style.includes("Flip")) {
+                                            if (keystudent.style.includes("Flip") && !this.edited.match_test) {
                                                 db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
                                                     const childData = snapshot.val();
                                                     db.ref(`hour_match/${keystudent.keyStudent}`).update({
@@ -648,7 +648,7 @@ export default {
                                                     });
                                                 })
                                             }
-                                            if (keystudent.style.includes("Private")) {
+                                            if (keystudent.style.includes("Private") && !this.edited.match_test) {
                                                 db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
                                                     const childData = snapshot.val();
                                                     db.ref(`hour_match/${keystudent.keyStudent}`).update({
@@ -680,6 +680,21 @@ export default {
                                                             this.clear_dialog();
                                                         } else {
                                                             console.log('>>> freeHour privateFreeHour No DATA');
+
+                                                            if (this.edited.style.substring(0, 4) === "Flip") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    trialFlipclassHour: this.summ_hour,
+                                                                })
+                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
+                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
+                                                                    trialPrivateClassHour: this.summ_hour,
+                                                                })
+                                                            } else {
+                                                                console.log("Error");
+                                                            }
+                                                            console.log('เพิ่ม ชม. ทดลอง');
+                                                            this.loadsave = false;
+                                                            this.clear_dialog();
                                                         }
                                                     })
                                             } else if (this.edited.status_study_column == "true3" || this.edited.status_study_column == "true2" || this.edited.status_study_column == "true1") {

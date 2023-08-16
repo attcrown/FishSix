@@ -579,7 +579,7 @@ export default {
         },
 
         close() {
-            this.dialog = false
+            this.dialog = false;
             this.$nextTick(() => {
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.editedIndex = -1
@@ -638,7 +638,7 @@ export default {
                     }
                     if (true) {
                         console.log('update>>', this.editedItem, this.date);
-                        let id = this.editedItem.id;
+                        let id = new Date().getTime();//this.editedItem.id;
                         db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
                             teacher: this.editedItem.key_teacher,
                             subject: this.editedItem.subject,
@@ -692,12 +692,12 @@ export default {
                             });
                         };
                         for (const key in this.time_standart_sum) {
-                            db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}`).set({
-                                0: ""
+                            db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
+                                0: this.editedItem.key_teacher
                             });
                         };
-                        if (this.date != this.old_item.date || this.editedItem.time_e != this.old_item.time_e) {
-                            this.delete_match();
+                        if (this.date != this.old_item.date || this.editedItem.time_e != this.old_item.time_e || this.editedItem.ID != id) {
+                            this.delete_match(id);
                         }
                         this.close();
                     }
@@ -705,20 +705,25 @@ export default {
 
         },
 
-        delete_match() {
-            // console.log('del>>', this.editedItem);
+        delete_match(id) {
+            console.log('del>>', this.old_item);
             const db = this.$fireModule.database();
             let keystudent = this.editedItem;
-            db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
+            let olditem = this.old_item;
+            if(!(this.editedItem.ID != id)){
+                db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
                 .then(() => {
                     console.log("success del");
                 });
-            db.ref(`Time_student/${this.old_item.key_student}/${this.old_item.date}`).once("value", (snapshot) => {
+            }
+            
+            db.ref(`Time_student/${olditem.key_student}/${olditem.date}`).once("value", (snapshot) => {
                 const childData = snapshot.val();
+                console.log('sssss',childData);
                 for (const key in childData) {
                     const detail = key.split(":");
-                    if (detail[4] == this.old_item.id) {
-                        db.ref(`Time_student/${this.old_item.key_student}/${this.old_item.date}/${key}`).remove();
+                    if (detail[4] == olditem.id) {
+                        db.ref(`Time_student/${olditem.key_student}/${olditem.date}/${key}`).remove();
                         console.log('ลบ', key, detail[4]);
                     }
                 }
@@ -739,8 +744,6 @@ export default {
                     });
                 })
             }
-
-            // this.close();
         },
 
         getColor(stutus) {

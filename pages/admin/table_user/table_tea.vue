@@ -1068,8 +1068,9 @@ export default {
             this.date1 = [];
         },
         allowedDates: val => {
-            const currentDate = new Date();
+            const currentDate = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
             const selectedDate = new Date(val);
+            console.log('>>>>',currentDate,selectedDate,val,`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDay()-1}`);
             return selectedDate >= currentDate;
         },
         search_teacher() {
