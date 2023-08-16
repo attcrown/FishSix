@@ -11,7 +11,7 @@
           <span class="mdi mdi-account-key large-icon"></span>
           <v-text-field
             v-model="firstName"
-            label="Username"
+            label=" "
             :rules="firstNameRules"
             placeholder="กรุณากรอกชื่อ"
             required
@@ -22,7 +22,7 @@
           <v-text-field
             v-model="lastName"
             type="password"
-            label="Password"
+            label=" "
             placeholder="กรุณากรอกรหัสผ่าน"
             :rules="lastNameRules"
             required
