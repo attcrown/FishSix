@@ -716,7 +716,7 @@ export default {
                                     const timeData = timeSnapshot.val();
                                     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
                                     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        alert('เวลาซ้ำกับของตนเองกรุณาลงใหม่อีกครั้ง');
                                         return;
                                     }
                                 }
@@ -724,7 +724,7 @@ export default {
                                     const timeteaData = timeteaSnapshot.val();
                                     const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
                                     if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
-                                        alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
+                                        alert('เวลาซ้ำกับตารางสอนครูกรุณาลงใหม่อีกครั้ง');
                                         return;
                                     }
                                 }
@@ -758,16 +758,19 @@ export default {
                                             hourprivate: data.hourprivate + sum_hour,
                                         });
                                     }
+                                    
                                 } else if (!hourmatchData.exists() && !this.checkbox) {
                                     if (location_data.name.includes("Flip")) {
                                         console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                         db.ref(`hour_match/${this.value_student}/`).update({
                                             hour: sum_hour,
+                                            hourprivate: 0,
                                         });
                                     }
                                     if (location_data.name.includes("Private")) {
                                         console.log('ทำสร้าง', `hour_match/${this.value_student}/`);
                                         db.ref(`hour_match/${this.value_student}/`).update({
+                                            hour: 0,
                                             hourprivate: sum_hour,
                                         });
                                     }
