@@ -261,8 +261,19 @@
                                         required></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
-                                    <v-text-field label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น"
-                                        v-model="edited.development" :rules="rules.text" required></v-text-field>
+                                    <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter
+                                        v-model="edited.development" :rules="rules.textarea" required>
+                                        <template v-slot:append-outer>
+                                            <v-tooltip bottom>
+                                                <template v-slot:activator="{ on }">
+                                                    <v-icon v-on="on">
+                                                        mdi-help-circle-outline
+                                                    </v-icon>
+                                                </template>
+                                                คู่มือการเขียนพัฒนาการน้อง
+                                            </v-tooltip>
+                                        </template>
+                                    </v-textarea>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
@@ -372,43 +383,66 @@
                 <v-card-text>
                     <v-container>
                         <v-row no-gutters>
-                            <v-checkbox class="m-0" v-model="isExportAll" label="ข้อมูลทั้งหมด" color="indigo"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="รหัสครู" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="isExportAll" @change="check_excel()"
+                                label="ข้อมูลทั้งหมด"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[0]" label="รหัสครู" :disabled="isExportAll"
                                 value="รหัสครู"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อจริงครู" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[1]" label="ชื่อจริงครู" :disabled="isExportAll"
                                 value="ชื่อจริงครู"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="นามสกุลครู" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[2]" label="นามสกุลครู" :disabled="isExportAll"
                                 value="นามสกุลครู"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อเล่นครู" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[3]" label="ชื่อเล่นครู" :disabled="isExportAll"
                                 value="ชื่อเล่นครู"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เบอร์โทรศัพท์" :disabled="isExportAll"
-                                value="เบอร์โทรศัพท์"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เพศ" :disabled="isExportAll"
-                                value="เพศ"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="อาชีพปัจจุบัน" value="อาชีพปัจจุบัน"
-                                :disabled="isExportAll"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="email" :disabled="isExportAll"
-                                value="email"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สัญญาจ้าง" :disabled="isExportAll"
-                                value="สัญญาจ้าง"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="ประเภทการทำงาน" :disabled="isExportAll"
-                                value="ประเภทการทำงาน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่เริ่มงาน" :disabled="isExportAll"
-                                value="วันที่เริ่มงาน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เรทค่าสอน" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[4]" label="เบอร์โทรศัพท์ครู"
+                                :disabled="isExportAll" value="เบอร์โทรศัพท์ครู"></v-checkbox>
+
+                            <v-checkbox class="m-0" v-model="selectedHeaders[5]" label="รหัสนักเรียน" :disabled="isExportAll"
+                                value="รหัสนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[6]" label="ชื่อจริงนักเรียน"
+                                :disabled="isExportAll" value="ชื่อจริงนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[7]" label="นามสกุลนักเรียน"
+                                :disabled="isExportAll" value="นามสกุลนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[8]" label="ชื่อเล่นนักเรียน"
+                                :disabled="isExportAll" value="ชื่อเล่นนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[9]" label="เบอร์โทรศัพท์นักเรียน"
+                                :disabled="isExportAll" value="เบอร์โทรศัพท์นักเรียน"></v-checkbox>
+
+                            <v-checkbox class="m-0" v-model="selectedHeaders[10]" label="สถานะเช็คชื่อนักเรียน"
+                                :disabled="isExportAll" value="สถานะเช็คชื่อนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="สถานะเช็คชื่อครู"
+                                :disabled="isExportAll" value="สถานะเช็คชื่อครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="เวลาบันทึกเช็คชื่อ"
+                                :disabled="isExportAll" value="เวลาบันทึกเช็คชื่อ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="เวลาบันทึกพัฒนาการนักเรียน"
+                                :disabled="isExportAll" value="เวลาบันทึกพัฒนาการนักเรียน"></v-checkbox>
+
+                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="วันที่เริ่มสอน" :disabled="isExportAll"
+                                value="วันที่เริ่มสอน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="เริ่มเรียน" :disabled="isExportAll"
+                                value="เริ่มเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="เลิกเรียน" :disabled="isExportAll"
+                                value="เลิกเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="เรื่องที่เรียน" :disabled="isExportAll"
+                                value="เรื่องที่เรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="ระดับความเข้าใจ"
+                                :disabled="isExportAll" value="ระดับความเข้าใจ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="พัฒนาการ" :disabled="isExportAll"
+                                value="พัฒนาการ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="ปัญหาในการสอน" :disabled="isExportAll"
+                                value="ปัญหาในการสอน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="วิธีแก้" :disabled="isExportAll"
+                                value="วิธีแก้"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="เพื่อพัฒนาน้อง" :disabled="isExportAll"
+                                value="เพื่อพัฒนาน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="การบ้าน" :disabled="isExportAll"
+                                value="การบ้าน"></v-checkbox>
+
+                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ" :disabled="isExportAll"
+                                value="สถานะพัฒนาการ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="Comment" :disabled="isExportAll"
+                                value="Comment"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[26]" label="เรทค่าสอน" :disabled="isExportAll"
                                 value="เรทค่าสอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สาขาที่สามารถสอนได้"
-                                :disabled="isExportAll" value="สาขาที่สามารถสอนได้"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="มหาวิทยาลัย" :disabled="isExportAll"
-                                value="มหาวิทยาลัย"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="คณะ" :disabled="isExportAll"
-                                value="คณะ"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="สาขา" :disabled="isExportAll"
-                                value="สาขา"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="วิชาที่สอนได้" :disabled="isExportAll"
-                                value="วิชาที่สอนได้"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders" label="เวลาที่บันทึกข้อมูล"
-                                :disabled="isExportAll" value="เวลาที่บันทึกข้อมูล"></v-checkbox>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -481,6 +515,7 @@ export default {
                 text: [(val) => (val || "").length > 0 || "กรุณาระบุข้อมูล"],
                 img: [value => !value || value.size < 10000000 || 'ภาพต้องมีขนาดไม่เกิน 10MB!',
                 (val) => (val) != null || "กรุณาระบุข้อมูล"],
+                textarea: [(val) => (val || "").length >= 200 || 'ขั้นต่ำ 200 ตัวอักษร'],
             },
 
             edited: [],
@@ -777,7 +812,8 @@ export default {
                 comment: this.edited.comment,
                 check_save: this.check_time,
                 rate: this.edited.rate,
-                link_url: this.edited.link_url
+                link_url: this.edited.link_url,
+                createAt_rate_OP: new Date()
             }).then(() => {
                 console.log('save send_plan');
                 this.clear_dialog();
@@ -838,17 +874,20 @@ export default {
                             const getStudentPromise = db.ref(`user/${key}`).once("value");
                             const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                             const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                            Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise])
+                            const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
+                            Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
                                 .then((snapshots) => {
                                     const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
                                     const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
                                     const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
                                     const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                                    const sendplanSnapshot = snapshots[4];
 
                                     const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                     const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                     const locationData = locationSnapshot.val();
                                     const studentData = studentSnapshot.val();
+                                    const sendplanData = sendplanSnapshot.val();
 
                                     const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
                                     const namestu = `${studentData.nickname} (${studentData.firstName})`;
@@ -862,18 +901,21 @@ export default {
                                             time_e: timedata.stop,
                                             style: locationData.name,
                                             keystyle: timedata.style_subject,
-                                            // class: timedata.class,
                                             subject: namesub,
                                             keySubject: timedata.subject,
                                             keyStudent: key,
                                             keyTeacher: timedata.teacher,
-                                            studentId: studentData.studentId || "-",
+                                            studentId: studentData.studentId,
+                                            teacherId: teacherData.teacherId,
                                             namestu: namestu,
                                             sendplan: timedata.sendplan,
                                             because: timedata.because,
                                             Idsendplan: timedata.Idsendplan,
                                             match_test: timedata.match_test,
-                                            hour: timedata.hour
+                                            hour: timedata.hour,
+                                            sendplanAll: sendplanData,
+                                            teacherAll: teacherData,
+                                            studentAll: studentData
                                         });
                                         // this.arrayEvents.push(date);
                                     }
@@ -955,46 +997,489 @@ export default {
             })
         },
 
+        check_excel() {
+            if (this.isExportAll) {
+                this.selectedHeaders = [
+                    "รหัสครู",
+                    "ชื่อจริงครู",
+                    "นามสกุลครู",
+                    "ชื่อเล่นครู",
+                    "เบอร์โทรศัพท์ครู",
+
+                    "รหัสนักเรียน",
+                    "ชื่อจริงนักเรียน",
+                    "นามสกุลนักเรียน",
+                    "ชื่อเล่นนักเรียน",
+                    "เบอร์โทรศัพท์นักเรียน",
+
+                    "สถานะเช็คชื่อนักเรียน",
+                    "สถานะเช็คชื่อครู",
+                    "เวลาบันทึกเช็คชื่อ",
+                    "เวลาบันทึกพัฒนาการนักเรียน",
+
+                    "วันที่เริ่มสอน",
+                    "เริ่มเรียน",
+                    "เลิกเรียน",
+
+                    "เรื่องที่เรียน",
+                    "ระดับความเข้าใจ",
+                    "พัฒนาการ",
+                    "ปัญหาในการสอน",
+                    "วิธีแก้",
+                    "เพื่อพัฒนาน้อง",
+                    "การบ้าน",
+                    "สถานะพัฒนาการ",
+                    "Comment",
+                    "เรทค่าสอน"]
+            } else { this.selectedHeaders = []; }
+        },
         exportToExcel() {
             console.log(this.selectedHeaders);
             // หัวข้อเอกสาร Excel
             let newdate = new Date().getFullYear() + ' ' + (parseInt(new Date().getMonth()) + 1) + ' ' + new Date().getDate();
-            let headers = [];
-            if(this.isExportAll){
-                headers = ["รหัสครู","ชื่อจริงครู","นามสกุลครู","ชื่อเล่นครู","เบอร์โทรศัพท์","เพศ","email","สัญญาจ้าง","ประเภทการทำงาน","วันที่เริ่มงาน",
-                            "เรทค่าสอน","สาขาที่สามารถสอนได้","มหาวิทยาลัย","คณะ","สาขา","วิชาที่สอนได้","เวลาที่บันทึกข้อมูล"];
-            }else{
-                headers = this.selectedHeaders;
-            }            
+            let headers = this.selectedHeaders;
             const data = [headers, ...this.desserts.map(item => {
                 const row = [];
                 if (this.isExportAll) {
-                    row.push(
-                        item.level,
-                        item.name,
-                        item.date,
-                        item.time_s,
-                        item.time_e,
-                        item.style,
-                        item.keystyle,                        
-                        item.subject,
-                        item.keySubject,
-                        item.keyStudent,
-                        item.keyTeacher,
-                        item.studentId,
-                        item.namestu,
-                        item.sendplan,
-                        item.because,
-                        item.Idsendplan,
-                        item.match_test,
-                        item.hour
-                    );
+                    if (this.selectedHeaders[0]){
+                        if(item.teacherId){
+                            row.push(item.teacherId);
+                        }else{
+                            row.push("");
+                        }
+                    } 
+                    if (this.selectedHeaders[1]){
+                        if(item.teacherAll.firstName){
+                            row.push(item.teacherAll.firstName);
+                        }else{
+                            row.push("");
+                        }
+                    } 
+                    if (this.selectedHeaders[2]){
+                        if(item.teacherAll.lastName){
+                            row.push(item.teacherAll.lastName);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[3]){
+                        if(item.teacherAll.nickname){
+                            row.push(item.teacherAll.nickname);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[4]){
+                        if(item.teacherAll.mobile){
+                            row.push(item.teacherAll.mobile);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[5]){
+                        if(item.studentId){
+                            row.push(item.studentId);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[6]){
+                        if(item.studentAll.firstName){
+                            row.push(item.studentAll.firstName);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[7]){
+                        if(item.studentAll.lastName){
+                            row.push(item.studentAll.lastName);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[8]){
+                        if(item.studentAll.nickname){
+                            row.push(item.studentAll.nickname);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[9]){
+                        if(item.studentAll.mobile){
+                            row.push(item.studentAll.mobile);
+                        }else{
+                            row.push("");
+                        }
+                    }  
+                    if (this.selectedHeaders[10]) {
+                        if (item.sendplanAll && item.sendplanAll.status_study_column) {
+                            row.push(item.sendplanAll.status_study_column);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[11]) {
+                        if (item.sendplanAll && item.sendplanAll.status_study_column_tea) {
+                            row.push(item.sendplanAll.status_study_column_tea);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.sendplanAll && item.sendplanAll.createAt_OP) {
+                            row.push(item.sendplanAll.createAt_OP);
+                        } else if (item.sendplanAll && item.sendplanAll.createAt) {
+                            row.push(item.sendplanAll.createAt);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[13]) {
+                        if (item.sendplanAll && item.sendplanAll.createAt_rate_OP) {
+                            row.push(item.sendplanAll.createAt_rate_OP);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[14]) {
+                        if (item.date) {
+                            row.push(item.date);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[15]) {
+                        if (item.time_s) {
+                            row.push(item.time_s);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[16]) {
+                        if (item.time_e) {
+                            row.push(item.time_e);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[17]) {
+                        if (item.sendplanAll && item.sendplanAll.learn) {
+                            row.push(item.sendplanAll.learn);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[18]) {
+                        if (item.sendplanAll && item.sendplanAll.understand) {
+                            row.push(item.sendplanAll.understand);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[19]) {
+                        if (item.sendplanAll && item.sendplanAll.development) {
+                            row.push(item.sendplanAll.development);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[20]) {
+                        if (item.sendplanAll && item.sendplanAll.problem) {
+                            row.push(item.sendplanAll.problem);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[21]) {
+                        if (item.sendplanAll && item.sendplanAll.method) {
+                            row.push(item.sendplanAll.method);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[22]) {
+                        if (item.sendplanAll && item.sendplanAll.to_development) {
+                            row.push(item.sendplanAll.to_development);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[23]) {
+                        if (item.sendplanAll && item.sendplanAll.homework) {
+                            row.push(item.sendplanAll.homework);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[24]) {
+                        if (item.sendplanAll && item.sendplanAll.status_development) {
+                            row.push(item.sendplanAll.status_development);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[25]) {
+                        if (item.sendplanAll && item.sendplanAll.comment) {
+                            row.push(item.sendplanAll.comment);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[26]) {
+                        if (item.sendplanAll && item.sendplanAll.rate) {
+                            row.push(item.sendplanAll.rate);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    //----------------------------------------------------
                 } else {
-                    if (this.selectedHeaders[1]) row.push(item.name);
-                    if (this.selectedHeaders[2]) row.push(item.namestu);
-                    if (this.selectedHeaders[3]) row.push(item.date);
+                    if (this.selectedHeaders[0]){
+                        if(item.teacherId){
+                            row.push(item.teacherId);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    } 
+                    if (this.selectedHeaders[1]){
+                        if(item.teacherAll.firstName){
+                            row.push(item.teacherAll.firstName);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }  
+                    if (this.selectedHeaders[2]){
+                        if(item.teacherAll.lastName){
+                            row.push(item.teacherAll.lastName);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[3]){
+                        if(item.teacherAll.nickname){
+                            row.push(item.teacherAll.nickname);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[4]){
+                        if(item.teacherAll.mobile){
+                            row.push(item.teacherAll.mobile);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[5]){
+                        if(item.studentId){
+                            row.push(item.studentId);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[6]){
+                        if(item.studentAll.firstName){
+                            row.push(item.studentAll.firstName);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[7]){
+                        if(item.studentAll.lastName){
+                            row.push(item.studentAll.lastName);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[8]){
+                        if(item.studentAll.nickname){
+                            row.push(item.studentAll.nickname);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[9]){
+                        if(item.studentAll.mobile){
+                            row.push(item.studentAll.mobile);
+                        }else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }   
+                    if (this.selectedHeaders[10]) {
+                        if (item.sendplanAll && item.sendplanAll.status_study_column) {
+                            row.push(item.sendplanAll.status_study_column);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[11]) {
+                        if (item.sendplanAll && item.sendplanAll.status_study_column_tea) {
+                            row.push(item.sendplanAll.status_study_column_tea);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.sendplanAll && item.sendplanAll.createAt_OP) {
+                            row.push(item.sendplanAll.createAt_OP);
+                        } else if (item.sendplanAll && item.sendplanAll.createAt) {
+                            row.push(item.sendplanAll.createAt);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[13]) {
+                        if (item.sendplanAll && item.sendplanAll.createAt_rate_OP) {
+                            row.push(item.sendplanAll.createAt_rate_OP);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[14]) {
+                        if (item.date) {
+                            row.push(item.date);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[15]) {
+                        if (item.time_s) {
+                            row.push(item.time_s);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[16]) {
+                        if (item.time_e) {
+                            row.push(item.time_e);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[17]) {
+                        if (item.sendplanAll && item.sendplanAll.learn) {
+                            row.push(item.sendplanAll.learn);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[18]) {
+                        if (item.sendplanAll && item.sendplanAll.understand) {
+                            row.push(item.sendplanAll.understand);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[19]) {
+                        if (item.sendplanAll && item.sendplanAll.development) {
+                            row.push(item.sendplanAll.development);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[20]) {
+                        if (item.sendplanAll && item.sendplanAll.problem) {
+                            row.push(item.sendplanAll.problem);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[21]) {
+                        if (item.sendplanAll && item.sendplanAll.method) {
+                            row.push(item.sendplanAll.method);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[22]) {
+                        if (item.sendplanAll && item.sendplanAll.to_development) {
+                            row.push(item.sendplanAll.to_development);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[23]) {
+                        if (item.sendplanAll && item.sendplanAll.homework) {
+                            row.push(item.sendplanAll.homework);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[24]) {
+                        if (item.sendplanAll && item.sendplanAll.status_development) {
+                            row.push(item.sendplanAll.status_development);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[25]) {
+                        if (item.sendplanAll && item.sendplanAll.comment) {
+                            row.push(item.sendplanAll.comment);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[26]) {
+                        if (item.sendplanAll && item.sendplanAll.rate) {
+                            row.push(item.sendplanAll.rate);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
                 }
-
                 // ... เพิ่มตามลำดับ
                 return row;
             })];
@@ -1009,7 +1494,7 @@ export default {
 
             // สร้าง Blob และบันทึกไฟล์
             const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(blob, `${newdate}-UpdateSTU.xlsx`);
+            saveAs(blob, `${newdate} - UpdateSTU.xlsx`);
         },
 
     },
