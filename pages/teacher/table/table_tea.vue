@@ -312,7 +312,7 @@ export default {
             } else {
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
-            this.value = this.keyuser;
+            // this.value = this.keyuser;
             console.log(">>>>>", this.keyuser);
         },
         validateTime() {
@@ -377,7 +377,7 @@ export default {
                 this.save_detail.subject == '' ||
                 this.picker_start == '' ||
                 this.picker_stop == '' ||
-                // this.value == null ||
+                this.value == null ||
                 this.date1 == '' ||
                 this.save_detail.sum_people == '') {
                 this.dialog_save_error = true;
@@ -459,7 +459,7 @@ export default {
         },
 
         clear_item() {
-            // this.value = null;
+            this.value = null;
             this.hour_tea = 0;
             this.min_tea = 0;
             this.save_detail = [];

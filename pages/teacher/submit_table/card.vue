@@ -1151,7 +1151,9 @@ export default {
                                                         teacherAll: teacherData,
                                                         studentAll: studentData
                                                     });
-                                                } else if (sendplanData.status_development == 'Pending' || sendplanData.status_development == 'Rejected') {
+                                                } else if (sendplanData.status_development == 'Pending' 
+                                                    || sendplanData.status_development == 'Rejected'
+                                                    || sendplanData.status_development == undefined && sendplanData.homework) {
                                                     this.dash_noall++;
                                                     item1.push({
                                                         level: timedata.level,
@@ -1321,7 +1323,9 @@ export default {
                                                             teacherAll: teacherData,
                                                             studentAll: studentData
                                                         });
-                                                    } else if (sendplanData.status_development == 'Pending' || sendplanData.status_development == 'Rejected') {
+                                                    } else if (sendplanData.status_development == 'Pending' 
+                                                        || sendplanData.status_development == 'Rejected'
+                                                        || sendplanData.status_development == undefined && sendplanData.homework) {
                                                         this.dash_noall++;
                                                         item1.push({
                                                             level: timedata.level,
