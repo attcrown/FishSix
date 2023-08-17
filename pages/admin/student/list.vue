@@ -187,8 +187,9 @@ export default {
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'stu.lastName' },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile' },
-                { text: 'ประเภทคลาส', value: 'stu.classTypes' },
-                { text: 'จำนวนชั่วโมงเรียนที่เหลือ (Decimal)', value: 'stu.hourLeft' },
+
+                { text: 'จำนวนชั่วโมง Flip Class ที่เหลือ ', value: 'stu.hourLeft' },
+                { text: 'จำนวนชั่วโมง Private Class ที่เหลือ ', value: 'stu.privateHourLeft' },
                 { text: 'เวลาที่บันทึก', value: 'stu.createdAt' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
@@ -370,8 +371,8 @@ export default {
                     const stu = {
                         studentId: childData.studentId,
                         createdAt: sumx_date,
-                        hourLeft: childData.hourLeft,
-                        classTypes: childData.classTypes,
+                        hourLeft: childData.hourLeft || "-" ,
+                        privateHourLeft: childData.privateHourLeft || '-' ,
                         firstName: childData.firstName,
                         lastName: childData.lastName,
                         nickname: childData.nickname,
