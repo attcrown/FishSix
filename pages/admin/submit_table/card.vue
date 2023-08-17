@@ -396,8 +396,8 @@
                             <v-checkbox class="m-0" v-model="selectedHeaders[4]" label="เบอร์โทรศัพท์ครู"
                                 :disabled="isExportAll" value="เบอร์โทรศัพท์ครู"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[5]" label="รหัสนักเรียน" :disabled="isExportAll"
-                                value="รหัสนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[5]" label="รหัสนักเรียน"
+                                :disabled="isExportAll" value="รหัสนักเรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[6]" label="ชื่อจริงนักเรียน"
                                 :disabled="isExportAll" value="ชื่อจริงนักเรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[7]" label="นามสกุลนักเรียน"
@@ -416,29 +416,29 @@
                             <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="เวลาบันทึกพัฒนาการนักเรียน"
                                 :disabled="isExportAll" value="เวลาบันทึกพัฒนาการนักเรียน"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="วันที่เริ่มสอน" :disabled="isExportAll"
-                                value="วันที่เริ่มสอน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="วันที่เริ่มสอน"
+                                :disabled="isExportAll" value="วันที่เริ่มสอน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="เริ่มเรียน" :disabled="isExportAll"
                                 value="เริ่มเรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="เลิกเรียน" :disabled="isExportAll"
                                 value="เลิกเรียน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="เรื่องที่เรียน" :disabled="isExportAll"
-                                value="เรื่องที่เรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="เรื่องที่เรียน"
+                                :disabled="isExportAll" value="เรื่องที่เรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="ระดับความเข้าใจ"
                                 :disabled="isExportAll" value="ระดับความเข้าใจ"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="พัฒนาการ" :disabled="isExportAll"
                                 value="พัฒนาการ"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="ปัญหาในการสอน" :disabled="isExportAll"
-                                value="ปัญหาในการสอน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="ปัญหาในการสอน"
+                                :disabled="isExportAll" value="ปัญหาในการสอน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="วิธีแก้" :disabled="isExportAll"
                                 value="วิธีแก้"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="เพื่อพัฒนาน้อง" :disabled="isExportAll"
-                                value="เพื่อพัฒนาน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="เพื่อพัฒนาน้อง"
+                                :disabled="isExportAll" value="เพื่อพัฒนาน้อง"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="การบ้าน" :disabled="isExportAll"
                                 value="การบ้าน"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ" :disabled="isExportAll"
-                                value="สถานะพัฒนาการ"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ"
+                                :disabled="isExportAll" value="สถานะพัฒนาการ"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="Comment" :disabled="isExportAll"
                                 value="Comment"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[26]" label="เรทค่าสอน" :disabled="isExportAll"
@@ -948,17 +948,20 @@ export default {
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise])
+                                const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
                                     .then((snapshots) => {
                                         const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
                                         const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
                                         const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
                                         const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                                        const sendplanSnapshot = snapshots[4];
 
                                         const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const locationData = locationSnapshot.val();
                                         const studentData = studentSnapshot.val();
+                                        const sendplanData = sendplanSnapshot.val();
 
                                         const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
                                         const namestu = `${studentData.nickname} (${studentData.firstName})`;
@@ -972,18 +975,21 @@ export default {
                                                 time_e: timedata.stop,
                                                 style: locationData.name,
                                                 keystyle: timedata.style_subject,
-                                                // class: timedata.class,
                                                 subject: namesub,
                                                 keySubject: timedata.subject,
                                                 keyStudent: key,
                                                 keyTeacher: timedata.teacher,
-                                                studentId: studentData.studentId || "-",
+                                                studentId: studentData.studentId,
+                                                teacherId: teacherData.teacherId,
                                                 namestu: namestu,
                                                 sendplan: timedata.sendplan,
                                                 because: timedata.because,
                                                 Idsendplan: timedata.Idsendplan,
                                                 match_test: timedata.match_test,
-                                                hour: timedata.hour
+                                                hour: timedata.hour,
+                                                sendplanAll: sendplanData,
+                                                teacherAll: teacherData,
+                                                studentAll: studentData
                                             });
                                             // this.arrayEvents.push(date);
                                         }
@@ -1041,76 +1047,76 @@ export default {
             const data = [headers, ...this.desserts.map(item => {
                 const row = [];
                 if (this.isExportAll) {
-                    if (this.selectedHeaders[0]){
-                        if(item.teacherId){
+                    if (this.selectedHeaders[0]) {
+                        if (item.teacherId) {
                             row.push(item.teacherId);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    } 
-                    if (this.selectedHeaders[1]){
-                        if(item.teacherAll.firstName){
+                    }
+                    if (this.selectedHeaders[1]) {
+                        if (item.teacherAll.firstName) {
                             row.push(item.teacherAll.firstName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    } 
-                    if (this.selectedHeaders[2]){
-                        if(item.teacherAll.lastName){
+                    }
+                    if (this.selectedHeaders[2]) {
+                        if (item.teacherAll.lastName) {
                             row.push(item.teacherAll.lastName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[3]){
-                        if(item.teacherAll.nickname){
+                    }
+                    if (this.selectedHeaders[3]) {
+                        if (item.teacherAll.nickname) {
                             row.push(item.teacherAll.nickname);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[4]){
-                        if(item.teacherAll.mobile){
+                    }
+                    if (this.selectedHeaders[4]) {
+                        if (item.teacherAll.mobile) {
                             row.push(item.teacherAll.mobile);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[5]){
-                        if(item.studentId){
+                    }
+                    if (this.selectedHeaders[5]) {
+                        if (item.studentId) {
                             row.push(item.studentId);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[6]){
-                        if(item.studentAll.firstName){
+                    }
+                    if (this.selectedHeaders[6]) {
+                        if (item.studentAll.firstName) {
                             row.push(item.studentAll.firstName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[7]){
-                        if(item.studentAll.lastName){
+                    }
+                    if (this.selectedHeaders[7]) {
+                        if (item.studentAll.lastName) {
                             row.push(item.studentAll.lastName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[8]){
-                        if(item.studentAll.nickname){
+                    }
+                    if (this.selectedHeaders[8]) {
+                        if (item.studentAll.nickname) {
                             row.push(item.studentAll.nickname);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }  
-                    if (this.selectedHeaders[9]){
-                        if(item.studentAll.mobile){
-                            row.push(item.studentAll.mobile);
-                        }else{
+                    }
+                    if (this.selectedHeaders[9]) {
+                        if (item.studentAll.studentMobile) {
+                            row.push(item.studentAll.studentMobile);
+                        } else {
                             row.push("");
                         }
-                    }  
+                    }
                     if (this.selectedHeaders[10]) {
                         if (item.sendplanAll && item.sendplanAll.status_study_column) {
                             row.push(item.sendplanAll.status_study_column);
@@ -1234,103 +1240,103 @@ export default {
                     }
                     //----------------------------------------------------
                 } else {
-                    if (this.selectedHeaders[0]){
-                        if(item.teacherId){
+                    if (this.selectedHeaders[0]) {
+                        if (item.teacherId) {
                             row.push(item.teacherId);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    } 
-                    if (this.selectedHeaders[1]){
-                        if(item.teacherAll.firstName){
+                    }
+                    if (this.selectedHeaders[1]) {
+                        if (item.teacherAll.firstName) {
                             row.push(item.teacherAll.firstName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }  
-                    if (this.selectedHeaders[2]){
-                        if(item.teacherAll.lastName){
+                    }
+                    if (this.selectedHeaders[2]) {
+                        if (item.teacherAll.lastName) {
                             row.push(item.teacherAll.lastName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[3]){
-                        if(item.teacherAll.nickname){
+                    }
+                    if (this.selectedHeaders[3]) {
+                        if (item.teacherAll.nickname) {
                             row.push(item.teacherAll.nickname);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[4]){
-                        if(item.teacherAll.mobile){
+                    }
+                    if (this.selectedHeaders[4]) {
+                        if (item.teacherAll.mobile) {
                             row.push(item.teacherAll.mobile);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[5]){
-                        if(item.studentId){
+                    }
+                    if (this.selectedHeaders[5]) {
+                        if (item.studentId) {
                             row.push(item.studentId);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[6]){
-                        if(item.studentAll.firstName){
+                    }
+                    if (this.selectedHeaders[6]) {
+                        if (item.studentAll.firstName) {
                             row.push(item.studentAll.firstName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[7]){
-                        if(item.studentAll.lastName){
+                    }
+                    if (this.selectedHeaders[7]) {
+                        if (item.studentAll.lastName) {
                             row.push(item.studentAll.lastName);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[8]){
-                        if(item.studentAll.nickname){
+                    }
+                    if (this.selectedHeaders[8]) {
+                        if (item.studentAll.nickname) {
                             row.push(item.studentAll.nickname);
-                        }else{
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
-                    if (this.selectedHeaders[9]){
-                        if(item.studentAll.mobile){
-                            row.push(item.studentAll.mobile);
-                        }else{
+                    }
+                    if (this.selectedHeaders[9]) {
+                        if (item.studentAll.studentMobile) {
+                            row.push(item.studentAll.studentMobile);
+                        } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
-                    }   
+                    }
                     if (this.selectedHeaders[10]) {
                         if (item.sendplanAll && item.sendplanAll.status_study_column) {
                             row.push(item.sendplanAll.status_study_column);
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[11]) {
@@ -1339,7 +1345,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[12]) {
@@ -1350,7 +1356,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[13]) {
@@ -1359,7 +1365,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[14]) {
@@ -1368,7 +1374,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[15]) {
@@ -1377,7 +1383,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[16]) {
@@ -1386,7 +1392,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[17]) {
@@ -1395,7 +1401,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[18]) {
@@ -1404,7 +1410,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[19]) {
@@ -1413,7 +1419,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[20]) {
@@ -1422,7 +1428,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[21]) {
@@ -1431,7 +1437,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[22]) {
@@ -1440,7 +1446,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[23]) {
@@ -1449,7 +1455,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[24]) {
@@ -1458,7 +1464,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[25]) {
@@ -1467,7 +1473,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                     if (this.selectedHeaders[26]) {
@@ -1476,7 +1482,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }else{
+                    } else {
                         row.push("");
                     }
                 }
