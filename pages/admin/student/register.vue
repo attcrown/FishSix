@@ -138,8 +138,15 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                         <v-card-text>
                             <v-row>
                                 <p>&#x2022; Flip class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
-                                <v-checkbox label="เพิ่ม Flip class" v-model="classTypes" value="Flip class"
-                                    @click="updateFlipClass()"></v-checkbox>
+                                <v-checkbox v-model="classTypes" value="Flip class" @click="updateFlipClass()">
+                                    <template v-slot:label>
+                                        <div>
+                                            เพิ่ม Flip class
+                                        </div>
+                                        <div style="color:red;">
+                                            &nbsp;*
+                                        </div>
+                                    </template></v-checkbox>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="totalHour" min="0" max="99999"
                                         maxlength="5" oninput="validity.valid||(value='');" @input="updateHourLeft" disabled
@@ -159,8 +166,15 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
 
                                 <v-col class="py-0" cols="3">
                                     <v-select class="black-label" v-model="courseHour" :items="courseHours"
-                                        :disabled="!isFlipClass" @input="updateFlipClassMonth"
-                                        label="จำนวนชั่วโมง"></v-select>
+                                        @input="updateFlipClassMonth" :disabled="!isFlipClass" :required="!isFlipClass">
+                                        <template v-slot:label>
+                                            <span>
+                                                จำนวนชั่วโมงที่ซื้อมา
+                                            </span>
+                                            <span style="color:red;">
+                                                *
+                                            </span>
+                                        </template></v-select>
                                 </v-col>
                                 <v-col class="py-0" cols="3">
                                     <v-text-field class="black-label" name="freeHour" v-model="freeHour" type="number"
@@ -190,8 +204,16 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                     <hr class=" solid">
                                 </div>
                                 <p>&#x2022; Private class (ุถ้าไม่มีไม่จำเป็นต้องใส่)</p>
-                                <v-checkbox label="เพิ่ม Private class" v-model="classTypes" value="Private class"
-                                    @click="updatePrivateClass()"></v-checkbox>
+                                <v-checkbox v-model="classTypes" value="Private class" @click="updatePrivateClass()">
+                                    <template v-slot:label>
+                                        <div>
+                                            เพิ่ม Private class
+                                        </div>
+                                        <div style="color:red;">
+                                            &nbsp;*
+                                        </div>
+                                    </template>
+                                </v-checkbox>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" v-model="privateTotalHour" min="0"
                                         disabled max="99999" maxlength="5" oninput="validity.valid||(value='');"
@@ -212,7 +234,16 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                 <v-col class="py-0" cols="3">
                                     <v-select class="black-label" v-model="privateCourseHour" :items="courseHours"
                                         :disabled="!isPrivateClass" @input="updatePrivateClassMonth"
-                                        label="จำนวนชั่วโมง"></v-select>
+                                        :required="!isPrivateClass">
+                                        <template v-slot:label>
+                                            <span>
+                                                จำนวนชั่วโมงที่ซื้อมา
+                                            </span>
+                                            <span style="color:red;">
+                                                *
+                                            </span>
+                                        </template>
+                                    </v-select>
                                 </v-col>
                                 <v-col class="py-0" cols="3">
                                     <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour"
@@ -323,16 +354,10 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                             <v-col cols="9">
                                 <v-row>
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" v-model="studentId" counter
-                                            label="รหัสนักเรียน (ไม่จำเป็นต้องกรอก)" required :rules="studentIdRules">
+                                        <v-text-field class="black-label" v-model="studentId" counter disabled
+                                            label="รหัสนักเรียน " required :rules="studentIdRules">
                                             <template v-slot:append>
-                                                <v-tooltip bottom>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-icon v-on="on">mdi-help-circle-outline</v-icon>
-                                                    </template>
-                                                    <span>FSS ตามด้วยเลข 4 หลัก
-                                                        <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
-                                                </v-tooltip>
+
                                             </template>
 
                                         </v-text-field>
@@ -348,8 +373,8 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                                     <template v-slot:activator="{ on }">
                                                         <v-icon v-on="on">mdi-help-circle-outline</v-icon>
                                                     </template>
-                                                    <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
-                                                        <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                    <span>ควรตั้งชื่อด้วยรหัสนักเรียน
+                                                    </span>
                                                 </v-tooltip>
                                             </template>
                                         </v-text-field>
@@ -363,40 +388,55 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                                     <template v-slot:activator="{ on }">
                                                         <v-icon v-on="on">mdi-help-circle-outline</v-icon>
                                                     </template>
-                                                    <span>ควรตั้งชื่อเป็นชื่อจริงภาษาอังกฤษ1234
-                                                        <br>โดยเป็นตัวพิมพ์เล็กทั้งหมด</span>
+                                                    <span>ควรตั้งชื่อด้วยคำว่า FishsixStudent
+                                                    </span>
                                                 </v-tooltip>
                                             </template>
                                         </v-text-field>
 
                                     </v-col>
-                                    <v-col cols="4" class="py-0 ">
-                                        <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                            label="ชื่อ (ภาษาอังกฤษ)" :error-messages="firstNameEngErrors" required
-                                            v-on:keypress="isLetter($event)" @input="$v.firstNameEng.$touch()"
-                                            @blur="$v.firstNameEng.$touch()">
-                                        </v-text-field>
-                                    </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                            :error-messages="lastNameEngErrors" label="นามสกุล (ภาษาอังกฤษ)" required
-                                            v-on:keypress="isLetter($event)" @input="$v.lastNameEng.$touch()"
-                                            @blur="$v.lastNameEng.$touch()">
-                                        </v-text-field>
-                                    </v-col>
-                                    <v-col cols="4" class="py-0">
-
-                                    </v-col>
-                                    <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="firstName" v-model="firstName" label="ชื่อ"
+                                        <v-text-field class="black-label" name="firstName" v-model="firstName"
                                             :error-messages="firstNameErrors" required @input="$v.firstName.$touch()"
                                             @blur="$v.firstName.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    ชื่อ
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
                                         <v-text-field class="black-label" name="lastName" v-model="lastName"
-                                            :error-messages="lastNameErrors" label="นามสกุล" required
-                                            @input="$v.lastName.$touch()" @blur="$v.lastName.$touch()">
+                                            :error-messages="lastNameErrors" required @input="$v.lastName.$touch()"
+                                            @blur="$v.lastName.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    lastName
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
+                                        </v-text-field>
+
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+
+                                    </v-col>
+                                    <v-col cols="4" class="py-0 ">
+                                        <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                            label="ชื่อ (ภาษาอังกฤษ)"  required
+                                            v-on:keypress="isLetter($event)" >
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                            label="นามสกุล (ภาษาอังกฤษ)" required
+                                            v-on:keypress="isLetter($event)">
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
@@ -404,15 +444,33 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
                                         <v-text-field class="black-label" name="nickname" v-model="nickname"
-                                            label="ชื่อเล่น" :error-messages="nicknameErrors" @input="$v.nickname.$touch()"
+                                            :error-messages="nicknameErrors" @input="$v.nickname.$touch()"
                                             @blur="$v.nickname.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    ชื่อเล่น
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="5" class="py-0">
 
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-select v-model="gender" :items="genders" label="เพศ"></v-select>
+                                        <v-select class="black-label" name="gender" v-model="gender"
+                                        :items="genders" :error-messages="genderErrors"
+                                        required @input="$v.gender.$touch()" @blur="$v.gender.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    เพศ
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template></v-select>
                                     </v-col>
 
 
@@ -428,7 +486,7 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                                 <v-col cols="4" class="py-0">
                                     <v-text-field class="black-label" v-model="studentMobile"
                                         :error-messages="studentMobileErrors" label="เบอร์โทรศัพท์" required
-                                        @input="$v.studentMobile.$touch()" counter @blur="$v.studentMobile.$touch()">
+                                        counter >
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
@@ -556,8 +614,7 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
 
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName"
-                                        label="ชื่อผู้ปกครอง" :error-messages="parentFirstNameErrors" required
-                                        @input="$v.parentFirstName.$touch()" @blur="$v.parentFirstName.$touch()">
+                                        label="ชื่อผู้ปกครอง" >
                                     </v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
@@ -596,8 +653,17 @@ background: #EFEFEF;" router exact>ย้อนกลับ</v-btn>
                         <v-card-text>
                             <v-row>
                                 <v-col cols="3">
-                                    <v-text-field class="black-label" name="school" label="โรงเรียน"
-                                        v-model="school"></v-text-field>
+                                    <v-text-field class="black-label" name="school" :error-messages="schoolErrors"
+                                        required @input="$v.school.$touch()" @blur="$v.school.$touch()"
+                                        v-model="school">
+                                        <template v-slot:label>
+                                                <span>
+                                                    โรงเรียน
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
                                     <v-select class="black-label" label="ระดับชั้น" name="education" v-model="education"
@@ -677,7 +743,7 @@ export default {
             studentId: null,
             profilePic: null,
             name: null,
-            password: null,
+            password: 'FishsixStudent',
             firstNameEng: null,
 
             lastNameEng: null,
@@ -804,17 +870,17 @@ export default {
     validations: {
         name: { required, minLength: minLength(2) },
         password: { required, maxLength: maxLength(100), minLength: minLength(2) },
-        firstNameEng: { required },
-        lastNameEng: { required },
+        
         firstName: { required },
         lastName: { required },
         nickname: { required },
+        gender: { required },
         email: { email },
         idCardNumber: { minLength: minLength(13), maxLength: maxLength(13), numeric },
-        studentMobile: { required, minLength: minLength(9), numeric },
-        parentMobile: { required, minLength: minLength(9), numeric },
-        parentFirstName: { required },
-
+        studentMobile: {  minLength: minLength(9), numeric },
+        parentMobile: {  minLength: minLength(9), numeric },
+        
+        school: { required },
         education: { required },
         classType: { required },
         //courseHour: { required },
@@ -856,19 +922,7 @@ export default {
             return errors
         },
 
-        firstNameEngErrors() {
-            const errors = []
-            if (!this.$v.firstNameEng.$dirty) return errors
-            !this.$v.firstNameEng.required && errors.push('กรุณาระบุชื่อผู้สอนเป็นภาษาอังกฤษ')
-            return errors
-        },
 
-        lastNameEngErrors() {
-            const errors = []
-            if (!this.$v.lastNameEng.$dirty) return errors
-            !this.$v.lastNameEng.required && errors.push('กรุณาระบุนามสกุลเป็นภาษาอังกฤษ')
-            return errors
-        },
         firstNameErrors() {
             const errors = []
             if (!this.$v.firstName.$dirty) return errors
@@ -890,6 +944,14 @@ export default {
             return errors
         },
 
+        
+        genderErrors() {
+            const errors = []
+            if (!this.$v.gender.$dirty) return errors
+            !this.$v.gender.required && errors.push('กรุณาระบุเพศของนักเรียน')
+            return errors
+        },
+
         emailErrors() {
             const errors = []
             if (!this.$v.email.$dirty) return errors
@@ -902,7 +964,7 @@ export default {
             if (!this.$v.studentMobile.$dirty) return errors
             !this.$v.studentMobile.numeric && errors.push('กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข')
             !this.$v.studentMobile.minLength && errors.push('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง')
-            !this.$v.studentMobile.required && errors.push('กรุณากรอกเบอร์โทรศัพท์')
+          
             return errors
         },
         parentFirstNameErrors() {
@@ -994,10 +1056,7 @@ export default {
         trialMenu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
-        'firstNameEng': {
-            handler: 'updateUsername',
-            immediate: true,
-        },
+
         'selectedTambon': {
             handler: 'fetchAmphoe',
             immediate: true,
@@ -1198,14 +1257,14 @@ export default {
             this.$v.$touch()
 
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
-                && this.firstNameEngErrors == 0 && this.lastNameEngErrors == 0
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0
                 && this.nameErrors.length == 0 && this.studentMobileErrors.length == 0
-                && this.parentFirstNameErrors.length == 0 && this.parentMobileErrors.length == 0
+                && this.parentMobileErrors.length == 0  && this.schoolErrors.length == 0
                 && this.educationErrors.length == 0) {
                 console.log("Save");
                 this.registerStudent();
-            } else { console.log("errors save"); }
+            } else { console.log("errors save");
+            this.openSnackbar("error", 'ข้อมูลที่กรอกไม่ครบถ้วน '); }
         },
 
 
@@ -1217,17 +1276,7 @@ export default {
         },
 
 
-        updateUsername() {
-            if (this.firstNameEng) {
-                const num = this.studentId.slice(3);
-                this.name = this.firstNameEng + num;
-                this.password = this.firstNameEng + num;
-            }
-            else {
-                this.name = null;
-            }
 
-        },
         async registerStudent() {
             const db = this.$fireModule.database();
             const keyuser = this.encode(this.name);
@@ -1338,8 +1387,8 @@ export default {
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
-                            firstName:  childData[key].teacherId +' '+ childData[key].nickname ,
-                        
+                            firstName: childData[key].teacherId + ' ' + childData[key].nickname,
+
                         };
                         item.push({ teacher });
 
@@ -1376,10 +1425,18 @@ export default {
                     const nextId = `FSS${currentYear}${currentMonth}${String(nextNumericPart).padStart(4, '0')}`;
 
                     this.studentId = nextId;
+                    this.name = nextId;
 
 
                 }
             }
+        },
+
+        
+        openSnackbar(status, message) {
+            this.showSnackbar = true;
+            this.snackbarMessage = message;
+            this.snackbarColor = status;
         },
 
         async fetchProvince() {

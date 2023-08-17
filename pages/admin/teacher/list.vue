@@ -360,7 +360,7 @@ export default {
                 const selectedData = await Promise.all(selectedDataPromises);
 
                 const data = [this.selectedHeaders, ...selectedData];
-                console.log(selectedData);
+             
 
                 const createdAt = Timestamp.fromDate(new Date()).toDate().toISOString();
 
@@ -387,7 +387,7 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    console.log(childData[key])
+      
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {

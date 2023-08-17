@@ -1628,7 +1628,7 @@ export default {
             //     //updates.privateCourseHour = this.privateTotalHourInput;
             // }
 
-            console.log(updates)
+  
             await db.ref(`user/${this.userId}/`).update(updates);
 
             this.openSnackbar("success", 'แก้ไขชั่วโมงสำเร็จ!');

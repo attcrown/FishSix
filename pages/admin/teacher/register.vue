@@ -82,30 +82,13 @@
                                                         <v-icon v-on="on">mdi-help-circle-outline</v-icon>
                                                     </template>
                                                     <span>fs ตามด้วยเลข 4 หลัก
-                                                        <br>โดยเป็นตัวพิมพ์เล็กทั้งหมด</span>
+                                                       </span>
                                                 </v-tooltip>
                                             </template>
                                         </v-text-field>
 
                                     </v-col>
-                                    <v-col cols="4" class="py-0 ">
-                                        <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                            label="ชื่อ (ภาษาอังกฤษ)" :error-messages="firstNameEngErrors" required
-                                            v-on:keypress="isLetter($event)" @input="$v.firstNameEng.$touch()"
-                                            @blur="$v.firstNameEng.$touch()">
-                                        </v-text-field>
-                                    </v-col>
-                                    <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                            :error-messages="lastNameEngErrors" label="นามสกุล (ภาษาอังกฤษ)" required
-                                            v-on:keypress="isLetter($event)" @input="$v.lastNameEng.$touch()"
-                                            @blur="$v.lastNameEng.$touch()">
-                                        </v-text-field>
-                                    </v-col>
-                                    <v-col cols="4" class="py-0">
-
-                                    </v-col>
-                                    <v-col cols="4" class="py-0 ">
+                                     <v-col cols="4" class="py-0 ">
                                         <v-text-field class="black-label" name="firstName" v-model="firstName"
                                             label="ชื่อ (ภาษาไทย)" :error-messages="firstNameErrors" required
                                             @input="$v.firstName.$touch()" @blur="$v.firstName.$touch()">
@@ -120,17 +103,50 @@
                                     <v-col cols="4" class="py-0">
 
                                     </v-col>
+                                    <v-col cols="4" class="py-0 ">
+                                        <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                            label="ชื่อ (ภาษาอังกฤษ)" 
+                                            v-on:keypress="isLetter($event)" >
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                           label="นามสกุล (ภาษาอังกฤษ)" 
+                                            v-on:keypress="isLetter($event)">
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+
+                                    </v-col>
                                     <v-col cols="4" class="py-0">
                                         <v-text-field class="black-label" name="nickname" v-model="nickname"
-                                            label="ชื่อเล่น">
+                                            :error-messages="nicknameErrors" @input="$v.nickname.$touch()"
+                                            @blur="$v.nickname.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    ชื่อเล่น
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="5" class="py-0">
 
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-select class="black-label" v-model="gender" :items="genders"
-                                            label="เพศ"></v-select>
+                                        <v-select class="black-label" name="gender" v-model="gender"
+                                        :items="genders" :error-messages="genderErrors"
+                                        required @input="$v.gender.$touch()" @blur="$v.gender.$touch()">
+                                            <template v-slot:label>
+                                                <span>
+                                                    เพศ
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template></v-select>
                                     </v-col>
 
 
@@ -148,14 +164,32 @@
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-text-field class="black-label" v-model="mobile" :error-messages="mobileErrors"
-                                        label="เบอร์โทรศัพท์"  @input="$v.mobile.$touch()" counter
-                                        @blur="$v.mobile.$touch()">
+                                    <v-text-field class="black-label" v-model="mobile" :error-messages="mobileErrors" name="mobile"
+                                         @input="$v.mobile.$touch()" counter
+                                        @blur="$v.mobile.$touch()"
+                                        
+                                        >
+                                        <template v-slot:label>
+                                                <span>
+                                                    เบอร์โทรศัพท์
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
-                                    <v-text-field class="black-label" v-model="email" :error-messages="emailErrors"
+                                    <v-text-field class="black-label" v-model="email" :error-messages="emailErrors" name="email"
                                         label="Email"  @input="$v.email.$touch()" @blur="$v.email.$touch()">
+                                        <template v-slot:label>
+                                                <span>
+                                                    Email
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                     </v-text-field>
                                 </v-col>
 
@@ -271,13 +305,11 @@
                             <v-row>
                                 <v-col cols="4" class="py-0">
                                     <v-select class="black-label" v-model="contract" :items="contracts" label="สัญญาจ้าง"
-                                        multiple :error-messages="contractErrors" @change="$v.contract.$touch()"
-                                        @blur="$v.contract.$touch()" required></v-select>
+                                        multiple ></v-select>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
                                     <v-select class="black-label" v-model="workType" :items="workTypes"
-                                        label="ประเภทการทำงาน" :error-messages="workTypeErrors"
-                                        @change="$v.workType.$touch()" @blur="$v.workType.$touch()" required></v-select>
+                                        label="ประเภทการทำงาน" ></v-select>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
 
@@ -288,7 +320,7 @@
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field class="black-label" v-model="startDate" label="วันที่เริ่มงาน"
                                                 name="startDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                :rules="startDateRules" required v-on="on"></v-text-field>
+                                                :rules="startDateRules"  v-on="on"></v-text-field>
                                         </template>
                                         <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
                                             min="1950-01-01" @change="save"></v-date-picker>
@@ -298,12 +330,22 @@
                                 <v-col cols="4" class="py-0">
                                     <v-text-field class="black-label" name="rate" type="number" label="เรทค่าสอน/ชั่วโมง"
                                         min="0" max="99999" maxlength="5" oninput="validity.valid||(value='');"
-                                        :error-messages="rateErrors" @change="$v.rate.$touch()" @blur="$v.rate.$touch()"
+                                   
                                         v-model="rate"></v-text-field>
                                 </v-col>
                                 <v-col cols="4" class="py-0">
                                     <v-select class="black-label" v-model="classLocation" :items="locations"
-                                        item-value="key" label="สาขาที่สามารถสอนได้" item-text="name" multiple>
+                                        item-value="key"  item-text="name" multiple name="classLocation"   :error-messages="classLocationErrors"
+                                        @change="$v.classLocation.$touch()"
+                                        @blur="$v.classLocation.$touch()" required>
+                                        <template v-slot:label>
+                                                <span>
+                                                    สาขาที่สามารถสอนได้
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template>
                                     </v-select>
 
                                 </v-col>
@@ -321,8 +363,19 @@
                         <v-card-text>
                             <v-row>
                                 <v-col cols="3" class="py-0">
-                                    <v-text-field class="black-label" name="university" label="มหาวิทยาลัย"
-                                        v-model="university"></v-text-field>
+                                    <v-text-field class="black-label" name="university" label="มหาวิทยาลัย" 
+                                    :error-messages="universityErrors"
+                                        @change="$v.university.$touch()"
+                                        @blur="$v.university.$touch()" required
+                                        v-model="university">
+                                        <template v-slot:label>
+                                                <span>
+                                                    มหาวิทยาลัย
+                                                </span>
+                                                <span style="color:red;">
+                                                    *
+                                                </span>
+                                            </template></v-text-field>
                                 </v-col>
 
                                 <v-col cols="3" class="py-0">
@@ -337,8 +390,9 @@
 
                                 <div class="col-md-12">
                                     <label>
-                                        <span class="text-danger">*</span>
+                        
                                         <span>วิชาที่สอนได้</span>
+                                        <span class="text-danger">*</span>
                                     </label>
                                     <table class="table table-sm">
                                         <tbody>
@@ -428,7 +482,7 @@ export default {
             profilePic: null,
             teacherId: null,
             createdAt: null,
-            password: null,
+            password: 'FishsixTeacher',
             firstNameEng: null,
             name: null,
             lastNameEng: null,
@@ -527,19 +581,20 @@ export default {
         teacherId: { maxLength: maxLength(6), minLength: minLength(6) },
         name: { required, maxLength: maxLength(100), minLength: minLength(1) },
         password: { required, maxLength: maxLength(100), minLength: minLength(1) },
-        firstNameEng: { required },
-        lastNameEng: { required },
+      
         firstName: { required },
         lastName: { required },
+        nickname: { required },
+        gender: { required },
         email: { required, email },
         mobile: { required, minLength: minLength(9), numeric },
         idCardNumber: { required, minLength: minLength(13), maxLength: maxLength(13), numeric },
-        postal: { required, numeric },
-        contract: { required },
-        workType: { required },
-        classType: { required },
-        startDate: { required },
-        rate: { required },
+        postal: {  numeric },
+        
+        classLocation: { required },
+        university: { required },
+        
+     
 
 
         checkbox: {
@@ -586,24 +641,10 @@ export default {
             return errors
         },
 
-        firstNameEngErrors() {
-            const errors = []
-            if (!this.$v.firstNameEng.$dirty) return errors
-            !this.$v.firstNameEng.required && errors.push('กรุณาระบุชื่อผู้สอนเป็นภาษาอังกฤษ')
-            return errors
-        },
-
-        lastNameEngErrors() {
-            const errors = []
-            if (!this.$v.lastNameEng.$dirty) return errors
-            !this.$v.lastNameEng.required && errors.push('กรุณาระบุนามสกุลเป็นภาษาอังกฤษ')
-            return errors
-        },
-
         firstNameErrors() {
             const errors = []
             if (!this.$v.firstName.$dirty) return errors
-            !this.$v.firstName.required && errors.push('กรุณาระบุชื่อผู้สอน')
+            !this.$v.firstName.required && errors.push('กรุณาระบุชื่อจริงผู้สอน')
             return errors
         },
 
@@ -614,11 +655,26 @@ export default {
             return errors
         },
 
+        nicknameErrors() {
+            const errors = []
+            if (!this.$v.nickname.$dirty) return errors
+            !this.$v.nickname.required && errors.push('กรุณาระบุชื่อเล่น')
+            return errors
+        },
+
+        
+        genderErrors() {
+            const errors = []
+            if (!this.$v.gender.$dirty) return errors
+            !this.$v.gender.required && errors.push('กรุณาระบุเพศของผู้สอน')
+            return errors
+        },
+
         emailErrors() {
             const errors = []
             if (!this.$v.email.$dirty) return errors
             !this.$v.email.email && errors.push('Must be valid e-mail')
-         
+            !this.$v.email.required && errors.push('กรุณาระบุ e-mail ของผู้สอน')
             return errors
         },
         mobileErrors() {
@@ -626,7 +682,7 @@ export default {
             if (!this.$v.mobile.$dirty) return errors
             !this.$v.mobile.numeric && errors.push('กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข')
             !this.$v.mobile.minLength && errors.push('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง')
-           
+            !this.$v.mobile.required && errors.push('กรุณาระบุเบอร์โทรศัพท์ของผู้สอน')
             return errors
         },
         idCardNumberErrors() {
@@ -636,6 +692,13 @@ export default {
             !this.$v.idCardNumber.minLength && errors.push('กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง')
             !this.$v.idCardNumber.maxLength && errors.push('กรุณากรอกหมายเลขบัตรประชาชนให้ถูกต้อง')
     
+            return errors
+        },
+
+        classLocationErrors() {
+            const errors = []
+            if (!this.$v.classLocation.$dirty) return errors
+            !this.$v.classLocation.required && errors.push('กรุณาเลือกสถานที่สามารถสอนได้')
             return errors
         },
         contractErrors() {
@@ -651,16 +714,10 @@ export default {
             return errors
         },
 
-        classTypeErrors() {
+        universityErrors() {
             const errors = []
-            if (!this.$v.classType.$dirty) return errors
-            !this.$v.classType.required && errors.push('กรุณาเลือกประเภทคลาส')
-            return errors
-        },
-        rateErrors() {
-            const errors = []
-            if (!this.$v.rate.$dirty) return errors
-  
+            if (!this.$v.university.$dirty) return errors
+            !this.$v.university.required && errors.push('กรุณากรอกข้อมูลมหาวิทยาลัย')
             return errors
         },
 
@@ -677,10 +734,7 @@ export default {
         menu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
-        'firstNameEng': {
-            handler: 'updateUsername',
-            immediate: true,
-        },
+        
         'selectedTambon': {
             handler: 'fetchAmphoe',
             immediate: true,
@@ -773,14 +827,14 @@ export default {
             this.$v.$touch()
 
             if (this.emailErrors.length == 0 && this.passErrors.length == 0
-                && this.firstNameEngErrors == 0 && this.lastNameEngErrors == 0
+              
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0 && this.nameErrors == 0
                 && this.idErrors.length == 0 && this.mobileErrors.length == 0
-                && this.idCardNumberErrors.length == 0 && this.contractErrors.length == 0
-                && this.workTypeErrors.length == 0 && this.rateErrors.length == 0 && this.selectedSubjects != 0) {
+                && this.emailErrors.length == 0 && this.genderErrors.length == 0
+                && this.classLocationErrors.length == 0 && this.universityErrors.length == 0 && this.selectedSubjects != 0) {
                 console.log("Save");
                 this.registerTeacher();
-            } else { this.openSnackbar("error", 'เกิดข้อผิดพลาดในการบันทึก!'); }
+            } else {  this.openSnackbar("error", 'ข้อมูลที่กรอกไม่ครบถ้วน ');}
         },
 
         async registerTeacher() {
@@ -954,25 +1008,13 @@ export default {
                 const numericPart = parseInt(lastTeacherCode.slice(2), 10) + 1;
                 const nextId = `FS${String(numericPart).padStart(4, '0')}`;
                 this.teacherId = nextId;
-
+                this.name = nextId;
             }}
 
         },
 
 
-        updateUsername() {
-            if (this.firstNameEng) {
-                
-                const num = this.teacherId.slice(2);
-         
-                this.name = this.firstNameEng + num;
-                this.password = this.firstNameEng + num;
-            }
-            else {
-                this.name = null;
-            }
-
-        },
+   
         async fetchProvince() {
             if (this.selectedAmphoes) {
 
