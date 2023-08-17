@@ -39,7 +39,7 @@
                             </v-text-field>
 
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
-                                rounded @click="exportToExcel()">
+                                rounded @click="dialog_excel=true">
                                 Export
                                 <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>
@@ -248,6 +248,55 @@
             </template>
         </div>
 
+        <v-dialog v-model="dialog_excel" max-width="600px">
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 16px">
+                        <b>กรุณาเลือกข้อมูลที่ต้องการ Export</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="dialog_excel = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row no-gutters>
+                            <v-checkbox class="m-0" v-model="isExportAll" @change="check_excel()"
+                                label="ข้อมูลทั้งหมด"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[0]" label="วันที่" :disabled="isExportAll"
+                                value="วันที่"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[1]" label="เริ่มเรียน" :disabled="isExportAll"
+                                value="เริ่มเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[2]" label="เลิกเรียน" :disabled="isExportAll"
+                                value="เลิกเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[3]" label="รหัสครู" :disabled="isExportAll"
+                                value="รหัสครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[4]" label="ชื่อเล่นครู" :disabled="isExportAll"
+                                value="ชื่อเล่นครู"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[5]" label="รหัสนักเรียน"
+                                :disabled="isExportAll" value="รหัสนักเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[6]" label="ชื่อจริงน้อง"
+                                :disabled="isExportAll" value="ชื่อจริงน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[7]" label="นามสกุลน้อง"
+                                :disabled="isExportAll" value="นามสกุลน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[8]" label="ชื่อเล่นน้อง"
+                                :disabled="isExportAll" value="ชื่อเล่นน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[9]" label="วิชาที่เรียน"
+                                :disabled="isExportAll" value="วิชาที่เรียน"></v-checkbox>                            
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
+                <v-card-title style="margin-top: -20px;">
+                    <v-btn class="text-white" @click="exportToExcel()" color="green">ยืนยัน
+                        <v-icon color="white" small> mdi-content-save</v-icon>
+                    </v-btn>
+                </v-card-title>
+            </v-card>
+        </v-dialog>
 
     </div>
 </template>
@@ -259,6 +308,9 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 export default {
     data: () => ({
+        isExportAll:false,
+        selectedHeaders:[],
+        dialog_excel: false,
         date: null,
         menu: false,
         modal: false,
@@ -519,24 +571,184 @@ export default {
                 // console.log(this.desserts_student);
             });
         },
+        check_excel() {
+            if (this.isExportAll) {
+                this.selectedHeaders = ['วันที่','เริ่มเรียน','เลิกเรียน','รหัสครู','ชื่อเล่นครู','รหัสนักเรียน','ชื่อจริงน้อง','นามสกุลน้อง','ชื่อเล่นน้อง','วิชาที่เรียน']
+            } else { this.selectedHeaders = []; }
+        },
         exportToExcel() {
             // หัวข้อเอกสาร Excel
             let newdate = new Date().getFullYear()+' '+(parseInt(new Date().getMonth())+1)+' '+new Date().getDate();
-            const headers = [ 'วันที่','เริ่มเรียน','เลิกเรียน','รหัสครู','ชื่อเล่นครู','รหัสนักเรียน','ชื่อจริงน้อง','นามสกุลน้อง','ชื่อเล่นน้อง','วิชาที่เรียน'];
+            const headers = this.selectedHeaders;
 
             // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
-            const data = [headers, ...this.desserts_student.map(item => [
-                item.date,
-                item.time_s,
-                item.time_e,
-                item.teacherId,
-                item.teachernickname,
-                item.studentId,
-                item.namestu_first,
-                item.namestu_last,
-                item.nickname_stu,
-                item.name_subject,                
-            ])];
+            const data = [headers, ...this.desserts_student.map(item => {
+                const row = [];
+                if (this.isExportAll) {
+                    if (this.selectedHeaders[0]) {
+                        if (item.date) {
+                            row.push(item.date);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[1]) {
+                        if (item.time_s) {
+                            row.push(item.time_s);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[2]) {
+                        if (item.time_e) {
+                            row.push(item.time_e);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[3]) {
+                        if (item.teacherId) {
+                            row.push(item.teacherId);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[4]) {
+                        if (item.teachernickname) {
+                            row.push(item.teachernickname);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[5]) {
+                        if (item.studentId) {
+                            row.push(item.studentId);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[6]) {
+                        if (item.namestu_first) {
+                            row.push(item.namestu_first);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[7]) {
+                        if (item.namestu_last) {
+                            row.push(item.namestu_last);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[8]) {
+                        if (item.nickname_stu) {
+                            row.push(item.nickname_stu);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[9]) {
+                        if (item.name_subject) {
+                            row.push(item.name_subject);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                }else{
+                    if (this.selectedHeaders[0]) {
+                        if (item.date) {
+                            row.push(item.date);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[1]) {
+                        if (item.time_s) {
+                            row.push(item.time_s);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[2]) {
+                        if (item.time_e) {
+                            row.push(item.time_e);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[3]) {
+                        if (item.teacherId) {
+                            row.push(item.teacherId);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[4]) {
+                        if (item.teachernickname) {
+                            row.push(item.teachernickname);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[5]) {
+                        if (item.studentId) {
+                            row.push(item.studentId);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[6]) {
+                        if (item.namestu_first) {
+                            row.push(item.namestu_first);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[7]) {
+                        if (item.namestu_last) {
+                            row.push(item.namestu_last);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[8]) {
+                        if (item.nickname_stu) {
+                            row.push(item.nickname_stu);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[9]) {
+                        if (item.name_subject) {
+                            row.push(item.name_subject);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                }
+                return row;                               
+            })];
             console.log(data);
 
             // สร้างเอกสาร Excel
