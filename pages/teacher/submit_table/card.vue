@@ -34,7 +34,7 @@
             </div>
         </v-card>
         <!------------------------------------------------------------------------------------->
-        <v-row>
+        <v-row v-if="dash_notactive != 0">
             <v-col cols="12">
                 <v-card-group class="d-flex pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
@@ -111,7 +111,7 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row>
+        <v-row v-if="dash_active != 0">
             <v-col cols="12">
                 <v-card-group class="d-flex pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
@@ -188,7 +188,7 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row>
+        <v-row v-if="dash_noall != 0">
             <v-col cols="12">
                 <v-card-group class="d-flex pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
@@ -265,7 +265,7 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row>
+        <v-row v-if="dash_all != 0">
             <v-col cols="12">
                 <v-card-group class="d-flex pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
