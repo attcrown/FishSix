@@ -37,9 +37,9 @@
         <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
 
-      <v-btn icon to="/admin/basket" router exact>
+      <!-- <v-btn icon to="/admin/basket" router exact>
         <v-icon>mdi-logout</v-icon>
-      </v-btn>
+      </v-btn> -->
     </v-app-bar>
 
 
@@ -68,7 +68,22 @@ export default {
         {
           icon: 'mdi-home',
           title: 'หน้าหลัก',
-          to: '/teacher',
+          to: '/teacher/dashboard',
+        },
+        {
+          icon: 'mdi-alarm-light-outline',
+          title: 'คำร้องขอจองเวลาเรียน',
+          to: '/teacher/match',
+        },
+        {
+          icon: 'mdi-receipt-text-send-outline',
+          title: 'เช็คชื่อ/ส่งพัฒนาการ',
+          to: '/teacher/submit_table',
+        },
+        {
+          icon: 'mdi-table-account',
+          title: 'ตารางครู',
+          to: '/teacher/table',
         },
         {
           icon: 'mdi-account-circle ',

@@ -34,6 +34,7 @@ export default {
                 this.firstName = localStorage.getItem('firstName') || '';
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
+            this.$router.push("/teacher/dashboard");
         },
     },
 }
