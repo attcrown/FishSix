@@ -432,8 +432,7 @@ export default {
                 let end = null;
                 let edit = '';
                 if (this.search_date == 'Day') {
-                    end = now;
-                    console.log(now);
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);                    
                 } else if (this.search_date == 'Week') {
                     if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
                         edit = formattedDate.substring(0, 8) + 30;
@@ -453,7 +452,7 @@ export default {
                     end = new Date(edit);
                     now = new Date('2022-01-01');
                 } else {
-                    end = now;
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);
                 }
 
                 for (const key in childData) {
@@ -462,6 +461,7 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
+                            // console.log(new Date(date).getTime() , now.getTime() ,end.getTime() ,date);
                             if (new Date(date).getTime() >= now.getTime() &&
                                 new Date(date).getTime() <= end.getTime()) {
                                 for (const time in datedata) {
@@ -581,6 +581,7 @@ export default {
                                 }
                             }
                         } else {
+                            console.log(new Date(date).getTime() , new Date(this.date).getTime());
                             if (new Date(date).getTime() >= new Date(this.date).getTime() &&
                                 new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
