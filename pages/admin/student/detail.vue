@@ -892,8 +892,8 @@ export default {
                 { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
                 { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
                 { text: 'ครูที่สอน', value: 'classHistory.teacherName' },
-                { text: 'วิชาที่เรียน', value: 'classHistory.keySubject' },
-                { text: 'ระดับชั้น', value: 'classHistory.teacherName' },
+                { text: 'วิชาที่เรียน', value: 'classHistory.subject' },
+                { text: 'ระดับชั้น', value: 'classHistory.level' },
                 { text: 'ประเภท', value: 'classHistory.style' },
             ],
             //temporary
