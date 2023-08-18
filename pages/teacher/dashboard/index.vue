@@ -1,20 +1,18 @@
 <template>
     <div class="mx-10">
-        <dashboard></dashboard>        
+        <table_now></table_now>        
     </div>
 </template>
 <script>
-import dashboard from './dashboard.vue'
+import table_now from '~/pages/admin/table_now.vue';
 export default {
     layout: 'teacherNav',
     data() {
         return {
-            firstName: 'ไม่มี',
-            keyuser: 'ไม่มี',
         }
     },
     components: {
-        dashboard,
+        table_now,
     },    
 }
 

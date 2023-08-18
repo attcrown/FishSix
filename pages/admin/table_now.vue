@@ -15,7 +15,8 @@
                                         <v-text-field v-model="date" label="วันที่เรียน" prepend-icon="mdi-calendar"
                                             readonly v-bind="attrs" v-on="on" class="mt-10 ms-5"></v-text-field>
                                     </template>
-                                    <v-date-picker v-model="date" :events="arrayEvents" event-color="green lighten-1" no-title scrollable>
+                                    <v-date-picker v-model="date" :events="arrayEvents" event-color="green lighten-1"
+                                        no-title scrollable>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="menu = false">
                                             Cancel
@@ -39,7 +40,7 @@
                             </v-text-field>
 
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
-                                rounded @click="dialog_excel=true">
+                                rounded @click="dialog_excel = true" v-if="status == 'admin'">
                                 Export
                                 <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>
@@ -280,12 +281,12 @@
                                 :disabled="isExportAll" value="รหัสนักเรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[6]" label="ชื่อจริงน้อง"
                                 :disabled="isExportAll" value="ชื่อจริงน้อง"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[7]" label="นามสกุลน้อง"
-                                :disabled="isExportAll" value="นามสกุลน้อง"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[7]" label="นามสกุลน้อง" :disabled="isExportAll"
+                                value="นามสกุลน้อง"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[8]" label="ชื่อเล่นน้อง"
                                 :disabled="isExportAll" value="ชื่อเล่นน้อง"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[9]" label="วิชาที่เรียน"
-                                :disabled="isExportAll" value="วิชาที่เรียน"></v-checkbox>                            
+                                :disabled="isExportAll" value="วิชาที่เรียน"></v-checkbox>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -308,8 +309,11 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 export default {
     data: () => ({
-        isExportAll:false,
-        selectedHeaders:[],
+        keyuser: null,
+        status: null,
+
+        isExportAll: false,
+        selectedHeaders: [],
         dialog_excel: false,
         date: null,
         menu: false,
@@ -366,13 +370,25 @@ export default {
             val || this.closeDelete()
         },
     },
-
+    mounted() {
+        this.fullName();
+    },
     created() {
         this.search_date_student();
         this.arrayEvent_search();
     },
 
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status') || '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status') || '';
+            }
+            console.log(">>>>>", this.keyuser, this.status);
+        },
         search_date_input() {
             this.search_date_student();
         },
@@ -411,13 +427,12 @@ export default {
                 const childData = snapshot.val();
                 this.desserts_student = [];
                 let item = [];
-                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 const formattedDate = now.toISOString().split('T')[0];
                 let end = null;
                 let edit = '';
                 if (this.search_date == 'Day') {
-                    end = now;
-                    console.log(now);
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);                    
                 } else if (this.search_date == 'Week') {
                     if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
                         edit = formattedDate.substring(0, 8) + 30;
@@ -437,7 +452,7 @@ export default {
                     end = new Date(edit);
                     now = new Date('2022-01-01');
                 } else {
-                    end = now;
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);
                 }
 
                 for (const key in childData) {
@@ -446,122 +461,237 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
+                            // console.log(new Date(date).getTime() , now.getTime() ,end.getTime() ,date);
                             if (new Date(date).getTime() >= now.getTime() &&
                                 new Date(date).getTime() <= end.getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
-                                    const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                    const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                    Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-                                        .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-                                            const teacherData = teacherSnapshot.val();
-                                            const studentData = studentSnapshot.val();
-                                            const subjectData = subjectSnapshot.val();
-                                            const locationData = locationSnapshot.val();
-                                            item.push({
-                                                nametea_first: teacherData.firstName,
-                                                nametea_last: teacherData.lastName,
-                                                nickname_tea: teacherData.nickname,
-                                                namestu_first: studentData.firstName,
-                                                namestu_last: studentData.lastName,
-                                                nickname_stu: studentData.nickname,
-                                                name_student: studentData.studentId+" น้อง"+ studentData.nickname + " " + studentData.firstName,
-                                                name: teacherData.teacherId+" ครู"+teacherData.nickname,
-                                                teacherId:teacherData.teacherId,
-                                                studentId: studentData.studentId,
-                                                teachernickname: teacherData.nickname,
-                                                subject: timedata.subject,
-                                                name_subject: subjectData.name,
-                                                date: date,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: timedata.style_subject,
-                                                name_style: locationData.name,
-                                                status: timedata.status,
-                                                key_student: key,
-                                                key_teacher: timedata.teacher,
-                                                phone_student: studentData.studentMobile,
-                                                phone_teacher: teacherData.mobile,
-                                                // class: timedata.class,
-                                                level: timedata.level,
-                                                because: timedata.because,
+                                    if (this.status == 'admin') {
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                                    teacherId: teacherData.teacherId,
+                                                    studentId: studentData.studentId,
+                                                    teachernickname: teacherData.nickname,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
                                             });
-                                            this.dash_all += 1;
-                                            if (timedata.status === 'พร้อมเรียน') {
-                                                this.dash_active += 1;
-                                            } else if (timedata.status === 'รอยืนยัน') {
-                                                this.dash_notactive += 1;
-                                            } else {
-                                                console.log('Error', timedata.status);
-                                            }
-                                            // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-                                            if (item.length === Object.keys(datedata).length) {
-                                                this.desserts_student = item;
-                                            }
-                                        })
-                                        .catch((error) => {
-                                            alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-                                        });
+                                    } else if (this.status == 'teacher' && this.keyuser == timedata.teacher) {
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                                    teacherId: teacherData.teacherId,
+                                                    studentId: studentData.studentId,
+                                                    teachernickname: teacherData.nickname,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                            });
+                                    }
+
                                 }
                             }
                         } else {
+                            console.log(new Date(date).getTime() , new Date(this.date).getTime());
                             if (new Date(date).getTime() >= new Date(this.date).getTime() &&
                                 new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
-                                    const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                    const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                    Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-                                        .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-                                            const teacherData = teacherSnapshot.val();
-                                            const studentData = studentSnapshot.val();
-                                            const subjectData = subjectSnapshot.val();
-                                            const locationData = locationSnapshot.val();
-                                            item.push({
-                                                nametea_first: teacherData.firstName,
-                                                nametea_last: teacherData.lastName,
-                                                nickname_tea: teacherData.nickname,
-                                                namestu_first: studentData.firstName,
-                                                namestu_last: studentData.lastName,
-                                                nickname_stu: studentData.nickname,
-                                                name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
-                                                name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
-                                                subject: timedata.subject,
-                                                name_subject: subjectData.name,
-                                                date: date,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: timedata.style_subject,
-                                                name_style: locationData.name,
-                                                status: timedata.status,
-                                                key_student: key,
-                                                key_teacher: timedata.teacher,
-                                                phone_student: studentData.studentMobile,
-                                                phone_teacher: teacherData.mobile,
-                                                // class: timedata.class,
-                                                level: timedata.level,
-                                                because: timedata.because,
+                                    if (this.status == 'admin') {
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
                                             });
-                                            this.dash_all += 1;
-                                            if (timedata.status === 'พร้อมเรียน') {
-                                                this.dash_active += 1;
-                                            } else if (timedata.status === 'รอยืนยัน') {
-                                                this.dash_notactive += 1;
-                                            } else {
-                                                console.log('Error', timedata.status);
-                                            }
-                                            // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-                                            if (item.length === Object.keys(datedata).length) {
-                                                this.desserts_student = item;
-                                            }
-                                        })
-                                        .catch((error) => {
-                                            alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-                                        });
+                                    } else if (this.status == 'teacher' && this.keyuser == timedata.teacher) {
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                            });
+                                    }
+
                                 }
                             }
                         }
@@ -573,12 +703,12 @@ export default {
         },
         check_excel() {
             if (this.isExportAll) {
-                this.selectedHeaders = ['วันที่','เริ่มเรียน','เลิกเรียน','รหัสครู','ชื่อเล่นครู','รหัสนักเรียน','ชื่อจริงน้อง','นามสกุลน้อง','ชื่อเล่นน้อง','วิชาที่เรียน']
+                this.selectedHeaders = ['วันที่', 'เริ่มเรียน', 'เลิกเรียน', 'รหัสครู', 'ชื่อเล่นครู', 'รหัสนักเรียน', 'ชื่อจริงน้อง', 'นามสกุลน้อง', 'ชื่อเล่นน้อง', 'วิชาที่เรียน']
             } else { this.selectedHeaders = []; }
         },
         exportToExcel() {
             // หัวข้อเอกสาร Excel
-            let newdate = new Date().getFullYear()+' '+(parseInt(new Date().getMonth())+1)+' '+new Date().getDate();
+            let newdate = new Date().getFullYear() + ' ' + (parseInt(new Date().getMonth()) + 1) + ' ' + new Date().getDate();
             const headers = this.selectedHeaders;
 
             // แปลง this.desserts_student เป็นอาร์เรย์ของอาร์เรย์ (array of arrays) และเพิ่มหัวข้อไว้ด้านบน
@@ -655,7 +785,7 @@ export default {
                             row.push("");
                         }
                     }
-                }else{
+                } else {
                     if (this.selectedHeaders[0]) {
                         if (item.date) {
                             row.push(item.date);
@@ -747,7 +877,7 @@ export default {
                         row.push("");
                     }
                 }
-                return row;                               
+                return row;
             })];
             console.log(data);
 

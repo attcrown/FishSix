@@ -27,7 +27,7 @@
 
                 <v-spacer></v-spacer>
                 <v-btn elevation="10" color="#322E2B" class="me-5 mt-3" style="color:white" :disabled="!formIsValid"
-                    type="submit" @click="dialog_excel = true" rounded>Export<span
+                    type="submit" @click="dialog_excel = true" rounded v-if="status != 'teacher'">Export<span
                         class="mdi mdi-microsoft-excel text-h6"></span></v-btn>
 
 
@@ -729,6 +729,8 @@ import { saveAs } from 'file-saver';
 export default {
     data() {
         return {
+            keyuser:null,
+            status:null,
             checkname: false,
             checkname1: false,
             checkname2: false,
@@ -817,6 +819,7 @@ export default {
         }
     },
     mounted() {
+        this.fullName();
         this.search_date_teacher();
         this.arrayEvent_search();
     },
@@ -890,6 +893,16 @@ export default {
     },
 
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status')|| '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status')|| '';
+            }
+            console.log(">>>>>", this.keyuser,this.status);
+        },
         validate() {
             if (this.$refs.form.validate()) {
                 this.upload();
@@ -1220,7 +1233,143 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (true){
+                            if (this.status == "teacher" && this.keyuser == timedata.teacher){
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
+                                    .then((snapshots) => {
+                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                        const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                                        const sendplanSnapshot = snapshots[4];
+
+                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const locationData = locationSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const sendplanData = sendplanSnapshot.val();
+
+                                        const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                        const namestu = `${studentData.nickname} (${studentData.firstName})`;
+                                        const namesub = subjectData.name;
+                                        if (timedata.status === "พร้อมเรียน" && date === this.date) {
+                                            if (sendplanData) {
+                                                if (sendplanData.status_development === 'Approved') {
+                                                    this.dash_all++;
+                                                    item.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                } else if (sendplanData.status_development == 'Pending'
+                                                    || sendplanData.status_development == 'Rejected'
+                                                    || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                    this.dash_noall++;
+                                                    item1.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                    this.dash_active++;
+                                                    item2.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                }
+                                            }
+                                            else if (!sendplanData?.Idsendplan) {
+                                                this.dash_notactive++;
+                                                item3.push({
+                                                    level: timedata.level,
+                                                    name: nametea,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: locationData.name,
+                                                    keystyle: timedata.style_subject,
+                                                    subject: namesub,
+                                                    keySubject: timedata.subject,
+                                                    keyStudent: key,
+                                                    keyTeacher: timedata.teacher,
+                                                    studentId: studentData.studentId,
+                                                    teacherId: teacherData.teacherId,
+                                                    namestu: namestu,
+                                                    sendplan: timedata.sendplan,
+                                                    because: timedata.because,
+                                                    Idsendplan: timedata.Idsendplan,
+                                                    match_test: timedata.match_test,
+                                                    hour: timedata.hour,
+                                                    sendplanAll: sendplanData,
+                                                    teacherAll: teacherData,
+                                                    studentAll: studentData
+                                                });
+                                            }
+                                        }
+                                    })
+                            }else if(this.status == 'admin'){
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -1397,7 +1546,145 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                if (true) {
+                                if (this.status == "teacher" && this.keyuser == timedata.teacher) {
+                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                    const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
+                                    Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
+                                        .then((snapshots) => {
+                                            const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                            const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                            const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                            const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                                            const sendplanSnapshot = snapshots[4];
+
+                                            const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const locationData = locationSnapshot.val();
+                                            const studentData = studentSnapshot.val();
+                                            const sendplanData = sendplanSnapshot.val();
+
+                                            const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                            const namestu = `${studentData.nickname} (${studentData.firstName})`;
+                                            const namesub = subjectData.name;
+                                            if (timedata.status === "พร้อมเรียน") {
+                                                // this.arrayEvents.push(date);
+                                                if (sendplanData) {
+                                                    if (sendplanData.status_development === 'Approved') {
+                                                        this.dash_all++;
+                                                        item.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    } else if (sendplanData.status_development == 'Pending'
+                                                        || sendplanData.status_development == 'Rejected'
+                                                        || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                        this.dash_noall++;
+                                                        item1.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                        this.dash_active++;
+                                                        item2.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    }
+                                                }
+
+                                                else if (!sendplanData?.Idsendplan) {
+                                                    this.dash_notactive++;
+                                                    item3.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                }
+                                            }
+                                        })
+                                }else if(this.status == 'admin'){
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

@@ -203,6 +203,8 @@
 import { Timestamp } from "firebase/firestore";
 export default {
     data: () => ({
+        keyuser: null,
+        status: null,
         valid: false,
         form: [],
         check_tea: true,
@@ -299,11 +301,22 @@ export default {
     },
 
     mounted() {
+        this.fullName();
         this.search_date_teacher();
         this.search_teacher();
     },
 
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status') || '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status') || '';
+            }
+            console.log(">>>>>", this.keyuser, this.status);
+        },
         validateTime() {
             if (true) {//this.picker_stop == null) {
                 this.time_standart_stop = [];
@@ -511,42 +524,82 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
-                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
-                                    .then((snapshots) => {
-                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
-                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
-                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                if (this.status == 'admin') {
+                                    const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                    const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
+                                        .then((snapshots) => {
+                                            const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                            const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                            const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
 
-                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                        const locationData = locationSnapshot.val();
+                                            const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const locationData = locationSnapshot.val();
 
-                                        const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
-                                        const namesub = subjectData.name;
-                                        if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
-                                            item.push({
-                                                userid: teacherData.teacherId,
-                                                name: nametea,
-                                                date: date,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: locationData.name,
-                                                keystyle: timedata.style_subject,
-                                                // class: timedata.class,
-                                                subject: namesub,
-                                                keySubject: timedata.subject,
-                                                people: timedata.sum_people,
-                                                sum_people: timedata.invite + "/" + timedata.sum_people,
-                                                invite: timedata.invite,
-                                                key: key,
-                                                IdTime: timedata.ID,
-                                            });
-                                            this.arrayEvents.push(date);
-                                        } else { }
-                                    })
+                                            const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                            const namesub = subjectData.name;
+                                            if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
+                                                item.push({
+                                                    userid: teacherData.teacherId,
+                                                    name: nametea,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: locationData.name,
+                                                    keystyle: timedata.style_subject,
+                                                    // class: timedata.class,
+                                                    subject: namesub,
+                                                    keySubject: timedata.subject,
+                                                    people: timedata.sum_people,
+                                                    sum_people: timedata.invite + "/" + timedata.sum_people,
+                                                    invite: timedata.invite,
+                                                    key: key,
+                                                    IdTime: timedata.ID,
+                                                });
+                                                this.arrayEvents.push(date);
+                                            }
+                                        })
+                                } else if (this.status == 'teacher' && this.keyuser == key) {
+                                    const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                    const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
+                                        .then((snapshots) => {
+                                            const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                            const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                            const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+
+                                            const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const locationData = locationSnapshot.val();
+
+                                            const nametea = `ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                            const namesub = subjectData.name;
+                                            if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
+                                                item.push({
+                                                    userid: teacherData.teacherId,
+                                                    name: nametea,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: locationData.name,
+                                                    keystyle: timedata.style_subject,
+                                                    // class: timedata.class,
+                                                    subject: namesub,
+                                                    keySubject: timedata.subject,
+                                                    people: timedata.sum_people,
+                                                    sum_people: timedata.invite + "/" + timedata.sum_people,
+                                                    invite: timedata.invite,
+                                                    key: key,
+                                                    IdTime: timedata.ID,
+                                                });
+                                                this.arrayEvents.push(date);
+                                            }
+                                        })
+                                }
+
                             }
                         }
                     }

@@ -144,7 +144,7 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-btn text icon elevation="5" @click="editItem(item)">
+                    <v-btn text icon elevation="5" @click="editItem(item)" v-if="status == 'admin'">
                         <v-icon class="text-h5" color="#AD382F">
                             mdi-delete
                         </v-icon>
@@ -163,6 +163,8 @@
 <script>
 export default {
     data: () => ({
+        keyuser: null,
+        status: null,
         search: '',
         dialog: false,
         dialogDelete: false,
@@ -219,10 +221,21 @@ export default {
     },
 
     mounted() {
+        this.fullName();
         this.initialize();
     },
 
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status') || '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status') || '';
+            }
+            console.log(">>>>>", this.keyuser, this.status);
+        },
         initialize() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
@@ -235,7 +248,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
+                            if (this.status == 'admin' && timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -263,7 +276,45 @@ export default {
                                             key_teacher: timedata.teacher,
                                             phone_student: studentData.studentMobile,
                                             phone_teacher: teacherData.mobile,
-                                            match_test:timedata.match_test,
+                                            match_test: timedata.match_test,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                            id: timedata.ID,
+                                            hour: timedata.hour
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        alert("active เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                    });
+                            } else if (this.status == 'teacher' && this.keyuser == timedata.teacher && timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                        const teacherData = teacherSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const subjectData = subjectSnapshot.val();
+                                        const locationData = locationSnapshot.val();
+                                        item.push({
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: date,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            time_s_tea: timedata.start_tea,
+                                            time_e_tea: timedata.stop_tea,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            match_test: timedata.match_test,
                                             level: timedata.level,
                                             because: timedata.because,
                                             id: timedata.ID,
@@ -290,7 +341,7 @@ export default {
         },
 
 
-        deleteItemConfirm() {            
+        deleteItemConfirm() {
             this.delete_match()
             this.closeDelete()
         },
@@ -331,11 +382,11 @@ export default {
                 sum = childData - 1;
             })
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_e_tea}`).update({
-                invite : sum
-            }); 
+                invite: sum
+            });
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
 
-            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {                
+            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {
                 db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.key_student}`).update({
@@ -396,3 +447,21 @@ export default {
     },
 }
 </script>
+<style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+
+.fonts500 {
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 500;
+}
+
+.fonts300 {
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 300;
+}
+</style>

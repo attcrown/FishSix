@@ -17,7 +17,6 @@ const _413b22ab = () => interopDefault(import('..\\pages\\testimportExcel.vue' /
 const _824854dc = () => interopDefault(import('..\\pages\\user\\index.vue' /* webpackChunkName: "pages/user/index" */))
 const _00845de9 = () => interopDefault(import('..\\pages\\admin\\candidate\\index.vue' /* webpackChunkName: "pages/admin/candidate/index" */))
 const _411899b3 = () => interopDefault(import('..\\pages\\admin\\content\\index.vue' /* webpackChunkName: "pages/admin/content/index" */))
-const _0899110a = () => interopDefault(import('..\\pages\\admin\\dashboard.vue' /* webpackChunkName: "pages/admin/dashboard" */))
 const _33c92baa = () => interopDefault(import('..\\pages\\admin\\matching\\index.vue' /* webpackChunkName: "pages/admin/matching/index" */))
 const _aa63029e = () => interopDefault(import('..\\pages\\admin\\student\\index.vue' /* webpackChunkName: "pages/admin/student/index" */))
 const _19281b20 = () => interopDefault(import('..\\pages\\admin\\subject\\index.vue' /* webpackChunkName: "pages/admin/subject/index" */))
@@ -35,7 +34,6 @@ const _7a1dd6a9 = () => interopDefault(import('..\\pages\\user\\content\\index.v
 const _d3c3390e = () => interopDefault(import('..\\pages\\user\\profile\\index.vue' /* webpackChunkName: "pages/user/profile/index" */))
 const _5eba2398 = () => interopDefault(import('..\\pages\\user\\table\\index.vue' /* webpackChunkName: "pages/user/table/index" */))
 const _7a4dac40 = () => interopDefault(import('..\\pages\\admin\\content\\detail.vue' /* webpackChunkName: "pages/admin/content/detail" */))
-const _ab0c1916 = () => interopDefault(import('..\\pages\\admin\\matching\\calendar.vue' /* webpackChunkName: "pages/admin/matching/calendar" */))
 const _936f8e64 = () => interopDefault(import('..\\pages\\admin\\matching\\table_active.vue' /* webpackChunkName: "pages/admin/matching/table_active" */))
 const _7939bca6 = () => interopDefault(import('..\\pages\\admin\\matching\\table_match.vue' /* webpackChunkName: "pages/admin/matching/table_match" */))
 const _e01a3456 = () => interopDefault(import('..\\pages\\admin\\register-teacher\\register.vue' /* webpackChunkName: "pages/admin/register-teacher/register" */))
@@ -54,13 +52,6 @@ const _d4a9810e = () => interopDefault(import('..\\pages\\admin\\table_user\\tab
 const _bd4923ae = () => interopDefault(import('..\\pages\\admin\\teacher\\detail.vue' /* webpackChunkName: "pages/admin/teacher/detail" */))
 const _44e1f014 = () => interopDefault(import('..\\pages\\admin\\teacher\\list.vue' /* webpackChunkName: "pages/admin/teacher/list" */))
 const _71d81b7b = () => interopDefault(import('..\\pages\\admin\\teacher\\register.vue' /* webpackChunkName: "pages/admin/teacher/register" */))
-const _5a1abc0d = () => interopDefault(import('..\\pages\\teacher\\dashboard\\dashboard.vue' /* webpackChunkName: "pages/teacher/dashboard/dashboard" */))
-const _41261d9f = () => interopDefault(import('..\\pages\\teacher\\match\\table_active.vue' /* webpackChunkName: "pages/teacher/match/table_active" */))
-const _43bcdebc = () => interopDefault(import('..\\pages\\teacher\\match\\table_match.vue' /* webpackChunkName: "pages/teacher/match/table_match" */))
-const _65f20c04 = () => interopDefault(import('..\\pages\\teacher\\submit_table\\card.vue' /* webpackChunkName: "pages/teacher/submit_table/card" */))
-const _d1423360 = () => interopDefault(import('..\\pages\\teacher\\submit_table\\dashboard.vue' /* webpackChunkName: "pages/teacher/submit_table/dashboard" */))
-const _0daa870f = () => interopDefault(import('..\\pages\\teacher\\table\\calendar.vue' /* webpackChunkName: "pages/teacher/table/calendar" */))
-const _119703c4 = () => interopDefault(import('..\\pages\\teacher\\table\\table_tea.vue' /* webpackChunkName: "pages/teacher/table/table_tea" */))
 const _1a9806cc = () => interopDefault(import('..\\pages\\user\\table\\calendar.vue' /* webpackChunkName: "pages/user/table/calendar" */))
 const _07f55806 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -127,10 +118,6 @@ export const routerOptions = {
     path: "/admin/content",
     component: _411899b3,
     name: "admin-content"
-  }, {
-    path: "/admin/dashboard",
-    component: _0899110a,
-    name: "admin-dashboard"
   }, {
     path: "/admin/matching",
     component: _33c92baa,
@@ -199,10 +186,6 @@ export const routerOptions = {
     path: "/admin/content/detail",
     component: _7a4dac40,
     name: "admin-content-detail"
-  }, {
-    path: "/admin/matching/calendar",
-    component: _ab0c1916,
-    name: "admin-matching-calendar"
   }, {
     path: "/admin/matching/table_active",
     component: _936f8e64,
@@ -275,34 +258,6 @@ export const routerOptions = {
     path: "/admin/teacher/register",
     component: _71d81b7b,
     name: "admin-teacher-register"
-  }, {
-    path: "/teacher/dashboard/dashboard",
-    component: _5a1abc0d,
-    name: "teacher-dashboard-dashboard"
-  }, {
-    path: "/teacher/match/table_active",
-    component: _41261d9f,
-    name: "teacher-match-table_active"
-  }, {
-    path: "/teacher/match/table_match",
-    component: _43bcdebc,
-    name: "teacher-match-table_match"
-  }, {
-    path: "/teacher/submit_table/card",
-    component: _65f20c04,
-    name: "teacher-submit_table-card"
-  }, {
-    path: "/teacher/submit_table/dashboard",
-    component: _d1423360,
-    name: "teacher-submit_table-dashboard"
-  }, {
-    path: "/teacher/table/calendar",
-    component: _0daa870f,
-    name: "teacher-table-calendar"
-  }, {
-    path: "/teacher/table/table_tea",
-    component: _119703c4,
-    name: "teacher-table-table_tea"
   }, {
     path: "/user/table/calendar",
     component: _1a9806cc,
