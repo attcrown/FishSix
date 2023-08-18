@@ -139,7 +139,7 @@
                                                             prepend-icon="mdi-calendar" readonly v-bind="attrs"
                                                             v-on="on"></v-text-field>
                                                     </template>
-                                                    <v-date-picker v-model="date" no-title scrollable>
+                                                    <v-date-picker v-model="date" no-title scrollable :readonly="status != 'admin'">
                                                         <v-spacer></v-spacer>
                                                         <v-btn text color="primary" @click="menu = false">
                                                             Cancel
@@ -154,24 +154,24 @@
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart" v-model="editedItem.time_s"
                                                     label="เวลาเริ่มต้น"
-                                                    @change="validateTime(), editedItem.time_e = null"></v-select>
+                                                    @change="validateTime(), editedItem.time_e = null" :readonly="status != 'admin'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart_stop" v-model="editedItem.time_e"
-                                                    @change="validateTime()" label="เวลาสิ้นสุด"></v-select>
+                                                    @change="validateTime()" label="เวลาสิ้นสุด" :readonly="status != 'admin'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
-                                                    v-model="editedItem.style" item-text="name" item-value="key"></v-select>
+                                                    v-model="editedItem.style" item-text="name" item-value="key" :readonly="status != 'admin'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
                                                     item-value="key" v-model="editedItem.subject"
-                                                    @input="search_select_level(editedItem.subject), editedItem.level = null"></v-select>
+                                                    @input="search_select_level(editedItem.subject), editedItem.level = null" :readonly="status != 'admin'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_level" label="ระดับชั้น"
-                                                    v-model="editedItem.level">
+                                                    v-model="editedItem.level" :readonly="status != 'admin'">
                                                 </v-select>
                                             </v-col>
                                         </v-row>
@@ -284,6 +284,8 @@
 <script>
 export default {
     data: () => ({
+        keyuser: null,
+        status: null,
         focus: '',
         type: 'week',
         typeToLabel: {
@@ -385,11 +387,22 @@ export default {
     },
 
     mounted() {
+        this.fullName();
         this.initialize();
         this.$refs.calendar.checkChange();
     },
 
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status') || '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status') || '';
+            }
+            console.log(">>>>>", this.keyuser, this.status);
+        },
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
@@ -448,7 +461,67 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (timedata.status == 'รอยืนยัน') {
+                            if (this.status == 'admin' && timedata.status == 'รอยืนยัน') {
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                        const teacherData = teacherSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const subjectData = subjectSnapshot.val();
+                                        const locationData = locationSnapshot.val();
+                                        let sumx_date = "-";
+                                        if (timedata.createAt) {
+                                            let sum_date = new Date(timedata.createAt).toString().split(" ");
+                                            sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
+                                        }
+                                        item.push({
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: date,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            time_s_tea: timedata.start_tea,
+                                            time_e_tea: timedata.stop_tea,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            // class: timedata.class,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                            id: timedata.ID,
+                                            createAt: sumx_date,
+                                            match_test: timedata.match_test,
+                                            hour: timedata.hour
+                                        });
+                                        this.events.push(
+                                            {
+                                                array: index,
+                                                name: subjectData.name,
+                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.start.substring(0, 2),
+                                                    timedata.start.substring(3, 5)),
+                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                    timedata.stop.substring(3, 5)),
+                                                color: this.getRandomColor(),
+                                                timed: true,
+                                            }
+                                        );
+                                        index++;
+                                    })
+                                    .catch((error) => {
+                                        alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);
+                                    });
+                            } else if (this.status == 'teacher' && this.keyuser == timedata.teacher && timedata.status == 'รอยืนยัน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -667,11 +740,11 @@ export default {
 
                         let keystudent = this.old_item;
                         let keystudent_new = this.editedItem;
-                        console.log('>>>>>',keystudent_new.name_style.includes("Flip") , !keystudent_new.match_test);
+                        console.log('>>>>>', keystudent_new.name_style.includes("Flip"), !keystudent_new.match_test);
                         if (keystudent_new.name_style.includes("Flip") && !keystudent_new.match_test) {
                             db.ref(`hour_match/${keystudent_new.key_student}`).once("value", (snapshot) => {
                                 const childData = snapshot.val();
-                                console.log(childData.hour , keystudent.hour , keystudent_new.hour);
+                                console.log(childData.hour, keystudent.hour, keystudent_new.hour);
                                 db.ref(`hour_match/${keystudent.key_student}`).update({
                                     hour: (childData.hour - keystudent.hour) + sum_hour,
                                 });
@@ -710,16 +783,16 @@ export default {
             const db = this.$fireModule.database();
             let keystudent = this.editedItem;
             let olditem = this.old_item;
-            if(!(this.editedItem.ID != id)){
+            if (!(this.editedItem.ID != id)) {
                 db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
-                .then(() => {
-                    console.log("success del");
-                });
+                    .then(() => {
+                        console.log("success del");
+                    });
             }
-            
+
             db.ref(`Time_student/${olditem.key_student}/${olditem.date}`).once("value", (snapshot) => {
                 const childData = snapshot.val();
-                console.log('sssss',childData);
+                console.log('sssss', childData);
                 for (const key in childData) {
                     const detail = key.split(":");
                     if (detail[4] == olditem.id) {
@@ -789,3 +862,21 @@ export default {
     },
 }
 </script>
+<style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+
+.fonts500 {
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 500;
+}
+
+.fonts300 {
+    font-family: 'Prompt', sans-serif;
+    /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
+    font-weight: 300;
+}
+</style>

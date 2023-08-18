@@ -121,7 +121,7 @@ export default {
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
-          this.keyuser = sessionStorage.getItem('lastName');
+          this.keyuser = localStorage.getItem('lastName');
         }
       }
     },

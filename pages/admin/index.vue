@@ -1,12 +1,10 @@
 <template>
   <div class="mx-10">
-    <!-- <dashboard></dashboard> -->
     <table_now></table_now>
   </div>
 </template>
   
 <script>
-// import dashboard from './dashboard.vue';
 import table_now from './table_now.vue';
 
 export default {
@@ -17,7 +15,6 @@ export default {
   },
 
   components: {
-    // dashboard,
     table_now,
   },
   created(){

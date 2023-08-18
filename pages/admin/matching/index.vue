@@ -1,6 +1,5 @@
 <template>
-    <div class="mx-16">
-        <!-- <calendar hidden></calendar> -->
+    <div class="mx-16">        
         <tablematch></tablematch>
         <tableactive></tableactive>
     </div>
@@ -8,7 +7,6 @@
     
 <script>
 import tablematch from './table_match.vue';
-import calendar from './calendar.vue';
 import tableactive from './table_active.vue';
 export default {
     data() {
@@ -19,7 +17,6 @@ export default {
 
     components: {
         tablematch,
-        // calendar,
         tableactive
     },
     mounted() {

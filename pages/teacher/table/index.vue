@@ -5,8 +5,8 @@
     </div>
 </template>
 <script>
-import calendar from './calendar.vue';
-import table_tea from './table_tea.vue';
+import calendar from '~/pages/admin/table_teacher/calendar.vue';
+import table_tea from '~/pages/admin/table_teacher/table_tea.vue';
     export default {
         layout: 'teacherNav',
         components:{

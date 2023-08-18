@@ -4,7 +4,7 @@
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
-                        <v-toolbar flat style="background-color:#AD382F;"  class="rounded-t-xl elevation-16">
+                        <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
                             <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
                                 Today
                             </v-btn>
@@ -61,8 +61,8 @@
                                     <v-btn icon>
                                         <v-icon>mdi-pencil</v-icon>
                                     </v-btn> -->
-                                    <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
-                                    <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                        <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                                     <v-spacer></v-spacer>
                                     <v-btn icon>
                                         <v-icon>mdi-heart</v-icon>
@@ -91,6 +91,8 @@
 <script>
 export default {
     data: () => ({
+        keyuser: null,
+        status: null,
         focus: '',
         type: 'week',
         typeToLabel: {
@@ -106,10 +108,21 @@ export default {
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted() {
+        this.fullName();
         this.search_date_teacher();
         this.$refs.calendar.checkChange();
     },
     methods: {
+        fullName() {
+            if (localStorage.getItem('firstName') == null) {
+                this.keyuser = sessionStorage.getItem('lastName') || '';
+                this.status = sessionStorage.getItem('status') || '';
+            } else {
+                this.keyuser = localStorage.getItem('lastName') || '';
+                this.status = localStorage.getItem('status') || '';
+            }
+            console.log(">>>>>", this.keyuser, this.status);
+        },
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
@@ -154,19 +167,18 @@ export default {
             db.ref(`date_teacher/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.events = [];
-                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`);
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (true){//new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5)) {
-                            const datedata = keydata[date];
-                            for (const time in datedata) {
-                                const timedata = datedata[time];
-                                // console.log(timedata);
+                        const datedata = keydata[date];
+                        for (const time in datedata) {
+                            const timedata = datedata[time];
+                            if (this.status == 'admin') {
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
-                                Promise.all([getSubjectPromise ,getTeacherPromise])
-                                    .then(([subjectSnapshot , teacherSnapshot]) => {
+                                Promise.all([getSubjectPromise, getTeacherPromise])
+                                    .then(([subjectSnapshot, teacherSnapshot]) => {
                                         const sub = subjectSnapshot.val();
                                         const tea = teacherSnapshot.val();
                                         this.events.push(
@@ -180,12 +192,36 @@ export default {
                                                     timedata.stop.substring(3, 5)),
                                                 color: this.getRandomColor(),
                                                 timed: true,
-                                                details: "ครู"+tea.nickname+" "+tea.teacherId,
+                                                details: "ครู" + tea.nickname + " " + tea.teacherId,
+                                            },
+                                        );
+                                    })
+                            } else if (this.status == 'teacher' && this.keyuser == key) {
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                Promise.all([getSubjectPromise, getTeacherPromise])
+                                    .then(([subjectSnapshot, teacherSnapshot]) => {
+                                        const sub = subjectSnapshot.val();
+                                        const tea = teacherSnapshot.val();
+                                        this.events.push(
+                                            {
+                                                name: sub.name,
+                                                start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.start.substring(0, 2),
+                                                    timedata.start.substring(3, 5)),
+                                                end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                    date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                    timedata.stop.substring(3, 5)),
+                                                color: this.getRandomColor(),
+                                                timed: true,
+                                                details: "ครู" + tea.nickname + " " + tea.teacherId,
                                             },
                                         );
                                     })
                             }
+
                         }
+
                     }
                 }
             });
