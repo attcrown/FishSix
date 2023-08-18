@@ -20,7 +20,7 @@
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                         hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers" :items="items" :search="search">
+                <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="-1">
                     <template v-slot:top>
 
 

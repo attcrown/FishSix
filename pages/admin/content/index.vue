@@ -21,14 +21,9 @@
                     </v-col>
 
                     <v-col cols="12" sm="3"> </v-col>
-                    <v-col cols="12" sm="3">
-
-                        <v-btn elevation="10" small color="#322E2B" style="color:white"
-                            @click="addContentDialog">เพิ่มข้อมูล<span class="mdi mdi-plus"></span></v-btn>
-                        <v-btn elevation="10" small color="#322E2B" style="color:white">ค้นหาข้อมูล<span
-                                class="mdi mdi-magnify"></span></v-btn>
-
-
+                    <v-col cols="12" sm="3" class="text-right">
+                        <v-btn elevation="10" color="#322E2B" style="color:white" @click="addContentDialog">เพิ่มข้อมูล<span
+                                class="mdi mdi-plus"></span></v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -36,8 +31,8 @@
         </v-card>
 
 
-        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents" :items-per-page="-1"
-            class="elevation-16 rounded-xl">
+        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents"
+            :items-per-page="-1" class="elevation-16 rounded-xl">
             <template v-slot:top>
                 <v-toolbar flat>
                     <v-toolbar-title class="ms-4"><b>เนื้อหารายวิชา</b></v-toolbar-title>
@@ -49,12 +44,18 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon color="black" class="mr-2" @click="viewItem(item)">
-                    mdi-eye
-                </v-icon>
-                <v-icon small>
-                    mdi-edit
-                </v-icon>
+                <div class="icon-container">
+
+                    <v-icon color="black" class="mr-2 icon-box" @click="viewItem(item)">
+                        mdi-eye
+                    </v-icon>
+
+                </div>
+                <div class="icon-container">
+                    <v-icon color="red" class="mr-2  icon-box" @click="viewMaterialDialog(item)">
+                        mdi-delete
+                    </v-icon>
+                </div>
             </template>
         </v-data-table>
 
@@ -238,13 +239,13 @@ export default {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     const subject = childData[key];
-                 
+
                     num += 1;
                     try {
                         const chapterCount = Object.keys(subject.subject_contents).length;
-                        item.push({ name: subject.name, level: subject.level, key: key, index: num,chapterCount:chapterCount});
+                        item.push({ name: subject.name, level: subject.level, key: key, index: num, chapterCount: chapterCount });
                     } catch (error) {
-                        item.push({ name: subject.name, level: subject.level, key: key, index: num,chapterCount:0 });
+                        item.push({ name: subject.name, level: subject.level, key: key, index: num, chapterCount: 0 });
                     }
 
 
@@ -273,7 +274,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .userSpan {
     background-color: rgb(243 244 246);
     color: #000000;
@@ -313,4 +314,53 @@ hr.solid {
 .header {
     font-size: 25px;
 }
-</style>
+
+.icon-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.icon-box {
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+
+.icon-box:hover {
+    transform: translateY(-3px);
+    color: #000000;
+
+}
+
+.hover-container {
+    position: absolute;
+    bottom: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    visibility: hidden;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.icon-container:hover .hover-container {
+    opacity: 1;
+    visibility: visible;
+    bottom: -40px;
+
+}
+
+.hover-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+
+    color: rgb(0, 0, 0);
+    border-radius: 4px;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}</style>

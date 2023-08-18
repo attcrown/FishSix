@@ -22,7 +22,7 @@
                         hide-details></v-text-field>
                 </v-card-title>
                 <template>
-                    <v-data-table :headers="headers" :items="items" :search="search">
+                    <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="-1">
                         <template v-slot:top>
                             <v-dialog v-model="dialogDetail" max-width="500px">
                                 <v-card>

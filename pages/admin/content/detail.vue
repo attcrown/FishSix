@@ -22,14 +22,9 @@
                     </v-col>
 
                     <v-col cols="12" sm="3"> </v-col>
-                    <v-col cols="12" sm="3">
-
-                        <v-btn elevation="10" small color="#322E2B" style="color:white"
-                            @click="addContentDialog">เพิ่มข้อมูล<span class="mdi mdi-plus"></span></v-btn>
-                        <v-btn elevation="10" small color="#322E2B" style="color:white">ค้นหาข้อมูล<span
-                                class="mdi mdi-magnify"></span></v-btn>
-
-
+                    <v-col cols="12" sm="3" class="text-right">
+                        <v-btn elevation="10" color="#322E2B" style="color:white"
+                            @click="addContentDialog">เพิ่มเนื้อหา<span class="mdi mdi-plus"></span></v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -107,8 +102,51 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialog_edit" max-width="600px">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title class="d-flex justify-space-between">
+                    <span style="font-size: 16px">
+                        <b>วิชา {{ subjectName }} | {{ level }}</b>
+
+                    </span>
+
+                    <v-btn fab dark small color="#37474F" @click="dialog_detail = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field type="number" min="0" label="บทที่"
+                                    v-model="selectItem.chapterNumber"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="ชื่อบท" v-model="selectItem.chapterName"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="รายละเอียดเนื้อหา" v-model="selectItem.chapterDetail"></v-text-field>
+                            </v-col> <v-col cols="6">
+                                <v-text-field label="หมายเหตุ" v-model="selectItem.annotation"></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+
+                </v-card-text>
 
 
+                <v-card-actions class="d-flex justify-center">
+
+                    <v-btn color=green @click="editContent" elevation="0" rounded>
+                        <b>บันทึก</b>
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="content_dialog" max-width="60%">
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -136,16 +174,16 @@
 
                                 </v-toolbar>
                             </template>
-                             <!-- eslint-disable-next-line vue/valid-v-slot -->
-            <template v-slot:item.actions="{ item }">
-                <v-icon color="indigo" class="mr-2" @click="viewItem(item)">
-                    mdi-pencil
-                </v-icon>
-             
-                <v-icon color="red" @click="deleteChapter(item)">
-                    mdi-delete
-                </v-icon>
-            </template>
+                            <!-- eslint-disable-next-line vue/valid-v-slot -->
+                            <template v-slot:item.actions="{ item }">
+                                <v-icon color="indigo" class="mr-2" @click="viewItem(item)">
+                                    mdi-pencil
+                                </v-icon>
+
+                                <v-icon color="red" @click="deleteChapter(item)">
+                                    mdi-delete
+                                </v-icon>
+                            </template>
                         </v-data-table>
                     </v-container>
                 </v-card-text>
@@ -228,9 +266,14 @@ export default {
     layout: 'default',
     data() {
         return {
+            selectItem: {},
+
+            //temp
+            selectChapterNumber: null,
 
             contentId: null,
             dialog_detail: false,
+            dialog_edit: false,
             content_dialog: false,
             material_dialog: false,
             isLoading: true,
@@ -266,7 +309,7 @@ export default {
             ],
 
             materialHeaders: [
-          
+
                 { text: 'ประเภทสื่อ', value: 'type' },
                 { text: 'ชื่อเรื่องที่เรียน', value: 'name' },
                 { text: 'ชื่อไฟล์ / วิดีโอ', value: 'fileName' },
@@ -331,9 +374,9 @@ export default {
                 let num = 0;
                 this.subjects = [];
                 const childData = snapshot.val();
-         
-                for (const key in childData){
-                    const item = childData[key]; 
+
+                for (const key in childData) {
+                    const item = childData[key];
                     items.push(item);
                 }
                 console.log(items)
@@ -347,8 +390,9 @@ export default {
 
 
         viewItem(item) {
-            this.$router.push({ path: 'content/detail', query: { contentId: item.key } });
-            //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
+            this.dialog_edit = true;
+            this.selectItem = item;
+            this.selectChapterNumber = item.chapterNumber
         },
         async addContent() {
             const db = this.$fireModule.database();
@@ -365,13 +409,37 @@ export default {
                 };
 
                 try {
-                    await chapterRef.set(chapterData);
+                    await chapterRef.update(chapterData);
                     console.log('Content added to Firebase successfully!');
                 } catch (error) {
                     console.error('Error adding content to Firebase:', error);
                 }
             } else {
                 console.log('Chapter already exists in Firebase. Not adding content.');
+            }
+        },
+        async editContent() {
+            const db = this.$fireModule.database();
+
+            const newChapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectItem.chapterNumber}/`);
+            const oldChapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterNumber}/`);
+
+            const chapterData = {
+                chapterName: this.selectItem.chapterName,
+                chapterDetail: this.selectItem.chapterDetail,
+                annotation: this.selectItem.annotation
+            };
+
+            try {
+                await newChapterRef.set(chapterData);
+
+                if (this.selectItem.chapterNumber !== this.selectChapterNumber) {
+                    await oldChapterRef.remove();
+                }
+
+                console.log('Content update to Firebase successfully!');
+            } catch (error) {
+                console.error('Error update content to Firebase:', error);
             }
         },
 

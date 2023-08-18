@@ -6,7 +6,7 @@
                 <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
                     <div>
-                        <v-btn class="text-white" @click="openFlipClassDialog()" color="black">ดูประวัติการเรียน
+                        <v-btn class="text-white" @click="openClassHistoryDialog()" color="black">ดูประวัติการเรียน
                             <v-icon color="white" class="ms-1">mdi-eye</v-icon></v-btn>
 
                         <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
@@ -748,7 +748,7 @@
         </div>
         <!-- dialog -->
 
-        <v-dialog v-model="flipClassDialog" max-width="60%">
+        <v-dialog v-model="classHistoryDialog" max-width="60%">
 
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -756,7 +756,7 @@
                         <b>ประวัติการปรับชั่วโมง</b>
                     </span>
                     <v-spacer></v-spacer>
-                    <v-btn fab dark small color="#37474F" @click="closeFlipClassDialog">
+                    <v-btn fab dark small color="#37474F" @click="closeClassHistoryDialog">
                         <v-icon dark class="text-h5">
                             mdi-close
                         </v-icon>
@@ -877,7 +877,7 @@ export default {
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
-            flipClassDialog: false,
+            classHistoryDialog: false,
             privateClassDialog: false,
             flipClassTransactionsDialog: false,
             privateClassTransactionsDialog: false,
@@ -1262,12 +1262,12 @@ export default {
 
         },
 
-        openFlipClassDialog() {
-            this.flipClassDialog = true;
+        openClassHistoryDialog() {
+            this.classHistoryDialog = true;
             this.fetchHistory('Flip class');
         },
-        closeFlipClassDialog() {
-            this.flipClassDialog = false;
+        closeClassHistoryDialog() {
+            this.classHistoryDialog = false;
 
         },
 
