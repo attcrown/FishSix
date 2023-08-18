@@ -30,7 +30,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
       <v-spacer />
       <p class="m-0">
-       Operation
+      Operation
       </p>
       <v-avatar class="ms-2">
         <v-icon style=" font-size: 40px;" color="grey">
@@ -74,7 +74,7 @@ export default {
         },
         {
           icon: 'mdi-book-open-variant',
-          title: 'จองเวลาเรียน',
+          title: 'คำร้องจองเวลาเรียน',
           to: '/admin/matching',
         },
         {
@@ -132,7 +132,6 @@ export default {
         //   title: 'Edit-Shop',
         //   to: '/admin/edit_shop',
         // },        
-        
       ],
       miniVariant: false,
       right: true,
