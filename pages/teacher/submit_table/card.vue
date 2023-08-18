@@ -887,6 +887,24 @@ export default {
                                             }).then(() => {
                                                 console.log('save date_match');
                                             })
+                                            //history 
+                                            const currentDate = new Date();
+                                            //classHistory
+                                            const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+                                            db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
+                                                hour: this.edited.hour,
+                                                keySubject: this.edited.keySubject,
+                                                teacherName: this.edited.teacherName,
+                                                level: this.edited.level,
+                                                studentId: this.edited.studentId,
+                                                subject: this.edited.subject,
+                                                teacherId: this.edited.teacherId,
+                                                time_e: this.edited.time_e,
+                                                time_s: this.edited.time_s,
+                                                style: this.edited.style,
+                                            }).then(() => {
+                                                console.log('Update student class history');
+                                            })
 
                                             db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
                                                 img: this.imageURL,
@@ -1151,7 +1169,7 @@ export default {
                                                         teacherAll: teacherData,
                                                         studentAll: studentData
                                                     });
-                                                } else if (sendplanData.status_development == 'Pending' 
+                                                } else if (sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
                                                     || sendplanData.status_development == undefined && sendplanData.homework) {
                                                     this.dash_noall++;
@@ -1323,7 +1341,7 @@ export default {
                                                             teacherAll: teacherData,
                                                             studentAll: studentData
                                                         });
-                                                    } else if (sendplanData.status_development == 'Pending' 
+                                                    } else if (sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
                                                         || sendplanData.status_development == undefined && sendplanData.homework) {
                                                         this.dash_noall++;

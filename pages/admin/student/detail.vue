@@ -5,7 +5,14 @@
             <v-row>
                 <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                    <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
+                    <div>
+                        <v-btn class="text-white" @click="openFlipClassDialog()" color="black">ดูประวัติการเรียน
+                            <v-icon color="white" class="ms-1">mdi-eye</v-icon></v-btn>
+
+                        <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
+
+                    </div>
+
                 </div>
                 <v-col cols="12">
                     <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
@@ -15,9 +22,8 @@
                             <div>
                                 <v-btn class="text-white" @click="openFlipClassTransactionsDialog()"
                                     color="black">ดูประวัติการปรับชั่วโมง
+                                    <v-icon color="white" class="ms-1">mdi-eye</v-icon>
 
-                                    <v-icon color="white" x-small>mdi-arrow-down</v-icon>
-                                    <v-icon color="white" x-small>mdi-arrow-up</v-icon>
                                 </v-btn>
 
                             </div>
@@ -149,9 +155,7 @@
                             <div>
                                 <v-btn class="text-white" @click="openPrivateClassTransactionsDialog()"
                                     color="black">ดูประวัติการปรับชั่วโมง
-
-                                    <v-icon color="white" x-small>mdi-arrow-down</v-icon>
-                                    <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                                    <v-icon color="white" class="ms-1">mdi-eye</v-icon>
                                 </v-btn>
 
                             </div>
@@ -253,9 +257,9 @@
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
-                            
+
                             <div>
-                             
+
                                 <button v-if="!isEditingCourse" class="editButton " @click="toEditCourse()">
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
@@ -267,15 +271,15 @@
                                 <v-btn class="text-white mt-2" @click="openFlipClassTransactionsDialog()"
                                     color="black">วิชาที่สามารถเรียนได้
 
-                                
+
                                     <v-icon color="white" x-small>mdi-book</v-icon>
                                 </v-btn>
                             </div>
                         </v-card-title>
                         <v-card-text>
-                            
+
                             <v-row>
-                                 
+
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" readonly value="Flip class"
                                         label="ประเภทคลาส"></v-text-field>
@@ -481,14 +485,14 @@
                                         <v-col cols="8" class="py-0"></v-col>
                                         <v-col cols="6" class="py-0 ">
                                             <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required :readonly="!isEditingDetail"
-                                                v-on:keypress="isLetter($event)">
+                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required
+                                                :readonly="!isEditingDetail" v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" :readonly="!isEditingDetail"
-                                                v-on:keypress="isLetter($event)">
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules"
+                                                :readonly="!isEditingDetail" v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
@@ -721,15 +725,15 @@
                                 <v-row>
 
                                     <v-col cols="4">
-                                        <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation" 
+                                        <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation"
                                             v-model="school"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation" v-if="!isEditingEducation" 
-                                            v-model="education"></v-text-field>
-                                            <v-select class="black-label" label="ระดับชั้น" name="education" v-model="education" v-if="isEditingEducation" 
-                                        :items="educationLevels" item-text="educationName" 
-                                       ></v-select>
+                                        <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation"
+                                            v-if="!isEditingEducation" v-model="education"></v-text-field>
+                                        <v-select class="black-label" label="ระดับชั้น" name="education" v-model="education"
+                                            v-if="isEditingEducation" :items="educationLevels"
+                                            item-text="educationName"></v-select>
                                     </v-col>
 
 
@@ -744,6 +748,38 @@
         </div>
         <!-- dialog -->
 
+        <v-dialog v-model="flipClassDialog" max-width="60%">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>ประวัติการปรับชั่วโมง</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="closeFlipClassDialog">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <hr style="border: 2px solid #000; background-color: #000;">
+                <v-card-text>
+                    <v-container>
+
+                        <v-data-table :headers="historyHeaders" :items="classHistories">
+                            <template v-slot:footer>
+
+                            </template>
+                        </v-data-table>
+                    </v-container>
+                </v-card-text>
+
+
+
+
+
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="flipClassTransactionsDialog" max-width="60%">
 
             <v-card class="p-4 rounded-xl">
@@ -841,6 +877,8 @@ export default {
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
+            flipClassDialog: false,
+            privateClassDialog: false,
             flipClassTransactionsDialog: false,
             privateClassTransactionsDialog: false,
             headers: [
@@ -848,6 +886,15 @@ export default {
                 { text: 'เวลาที่บันทึก', value: 'transactionHistory.timestamp' },
                 { text: 'จำนวนที่เปลี่ยน', value: 'transactionHistory.amount' },
                 { text: 'รูปแบบ', value: 'transactionHistory.type' },
+            ],
+            historyHeaders: [
+                { text: 'Class ID', value: 'key', sort: 'true' },
+                { text: 'เวลาที่เริ่มเรียน', value: 'history.time_s' },
+                { text: 'เวลาที่สิ้นสุด', value: 'history.time_e' },
+                { text: 'ครูที่สอน', value: 'history.teacherName' },
+                { text: 'วิชาที่เรียน', value: 'history.keySubject' },
+                { text: 'ระดับชั้น', value: 'history.teacherName' },
+                { text: 'ประเภท', value: 'history.style' },
             ],
             //temporary
             selectedAddHour: null,
@@ -947,6 +994,7 @@ export default {
 
             teachers: [],
             transactionHistories: [],
+            classHistories: [],
             //static
             genders: [
                 'ชาย',
@@ -959,7 +1007,7 @@ export default {
             courseHours: [
                 32,
                 48, 96
-            ], 
+            ],
             educationLevels:
                 [
                     { id: "grade1", educationName: "ป.1" },
@@ -1211,6 +1259,15 @@ export default {
         },
         save(date) {
             this.$refs.menu.save(date);
+
+        },
+
+        openFlipClassDialog() {
+            this.flipClassDialog = true;
+            this.fetchHistory('Flip class');
+        },
+        closeFlipClassDialog() {
+            this.flipClassDialog = false;
 
         },
 
@@ -1560,6 +1617,45 @@ export default {
             //console.log(this.teachers)
         },
 
+        async fetchHistory(type) {
+            try {
+                const db = this.$fireModule.database();
+                db.ref(`studentHistoy/${this.userId}`).on("value", (snapshot) => {
+                    let item = [];
+                    const childData = snapshot.val();
+
+                    for (const key in childData) {
+
+                        const history = childData[key];
+
+
+                        // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
+                        const classHistory = {
+                            hour: history.hour,
+                            keySubject: history.keySubject,
+                            teacherName: history.teacherName,
+                            level: history.level,
+                            studentId: history.studentId,
+                            subject: history.subject,
+                            teacherId: history.teacherId,
+                            time_e: history.time_e,
+                            time_s: history.time_s,
+                            style: history.style,
+                        };
+                        item.push({ key, classHistory });
+
+
+
+                    }
+                    console.log(this.classHistories)
+
+                    this.classHistories = item;
+                    this.isLoading = false;
+                });
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+            }
+        },
         async fetchTransactionHistory(type) {
             try {
                 const db = this.$fireModule.database();
@@ -1569,7 +1665,6 @@ export default {
 
                     for (const key in childData) {
 
-
                         const transaction = childData[key];
 
                         if (transaction.class === type) {
@@ -1577,8 +1672,8 @@ export default {
                             const gmtOffset = 7 * 60 * 60 * 1000;
                             const adjustedTimestamp = transaction.timestamp + gmtOffset;
                             const date = new Date(adjustedTimestamp);
-                            const formattedDate=date.toISOString().slice(0, 19).replace('T',' ');
-                           // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
+                            const formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+                            // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
                             const transactionHistory = {
                                 amount: transaction.amount,
                                 timestamp: formattedDate,
@@ -1628,7 +1723,7 @@ export default {
             //     //updates.privateCourseHour = this.privateTotalHourInput;
             // }
 
-  
+
             await db.ref(`user/${this.userId}/`).update(updates);
 
             this.openSnackbar("success", 'แก้ไขชั่วโมงสำเร็จ!');
@@ -1648,7 +1743,7 @@ export default {
 
                 const currentDate = new Date();
                 const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
-               // const timestamp = Date.now();
+                // const timestamp = Date.now();
                 var timestamp = new Date();
                 timestamp = timestamp.getTime();
                 const transactionData = {
@@ -1663,7 +1758,7 @@ export default {
                     expireFlipClassDate: this.updateExpire(selectedValue, this.expireFlipClassDate) || this.expireFlipClassDate,
 
                 });
-               await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
 
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
@@ -1691,7 +1786,7 @@ export default {
                     privateHourLeft: this.privateHourLeft,
                     expirePrivateClassDate: this.updateExpire(selectedValue, this.expirePrivateClassDate) || this.expirePrivateClassDate,
                 });
-              
+
                 await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
                 this.openSnackbar("success", 'เพิ่มชั่วโมงสำเร็จ!');
                 return;
@@ -1960,7 +2055,7 @@ export default {
 
         async fetchCurrAmphoe() {
             if (this.selectedCurrTambon) {
-             
+
                 const db = this.$fireModule.database();
                 const amphoeRef = db.ref(`RECORDS_amp/`);
                 const amp_id = this.selectedCurrTambon.amphure_id;
