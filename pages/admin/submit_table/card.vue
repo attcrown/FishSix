@@ -34,9 +34,271 @@
             </div>
         </v-card>
 
+        <!------------------------------------------------------------------------------------->
+        <v-row>
+            <v-col cols="12">
+                <v-card-group class="d-flex justify-space-between pt-8 fonts500">
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #B6A7A2;" height="159px" width="300px"
+                            @click="checkname = true, checkname1 = false, checkname2 = false, checkname3 = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/youngpeoplestudents.png')"
+                                        class="pt-5 ps-5" v-if="checkname">
+                                    <img :src="require('~/assets/youngpeoplestudents.png')"
+                                        class="pt-5 ps-5" v-if="!checkname" style="opacity: 0.2;">                                     
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname">
+                                    {{ dash_notactive }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.329);" v-if="!checkname">
+                                    {{ dash_notactive }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">
+                                        ยังไม่เช็คชื่อนักเรียน</p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #322E2B;" height="159px" width="300px"
+                            @click=" checkname1 = true, checkname2 = false, checkname = false, checkname3 = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/young smiling woman working at laptop.png')"
+                                        class="pt-5 ps-5" v-if="checkname1">
+                                    <img :src="require('~/assets/young smiling woman working at laptop.png')"
+                                        class="pt-5 ps-5" v-if="!checkname1" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname1">
+                                    {{ dash_active }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.315);" v-if="!checkname1">
+                                    {{ dash_active }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">
+                                        ยังไม่ส่งพัฒนาการนักเรียน</p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #AD382F;" height="159px" width="300px"
+                            @click="checkname2 = true, checkname1 = false, checkname = false, checkname3 = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/stackbooks.png')"
+                                        class="pt-8 ps-5" v-if="checkname2">
+                                    <img :src="require('~/assets/stackbooks.png')"
+                                        class="pt-8 ps-5" v-if="!checkname2" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname2">
+                                    {{ dash_noall }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.295);" v-if="!checkname2">
+                                    {{ dash_noall }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">ไม่ผ่านการตรวจ
+                                    </p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #2b8b0e;" height="159px" width="300px"
+                            @click="checkname3 = true, checkname1 = false, checkname2 = false, checkname = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/books.png')"
+                                        class="pt-8 ps-5" v-if="checkname3">
+                                    <img :src="require('~/assets/books.png')"
+                                        class="pt-8 ps-5" v-if="!checkname3" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname3">
+                                    {{ dash_all }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.281);" v-if="!checkname3">
+                                    {{ dash_all }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">ผ่านการตรวจแล้ว
+                                    </p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                </v-card-group>
+            </v-col>
+        </v-row>
         <!-- Detail teacher -->
-        <v-expansion-panels v-model="panel" multiple class="mt-8">
-            <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacher"
+        <v-expansion-panels v-model="panel" multiple class="mt-8" v-if="checkname">
+            <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotcheck"
+                :key="index">
+                <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
+                <v-expansion-panel-content class="rounded-b-xl">
+                    <table class="text-center" style="width: 100%;">
+                        <thead style="background-color:#D4C1B2;">
+                            <tr>
+                                <th class="p-2">วันที่</th>
+                                <th class="p-2">รหัสนักเรียน</th>
+                                <th class="p-2">ชื่อนักเรียน</th>
+                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">วิชาที่สอน</th>
+                                <th class="p-2">เวลาเริ่มต้น</th>
+                                <th class="p-2">เวลาสิ้นสุด</th>
+                                <th class="p-2">ระดับชั้น</th>
+                                <th class="p-2">เช็คชื่อ</th>
+                                <th class="p-2">ส่งพัฒนาการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items" :key="item.keyStudent">
+                                <td class="p-2">{{ item.date }}</td>
+                                <td class="p-2">{{ item.studentId }}</td>
+                                <td class="p-2">{{ item.namestu }}</td>
+                                <td class="p-2">{{ item.style }}</td>
+                                <td class="p-2">{{ item.subject }}</td>
+                                <td class="p-2">{{ item.time_s }}</td>
+                                <td class="p-2">{{ item.time_e }}</td>
+                                <td class="p-2">{{ item.level }}</td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" v-if="item.sendplan == undefined"
+                                        @click="check_sendplan(item)">
+                                        <span class="mdi mdi-check text-h5"></span>
+                                    </v-btn>
+                                    <v-btn text icon elevation="5" v-if="item.sendplan != undefined" disabled>
+                                        <span class="mdi mdi-check-all text-h5"></span>
+                                    </v-btn>
+                                </td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" :disabled="item.sendplan == undefined"
+                                        @click="check_confirm(item)">
+                                        <span class="mdi mdi-clipboard-text-outline text-h5"></span>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
+        <!------------------------------------------------------------------------------------->
+        <!-- Detail teacher -->
+        <v-expansion-panels v-model="panel1" multiple class="mt-8" v-if="checkname1">
+            <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotData"
+                :key="index">
+                <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
+                <v-expansion-panel-content class="rounded-b-xl">
+                    <table class="text-center" style="width: 100%;">
+                        <thead style="background-color:#D4C1B2;">
+                            <tr>
+                                <th class="p-2">วันที่</th>
+                                <th class="p-2">รหัสนักเรียน</th>
+                                <th class="p-2">ชื่อนักเรียน</th>
+                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">วิชาที่สอน</th>
+                                <th class="p-2">เวลาเริ่มต้น</th>
+                                <th class="p-2">เวลาสิ้นสุด</th>
+                                <th class="p-2">ระดับชั้น</th>
+                                <th class="p-2">เช็คชื่อ</th>
+                                <th class="p-2">ส่งพัฒนาการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items" :key="item.keyStudent">
+                                <td class="p-2">{{ item.date }}</td>
+                                <td class="p-2">{{ item.studentId }}</td>
+                                <td class="p-2">{{ item.namestu }}</td>
+                                <td class="p-2">{{ item.style }}</td>
+                                <td class="p-2">{{ item.subject }}</td>
+                                <td class="p-2">{{ item.time_s }}</td>
+                                <td class="p-2">{{ item.time_e }}</td>
+                                <td class="p-2">{{ item.level }}</td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" v-if="item.sendplan == undefined"
+                                        @click="check_sendplan(item)">
+                                        <span class="mdi mdi-check text-h5"></span>
+                                    </v-btn>
+                                    <v-btn text icon elevation="5" v-if="item.sendplan != undefined" disabled>
+                                        <span class="mdi mdi-check-all text-h5"></span>
+                                    </v-btn>
+                                </td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" :disabled="item.sendplan == undefined"
+                                        @click="check_confirm(item)">
+                                        <span class="mdi mdi-clipboard-text-outline text-h5"></span>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
+        <!------------------------------------------------------------------------------------->
+        <!-- Detail teacher -->
+        <v-expansion-panels v-model="panel2" multiple class="mt-8" v-if="checkname2">
+            <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotapprove"
+                :key="index">
+                <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
+                <v-expansion-panel-content class="rounded-b-xl">
+                    <table class="text-center" style="width: 100%;">
+                        <thead style="background-color:#D4C1B2;">
+                            <tr>
+                                <th class="p-2">วันที่</th>
+                                <th class="p-2">รหัสนักเรียน</th>
+                                <th class="p-2">ชื่อนักเรียน</th>
+                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">วิชาที่สอน</th>
+                                <th class="p-2">เวลาเริ่มต้น</th>
+                                <th class="p-2">เวลาสิ้นสุด</th>
+                                <th class="p-2">ระดับชั้น</th>
+                                <th class="p-2">เช็คชื่อ</th>
+                                <th class="p-2">ส่งพัฒนาการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items" :key="item.keyStudent">
+                                <td class="p-2">{{ item.date }}</td>
+                                <td class="p-2">{{ item.studentId }}</td>
+                                <td class="p-2">{{ item.namestu }}</td>
+                                <td class="p-2">{{ item.style }}</td>
+                                <td class="p-2">{{ item.subject }}</td>
+                                <td class="p-2">{{ item.time_s }}</td>
+                                <td class="p-2">{{ item.time_e }}</td>
+                                <td class="p-2">{{ item.level }}</td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" v-if="item.sendplan == undefined"
+                                        @click="check_sendplan(item)">
+                                        <span class="mdi mdi-check text-h5"></span>
+                                    </v-btn>
+                                    <v-btn text icon elevation="5" v-if="item.sendplan != undefined" disabled>
+                                        <span class="mdi mdi-check-all text-h5"></span>
+                                    </v-btn>
+                                </td>
+                                <td class="p-2">
+                                    <v-btn text icon elevation="5" :disabled="item.sendplan == undefined"
+                                        @click="check_confirm(item)">
+                                        <span class="mdi mdi-clipboard-text-outline text-h5"></span>
+                                    </v-btn>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
+        <!------------------------------------------------------------------------------------->
+        <!-- Detail teacher -->
+        <v-expansion-panels v-model="panel3" multiple class="mt-8" v-if="checkname3">
+            <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherApprove"
                 :key="index">
                 <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
                 <v-expansion-panel-content class="rounded-b-xl">
@@ -467,6 +729,26 @@ import { saveAs } from 'file-saver';
 export default {
     data() {
         return {
+            checkname: false,
+            checkname1: false,
+            checkname2: false,
+            checkname3: false,
+            dash_all: 0,
+            dash_noall: 0,
+            dash_active: 0,
+            dash_notactive: 0,
+
+            panel: [0],
+            panel1: [0],
+            panel2: [0],
+            panel3: [0],
+
+            desserts:[],
+            dessertsNotcheck: [],
+            dessertsNotData: [],
+            dessertsNotapprove: [],
+            dessertsApprove: [],
+
             dialog_excel: false,
             isExportAll: false,
             selectedHeaders: [],
@@ -540,9 +822,51 @@ export default {
     },
 
     computed: {
-        dessertsByTeacher() {
+        dessertsByTeacherNotcheck() {
             // Use Array.reduce() to group items by teacher name
-            const groupedByTeacher = this.desserts.reduce((acc, item) => {
+            const groupedByTeacher = this.dessertsNotcheck.reduce((acc, item) => {
+                const teacherName = item.name;
+                if (!acc[teacherName]) {
+                    acc[teacherName] = [];
+                }
+                acc[teacherName].push(item);
+                return acc;
+            }, {});
+
+            // Convert the object back to an array
+            return Object.values(groupedByTeacher);
+        },
+        dessertsByTeacherNotData() {
+            // Use Array.reduce() to group items by teacher name
+            const groupedByTeacher = this.dessertsNotData.reduce((acc, item) => {
+                const teacherName = item.name;
+                if (!acc[teacherName]) {
+                    acc[teacherName] = [];
+                }
+                acc[teacherName].push(item);
+                return acc;
+            }, {});
+
+            // Convert the object back to an array
+            return Object.values(groupedByTeacher);
+        },
+        dessertsByTeacherNotapprove() {
+            // Use Array.reduce() to group items by teacher name
+            const groupedByTeacher = this.dessertsNotapprove.reduce((acc, item) => {
+                const teacherName = item.name;
+                if (!acc[teacherName]) {
+                    acc[teacherName] = [];
+                }
+                acc[teacherName].push(item);
+                return acc;
+            }, {});
+
+            // Convert the object back to an array
+            return Object.values(groupedByTeacher);
+        },
+        dessertsByTeacherApprove() {
+            // Use Array.reduce() to group items by teacher name
+            const groupedByTeacher = this.dessertsApprove.reduce((acc, item) => {
                 const teacherName = item.name;
                 if (!acc[teacherName]) {
                     acc[teacherName] = [];
@@ -856,94 +1180,29 @@ export default {
                 }
             })
         },
-        search_date_teacher() {
-            console.log('ทำๆ');
+        search_date_teacher() {            
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
-                this.desserts = [];
-                // this.arrayEvents = [];
+                this.dash_all = 0;
+                this.dash_noall = 0;
+                this.dash_active = 0;
+                this.dash_notactive = 0;
+                this.dessertsNotcheck = [];
+                this.dessertsNotData = [];
+                this.dessertsNotapprove = [];
+                this.dessertsApprove = [];
                 let item = [];
+                let item1 = [];
+                let item2 = [];
+                let item3 = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                            const getStudentPromise = db.ref(`user/${key}`).once("value");
-                            const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-                            const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                            const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
-                            Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
-                                .then((snapshots) => {
-                                    const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
-                                    const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
-                                    const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
-                                    const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
-                                    const sendplanSnapshot = snapshots[4];
-
-                                    const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
-                                    const locationData = locationSnapshot.val();
-                                    const studentData = studentSnapshot.val();
-                                    const sendplanData = sendplanSnapshot.val();
-
-                                    const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
-                                    const namestu = `${studentData.nickname} (${studentData.firstName})`;
-                                    const namesub = subjectData.name;
-                                    if (timedata.status === "พร้อมเรียน" && date === this.date) {
-                                        item.push({
-                                            level: timedata.level,
-                                            name: nametea,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            style: locationData.name,
-                                            keystyle: timedata.style_subject,
-                                            subject: namesub,
-                                            keySubject: timedata.subject,
-                                            keyStudent: key,
-                                            keyTeacher: timedata.teacher,
-                                            studentId: studentData.studentId,
-                                            teacherId: teacherData.teacherId,
-                                            namestu: namestu,
-                                            sendplan: timedata.sendplan,
-                                            because: timedata.because,
-                                            Idsendplan: timedata.Idsendplan,
-                                            match_test: timedata.match_test,
-                                            hour: timedata.hour,
-                                            sendplanAll: sendplanData,
-                                            teacherAll: teacherData,
-                                            studentAll: studentData
-                                        });
-                                        // this.arrayEvents.push(date);
-                                    }
-                                })
-                        }
-                    }
-                }
-                this.desserts = item;
-                console.log(this.desserts);
-            })
-        },
-
-        search_date_teacher_All() {
-            console.log('ทำๆ');
-            const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
-                const childData = snapshot.val();
-                this.desserts = [];
-                // this.arrayEvents = [];
-                let item = [];
-                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
-                for (const key in childData) {
-                    const keydata = childData[key];
-                    for (const date in keydata) {
-                        if (new Date(date).getTime().toString().substring(0, 5) <= now.getTime().toString().substring(0, 5)) {
-                            const datedata = keydata[date];
-                            for (const time in datedata) {
-                                const timedata = datedata[time];
+                            if (true){
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -966,40 +1225,307 @@ export default {
                                         const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
                                         const namestu = `${studentData.nickname} (${studentData.firstName})`;
                                         const namesub = subjectData.name;
-                                        if (timedata.status === "พร้อมเรียน") {
-                                            item.push({
-                                                level: timedata.level,
-                                                name: nametea,
-                                                date: date,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: locationData.name,
-                                                keystyle: timedata.style_subject,
-                                                subject: namesub,
-                                                keySubject: timedata.subject,
-                                                keyStudent: key,
-                                                keyTeacher: timedata.teacher,
-                                                studentId: studentData.studentId,
-                                                teacherId: teacherData.teacherId,
-                                                namestu: namestu,
-                                                sendplan: timedata.sendplan,
-                                                because: timedata.because,
-                                                Idsendplan: timedata.Idsendplan,
-                                                match_test: timedata.match_test,
-                                                hour: timedata.hour,
-                                                sendplanAll: sendplanData,
-                                                teacherAll: teacherData,
-                                                studentAll: studentData
-                                            });
-                                            // this.arrayEvents.push(date);
+                                        if (timedata.status === "พร้อมเรียน" && date === this.date) {
+                                            if (sendplanData) {
+                                                if (sendplanData.status_development === 'Approved') {
+                                                    this.dash_all++;
+                                                    item.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                } else if (sendplanData.status_development == 'Pending'
+                                                    || sendplanData.status_development == 'Rejected'
+                                                    || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                    this.dash_noall++;
+                                                    item1.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                    this.dash_active++;
+                                                    item2.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                }
+                                            }
+                                            else if (!sendplanData?.Idsendplan) {
+                                                this.dash_notactive++;
+                                                item3.push({
+                                                    level: timedata.level,
+                                                    name: nametea,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: locationData.name,
+                                                    keystyle: timedata.style_subject,
+                                                    subject: namesub,
+                                                    keySubject: timedata.subject,
+                                                    keyStudent: key,
+                                                    keyTeacher: timedata.teacher,
+                                                    studentId: studentData.studentId,
+                                                    teacherId: teacherData.teacherId,
+                                                    namestu: namestu,
+                                                    sendplan: timedata.sendplan,
+                                                    because: timedata.because,
+                                                    Idsendplan: timedata.Idsendplan,
+                                                    match_test: timedata.match_test,
+                                                    hour: timedata.hour,
+                                                    sendplanAll: sendplanData,
+                                                    teacherAll: teacherData,
+                                                    studentAll: studentData
+                                                });
+                                            }
                                         }
                                     })
                             }
                         }
                     }
                 }
-                this.desserts = item;
-                console.log(this.desserts);
+                this.dessertsNotcheck = item3;
+                this.dessertsNotData = item2;
+                this.dessertsNotapprove = item1;
+                this.dessertsApprove = item;
+            })
+        },
+
+        search_date_teacher_All() {
+            console.log(
+                this.panel,
+                this.panel1,
+                this.panel2,
+                this.panel3
+            );
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.dash_all = 0;
+                this.dash_noall = 0;
+                this.dash_active = 0;
+                this.dash_notactive = 0;
+                this.dessertsNotcheck = [];
+                this.dessertsNotData = [];
+                this.dessertsNotapprove = [];
+                this.dessertsApprove = [];
+                let item = [];
+                let item1 = [];
+                let item2 = [];
+                let item3 = [];
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    for (const date in keydata) {
+                        if (new Date(date).getTime().toString().substring(0, 5) <= now.getTime().toString().substring(0, 5)) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                if (true) {
+                                    const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                    const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                    const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                    const getSendplanPromise = db.ref(`send_plan/${timedata.teacher}/${timedata.Idsendplan}`).once("value");
+                                    Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise, getStudentPromise, getSendplanPromise])
+                                        .then((snapshots) => {
+                                            const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                            const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                            const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                            const studentSnapshot = snapshots[3]; // เปลี่ยนตรงนี้
+                                            const sendplanSnapshot = snapshots[4];
+
+                                            const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                            const locationData = locationSnapshot.val();
+                                            const studentData = studentSnapshot.val();
+                                            const sendplanData = sendplanSnapshot.val();
+
+                                            const nametea = `${teacherData.teacherId}-ครู${teacherData.nickname} (${teacherData.firstName})`;
+                                            const namestu = `${studentData.nickname} (${studentData.firstName})`;
+                                            const namesub = subjectData.name;
+                                            if (timedata.status === "พร้อมเรียน") {
+                                                // this.arrayEvents.push(date);
+                                                if (sendplanData) {
+                                                    if (sendplanData.status_development === 'Approved') {
+                                                        this.dash_all++;
+                                                        item.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    } else if (sendplanData.status_development == 'Pending'
+                                                        || sendplanData.status_development == 'Rejected'
+                                                        || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                        this.dash_noall++;
+                                                        item1.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                        this.dash_active++;
+                                                        item2.push({
+                                                            level: timedata.level,
+                                                            name: nametea,
+                                                            date: date,
+                                                            time_s: timedata.start,
+                                                            time_e: timedata.stop,
+                                                            style: locationData.name,
+                                                            keystyle: timedata.style_subject,
+                                                            subject: namesub,
+                                                            keySubject: timedata.subject,
+                                                            keyStudent: key,
+                                                            keyTeacher: timedata.teacher,
+                                                            studentId: studentData.studentId,
+                                                            teacherId: teacherData.teacherId,
+                                                            namestu: namestu,
+                                                            sendplan: timedata.sendplan,
+                                                            because: timedata.because,
+                                                            Idsendplan: timedata.Idsendplan,
+                                                            match_test: timedata.match_test,
+                                                            hour: timedata.hour,
+                                                            sendplanAll: sendplanData,
+                                                            teacherAll: teacherData,
+                                                            studentAll: studentData
+                                                        });
+                                                    }
+                                                }
+
+                                                else if (!sendplanData?.Idsendplan) {
+                                                    this.dash_notactive++;
+                                                    item3.push({
+                                                        level: timedata.level,
+                                                        name: nametea,
+                                                        date: date,
+                                                        time_s: timedata.start,
+                                                        time_e: timedata.stop,
+                                                        style: locationData.name,
+                                                        keystyle: timedata.style_subject,
+                                                        subject: namesub,
+                                                        keySubject: timedata.subject,
+                                                        keyStudent: key,
+                                                        keyTeacher: timedata.teacher,
+                                                        studentId: studentData.studentId,
+                                                        teacherId: teacherData.teacherId,
+                                                        namestu: namestu,
+                                                        sendplan: timedata.sendplan,
+                                                        because: timedata.because,
+                                                        Idsendplan: timedata.Idsendplan,
+                                                        match_test: timedata.match_test,
+                                                        hour: timedata.hour,
+                                                        sendplanAll: sendplanData,
+                                                        teacherAll: teacherData,
+                                                        studentAll: studentData
+                                                    });
+                                                }
+                                            }
+                                        })
+                                }
+                            }
+                        }
+                    }
+                }
+                this.dessertsNotcheck = item3;
+                this.dessertsNotData = item2;
+                this.dessertsNotapprove = item1;
+                this.dessertsApprove = item;
             })
         },
 
@@ -1041,7 +1567,12 @@ export default {
         },
         exportToExcel() {
             console.log(this.selectedHeaders);
-            // หัวข้อเอกสาร Excel
+            this.desserts = this.desserts.concat(
+                this.dessertsNotcheck,
+                this.dessertsNotData,
+                this.dessertsNotapprove,
+                this.dessertsApprove
+            );
             let newdate = new Date().getFullYear() + ' ' + (parseInt(new Date().getMonth()) + 1) + ' ' + new Date().getDate();
             let headers = this.selectedHeaders;
             const data = [headers, ...this.desserts.map(item => {
