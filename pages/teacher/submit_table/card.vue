@@ -62,7 +62,7 @@
                         </v-card>
                     </v-hover>
                     <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
                             style="background: #322E2B;" height="159px" width="300px"
                             @click=" checkname1 = true, checkname2 = false, checkname = false, checkname3 = false">
                             <v-row>
@@ -86,7 +86,7 @@
                         </v-card>
                     </v-hover>
                     <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
                             style="background: #AD382F;" height="159px" width="300px"
                             @click="checkname2 = true, checkname1 = false, checkname = false, checkname3 = false">
                             <v-row>
@@ -110,7 +110,7 @@
                         </v-card>
                     </v-hover>
                     <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
                             style="background: #2b8b0e;" height="159px" width="300px"
                             @click="checkname3 = true, checkname1 = false, checkname2 = false, checkname = false">
                             <v-row>
