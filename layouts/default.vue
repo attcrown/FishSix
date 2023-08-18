@@ -30,7 +30,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
       <v-spacer />
       <p class="m-0">
-       Operation
+      Operation
       </p>
       <v-avatar class="ms-2">
         <v-icon style=" font-size: 40px;" color="grey">
@@ -73,17 +73,17 @@ export default {
           to: '/admin',
         },
         {
-          icon: 'mdi-book-open-variant',
-          title: 'จองเวลาเรียน',
+          icon: 'mdi-alarm-light-outline',
+          title: 'คำร้องจองเวลาเรียน',
           to: '/admin/matching',
         },
         {
-          icon: 'mdi-table-large',
+          icon: 'mdi-format-list-checks',
           title: 'เช็คชื่อ/ส่งพัฒนาการ',
           to: '/admin/submit_table',
         },
         {
-          icon: 'mdi-folder-file-outline',
+          icon: 'mdi-card-account-details-outline',
           title: 'เพิ่มรายละเอียด',
           to: '/admin/subject',
         },
@@ -132,7 +132,6 @@ export default {
         //   title: 'Edit-Shop',
         //   to: '/admin/edit_shop',
         // },        
-        
       ],
       miniVariant: false,
       right: true,

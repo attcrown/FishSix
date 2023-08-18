@@ -76,7 +76,7 @@ export default {
           to: '/teacher/match',
         },
         {
-          icon: 'mdi-receipt-text-send-outline',
+          icon: 'mdi-format-list-checks',
           title: 'เช็คชื่อ/ส่งพัฒนาการ',
           to: '/teacher/submit_table',
         },
