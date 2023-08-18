@@ -372,9 +372,9 @@ export default {
     },
     mounted() {
         this.fullName();
+        this.search_date_student(); 
     },
-    created() {
-        this.search_date_student();
+    created() {  
         this.arrayEvent_search();
     },
 
@@ -581,7 +581,7 @@ export default {
                                 }
                             }
                         } else {
-                            console.log(new Date(date).getTime() , new Date(this.date).getTime());
+                            // console.log(new Date(date).getTime() , new Date(this.date).getTime());
                             if (new Date(date).getTime() >= new Date(this.date).getTime() &&
                                 new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
