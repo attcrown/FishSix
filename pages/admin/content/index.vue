@@ -36,7 +36,7 @@
         </v-card>
 
 
-        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents"
+        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents" :items-per-page="-1"
             class="elevation-16 rounded-xl">
             <template v-slot:top>
                 <v-toolbar flat>
