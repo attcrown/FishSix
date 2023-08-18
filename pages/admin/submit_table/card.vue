@@ -1006,7 +1006,7 @@ export default {
                                             db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
                                                 hour: this.edited.hour,
                                                 keySubject: this.edited.keySubject,
-                                                teacherName: this.edited.teacherName,
+                                                teacherName: this.edited.name,
                                                 level: this.edited.level,
                                                 studentId: this.edited.studentId,
                                                 subject: this.edited.subject,
