@@ -748,7 +748,7 @@
         </div>
         <!-- dialog -->
 
-        <v-dialog v-model="classHistoryDialog" max-width="60%">
+        <v-dialog v-model="classHistoryDialog" max-width="80%">
 
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -889,12 +889,12 @@ export default {
             ],
             historyHeaders: [
                 { text: 'Class ID', value: 'key', sort: 'true' },
-                { text: 'เวลาที่เริ่มเรียน', value: 'history.time_s' },
-                { text: 'เวลาที่สิ้นสุด', value: 'history.time_e' },
-                { text: 'ครูที่สอน', value: 'history.teacherName' },
-                { text: 'วิชาที่เรียน', value: 'history.keySubject' },
-                { text: 'ระดับชั้น', value: 'history.teacherName' },
-                { text: 'ประเภท', value: 'history.style' },
+                { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
+                { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
+                { text: 'ครูที่สอน', value: 'classHistory.teacherName' },
+                { text: 'วิชาที่เรียน', value: 'classHistory.keySubject' },
+                { text: 'ระดับชั้น', value: 'classHistory.teacherName' },
+                { text: 'ประเภท', value: 'classHistory.style' },
             ],
             //temporary
             selectedAddHour: null,
@@ -1620,10 +1620,10 @@ export default {
         async fetchHistory(type) {
             try {
                 const db = this.$fireModule.database();
-                db.ref(`studentHistoy/${this.userId}`).on("value", (snapshot) => {
+                db.ref(`studentHistory/${this.userId}`).on("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
-
+                    console.log(childData)
                     for (const key in childData) {
 
                         const history = childData[key];
@@ -1644,12 +1644,13 @@ export default {
                         };
                         item.push({ key, classHistory });
 
-
+                        console.log(classHistory)
 
                     }
-                    console.log(this.classHistories)
+               
 
                     this.classHistories = item;
+                    console.log(this.classHistories)
                     this.isLoading = false;
                 });
             } catch (error) {
