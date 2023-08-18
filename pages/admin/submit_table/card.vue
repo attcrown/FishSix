@@ -605,7 +605,7 @@ export default {
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
                     this.check_time = true;
-                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime().toString().substring(0, 5))) {
+                } else if (parseInt(new Date(this.edited.date)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`))) {
                     this.check_time = true;
                 } else {
                     this.check_time = false;

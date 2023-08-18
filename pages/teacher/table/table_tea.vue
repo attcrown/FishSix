@@ -518,7 +518,7 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (parseInt(new Date(date).getTime().toString().substring(0, 5)) >= parseInt(now.getTime().toString().substring(0, 5))) {
+                        if (parseInt(new Date(date).getTime()) >= parseInt(now.getTime())) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];

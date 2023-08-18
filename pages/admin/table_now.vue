@@ -446,8 +446,8 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
-                            if (new Date(date).getTime().toString().substring(0, 5) >= now.getTime().toString().substring(0, 5) &&
-                                new Date(date).getTime().toString().substring(0, 5) <= end.getTime().toString().substring(0, 5)) {
+                            if (new Date(date).getTime() >= now.getTime() &&
+                                new Date(date).getTime() <= end.getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
@@ -507,8 +507,8 @@ export default {
                                 }
                             }
                         } else {
-                            if (new Date(date).getTime().toString().substring(0, 5) >= new Date(this.date).getTime().toString().substring(0, 5) &&
-                                new Date(date).getTime().toString().substring(0, 5) <= new Date(this.date).getTime().toString().substring(0, 5)) {
+                            if (new Date(date).getTime() >= new Date(this.date).getTime() &&
+                                new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");

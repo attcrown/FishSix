@@ -34,18 +34,24 @@
             </div>
         </v-card>
         <!------------------------------------------------------------------------------------->
-        <v-row v-if="dash_notactive != 0">
+        <v-row>
             <v-col cols="12">
-                <v-card-group class="d-flex pt-8 fonts500">
+                <v-card-group class="d-flex justify-space-between pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
-                            style="background: #B6A7A2;" height="159px" width="300px">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #B6A7A2;" height="159px" width="300px"
+                            @click="checkname = true, checkname1 = false, checkname2 = false, checkname3 = false">
                             <v-row>
                                 <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/сolleagues discussing team project.png')"
-                                        class="pt-5 ps-5">
+                                    <img :src="require('~/assets/youngpeoplestudents.png')"
+                                        class="pt-5 ps-5" v-if="checkname">
+                                    <img :src="require('~/assets/youngpeoplestudents.png')"
+                                        class="pt-5 ps-5" v-if="!checkname" style="opacity: 0.2;">                                     
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(155, 0, 0);">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname">
+                                    {{ dash_notactive }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.329);" v-if="!checkname">
                                     {{ dash_notactive }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
@@ -55,11 +61,83 @@
                             </v-row>
                         </v-card>
                     </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #322E2B;" height="159px" width="300px"
+                            @click=" checkname1 = true, checkname2 = false, checkname = false, checkname3 = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/young smiling woman working at laptop.png')"
+                                        class="pt-5 ps-5" v-if="checkname1">
+                                    <img :src="require('~/assets/young smiling woman working at laptop.png')"
+                                        class="pt-5 ps-5" v-if="!checkname1" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname1">
+                                    {{ dash_active }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.315);" v-if="!checkname1">
+                                    {{ dash_active }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">
+                                        ยังไม่ส่งพัฒนาการนักเรียน</p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #AD382F;" height="159px" width="300px"
+                            @click="checkname2 = true, checkname1 = false, checkname = false, checkname3 = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/stackbooks.png')"
+                                        class="pt-8 ps-5" v-if="checkname2">
+                                    <img :src="require('~/assets/stackbooks.png')"
+                                        class="pt-8 ps-5" v-if="!checkname2" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname2">
+                                    {{ dash_noall }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.295);" v-if="!checkname2">
+                                    {{ dash_noall }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">ไม่ผ่านการตรวจ
+                                    </p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #2b8b0e;" height="159px" width="300px"
+                            @click="checkname3 = true, checkname1 = false, checkname2 = false, checkname = false">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/books.png')"
+                                        class="pt-8 ps-5" v-if="checkname3">
+                                    <img :src="require('~/assets/books.png')"
+                                        class="pt-8 ps-5" v-if="!checkname3" style="opacity: 0.2;">
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname3">
+                                    {{ dash_all }}
+                                </v-col>
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.281);" v-if="!checkname3">
+                                    {{ dash_all }}
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7">
+                                    <p style="font-size: 16px; margin-top: -50px; color:white">ผ่านการตรวจแล้ว
+                                    </p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
                 </v-card-group>
             </v-col>
         </v-row>
         <!-- Detail teacher -->
-        <v-expansion-panels v-model="panel" multiple class="mt-8">
+        <v-expansion-panels v-model="panel" multiple class="mt-8" v-if="checkname">
             <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotcheck"
                 :key="index">
                 <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
@@ -111,32 +189,8 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row v-if="dash_active != 0">
-            <v-col cols="12">
-                <v-card-group class="d-flex pt-8 fonts500">
-                    <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
-                            style="background: #322E2B;" height="159px" width="300px">
-                            <v-row>
-                                <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/young woman at work with laptop writing.png')"
-                                        class="pt-5 ps-5">
-                                </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px;color:rgb(255, 6, 6);">
-                                    {{ dash_active }}
-                                </v-col>
-                                <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">
-                                        ยังไม่ส่งพัฒนาการนักเรียน</p>
-                                </v-col>
-                            </v-row>
-                        </v-card>
-                    </v-hover>
-                </v-card-group>
-            </v-col>
-        </v-row>
         <!-- Detail teacher -->
-        <v-expansion-panels v-model="panel1" multiple class="mt-8">
+        <v-expansion-panels v-model="panel1" multiple class="mt-8" v-if="checkname1">
             <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotData"
                 :key="index">
                 <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
@@ -188,32 +242,8 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row v-if="dash_noall != 0">
-            <v-col cols="12">
-                <v-card-group class="d-flex pt-8 fonts500">
-                    <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-2"
-                            style="background: #AD382F;" height="159px" width="300px">
-                            <v-row>
-                                <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/сolleagues discussing team project.png')"
-                                        class="pt-5 ps-5">
-                                </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
-                                    {{ dash_noall }}
-                                </v-col>
-                                <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">ไม่ผ่านการตรวจ
-                                    </p>
-                                </v-col>
-                            </v-row>
-                        </v-card>
-                    </v-hover>
-                </v-card-group>
-            </v-col>
-        </v-row>
         <!-- Detail teacher -->
-        <v-expansion-panels v-model="panel2" multiple class="mt-8">
+        <v-expansion-panels v-model="panel2" multiple class="mt-8" v-if="checkname2">
             <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherNotapprove"
                 :key="index">
                 <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
@@ -265,32 +295,8 @@
             </v-expansion-panel>
         </v-expansion-panels>
         <!------------------------------------------------------------------------------------->
-        <v-row v-if="dash_all != 0">
-            <v-col cols="12">
-                <v-card-group class="d-flex pt-8 fonts500">
-                    <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
-                            style="background: #2b8b0e;" height="159px" width="300px">
-                            <v-row>
-                                <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/сolleagues discussing team project.png')"
-                                        class="pt-5 ps-5">
-                                </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
-                                    {{ dash_all }}
-                                </v-col>
-                                <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">ผ่านการตรวจแล้ว
-                                    </p>
-                                </v-col>
-                            </v-row>
-                        </v-card>
-                    </v-hover>
-                </v-card-group>
-            </v-col>
-        </v-row>
         <!-- Detail teacher -->
-        <v-expansion-panels v-model="panel3" multiple class="mt-8">
+        <v-expansion-panels v-model="panel3" multiple class="mt-8" v-if="checkname3">
             <v-expansion-panel class="elevation-16 rounded-xl mb-2" v-for="(items, index) in dessertsByTeacherApprove"
                 :key="index">
                 <v-expansion-panel-header style="font-size:20px;"><b>{{ items[0].name }}</b></v-expansion-panel-header>
@@ -556,14 +562,14 @@
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-select v-model="edited.status_development" :items="items_development"
-                                        :rules="[v => !!v || 'กรุณาลงสถานะ']" label="สถานะพัฒนาการ" disabled></v-select>
+                                        label="สถานะพัฒนาการ" disabled></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
-                                    <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
+                                    <v-text-field label="Comment/อื่นๆ" v-model="edited.comment"
                                         disabled></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12">
-                                    <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
+                                    <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate"
                                         disabled></v-text-field>
                                 </v-col>
 
@@ -633,6 +639,10 @@ import { saveAs } from 'file-saver';
 export default {
     data() {
         return {
+            checkname: false,
+            checkname1: false,
+            checkname2: false,
+            checkname3: false,
             dash_all: 0,
             dash_noall: 0,
             dash_active: 0,
@@ -667,10 +677,10 @@ export default {
             dessertsApprove: [],
             arrayEvents: [],
 
-            panel: [],
-            panel1: [],
-            panel2: [],
-            panel3: [],
+            panel: [0],
+            panel1: [0],
+            panel2: [0],
+            panel3: [0],
             readonly: false,
             date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             date_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
@@ -830,7 +840,7 @@ export default {
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
                     this.check_time = true;
-                } else if (parseInt(new Date(item.date).getTime().toString().substring(0, 5)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime().toString().substring(0, 5))) {
+                } else if (parseInt(new Date(this.edited.date)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`))) {
                     this.check_time = true;
                 } else {
                     this.check_time = false;
@@ -1079,6 +1089,12 @@ export default {
             })
         },
         search_date_teacher() {
+            console.log(
+                this.panel,
+                this.panel1,
+                this.panel2,
+                this.panel3
+            );
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
@@ -1100,7 +1116,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.keyuser == timedata.teacher) {
+                            if (true){//this.keyuser == timedata.teacher) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -1151,7 +1167,7 @@ export default {
                                                         teacherAll: teacherData,
                                                         studentAll: studentData
                                                     });
-                                                } else if (sendplanData.status_development == 'Pending' 
+                                                } else if (sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
                                                     || sendplanData.status_development == undefined && sendplanData.homework) {
                                                     this.dash_noall++;
@@ -1248,6 +1264,12 @@ export default {
         },
 
         search_date_teacher_All() {
+            console.log(
+                this.panel,
+                this.panel1,
+                this.panel2,
+                this.panel3
+            );
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
@@ -1323,7 +1345,7 @@ export default {
                                                             teacherAll: teacherData,
                                                             studentAll: studentData
                                                         });
-                                                    } else if (sendplanData.status_development == 'Pending' 
+                                                    } else if (sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
                                                         || sendplanData.status_development == undefined && sendplanData.homework) {
                                                         this.dash_noall++;
@@ -1433,4 +1455,12 @@ export default {
     background-color: #D4C1B2;
     /* เปลี่ยนเป็นสีที่คุณต้องการ */
 }
+.repeating-gradient {
+    background-image: repeating-linear-gradient(-45deg,
+                        rgba(161, 158, 158, 0.25),
+                        rgba(161, 158, 158, 0.25) 5px,
+                        rgba(10, 10, 10, 0.25) 5px,
+                        rgba(12, 12, 12, 0.25) 10px
+                      );
+  }
 </style>
