@@ -39,20 +39,22 @@
             <v-col cols="12">
                 <v-card-group class="d-flex justify-space-between pt-8 fonts500">
                     <v-hover v-slot="{ hover }">
-                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover}" class="rounded-5"
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
                             style="background: #B6A7A2;" height="159px" width="300px"
                             @click="checkname = true, checkname1 = false, checkname2 = false, checkname3 = false">
                             <v-row>
                                 <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/youngpeoplestudents.png')"
-                                        class="pt-5 ps-5" v-if="checkname">
-                                    <img :src="require('~/assets/youngpeoplestudents.png')"
-                                        class="pt-5 ps-5" v-if="!checkname" style="opacity: 0.2;">                                     
+                                    <img :src="require('~/assets/youngpeoplestudents.png')" class="pt-5 ps-5"
+                                        v-if="checkname">
+                                    <img :src="require('~/assets/youngpeoplestudents.png')" class="pt-5 ps-5"
+                                        v-if="!checkname" style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);"
+                                    v-if="checkname">
                                     {{ dash_notactive }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.329);" v-if="!checkname">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.329);"
+                                    v-if="!checkname">
                                     {{ dash_notactive }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
@@ -73,10 +75,12 @@
                                     <img :src="require('~/assets/young smiling woman working at laptop.png')"
                                         class="pt-5 ps-5" v-if="!checkname1" style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);" v-if="checkname1">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);"
+                                    v-if="checkname1">
                                     {{ dash_active }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.315);" v-if="!checkname1">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.315);"
+                                    v-if="!checkname1">
                                     {{ dash_active }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
@@ -92,15 +96,15 @@
                             @click="checkname2 = true, checkname1 = false, checkname = false, checkname3 = false">
                             <v-row>
                                 <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/stackbooks.png')"
-                                        class="pt-8 ps-5" v-if="checkname2">
-                                    <img :src="require('~/assets/stackbooks.png')"
-                                        class="pt-8 ps-5" v-if="!checkname2" style="opacity: 0.2;">
+                                    <img :src="require('~/assets/stackbooks.png')" class="pt-8 ps-5" v-if="checkname2">
+                                    <img :src="require('~/assets/stackbooks.png')" class="pt-8 ps-5" v-if="!checkname2"
+                                        style="opacity: 0.2;">
                                 </v-col>
                                 <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname2">
                                     {{ dash_noall }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.295);" v-if="!checkname2">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.295);"
+                                    v-if="!checkname2">
                                     {{ dash_noall }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
@@ -116,15 +120,15 @@
                             @click="checkname3 = true, checkname1 = false, checkname2 = false, checkname = false">
                             <v-row>
                                 <v-col cols="auto" class="mr-auto">
-                                    <img :src="require('~/assets/books.png')"
-                                        class="pt-8 ps-5" v-if="checkname3">
-                                    <img :src="require('~/assets/books.png')"
-                                        class="pt-8 ps-5" v-if="!checkname3" style="opacity: 0.2;">
+                                    <img :src="require('~/assets/books.png')" class="pt-8 ps-5" v-if="checkname3">
+                                    <img :src="require('~/assets/books.png')" class="pt-8 ps-5" v-if="!checkname3"
+                                        style="opacity: 0.2;">
                                 </v-col>
                                 <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname3">
                                     {{ dash_all }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.281);" v-if="!checkname3">
+                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.281);"
+                                    v-if="!checkname3">
                                     {{ dash_all }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
@@ -365,6 +369,17 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
+                                <v-col cols="12" style="margin-top:-15px">
+                                    <v-chip color="#29CC39" text-color="white" v-if="check_time">
+                                        ส่งภายในเวลา
+                                    </v-chip>
+                                    <v-chip color="#AD382F" text-color="white" v-if="!check_time">
+                                        ส่งล่าช้า
+                                    </v-chip>
+                                    <v-chip color="#FFC107" text-color="black" v-if="edited.match_test">
+                                        ทดลองเรียน
+                                    </v-chip>
+                                </v-col>
                                 <v-col cols="12" sm="12">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px;">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
@@ -443,14 +458,15 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
-                                <v-col cols="12" style="margin-top:-15px" v-if="check_time">
-                                    <v-chip color="#29CC39" text-color="white">
+                                <v-col cols="12" style="margin-top:-15px">
+                                    <v-chip color="#29CC39" text-color="white" v-if="check_time">
                                         ส่งภายในเวลา
                                     </v-chip>
-                                </v-col>
-                                <v-col cols="12" style="margin-top:-15px" v-if="!check_time">
-                                    <v-chip color="#AD382F" text-color="white">
+                                    <v-chip color="#AD382F" text-color="white" v-if="!check_time">
                                         ส่งล่าช้า
+                                    </v-chip>
+                                    <v-chip color="#FFC107" text-color="black" v-if="edited.match_test">
+                                        ทดลองเรียน
                                     </v-chip>
                                 </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-20px">
@@ -557,6 +573,14 @@
                                     <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
                                         v-model="edited.link_url" :rules="rules.text" required></v-text-field>
                                 </v-col>
+                                <v-col cols="12" sm="12">
+                                    <v-radio-group v-model="check_sheet"  :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                        <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name" :value="items.key"></v-radio>
+                                    </v-radio-group>                                    
+                                    <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
+                                        v-if="check_sheet == '-NcBOFy1oXhSI-dVzWkp'" v-model="edited.link_sheet"
+                                        :rules="rules.text" required></v-text-field>
+                                </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
@@ -569,9 +593,12 @@
                                     <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12">
-                                    <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
-                                        required></v-text-field>
+                                <v-col cols="12" sm="12" v-if="edited.match_test">
+                                    <v-select v-model="edited.optional" :items="optional_all" item-value="key"
+                                        item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
+                                        required></v-select>
+                                    <!-- <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
+                                        required></v-text-field> -->
                                 </v-col>
 
                             </v-row>
@@ -729,8 +756,11 @@ import { saveAs } from 'file-saver';
 export default {
     data() {
         return {
-            keyuser:null,
-            status:null,
+            optional_all: [],
+            sheet_all: [],
+            check_sheet: null,
+            keyuser: null,
+            status: null,
             checkname: false,
             checkname1: false,
             checkname2: false,
@@ -745,7 +775,7 @@ export default {
             panel2: [0],
             panel3: [0],
 
-            desserts:[],
+            desserts: [],
             dessertsNotcheck: [],
             dessertsNotData: [],
             dessertsNotapprove: [],
@@ -819,6 +849,8 @@ export default {
         }
     },
     mounted() {
+        this.sheet_search();
+        this.optional_search();
         this.fullName();
         this.search_date_teacher();
         this.arrayEvent_search();
@@ -893,15 +925,39 @@ export default {
     },
 
     methods: {
+        optional_search() {
+            const db = this.$fireModule.database();
+            db.ref(`optional_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.optional_all = item;
+                console.log(this.optional_all);
+            })
+        },
+        sheet_search() {
+            const db = this.$fireModule.database();
+            db.ref(`sheet_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.sheet_all = item;
+                console.log(this.sheet_all);
+            })
+        },
         fullName() {
             if (localStorage.getItem('firstName') == null) {
                 this.keyuser = sessionStorage.getItem('lastName') || '';
-                this.status = sessionStorage.getItem('status')|| '';
+                this.status = sessionStorage.getItem('status') || '';
             } else {
                 this.keyuser = localStorage.getItem('lastName') || '';
-                this.status = localStorage.getItem('status')|| '';
+                this.status = localStorage.getItem('status') || '';
             }
-            console.log(">>>>>", this.keyuser,this.status);
+            console.log(">>>>>", this.keyuser, this.status);
         },
         validate() {
             if (this.$refs.form.validate()) {
@@ -920,7 +976,12 @@ export default {
             this.dialog = true;
             this.edited = item;
             this.summ_hour = this.sum_hour(this.edited.time_s, this.edited.time_e);
-            console.log(this.edited, this.summ_hour);
+            if (parseInt(new Date(this.edited.date).getTime()) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime())) {
+                this.check_time = true;
+            } else {
+                this.check_time = false;
+            }
+            console.log(this.edited, this.summ_hour, this.check_time);
         },
         check_confirm(item) {
             this.edited = item;
@@ -942,11 +1003,12 @@ export default {
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
                     this.check_time = true;
-                } else if (parseInt(new Date(this.edited.date)) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`))) {
+                } else if (parseInt(new Date(this.edited.date).getTime()) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime())) {
                     this.check_time = true;
                 } else {
                     this.check_time = false;
                 }
+                this.check_sheet = this.edited.check_sheet;
                 console.log(this.edited, this.check_time);
             });
             this.dialog_confirm = true;
@@ -958,6 +1020,7 @@ export default {
             this.fileToUpload = null;
             this.fileToUpload1 = null;
             this.dialog = false;
+            this.check_sheet = null;
         },
 
         upload() {
@@ -1025,8 +1088,19 @@ export default {
                                                 status_study_column: this.edited.status_study_column,
                                                 status_study_column_tea: this.edited.status_study_column_tea,
                                                 createAt_OP: new Date(),
+                                                keystudent: this.edited.keyStudent,
+                                                date_learn: this.edited.date,
+                                                time_learn: this.edited.time_e,
+                                                level: this.edited.level,
+                                                keysubject: this.edited.keySubject,
+                                                check_name: this.check_time,
                                             }).then(() => {
                                                 console.log('save send_plan');
+                                                if (this.date == null) {
+                                                    this.search_date_teacher_All();
+                                                } else {
+                                                    this.search_date_teacher();
+                                                }
                                             })
 
                                             let keystudent = this.edited;
@@ -1155,6 +1229,47 @@ export default {
         },
         save_confirm() {
             const db = this.$fireModule.database();
+            if (this.edited.status_development == "Approved") {
+                let level_search = null;
+                const getsubjectPromise = db.ref(`subject_all/${this.edited.keySubject}/`).once("value");
+                const getlevelPromise = db.ref(`level_all/`).once("value");
+                const gettypeflipPromise = db.ref(`type_all/${this.edited.teacherAll.typeflip}`).once("value");
+                const gettypeprivatePromise = db.ref(`type_private_all/${this.edited.teacherAll.typeprivate}`).once("value");
+                const getlocationPromise = db.ref(`location/${this.edited.keystyle}`).once("value");
+                const getsheetPromise = db.ref(`sheet_all/${this.edited.check_sheet}`).once("value");
+                const getoptionalPromise = db.ref(`optional_all/${this.edited.optional}`).once("value");
+                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getsheetPromise, getoptionalPromise])
+                    .then((snapshots) => {
+                        const subject_data = snapshots[0].val();
+                        const level_data = snapshots[1].val();
+                        const typeflip_data = snapshots[2].val();
+                        const typeprivate_data = snapshots[3].val();
+                        const location_data = snapshots[4].val();
+                        const sheet_data = snapshots[5].val();
+                        const optional_data = snapshots[6].val();
+                        console.log(subject_data ,level_data,typeflip_data,typeprivate_data,location_data,sheet_data,optional_data);
+                        for(const key in level_data){
+                            console.log(level_data[key].name);
+                            if(level_data[key].name.includes(this.edited.level)){
+                                level_search = {key:key, name:level_data[key].name, bath:level_data[key].bath};
+                                console.log(level_search ,this.edited.level);
+                                break;
+                            }                            
+                        }
+                        
+                        db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/money`).update({
+                            subject: subject_data || null,
+                            level: level_search || null,
+                            typeflip: typeflip_data || null,
+                            typeprivate: typeprivate_data || null,
+                            location: location_data || null,
+                            sheet: sheet_data || null,
+                            optional: optional_data || null,                            
+                        }).then(() => {
+                            console.log("คำนวนเงินเดือน");
+                        })
+                    })
+            }
             db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/`).update({
                 learn: this.edited.learn,
                 understand: this.edited.understand,
@@ -1166,12 +1281,19 @@ export default {
                 status_development: this.edited.status_development,
                 comment: this.edited.comment,
                 check_save: this.check_time,
-                rate: this.edited.rate,
+                optional: this.edited.optional || "-",
                 link_url: this.edited.link_url,
+                link_sheet: this.edited.link_sheet,
+                check_sheet: this.check_sheet,
                 createAt_rate_OP: new Date()
             }).then(() => {
                 console.log('save send_plan');
                 this.clear_dialog();
+                if (this.date == null) {
+                    this.search_date_teacher_All();
+                } else {
+                    this.search_date_teacher();
+                }
             })
         },
 
@@ -1211,7 +1333,7 @@ export default {
                 }
             })
         },
-        search_date_teacher() {            
+        search_date_teacher() {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
@@ -1233,7 +1355,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.status == "teacher" && this.keyuser == timedata.teacher){
+                            if (this.status == "teacher" && this.keyuser == timedata.teacher) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -1369,7 +1491,7 @@ export default {
                                             }
                                         }
                                     })
-                            }else if(this.status == 'admin'){
+                            } else if (this.status == 'admin') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -1538,11 +1660,11 @@ export default {
                 let item1 = [];
                 let item2 = [];
                 let item3 = [];
-                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (new Date(date).getTime().toString().substring(0, 5) <= now.getTime().toString().substring(0, 5)) {
+                        if (new Date(date).getTime() <= now.getTime()) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -1684,7 +1806,7 @@ export default {
                                                 }
                                             }
                                         })
-                                }else if(this.status == 'admin'){
+                                } else if (this.status == 'admin') {
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -2352,7 +2474,9 @@ export default {
     background-color: #D4C1B2;
     /* เปลี่ยนเป็นสีที่คุณต้องการ */
 }
+
 .background-light {
-  background-color: rgb(233, 16, 16); /* หรือสีที่คุณต้องการ */
+    background-color: rgb(233, 16, 16);
+    /* หรือสีที่คุณต้องการ */
 }
 </style>

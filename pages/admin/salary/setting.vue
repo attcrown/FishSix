@@ -23,7 +23,10 @@
                         ราคาต่อระดับชั้น
                     </v-btn>
                     <v-btn color="primary" dark @click="dialog4 = !dialog4, type_search()" class="mb-3">
-                        ราคา Type & Tier
+                        ราคา Type & Tier FlipClass
+                    </v-btn>
+                    <v-btn color="primary" dark @click="dialog8 = !dialog8, type_private_search()" class="mb-3">
+                        ราคา Type & Tier PrivateClass
                     </v-btn>
                     <v-btn color="primary" dark @click="dialog5 = !dialog5, sheet_search()" class="mb-3">
                         ราคา Sheets
@@ -105,11 +108,11 @@
         <v-dialog v-model="dialog4" max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span>TYPE & TIER</span>
+                    <span>TYPE & TIER FlipClass</span>
                     <v-spacer></v-spacer>
                 </v-card-title>
                 <v-card-text>
-                    เพิ่ม TYPE & TIER
+                    เพิ่ม TYPE & TIER FlipClass
                     <v-text-field label="name" type="text" v-model="type.name"></v-text-field>
                     <v-text-field label="Amount" type="number" v-model="type.bath" prefix="฿"></v-text-field>
                     <v-btn @click="save_type_add()" :disabled="!type.name || !type.bath">Add</v-btn>
@@ -230,14 +233,30 @@
         <v-dialog v-model="dialog8" max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span>Dialog 8</span>
+                    <span>TYPE & TIER PrivateClass</span>
                     <v-spacer></v-spacer>
                 </v-card-title>
+                <v-card-text>
+                    เพิ่ม TYPE & TIER PrivateClass
+                    <v-text-field label="name" type="text" v-model="type_private.name"></v-text-field>
+                    <v-text-field label="Amount" type="number" v-model="type_private.bath" prefix="฿"></v-text-field>
+                    <v-btn @click="save_type_private_add()" :disabled="!type_private.name || !type_private.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in type_private_all" :key="item.key">
+                        <v-col cols="8">
+                            <v-text-field v-model="item.name"></v-text-field>
+                            <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="Amount" type_private="number" v-model="item.bath" prefix="฿"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" text @click="dialog8 = false">
                         Close
                     </v-btn>
-                    <v-btn color="primary" text @click="dialog8 = false">
+                    <v-btn color="primary" text @click="save_type_private_bath()">
                         save
                     </v-btn>
                 </v-card-actions>
@@ -270,6 +289,8 @@ export default {
             style_all: [],
             optional: [],
             optional_all: [],
+            type_private: [],
+            type_private_all: [],
         }
     },
     methods: {
@@ -360,6 +381,38 @@ export default {
                 })
             }
             console.log('success save type bath');
+        },
+
+        type_private_search() {
+            const db = this.$fireModule.database();
+            db.ref(`type_private_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.type_private_all = item;
+                console.log(this.type_private_all);
+            })
+        },
+        save_type_private_add() {
+            const db = this.$fireModule.database();
+            db.ref(`type_private_all/`).push({
+                name: this.type_private.name,
+                bath: this.type_private.bath,
+            })
+            console.log('success save type_private');
+        },
+        save_type_private_bath(){
+            const db = this.$fireModule.database();
+            for (const key in this.type_private_all) {
+                console.log(this.type_private_all[key]);
+                db.ref(`type_private_all/${this.type_private_all[key].key}/`).update({
+                    bath: this.type_private_all[key].bath,
+                    name: this.type_private_all[key].name,
+                })
+            }
+            console.log('success save type_private bath');
         },
 
         sheet_search() {

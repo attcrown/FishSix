@@ -295,7 +295,16 @@
                                             :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
                                     </v-col>
-
+                                    <v-col cols="4">
+                                        <v-select class="black-label" v-model="type_Flip"
+                                            :items="type_all" item-text="name" item-value="key"
+                                            label="Type & Tier FlipClass" :readonly="!isEditingContract"></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select class="black-label" v-model="type_Private"
+                                            :items="type_private_all" item-text="name" item-value="key"
+                                            label="Type & Tier PrivateClass" :readonly="!isEditingContract"></v-select>
+                                    </v-col>
                                 </v-row>
 
 
@@ -380,6 +389,10 @@ export default {
 
     data() {
         return {
+            type_Flip:null,
+            type_Private:null,
+            type_all:[],
+            type_private_all:[],
             //status
             isLoading: true,
             userId: null,
@@ -553,7 +566,8 @@ export default {
         this.getlocation();
         this.initialize();
         this.getTeacherLocation();
-
+        this.typeClass();
+        this.typePrivateClass();
     },
 
     computed: {
@@ -586,6 +600,28 @@ export default {
     },
 
     methods: {
+        typeClass(){
+            const db = this.$fireModule.database();
+            db.ref(`type_all/`).once("value", (snapshot) => {
+                let type = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    type.push({ key: key, name: childData[key].name, bath:childData[key].bath});
+                }
+                this.type_all = type;
+            })
+        },
+        typePrivateClass(){
+            const db = this.$fireModule.database();
+            db.ref(`type_private_all/`).once("value", (snapshot) => {
+                let type = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    type.push({ key: key, name: childData[key].name, bath:childData[key].bath});
+                }
+                this.type_private_all = type;
+            })
+        },
         async initialize() {
 
             await Promise.all([this.fetchData(), this.readdata(), this.readSubject()]);
@@ -774,7 +810,8 @@ export default {
                         startDate: this.startDate,
                         rate: this.rate,
                         classLocation: this.classLocation,
-
+                        typeflip : this.type_Flip,
+                        typeprivate : this.type_Private
                     })
                         .then(() => {
 
@@ -894,7 +931,8 @@ export default {
                 this.university = childData.university || null;
                 this.faculty = childData.faculty || null;
                 this.major = childData.major || null;
-
+                this.type_Flip = childData.typeflip || null;
+                this.type_Private = childData.typeprivate || null;
                 try {
                     this.address.houseNo = childData.address.houseNo || null;
                     this.address.tambon = childData.address.tambon || null;
