@@ -574,11 +574,11 @@
                                         v-model="edited.link_url" :rules="rules.text" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12">
-                                    <v-radio-group v-model="check_sheet"  :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                    <v-radio-group v-model="edited.check_sheet"  :rules="[v => !!v || 'กรุณาเลือก']" required>
                                         <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name" :value="items.key"></v-radio>
                                     </v-radio-group>                                    
                                     <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
-                                        v-if="check_sheet == '-NcBOFy1oXhSI-dVzWkp'" v-model="edited.link_sheet"
+                                        v-if="edited.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" v-model="edited.link_sheet"
                                         :rules="rules.text" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px">
@@ -737,7 +737,7 @@
                 </v-card-text>
                 <hr style="border: 2px solid #000; background-color: #000; margin-top: -30px;">
                 <v-card-title style="margin-top: -20px;">
-                    <v-btn class="text-white" @click="exportToExcel" color="green" :loading="isExport">ยืนยัน
+                    <v-btn class="text-white" @click="exportToExcel" color="green">ยืนยัน
                         <v-icon color="white" small> mdi-content-save</v-icon>
                     </v-btn>
                 </v-card-title>
@@ -758,7 +758,6 @@ export default {
         return {
             optional_all: [],
             sheet_all: [],
-            check_sheet: null,
             keyuser: null,
             status: null,
             checkname: false,
@@ -931,7 +930,7 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath});
                 }
                 this.optional_all = item;
                 console.log(this.optional_all);
@@ -1008,7 +1007,6 @@ export default {
                 } else {
                     this.check_time = false;
                 }
-                this.check_sheet = this.edited.check_sheet;
                 console.log(this.edited, this.check_time);
             });
             this.dialog_confirm = true;
@@ -1020,7 +1018,6 @@ export default {
             this.fileToUpload = null;
             this.fileToUpload1 = null;
             this.dialog = false;
-            this.check_sheet = null;
         },
 
         upload() {
@@ -1256,6 +1253,43 @@ export default {
                                 break;
                             }                            
                         }
+                        //-----------------คำนวนรายได้----------------------------
+                        let sum = 0;
+                        if(this.edited.style.substring(0,4).includes('Flip') && optional_data != undefined){
+                            console.log('1',this.edited.style.substring(0,4) ,optional_data);
+                            sum = ( parseFloat(subject_data.bath)+
+                                    parseFloat(level_search.bath)+
+                                    parseFloat(typeflip_data.bath)+
+                                    parseFloat(location_data.bath)+
+                                    parseFloat(sheet_data.bath)+
+                                    parseFloat(optional_data.bath))*parseFloat(this.edited.hour);
+                                    console.log(sum);
+                        }else if(this.edited.style.substring(0,7).includes('Private') && optional_data != undefined){
+                            console.log('2',this.edited.style.substring(0,4) ,optional_data);
+                            sum = ( parseFloat(subject_data.bath)+
+                                    parseFloat(level_search.bath)+
+                                    parseFloat(typeprivate_data.bath || 0)+
+                                    parseFloat(location_data.bath)+
+                                    parseFloat(sheet_data.bath)+
+                                    parseFloat(optional_data.bath))*parseFloat(this.edited.hour);
+                                    console.log(sum);
+                        }else if(this.edited.style.substring(0,4).includes('Flip') && optional_data == undefined){
+                            console.log('3',this.edited.style.substring(0,4) ,optional_data);
+                            sum = ( parseFloat(subject_data.bath)+
+                                    parseFloat(level_search.bath)+
+                                    parseFloat(typeflip_data.bath)+
+                                    parseFloat(location_data.bath)+
+                                    parseFloat(sheet_data.bath))*parseFloat(this.edited.hour);
+                                    console.log(sum);
+                        }else if(this.edited.style.substring(0,7).includes('Private') && optional_data == undefined){
+                            console.log('4',this.edited.style.substring(0,4) ,optional_data);
+                            sum = ( parseFloat(subject_data.bath)+
+                                    parseFloat(level_search.bath)+
+                                    parseFloat(typeprivate_data.bath)+
+                                    parseFloat(location_data.bath)+
+                                    parseFloat(sheet_data.bath))*parseFloat(this.edited.hour);
+                                    console.log(sum);
+                        }else{alert('คำนวนล้มเหลว');}
                         
                         db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/money`).update({
                             subject: subject_data || null,
@@ -1264,10 +1298,12 @@ export default {
                             typeprivate: typeprivate_data || null,
                             location: location_data || null,
                             sheet: sheet_data || null,
-                            optional: optional_data || null,                            
+                            optional: optional_data || null, 
+                            sum_money: sum || null,                                                      
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");
                         })
+
                     })
             }
             db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/`).update({
@@ -1281,10 +1317,10 @@ export default {
                 status_development: this.edited.status_development,
                 comment: this.edited.comment,
                 check_save: this.check_time,
-                optional: this.edited.optional || "-",
+                optional: this.edited.optional || null,
                 link_url: this.edited.link_url,
-                link_sheet: this.edited.link_sheet,
-                check_sheet: this.check_sheet,
+                link_sheet: this.edited.link_sheet || null,
+                check_sheet: this.edited.check_sheet,
                 createAt_rate_OP: new Date()
             }).then(() => {
                 console.log('save send_plan');
