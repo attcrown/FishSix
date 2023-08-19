@@ -10,7 +10,7 @@
             </v-row>
         </div>
 
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="dialog" max-width="400px">
             <v-card>
                 <v-card-title>
                     ตั้งค่าเรดราคา
@@ -18,22 +18,22 @@
                 <v-card-text>
                     <v-btn color="primary" dark @click="dialog2 = !dialog2, subject()" class="mb-3">
                         ราคาต่อวิชา
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog3 = !dialog3, level_search()" class="mb-3">
                         ราคาต่อระดับชั้น
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog4 = !dialog4, type_search()" class="mb-3">
                         ราคา Type & Tier FlipClass
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog8 = !dialog8, type_private_search()" class="mb-3">
                         ราคา Type & Tier PrivateClass
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog5 = !dialog5, sheet_search()" class="mb-3">
                         ราคา Sheets
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog6 = !dialog6, style_search()" class="mb-3">
                         ราคารูปแบบการสอน
-                    </v-btn>
+                    </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog7 = !dialog7, optional_search() " class="mb-3">
                         ราคา Optional
                     </v-btn>                    
