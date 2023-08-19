@@ -122,16 +122,11 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/admin/student',
         },
-        // {
-        //   icon: 'mdi-store',
-        //   title: 'Shop',
-        //   to: '/admin/shop',
-        // },
-        // {
-        //   icon: 'mdi-store-settings',
-        //   title: 'Edit-Shop',
-        //   to: '/admin/edit_shop',
-        // },        
+        {
+          icon: 'mdi-cash-fast',
+          title: 'รายได้ครู',
+          to: '/admin/salary',
+        },       
       ],
       miniVariant: false,
       right: true,
