@@ -163,7 +163,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in items" :key="item.keyStudent">
+                            <tr v-for="item in items" :key="item.keyStudent.key">
                                 <td class="p-2">{{ item.date }}</td>
                                 <td class="p-2">{{ item.studentId }}</td>
                                 <td class="p-2">{{ item.namestu }}</td>
@@ -216,7 +216,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in items" :key="item.keyStudent">
+                            <tr v-for="item in items" :key="item.keyStudent.key">
                                 <td class="p-2">{{ item.date }}</td>
                                 <td class="p-2">{{ item.studentId }}</td>
                                 <td class="p-2">{{ item.namestu }}</td>
@@ -269,7 +269,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in items" :key="item.keyStudent">
+                            <tr v-for="item in items" :key="item.keyStudent.key">
                                 <td class="p-2">{{ item.date }}</td>
                                 <td class="p-2">{{ item.studentId }}</td>
                                 <td class="p-2">{{ item.namestu }}</td>
@@ -322,7 +322,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in items" :key="item.keyStudent">
+                            <tr v-for="item in items" :key="item.keyStudent.key">
                                 <td class="p-2">{{ item.date }}</td>
                                 <td class="p-2">{{ item.studentId }}</td>
                                 <td class="p-2">{{ item.namestu }}</td>

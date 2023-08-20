@@ -360,8 +360,8 @@
                     <v-card-title class="text-h6">
                         <!-- <span class="mdi mdi-plus-box"></span> เลือกวันที่สอน -->
                     </v-card-title>
-                    <v-date-picker v-model="date1" multiple :events="arrayEvents" :allowed-dates="allowedDates"
-                        show-adjacent-months event-color="green lighten-1"></v-date-picker>
+                    <v-date-picker v-model="date1" multiple :events="arrayEvents" 
+                        show-adjacent-months event-color="green lighten-1"></v-date-picker> <!------:allowed-dates="allowedDates"------>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn rounded color="#29CC39" dark class="mb-5" @click="dialog_select_date = false, mode = 'save'">

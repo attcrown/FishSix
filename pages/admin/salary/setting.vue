@@ -36,7 +36,10 @@
                     </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog7 = !dialog7, optional_search() " class="mb-3">
                         ราคา Optional
-                    </v-btn>                    
+                    </v-btn>      
+                    <v-btn color="primary" dark @click="dialog9 = !dialog9, send_rate_search() " class="mb-3">
+                        หัก%การส่งข้อมูลล่าช้า
+                    </v-btn>              
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" text @click="dialog = false">
@@ -263,6 +266,39 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog9" max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span>Send Rate</span>
+                    <v-spacer></v-spacer>
+                </v-card-title>
+                <v-card-text>
+                    แก้ไขการเช็คสาย ส่งสาย
+                    <v-text-field label="name" type="text" v-model="send_rate.name"></v-text-field>
+                    <v-text-field label="Amount" type="number" v-model="send_rate.bath" prefix="%"></v-text-field>
+                    <v-btn @click="save_send_rate_add()" :disabled="!send_rate.name || !send_rate.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in send_rate_all" :key="item.key">
+                        <v-col cols="8">
+                            <v-text-field v-model="item.name"></v-text-field>
+                            <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="Amount" send_rate="number" v-model="item.bath" prefix="%"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" text @click="dialog9 = false">
+                        Close
+                    </v-btn>
+                    <v-btn color="primary" text @click="save_send_rate_bath()">
+                        save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </div>
 </template>
 <script>
@@ -277,6 +313,7 @@ export default {
             dialog6: false,
             dialog7: false,
             dialog8: false,
+            dialog9: false,
 
             subject_all: [],
             level: [],
@@ -291,6 +328,8 @@ export default {
             optional_all: [],
             type_private: [],
             type_private_all: [],
+            send_rate: [],
+            send_rate_all: [],
         }
     },
     methods: {
@@ -501,6 +540,38 @@ export default {
                 })
             }
             console.log('success save optional bath');
+        },
+
+        send_rate_search(){
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_all = item;
+                console.log(this.send_rate_all);
+            })
+        },
+        save_send_rate_add(){
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_all/`).push({
+                name: this.send_rate.name,
+                bath: this.send_rate.bath,
+            })
+            console.log('success save send_rate');
+        },
+        save_send_rate_bath(){
+            const db = this.$fireModule.database();
+            for (const key in this.send_rate_all) {
+                console.log(this.send_rate_all[key]);
+                db.ref(`send_rate_all/${this.send_rate_all[key].key}/`).update({
+                    bath: this.send_rate_all[key].bath,
+                    name: this.send_rate_all[key].name,
+                })
+            }
+            console.log('success save send_rate bath');
         },
         
     }

@@ -12,7 +12,8 @@
                             <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
                                 v-bind="attrs" v-on="on"></v-text-field>
                         </template>
-                        <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents" event-color="green lighten-1">
+                        <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
+                            event-color="green lighten-1">
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="modal = false">
                                 Cancel
@@ -226,12 +227,15 @@ export default {
                 const existingGroup = acc.find(group => group[0].name === item.name);
                 if (existingGroup) {
                     existingGroup.push(item);
+                    // เรียงข้อมูลในกลุ่มตามวันที่
+                    existingGroup.sort((a, b) => new Date(a.send_plan.date_learn) - new Date(b.send_plan.date_learn));
                 } else {
                     acc.push([item]);
                 }
                 return acc;
             }, []);
         },
+
     },
     methods: {
         arrayEvent_search() {
