@@ -273,11 +273,11 @@
                     <v-spacer></v-spacer>
                 </v-card-title>
                 <v-card-text>
-                    แก้ไขการเช็คสาย ส่งสาย
+                    <!-- แก้ไขการเช็คสาย ส่งสาย
                     <v-text-field label="name" type="text" v-model="send_rate.name"></v-text-field>
                     <v-text-field label="Amount" type="number" v-model="send_rate.bath" prefix="%"></v-text-field>
                     <v-btn @click="save_send_rate_add()" :disabled="!send_rate.name || !send_rate.bath">Add</v-btn>
-                    <hr>
+                    <hr> -->
                     <v-row v-for="item in send_rate_all" :key="item.key">
                         <v-col cols="8">
                             <v-text-field v-model="item.name"></v-text-field>

@@ -1235,7 +1235,8 @@ export default {
                 const getlocationPromise = db.ref(`location/${this.edited.keystyle}`).once("value");
                 const getsheetPromise = db.ref(`sheet_all/${this.edited.check_sheet}`).once("value");
                 const getoptionalPromise = db.ref(`optional_all/${this.edited.optional}`).once("value");
-                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getsheetPromise, getoptionalPromise])
+                const getsend_ratePromise = db.ref(`send_rate_all/`).once("value");
+                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getsheetPromise, getoptionalPromise ,getsend_ratePromise])
                     .then((snapshots) => {
                         const subject_data = snapshots[0].val();
                         const level_data = snapshots[1].val();
@@ -1244,7 +1245,8 @@ export default {
                         const location_data = snapshots[4].val();
                         const sheet_data = snapshots[5].val();
                         const optional_data = snapshots[6].val();
-                        console.log(subject_data ,level_data,typeflip_data,typeprivate_data,location_data,sheet_data,optional_data);
+                        const send_rate_data = snapshots[7].val();
+                        console.log(subject_data ,level_data,typeflip_data,typeprivate_data,location_data,sheet_data,optional_data ,send_rate_data);
                         for(const key in level_data){
                             console.log(level_data[key].name);
                             if(level_data[key].name.includes(this.edited.level)){
@@ -1262,7 +1264,12 @@ export default {
                                     parseFloat(typeflip_data.bath)+
                                     parseFloat(location_data.bath)+
                                     parseFloat(sheet_data.bath)+
-                                    parseFloat(optional_data.bath))*parseFloat(this.edited.hour);
+                                    parseFloat(optional_data.bath))*parseFloat(this.edited.hour);                                    
+                                    if(this.edited.check_name == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath)/100);
+                                    }if(this.edited.check_save == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath)/100);
+                                    }
                                     console.log(sum);
                         }else if(this.edited.style.substring(0,7).includes('Private') && optional_data != undefined){
                             console.log('2',this.edited.style.substring(0,4) ,optional_data);
@@ -1272,6 +1279,11 @@ export default {
                                     parseFloat(location_data.bath)+
                                     parseFloat(sheet_data.bath)+
                                     parseFloat(optional_data.bath))*parseFloat(this.edited.hour);
+                                    if(this.edited.check_name == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath)/100);
+                                    }if(this.edited.check_save == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath)/100);
+                                    }
                                     console.log(sum);
                         }else if(this.edited.style.substring(0,4).includes('Flip') && optional_data == undefined){
                             console.log('3',this.edited.style.substring(0,4) ,optional_data);
@@ -1280,6 +1292,11 @@ export default {
                                     parseFloat(typeflip_data.bath)+
                                     parseFloat(location_data.bath)+
                                     parseFloat(sheet_data.bath))*parseFloat(this.edited.hour);
+                                    if(this.edited.check_name == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath)/100);
+                                    }if(this.edited.check_save == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath)/100);
+                                    }
                                     console.log(sum);
                         }else if(this.edited.style.substring(0,7).includes('Private') && optional_data == undefined){
                             console.log('4',this.edited.style.substring(0,4) ,optional_data);
@@ -1288,6 +1305,11 @@ export default {
                                     parseFloat(typeprivate_data.bath)+
                                     parseFloat(location_data.bath)+
                                     parseFloat(sheet_data.bath))*parseFloat(this.edited.hour);
+                                    if(this.edited.check_name == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath)/100);
+                                    }if(this.edited.check_save == false){
+                                        sum = sum-(sum*parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath)/100);
+                                    }
                                     console.log(sum);
                         }else{alert('คำนวนล้มเหลว');}
                         
@@ -1299,6 +1321,8 @@ export default {
                             location: location_data || null,
                             sheet: sheet_data || null,
                             optional: optional_data || null, 
+                            send_rate_save: send_rate_data['-NcGcQ5V7RjIzzAJaerY'],
+                            send_rate_name: send_rate_data['-NcGcM3iD1BtbI6Z0E1R'],
                             sum_money: sum || null,                                                      
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");

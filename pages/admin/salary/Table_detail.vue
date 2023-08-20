@@ -173,6 +173,20 @@
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailHour" prefix="Hr."></v-text-field>
                         </v-col>
+                        <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            <v-subheader style="font-size:16px; color:red;" >{{ detailData.money.send_rate_name.name }}</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath"
+                                prefix="-%"></v-text-field>
+                        </v-col>
+                        <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name }}</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath"
+                                prefix="-%"></v-text-field>
+                        </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">รวมทั้งหมด</v-subheader>
                         </v-col>
@@ -416,16 +430,17 @@ export default {
         },
         detail_send(item, hour) {
             this.detailData = item;
-            let min = hour.toString().split(".");
-            let min_s = null;
-            if (min.length > 1) {
-                min_s = (parseFloat("0." + min[1]) * 60 / 100);
-                this.detailHour = parseFloat(min[0]) + parseFloat(min_s);
-            } else {
-                this.detailHour = hour;
-            }
-            console.log(min, min_s);
-            console.log(this.detailData, this.detailHour);
+            this.detailHour = hour;
+            // let min = hour.toString().split(".");
+            // let min_s = null;
+            // if (min.length > 1) {
+            //     min_s = (parseFloat("0." + min[1]) * 60 / 100);
+            //     this.detailHour = parseFloat(min[0]) + parseFloat(min_s);
+            // } else {
+            //     this.detailHour = hour;
+            // }
+            // console.log(min, min_s);
+            // console.log(this.detailData, this.detailHour);
             this.dialog = true;
         },
     },
