@@ -4,7 +4,7 @@
             <v-row>
                 <v-col cols="12" md="2">
                     <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
-                        label="เลือกครู"></v-autocomplete>
+                        label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
                 </v-col>
                 <v-col cols="12" md="2">
                     <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
@@ -12,7 +12,7 @@
                             <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
                                 v-bind="attrs" v-on="on"></v-text-field>
                         </template>
-                        <v-date-picker v-model="date" scrollable :max="date_now">
+                        <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents" event-color="green lighten-1">
                             <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="modal = false">
                                 Cancel
@@ -84,7 +84,8 @@
                                 <td class="p-2">{{ item.send_plan.hour }} Hr.</td>
                                 <td class="p-2">{{ item.send_plan.money.sum_money }}฿</td>
                                 <td class="p-2 text-center">
-                                    <v-btn text icon elevation="5" @click="detail_send(item.send_plan ,item.send_plan.hour)">
+                                    <v-btn text icon elevation="5"
+                                        @click="detail_send(item.send_plan, item.send_plan.hour)">
                                         <span class="mdi mdi-cash-register text-h5"></span>
                                     </v-btn>
                                 </td>
@@ -112,45 +113,58 @@
                             <v-subheader style="font-size:16px">{{ detailData.money.subject.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5">
-                            <v-text-field readonly label="Amount" :value="detailData.money.subject.bath" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.subject.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.level.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.level.bath" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.level.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.location.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.location.bath" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.location.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.sheet.name }}</v-subheader>
-                        </v-col> 
+                        </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.sheet.bath" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.sheet.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.optional">
                             <v-subheader style="font-size:16px">{{ detailData.money.optional.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.optional">
-                            <v-text-field readonly label="Amount" :value="detailData.money.optional.bath" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.optional.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7" v-if="detailData.money.location.name.substring(0,4) == 'Flip'" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeflip.name }}</v-subheader>
+                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
+                            style="margin-top:-20px">
+                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeflip.name
+                            }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" v-if="detailData.money.location.name.substring(0,4) == 'Flip'" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.typeflip.bath" prefix="฿"></v-text-field>
+                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
+                            style="margin-top:-30px">
+                            <v-text-field readonly label="Amount" :value="detailData.money.typeflip.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7" v-if="detailData.money.location.name.substring(0,4) != 'Flip'" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeprivate.name }}</v-subheader>
+                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
+                            style="margin-top:-20px">
+                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeprivate.name
+                            }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" v-if="detailData.money.location.name.substring(0,4) != 'Flip'" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.typeprivate.bath" prefix="฿"></v-text-field>
+                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
+                            style="margin-top:-30px">
+                            <v-text-field readonly label="Amount" :value="detailData.money.typeprivate.bath"
+                                prefix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">ชั่วโมงสอน</v-subheader>
@@ -162,9 +176,10 @@
                             <v-subheader style="font-size:16px">รวมทั้งหมด</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.sum_money" prefix="฿"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.sum_money"
+                                prefix="฿"></v-text-field>
                         </v-col>
-                    </v-row>                    
+                    </v-row>
                 </v-card-text>
 
                 <v-card-actions>
@@ -181,6 +196,8 @@
 <script>
 export default {
     data: () => ({
+        arrayEvents: [],
+
         detailHour: null,
         detailData: null,
         dialog: false,
@@ -217,6 +234,47 @@ export default {
         },
     },
     methods: {
+        arrayEvent_search() {
+            const db = this.$fireModule.database();
+            if (this.value_tea != '00000') {
+                db.ref(`date_match/`).on("value", (snapshot) => {
+                    this.arrayEvents = [];
+                    const childData = snapshot.val();
+                    for (const key in childData) {
+                        const date = childData[key]
+                        for (const day in date) {
+                            const time = date[day];
+                            for (const data_all in time) {
+                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined && time[data_all].teacher == this.value_tea) {
+                                    this.arrayEvents.push(day);
+                                    console.log(this.arrayEvents);
+                                }
+                            }
+                        }
+                    }
+
+                })
+            } else {
+                db.ref(`date_match/`).on("value", (snapshot) => {
+                    this.arrayEvents = [];
+                    const childData = snapshot.val();
+                    for (const key in childData) {
+                        const date = childData[key]
+                        for (const day in date) {
+                            const time = date[day];
+                            for (const data_all in time) {
+                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined) {
+                                    this.arrayEvents.push(day);
+                                    console.log(this.arrayEvents);
+                                }
+                            }
+                        }
+                    }
+
+                })
+            }
+
+        },
         calculateTotalIncome(teacherData) {
             let totalIncome = 0;
             for (const item of teacherData) {
@@ -314,21 +372,56 @@ export default {
                     this.data_all = item;
                     console.log(this.data_all);
                 })
+            } else {
+                db.ref(`send_plan/${tea}`).once("value", (snapshot) => {
+                    let item = [];
+                    const data_all = snapshot.val();
+                    for (const data in data_all) {
+                        console.log(new Date(data_all[data].date_learn).getTime(), day_search_start, day_search_end);
+                        if (data_all[data].status_development == 'Approved' && new Date(data_all[data].date_learn).getTime() >= day_search_start && new Date(data_all[data].date_learn).getTime() <= day_search_end) {
+                            console.log(data_all[data]);
+                            const getTeacherPromise = db.ref(`user/${tea}`).once("value");
+                            const getStudentPromise = db.ref(`user/${data_all[data].keystudent}`).once("value");
+                            const getDateMatchPromise = db.ref(`date_match/${data_all[data].keystudent}/${data_all[data].date_learn}/${data_all[data].time_learn}`).once("value");
+                            Promise.all([getTeacherPromise, getStudentPromise, getDateMatchPromise])
+                                .then((snapshots) => {
+                                    const teacherSnapshot = snapshots[0];
+                                    const studentSnapshot = snapshots[1];
+                                    const dateMatchSnapshot = snapshots[2];
+
+                                    const teacherData = teacherSnapshot.val();
+                                    const studentData = studentSnapshot.val();
+                                    const datematchData = dateMatchSnapshot.val();
+
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all[data],
+                                        IdKey: data,
+                                    })
+                                })
+                        }
+                    }
+                    this.data_all = item;
+                    console.log(this.data_all);
+                })
             }
 
         },
-        detail_send(item ,hour) {
-            this.detailData = item;           
+        detail_send(item, hour) {
+            this.detailData = item;
             let min = hour.toString().split(".");
             let min_s = null;
-            if(min.length > 1){
-                min_s = (parseFloat("0."+min[1])*60/100);
-                this.detailHour = parseFloat(min[0])+parseFloat(min_s);
-            }else{
+            if (min.length > 1) {
+                min_s = (parseFloat("0." + min[1]) * 60 / 100);
+                this.detailHour = parseFloat(min[0]) + parseFloat(min_s);
+            } else {
                 this.detailHour = hour;
             }
-            console.log(min ,min_s);
-            console.log(this.detailData ,this.detailHour);
+            console.log(min, min_s);
+            console.log(this.detailData, this.detailHour);
             this.dialog = true;
         },
     },
