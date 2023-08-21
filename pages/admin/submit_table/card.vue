@@ -610,13 +610,11 @@
                                         label="สถานะพัฒนาการ" readonly></v-select>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" v-if="this.status == 'teacher'">
-                                    <v-text-field label="Comment/อื่นๆ" v-model="edited.comment"
-                                        readonly></v-text-field>
+                                    <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" v-if="edited.match_test && this.status == 'teacher'">
                                     <v-select v-model="edited.optional" :items="optional_all" item-value="key"
-                                        item-text="name" label="Optional"
-                                        readonly></v-select>
+                                        item-text="name" label="Optional" readonly></v-select>
                                 </v-col>
 
                             </v-row>
@@ -1284,6 +1282,8 @@ export default {
                         }
                         //-----------------คำนวนรายได้----------------------------
                         let sum = 0;
+                        let del_send_rate_name = 0;
+                        let del_send_rate_save = 0;
                         if (this.edited.style.substring(0, 4).includes('Flip') && optional_data != undefined) {
                             console.log('1', this.edited.style.substring(0, 4), optional_data);
                             sum = (parseFloat(subject_data.bath) +
@@ -1293,11 +1293,14 @@ export default {
                                 parseFloat(sheet_data.bath) +
                                 parseFloat(optional_data.bath)) * parseFloat(this.edited.hour);
                             if (this.edited.check_name == false) {
+                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+
                             } if (this.edited.check_save == false) {
+                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
                             }
-                            console.log(sum);
+                            console.log(sum ,del_send_rate_name,del_send_rate_save);
                         } else if (this.edited.style.substring(0, 7).includes('Private') && optional_data != undefined) {
                             console.log('2', this.edited.style.substring(0, 4), optional_data);
                             sum = (parseFloat(subject_data.bath) +
@@ -1307,11 +1310,14 @@ export default {
                                 parseFloat(sheet_data.bath) +
                                 parseFloat(optional_data.bath)) * parseFloat(this.edited.hour);
                             if (this.edited.check_name == false) {
+                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+
                             } if (this.edited.check_save == false) {
+                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
                             }
-                            console.log(sum);
+                            console.log(sum ,del_send_rate_name,del_send_rate_save);
                         } else if (this.edited.style.substring(0, 4).includes('Flip') && optional_data == undefined) {
                             console.log('3', this.edited.style.substring(0, 4), optional_data);
                             sum = (parseFloat(subject_data.bath) +
@@ -1320,11 +1326,14 @@ export default {
                                 parseFloat(location_data.bath) +
                                 parseFloat(sheet_data.bath)) * parseFloat(this.edited.hour);
                             if (this.edited.check_name == false) {
+                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+
                             } if (this.edited.check_save == false) {
+                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
                             }
-                            console.log(sum);
+                            console.log(sum ,del_send_rate_name,del_send_rate_save);
                         } else if (this.edited.style.substring(0, 7).includes('Private') && optional_data == undefined) {
                             console.log('4', this.edited.style.substring(0, 4), optional_data);
                             sum = (parseFloat(subject_data.bath) +
@@ -1333,11 +1342,14 @@ export default {
                                 parseFloat(location_data.bath) +
                                 parseFloat(sheet_data.bath)) * parseFloat(this.edited.hour);
                             if (this.edited.check_name == false) {
+                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+
                             } if (this.edited.check_save == false) {
+                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
                                 sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
                             }
-                            console.log(sum);
+                            console.log(sum ,del_send_rate_name,del_send_rate_save);
                         } else { alert('คำนวนล้มเหลว'); }
 
                         db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/money`).update({
@@ -1351,6 +1363,8 @@ export default {
                             send_rate_save: send_rate_data['-NcGcQ5V7RjIzzAJaerY'],
                             send_rate_name: send_rate_data['-NcGcM3iD1BtbI6Z0E1R'],
                             sum_money: sum || null,
+                            sum_send_rate_name: del_send_rate_name,
+                            sum_send_rate_save: del_send_rate_save,
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");
                         })
@@ -1367,14 +1381,14 @@ export default {
                 homework: this.edited.homework || null,
                 status_development: this.edited.status_development || null,
                 comment: this.edited.comment || null,
-                check_save: this.check_time || null,
+                check_save: this.check_time,
                 optional: this.edited.optional || null,
                 link_url: this.edited.link_url || null,
                 link_sheet: this.edited.link_sheet || null,
                 check_sheet: this.edited.check_sheet || null,
                 createAt_rate_OP: new Date()
             }).then(() => {
-                console.log('save send_plan');
+                console.log('save send_plan' ,this.edited);
                 this.clear_dialog();
                 if (this.date == null) {
                     this.search_date_teacher_All();

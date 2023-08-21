@@ -171,21 +171,21 @@
                             <v-subheader style="font-size:16px">ชั่วโมงสอน</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailHour" prefix="Hr."></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailHour" suffix="Hr."></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_name && detailData.money.send_rate_name">
                             <v-subheader style="font-size:16px; color:red;" >{{ detailData.money.send_rate_name.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_name && detailData.money.send_rate_name">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath"
-                                prefix="-" suffix="%"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath+'% '+'(-'+detailData.money.sum_send_rate_name+' ฿)'" 
+                                prefix="-"></v-text-field> <!----sum_send_rate_name(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_save && detailData.money.send_rate_save">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_save && detailData.money.send_rate_save">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath"
-                                prefix="-" suffix="%"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath+'% '+'(-'+detailData.money.sum_send_rate_save+' ฿)'"
+                                prefix="-" ></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">รวมทั้งหมด</v-subheader>
@@ -440,7 +440,7 @@ export default {
             //     this.detailHour = hour;
             // }
             // console.log(min, min_s);
-            // console.log(this.detailData, this.detailHour);
+            console.log(this.detailData, this.detailHour);
             this.dialog = true;
         },
     },
