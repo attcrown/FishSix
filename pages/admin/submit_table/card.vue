@@ -583,24 +583,40 @@
                                         v-if="edited.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" v-model="edited.link_sheet"
                                         :rules="rules.text" required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12" style="margin-top:-30px">
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'admin'">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'admin'">
                                     <v-select v-model="edited.status_development" :items="items_development"
                                         :rules="[v => !!v || 'กรุณาลงสถานะ']" label="สถานะพัฒนาการ" required></v-select>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'admin'">
                                     <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12" v-if="edited.match_test">
+                                <v-col cols="12" sm="12" v-if="edited.match_test && this.status == 'admin'">
                                     <v-select v-model="edited.optional" :items="optional_all" item-value="key"
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
                                         required></v-select>
-                                    <!-- <v-text-field label="เรทค่าจ้างครู" v-model="edited.rate" :rules="rules.name"
-                                        required></v-text-field> -->
+                                </v-col>
+
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'teacher'">
+                                    <hr style="border: 1px solid #000; background-color: #000;">
+                                    <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'teacher'">
+                                    <v-select v-model="edited.status_development" :items="items_development"
+                                        label="สถานะพัฒนาการ" readonly></v-select>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'teacher'">
+                                    <v-text-field label="Comment/อื่นๆ" v-model="edited.comment"
+                                        readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="12" v-if="edited.match_test && this.status == 'teacher'">
+                                    <v-select v-model="edited.optional" :items="optional_all" item-value="key"
+                                        item-text="name" label="Optional"
+                                        readonly></v-select>
                                 </v-col>
 
                             </v-row>
@@ -1342,20 +1358,20 @@ export default {
                     })
             }
             db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/`).update({
-                learn: this.edited.learn,
-                understand: this.edited.understand,
-                development: this.edited.development,
-                problem: this.edited.problem,
-                method: this.edited.method,
-                to_development: this.edited.to_development,
-                homework: this.edited.homework,
-                status_development: this.edited.status_development,
-                comment: this.edited.comment,
-                check_save: this.check_time,
+                learn: this.edited.learn || null,
+                understand: this.edited.understand || null,
+                development: this.edited.development || null,
+                problem: this.edited.problem || null,
+                method: this.edited.method || null,
+                to_development: this.edited.to_development || null,
+                homework: this.edited.homework || null,
+                status_development: this.edited.status_development || null,
+                comment: this.edited.comment || null,
+                check_save: this.check_time || null,
                 optional: this.edited.optional || null,
-                link_url: this.edited.link_url,
+                link_url: this.edited.link_url || null,
                 link_sheet: this.edited.link_sheet || null,
-                check_sheet: this.edited.check_sheet,
+                check_sheet: this.edited.check_sheet || null,
                 createAt_rate_OP: new Date()
             }).then(() => {
                 console.log('save send_plan');
