@@ -173,6 +173,13 @@
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailHour" suffix="Hr."></v-text-field>
                         </v-col>
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.check_name == false || detailData.check_save == false">
+                            <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.check_name == false || detailData.check_save == false">
+                            <v-text-field readonly label="Amount" :value="detailData.money.sum_send_rate_name+detailData.money.sum_money+detailData.money.sum_send_rate_save"
+                                suffix="฿"></v-text-field>
+                        </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_name && detailData.money.send_rate_name">
                             <v-subheader style="font-size:16px; color:red;" >{{ detailData.money.send_rate_name.name }}</v-subheader>
                         </v-col>
@@ -188,7 +195,7 @@
                                 prefix="-" ></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">รวมทั้งหมด</v-subheader>
+                            <v-subheader style="font-size:16px; color:#2E7D32;">ราคาสุทธิ</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.sum_money"
