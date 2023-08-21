@@ -45,19 +45,19 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon color="indigo" class="mr-2" @click="viewItem(item)">
+                <v-icon color="indigo" large class="mr-2" @click="viewItem(item)">
                     mdi-pencil
                 </v-icon>
-                <v-icon color="black" class="mr-2" @click="viewMaterialDialog(item)">
+                <v-icon color="black" large class="mr-2" @click="viewMaterialDialog(item)">
                     mdi-file-pdf-box
                 </v-icon>
-                <v-icon color="red" @click="deleteChapter(item)">
+                <v-icon color="red" large @click="viewDeleteDialog(item)">
                     mdi-delete
                 </v-icon>
             </template>
         </v-data-table>
 
-
+        <!-- เพิ่มเนื้อหา / บท -->
         <v-dialog v-model="dialog_detail" max-width="600px">
 
             <v-card class="p-4 rounded-xl">
@@ -102,6 +102,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <!-- แก้ไขเนื้อหา / บท -->
         <v-dialog v-model="dialog_edit" max-width="600px">
 
             <v-card class="p-4 rounded-xl">
@@ -147,6 +148,43 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <!-- ลบบท -->
+        <v-dialog v-model="dialog_delete" max-width="600px">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title class="d-flex justify-space-between">
+                    <span style="font-size: 16px">
+                        <b>ลบเนื้อหา</b>
+
+                    </span>
+
+                    <v-btn fab dark small color="#37474F" @click="dialog_delete = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <p class="text-danger"> การลบส่วนนี้ จะลบทั้งไฟล์และเอกสารที่มีในบทนี้ทั้งหมด</p>
+                        </v-row>
+                    </v-container>
+
+                </v-card-text>
+                <v-card-actions class="d-flex justify-center">
+                    <v-spacer></v-spacer>
+
+                    <v-btn rounded color="red" dark class="mt-5 mb-5" @click="deleteChapter()">
+                        ลบ
+                    </v-btn>
+
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <!-- ดูสื่อการสอนในบททั้งหมด-->
         <v-dialog v-model="content_dialog" max-width="60%">
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -176,11 +214,11 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="indigo" class="mr-2" @click="viewItem(item)">
+                                <v-icon color="indigo" large class="mr-2" @click="openEditDialog(item)">
                                     mdi-pencil
                                 </v-icon>
 
-                                <v-icon color="red" @click="deleteChapter(item)">
+                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)">
                                     mdi-delete
                                 </v-icon>
                             </template>
@@ -194,7 +232,7 @@
 
             </v-card>
         </v-dialog>
-
+        <!-- เพิ่มสื่อการสอนในบท -->
         <v-dialog v-model="material_dialog" max-width="600px">
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -256,6 +294,151 @@
 
             </v-card>
         </v-dialog>
+        <!-- แก้ไขสื่อการสอนในบท -->
+        <v-dialog v-model="edit_material" max-width="600px">
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>{{ subjectName }} | {{ level }} | {{ selectChapter }} | ชื่อเรื่อง</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="material_dialog = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-container>
+                        <v-row justify="center">
+                            <v-col cols="12">
+                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name"
+                                    :rules="nameRules"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select :items="materialTypes" label="ประเภทสื่อ" disabled
+                                    v-model="selectMaterial.type"></v-select>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="รายละเอียดเรื่องที่เรียน"
+                                    v-model="selectMaterial.detail"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <label v-if="selectMaterial.type === 'Video Link'">Link
+                                </label><br>
+                                <a v-if="selectMaterial.type === 'Video Link'" :href="selectMaterial.link"
+                                    target="_blank">{{ selectMaterial.link }}</a>
+
+                                <label v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'">เอกสารประกอบการเรียน
+                                    (Pdf)</label><br>
+                                <a v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'" href=""
+                                    @click="downloadFile()"> View</a>
+
+                            </v-col>
+                            <v-col cols="6">
+
+                            </v-col>
+                        </v-row>
+                    </v-container>
+
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="#37474F" @click="material_dialog = false">
+                        ย้อนกลับ<span class="mdi mdi-keyboard-backspace text-h6"></span>
+                    </v-btn>
+                    <v-btn rounded color="#29CC39" dark class="mt-5 mb-5" @click="editMaterial()">
+                        บันทึก <span class="mdi mdi-content-save text-h6"></span>
+                    </v-btn>
+
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+
+
+            </v-card>
+        </v-dialog>
+        <!-- ลบสื่อการสอน -->
+        <v-dialog v-model="delete_material" max-width="600px">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>ลบสื่อการสอน </b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="material_dialog = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-container>
+                        <v-row justify="center">
+                            <v-col cols="12">
+                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name" disabled
+                                    :rules="nameRules"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-select :items="materialTypes" label="ประเภทสื่อ" disabled
+                                    v-model="selectMaterial.type"></v-select>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"
+                                    disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="รายละเอียดเรื่องที่เรียน" v-model="selectMaterial.detail"
+                                    disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <label v-if="selectMaterial.type === 'Video Link'">Link
+                                </label><br>
+                                <a v-if="selectMaterial.type === 'Video Link'" :href="selectMaterial.link"
+                                    target="_blank">{{ selectMaterial.link }}</a>
+
+                                <label v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'">เอกสารประกอบการเรียน
+                                    (Pdf)</label><br>
+                                <a v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'" href=""
+                                    @click="downloadFile()"> View</a>
+
+                            </v-col>
+                            <v-col cols="6">
+
+                            </v-col>
+                        </v-row>
+                    </v-container>
+
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="#37474F" @click="delete_material = false">
+                        ย้อนกลับ<span class="mdi mdi-keyboard-backspace text-h6"></span>
+                    </v-btn>
+                    <v-btn rounded color="red" dark class="mt-5 mb-5" @click="deleteMaterial()">
+                        ยืนยันการลบ <span class="mdi mdi-content-save text-h6"></span>
+                    </v-btn>
+
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+
+
+            </v-card>
+        </v-dialog>
+        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
+            <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
+        </v-snackbar>
     </div>
 </template>
 
@@ -266,16 +449,24 @@ export default {
     layout: 'default',
     data() {
         return {
-            selectItem: {},
 
+            showSnackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
+            selectItem: {},
+            selectMaterial: {},
+            selectItemDelete: null,
             //temp
             selectChapterNumber: null,
 
             contentId: null,
             dialog_detail: false,
             dialog_edit: false,
+            dialog_delete: false,
             content_dialog: false,
             material_dialog: false,
+            delete_material: false,
+            edit_material: false,
             isLoading: true,
             searchSubject: '',
             subjectSelected: null,
@@ -363,7 +554,10 @@ export default {
             this.dialog_detail = true;
         },
 
-
+        viewDeleteDialog(item) {
+            this.selectItemDelete = item;
+            this.dialog_delete = true;
+        },
         async viewMaterialDialog(item) {
             this.content_dialog = true;
             this.selectChapter = item.chapterName;
@@ -377,8 +571,9 @@ export default {
 
                 for (const key in childData) {
                     const item = childData[key];
-                    items.push(item);
+                    items.push({ key, ...item });
                 }
+
                 console.log(items)
                 this.contentMaterials = items;
             })
@@ -411,11 +606,14 @@ export default {
                 try {
                     await chapterRef.update(chapterData);
                     console.log('Content added to Firebase successfully!');
+                    this.openSnackbar('success', 'เพิ่มเนื้อหาเสร็จสิ้น ');
                 } catch (error) {
                     console.error('Error adding content to Firebase:', error);
+                    this.openSnackbar('error', 'ผิดพลาดในการเพิ่มเนื้อหา ');
                 }
             } else {
                 console.log('Chapter already exists in Firebase. Not adding content.');
+                this.openSnackbar('error', 'เลขบทซ้ำ ');
             }
         },
         async editContent() {
@@ -438,6 +636,7 @@ export default {
                 }
 
                 console.log('Content update to Firebase successfully!');
+                this.openSnackbar('success', 'แก้ไขเนื้อหาเสร็จสิ้น ');
             } catch (error) {
                 console.error('Error update content to Firebase:', error);
             }
@@ -475,14 +674,14 @@ export default {
             this.materialFile = '';
             newMaterial.pdfFileUrl = null;
             this.materialLink = '';
-
+            this.openSnackbar('success', 'เพิ่มสื่อการสอนเสร็จสิ้น ');
 
         },
 
-        async deleteChapter(item) {
+        async deleteChapter() {
             const db = this.$fireModule.database();
 
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${item.chapterNumber}/`);
+            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectItemDelete.chapterNumber}/`);
 
             const snapshot = await chapterRef.once('value');
             const chapterExists = snapshot.exists();
@@ -491,6 +690,8 @@ export default {
                 try {
                     await chapterRef.remove();
                     console.log('Chapter deleted from Firebase successfully!');
+                    this.openSnackbar('success', 'ลบบทเรียนเสร็จสิ้น ');
+                    window.location.reload();
                 } catch (error) {
                     console.error('Error deleting chapter from Firebase:', error);
                 }
@@ -499,7 +700,51 @@ export default {
             }
         },
 
+        openEditDialog(item) {
+            this.edit_material = true;
+            this.selectMaterial = item;
+           
+        },
+        async editMaterial() {
+            const db = this.$fireModule.database();
+            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material/${this.selectMaterial.key}`);
+            const snapshot = await chapterRef.once('value');
+            const materialData = {
+                name: this.selectMaterial.name,
+                detail: this.selectMaterial.detail,
+                fileName: this.selectMaterial.fileName,
+                annotation: this.selectMaterial.annotation
+            };
+            try {
+                await chapterRef.update(materialData);
 
+
+                console.log('Content update to Firebase successfully!');
+                this.openSnackbar('success', 'แก้ไขสื่อการสอนเสร็จสิ้น ');
+            } catch (error) {
+                console.error('Error update content to Firebase:', error);
+            }
+        },
+        openDeleteMaterialDialog(item) {
+            this.delete_material = true;
+            this.selectMaterial = item;
+            console.log(item)
+        },
+        async deleteMaterial() {
+            const db = this.$fireModule.database();
+            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material/${this.selectMaterial.key}`);
+
+            try {
+                await chapterRef.remove();
+
+                console.log('Material deleted from Firebase successfully!');
+                this.openSnackbar('success', 'ลบสื่อการสอนเสร็จสิ้น');
+            } catch (error) {
+                console.error('Error deleting material from Firebase:', error);
+            }
+
+
+        },
         async checkIfContentExists(name, level) {
 
             const db = this.$fireModule.database();
@@ -554,17 +799,9 @@ export default {
 
         },
 
-        // search_level_select() {
-        //     const db = this.$fireModule.database();
-        //     db.ref(`subject_all/${this.subject}`).on("value", (snapshot) => {
-        //         const childData = snapshot.val();
-
-        //         this.level_select = childData.level;
-        //         this.subjectSelected = childData.name;
-        //     })
-        // },
-
-
+        downloadFile() {
+            window.open(this.selectMaterial.pdfFileUrl, '_blank');
+        },
 
 
     },
