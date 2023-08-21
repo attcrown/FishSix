@@ -3,301 +3,358 @@
         <pageLoader v-if="isLoading"></pageLoader>
         <div v-if="!isLoading" class="col mx-3 d-flex justify-content-center">
             <v-row>
-
-                <div style="max-width: 500px;">
+                <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลครู</h1>
+                    <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
                 </div>
-
                 <v-col cols="12">
-                    <v-card style="border-radius: 32px; background: #F5F5F5;" elevation="0">
-                        <v-row class="text-right p-3 pb-0 justify-space-between">
-
-                            <div>
-                                <v-btn class="editButton elevation-0" @click="dialogEditName = true">
-                                    <span style="color: #C3CAD9;">Edit</span>
-                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
-                                </v-btn>
-                            </div>
-                        </v-row>
-                        <v-row class="mt-0" align="center">
-                            <v-col cols="2" sm="2" class="pl-10">
-                                <div>
-                                    <v-avatar style="max-width: 116px; width: 100%; height: 100%;max-height: 116px;">
-
-                                        <img :src="profilePic" alt="รูปโปรไฟล์">
-                                    </v-avatar>
-                                </div>
-                            </v-col>
-                            <v-col cols="9" sm="9">
-                                <div>
-                                    <strong class="header text-break">&nbsp;คุณ {{ firstNameDisplay }} {{ lastNameDisplay
-                                    }}</strong>
-                                    <br>
-                                    <span class="userSpan text-break">{{ nicknameDisplay }}</span>
-                                </div>
-                            </v-col>
-
-                        </v-row>
-                    </v-card>
-                </v-col>
-
-
-                <v-col cols="12">
-                    <v-card style="border-radius: 32px;background: #F5F5F5;" elevation="0">
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0" class="px-10">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="pl-2">ข้อมูลทั่วไป</div>
                             <div>
-                                <v-btn class="editButton elevation-0" @click="dialogEditDetail = true">
-                                    <span style="color: #C3CAD9;">Edit</span>
+                                <button v-if="!isEditingDetail" class="editButton " @click="toEditDetail()">
+                                    <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
-                                </v-btn>
+                                </button>
+                                <button v-if="isEditingDetail" class="saveButton " @click="toEditDetail()"
+                                    :loading="isSubmitting">
+                                    <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
+
+                                </button>
                             </div>
                         </v-card-title>
+                        <v-form ref="detailForm" @submit.prevent="toEditDetail">
+                            <v-row class="mt-0" align="center">
+                                <v-col cols="3" sm="3" class="pl-10">
+                                    <div>
+                                        <v-avatar style="max-width: 180px; width: 100%; height: 100%;max-height: 180px;">
+                                            <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์">
+                                            <v-icon style=" font-size: 100px;" v-if="!profilePic" dark>
+                                                mdi-account-circle
+                                            </v-icon>
+                                        </v-avatar>
+                                        <label v-if="isEditingDetail" class="upload-label mt-3" for="upload-file">
+                                            เปลี่ยนรูป
+                                            <input type="file" id="upload-file" hidden @change="uploadFile" />
+                                        </label>
 
-                        <v-row align="center">
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">สถานศึกษา </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ school }} </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="3" sm="3" class=" py-2">
-                                <div>
-                                    <p class=" text-break">ระดับชั้น </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ education }} </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="5" sm="5" class=" py-2">
+                                    </div>
+                                </v-col>
+                                <v-col cols="9">
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-text-field v-model="teacherId" counter label="รหัสครู (ไม่จำเป็นต้องกรอก) " disabled
+                                               >
+                                                <template v-slot:append>
+                                                    <v-tooltip bottom>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+                                                        </template>
+                                                        <span>FS ตามด้วยเลข 4 หลัก
+                                                            <br>โดยเป็นตัวพิมพ์ใหญ่ทั้งหมด</span>
+                                                    </v-tooltip>
+                                                </template>
 
-                            </v-col>
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">วันเกิด </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ birthDate }} </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="3" sm="3" class="py-2">
-                                <div>
-                                    <p class=" text-break">เพศ </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ gender }} </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="5" sm="5" class=" py-2">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="9"></v-col>
+                                        <v-col cols="6" class="py-0 ">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                                 disabled
+                                                label="ชื่อ (ภาษาอังกฤษ)"  v-on:keypress="isLetter($event)">
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="py-0">
+                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                                label="นามสกุล (ภาษาอังกฤษ)" disabled
+                                               v-on:keypress="isLetter($event)">
+                                            </v-text-field>
+                                        </v-col>
 
-                            </v-col>
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">เบอร์โทรศัพท์ </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ teacherMobile }}
-                                    </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="3" sm="3" class=" py-2">
-                                <div>
-                                    <p class=" text-break">วิชาที่สอน </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ teacherMobile }}
-                                    </p>
-                                </div>
-                            </v-col>
-                         
-                        </v-row>
+                                        <v-col cols="6" class="py-0">
+                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName" disabled
+                                              
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="py-0">
+                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName" disabled
+                                                ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname"
+                                                :readonly="!isEditingDetail" :rules="nicknameRules" required></v-text-field>
+                                        </v-col>
+                                        <v-col cols="5" class="py-0">
+
+                                        </v-col>
+                                        <v-col cols="4" class="py-0">
+                                            <v-text-field v-if="!isEditingDetail" label="เพศ" name="gender" v-model="gender"
+                                                :readonly="!isEditingDetail"></v-text-field>
+                                            <v-select v-if="isEditingDetail" v-model="gender" :items="genders"
+                                                label="เพศ"></v-select>
+                                        </v-col>
+
+
+                                    </v-row>
+                                </v-col>
+                                <v-col cols="12">
+                                    <div class="text-center px-4 py-0">
+                                        <hr class=" solid">
+                                    </div>
+
+                                </v-col>
+                                <v-row class="px-4">
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field label="อาชีพปัจจุบัน" name="currJob" v-model="currJob"
+                                            :readonly="!isEditingDetail"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field label="เบอร์" name="mobile" v-model="mobile" :rules="mobileRules"
+                                            :readonly="!isEditingDetail" :counter="isEditingDetail" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" class="py-0">
+                                        <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
+                                            :readonly="!isEditingDetail"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber"
+                                            :rules="idCardRules" :counter="isEditingDetail"
+                                            :readonly="!isEditingDetail"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <label>สำเนาบัตรประชาชน</label><br>
+                                        <!-- <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy" disabled
+                                        accept=".pdf,image/*"></v-file-input> -->
+                                        <a v-if="idCardCopy" href="" @click="downloadFile()"> View</a>
+                                        <a v-if="!idCardCopy"> ไม่มี</a>
+                                    </v-col>
+
+                                </v-row>
+
+                            </v-row>
+                        </v-form>
                     </v-card>
-                </v-col>
-                <v-col cols="12">
-                    <v-card style="border-radius: 32px;background: #F5F5F5;" elevation="0">
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-7">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
-                            <div class="pl-2">ที่อยู่ปัจจุบัน</div>
+                            <div class="">ข้อมูลที่อยู่</div>
                             <div>
-                                <v-btn class="editButton elevation-0" @click="dialogEditAddress = true">
-                                    <span style="color: #C3CAD9;">Edit</span>
+                                <button v-if="!isEditingAddress" class="editButton " @click="toEditAddress()">
+                                    <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
-                                </v-btn>
+                                </button>
+                                <button v-if="isEditingAddress" class="saveButton " @click="toEditAddress()">
+                                    <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
+
+                                </button>
                             </div>
                         </v-card-title>
+                        <v-card-text>
+                            <v-form ref="addressForm">
+                                <v-row>
+                                    <p>&#x2022; ที่อยู่ตามบัตรประชาชน</p>
+                                    <v-col cols="4">
+                                        <v-text-field name="houseNo" label="บ้านเลขที่" :readonly="!isEditingAddress"
+                                            v-model="address.houseNo"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field v-if="!isEditingAddress" name="tambon" label="ตำบล/แขวง"
+                                            :readonly="!isEditingAddress" v-model="address.tambon"></v-text-field>
 
-                        <v-row align="center">
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">บ้านเลขที่ </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ address.houseNo }}
-                                    </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="3" sm="3" class=" py-2">
-                                <div>
-                                    <p class=" text-break">ตำบล/แขวง </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ address.tambon }}
-                                    </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="5" sm="5" class=" py-2">
+                                        <v-autocomplete v-if="isEditingAddress" class="black-label" v-model="selectedTambon"
+                                            :items="tambons" :item-value="tambonValue" item-text="name_th"
+                                            :search-input.sync="searchTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                            @update:search-input="fetchTambons" label="ตำบล"></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field name="amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
+                                            v-model="address.amphoe"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field name="province" label="จังหวัด" :readonly="!isEditingAddress"
+                                            v-model="address.province"></v-text-field>
 
-                            </v-col>
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">อำเภอ/เขต </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ address.amphoe }}
-                                    </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="3" sm="3" class="py-2">
-                                <div>
-                                    <p class=" text-break">จังหวัด </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ address.province }}
-                                    </p>
-                                </div>
-                            </v-col>
-                            <v-col cols="5" sm="5" class=" py-2">
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field name="postal" label="รหัสไปรษณีย์" :rules="postalRules"
+                                            :readonly="!isEditingAddress" v-model="address.postal"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <div class="text-center ">
+                                            <hr class=" solid">
+                                        </div>
 
-                            </v-col>
-                            <v-col cols="4" sm="4" class="pl-10 py-2">
-                                <div>
-                                    <p class=" text-break">รหัสไปรษณีย์ </p>
-                                    <p class=" text-break font-weight-bold" style="font-weight: 500;">{{ address.postal }}
-                                    </p>
-                                </div>
-                            </v-col>
+                                    </v-col>
+                                    <v-row class="px-4">
+                                        <p class="py-0">&#x2022; ที่อยู่ปัจจุบัน
+                                            <v-checkbox label="ที่อยู่ตามบัตรประชาชน " :disabled="!isEditingAddress"
+                                                @click="updateCurrAddress()"></v-checkbox>
+                                        </p>
 
-                        </v-row>
+                                        <v-col cols="4">
+                                            <v-text-field name="curr_houseNo" label="บ้านเลขที่"
+                                                :readonly="!isEditingAddress" :disabled="isAddressSame"
+                                                v-model="currAddress.houseNo"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field v-if="!isEditingAddress || isAddressSame" name="curr_tambon"
+                                                label="ตำบล/แขวง" readonly :disabled="isAddressSame"
+                                                v-model="currAddress.tambon"></v-text-field>
+
+                                            <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
+                                                :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
+                                                :item-value="currTambonValue" item-text="name_th"
+                                                :search-input.sync="searchCurrTambon" no-data-text="กรุณากรอกชื่อตำบล"
+                                                @update:search-input="fetchCurrTambons" label="ตำบล"></v-autocomplete>
+
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field name="curr_amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
+                                                :disabled="isAddressSame" v-model="currAddress.amphoe"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field name="curr_province" label="จังหวัด" :readonly="!isEditingAddress"
+                                                :disabled="isAddressSame" v-model="currAddress.province"></v-text-field>
+
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field name="curr_postal" label="รหัสไปรษณีย์" :rules="postalRules"
+                                                :disabled="isAddressSame" :readonly="!isEditingAddress"
+                                                v-model="currAddress.postal"></v-text-field>
+                                        </v-col>
+
+                                    </v-row>
+                                </v-row>
+
+
+                            </v-form>
+                        </v-card-text>
+
+                    </v-card>
+
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div class="">ข้อมูลสัญญาจ้าง</div>
+                         
+                        </v-card-title>
+                        <v-card-text>
+                            <v-form ref="contractForm">
+                                <v-row>
+                                    <v-col cols="4">
+                                        <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
+                                            :readonly="!isEditingContract" v-model="contract"></v-text-field>
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="contract"
+                                            :items="contracts" label="สัญญาจ้าง" multiple></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field v-if="!isEditingContract" name="workType" label="ประเภทการทำงาน"
+                                            :readonly="!isEditingContract" v-model="workType"></v-text-field>
+                                        <v-select v-if="isEditingContract" v-model="workType" :items="workTypes"
+                                            label="ประเภทการทำงาน" required></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
+                                            :readonly="!isEditingContract" v-model="startDate"></v-text-field>
+                                        <v-menu v-if="isEditingContract" ref="menu" v-model="menu"
+                                            :close-on-content-click="false" transition="scale-transition" offset-y
+                                            min-width="auto">
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
+                                                    prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                    :rules="startDateRules" required v-on="on"></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
+                                                min="1950-01-01" @change="save"></v-date-picker>
+                                        </v-menu>
+                                    </v-col>
+                                
+                                    <v-col cols="4">
+                                        <v-select v-if="!isEditingContract" class="black-label" v-model="classLocation"
+                                            :items="classLocations" item-text="name" item-value="key"
+                                            :readonly="!isEditingContract" label="สาขาที่สามารถสอนได้" multiple></v-select>
+
+                                        <v-select v-if="isEditingContract" class="black-label" v-model="classLocation"
+                                            :items="classLocations" item-text="name" item-value="key"
+                                            label="สาขาที่สามารถสอนได้" multiple></v-select>
+                                    </v-col>
+                            
+                                </v-row>
+
+
+                            </v-form>
+                        </v-card-text>
+
+                    </v-card>
+                    <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
+                        class="px-10 mt-5">
+                        <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
+                            <div class="">ข้อมูลการศึกษา</div>
+                            <div>
+                                <button v-if="!isEditingEducation" class="editButton " @click="toEditEducation()">
+                                    <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
+                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
+                                </button>
+                                <button v-if="isEditingEducation" class="saveButton " @click="toEditEducation()">
+                                    <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
+
+                                </button>
+                            </div>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-form ref="educationForm">
+                                <v-row>
+
+                                    <v-col cols="4">
+                                        <v-text-field name="university" label="มหาวิทยาลัย" :readonly="!isEditingEducation"
+                                            v-model="university"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field name="faculty" label="คณะ" :readonly="!isEditingEducation"
+                                            v-model="faculty"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field name="major" label="สาขา" :readonly="!isEditingEducation"
+                                            v-model="major"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <label>
+                                            <span class="text-danger">*</span>
+                                            <span style="color: #000;font-size: 16px;">วิชาที่สอนได้</span>
+                                            <span v-if="isEditingEducation" class="text-danger"
+                                                style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ
+                                                เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span>
+                                        </label>
+                                        <table class="table table-sm">
+                                            <tbody>
+                                                <tr v-for="subject in subjects" :key="subject.name">
+                                                    <td>{{ subject.name }}</td>
+                                                    <td v-for="(level, index) in subject.level" :key="index">
+                                                        <v-checkbox class="m-0"
+                                                            :input-value="isChecked(subject.name, level, subject.key)"
+                                                            @click="updateSelectedSubjects(subject.key, level, subject.name)"
+                                                            :label="level" disabled>
+                                                        </v-checkbox>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                        </v-card-text>
+
                     </v-card>
                 </v-col>
-              
             </v-row>
 
         </div>
         <!-- dialog -->
-        <div>
-            <!-- Dialog for editing name -->
-            <v-dialog v-model="dialogEditName" max-width="500px">
-
-                <v-card style="border-radius: 12px; " elevation="0">
-                    <v-card-title>
-                        แก้ไขชื่อ
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form ref="nameForm">
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field label="ชื่อ" name="firstName" v-model="firstName" :rules="nameRules"
-                                        required></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field label="นามสกุล" name="lastName" v-model="lastName"
-                                        :rules="nameRules"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname"></v-text-field>
-                                </v-col>
-                                <v-col cols="8"><v-file-input label="อัพโหลดรูปโปรไฟล์" v-model="profilePicUpload"
-                                        accept="image/*"></v-file-input></v-col>
-                            </v-row></v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
-                            @click="saveName"> บันทึกข้อมูล</v-btn>
-                        <v-btn color="white" @click="dialogEditName = false">ยกเลิก</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-            <!-- Dialog for editing detail -->
-            <v-dialog v-model="dialogEditDetail" max-width="500px">
-                <!-- Dialog content -->
-                <v-card>
-                    <v-card-title>
-                        แก้ไขข้อมูลทั่วไป
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form ref="detailForm" @submit="saveDetail">
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field label="โรงเรียน" name="school" v-model="school"></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-select label="เพศ" name="gender" v-model="gender" :items="genders"></v-select>
-                                </v-col>
-                                <v-col cols="6">
-                                    <div>
-
-                                        <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
-                                            transition="scale-transition" offset-y min-width="auto">
-                                            <template v-slot:activator="{ on, attrs }">
-                                                <v-text-field v-model="birthDate" label="วันเกิด" name="birthDate"
-                                                    prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                    v-on="on"></v-text-field>
-                                            </template>
-                                            <v-date-picker v-model="birthDate" :active-picker.sync="activePicker"
-                                                :max="(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substring(0, 10)"
-                                                min="1950-01-01" @change="save"></v-date-picker>
-                                        </v-menu>
-                                    </div>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-select label="ระดับชั้น" name="education" v-model="education"
-                                        :items="educationLevels" item-text="educationName"></v-select>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field label="เบอร์โทรศัพท์" name="teacherMobile" v-model="teacherMobile"
-                                        :rules="teacherMobileRules"></v-text-field>
-                                </v-col>
-                              
-                            </v-row></v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
-                            @click="saveDetail"> บันทึกข้อมูล</v-btn>
-                        <v-btn color="white" @click="dialogEditDetail = false">ยกเลิก</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-            <!-- Dialog for editing address -->
-            <v-dialog v-model="dialogEditAddress" max-width="500px">
-                <!-- Dialog content -->
-                <v-card>
-                    <v-card-title>
-                        แก้ไขที่อยู่
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form ref="addressForm">
-                            <v-row>
-                                <v-col cols="4">
-                                    <v-text-field name="houseNo" label="บ้านเลขที่"
-                                        v-model="address.houseNo"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="tambon" label="ตำบล/แขวง" v-model="address.tambon"></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field name="amphoe" label="อำเภอ/เขต" v-model="address.amphoe"></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-autocomplete name="province" v-model="address.province" :items="provinceOptions"
-                                        autocomplete label="จังหวัด"></v-autocomplete>
-
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field name="postal" label="รหัสไปรษณีย์" :rules="postalRules"
-                                        v-model="address.postal"></v-text-field>
-                                </v-col>
-                            </v-row></v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn class="mx-2 text-white " :loading="loading" color="indigo" :disabled="isLoading"
-                            @click="saveAddress"> บันทึกข้อมูล</v-btn>
-                        <v-btn color="white" @click="dialogEditAddress = false">ยกเลิก</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-        </div>
-
-        <!-- snackbar -->
-
-        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="3000">
-
+        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
             <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
-
-
         </v-snackbar>
     </div>
 </template>
@@ -310,34 +367,40 @@ export default {
     data() {
         return {
 
+            type_Flip: null,
+            type_Private: null,
+            type_all: [],
+            type_private_all: [],
             //status
             isLoading: true,
-            showSnackbar: false,
-            snackbarMessage: '',
-            snackbarColor: '',
-            loading: false,
+            userId: null,
+            teacherId: null,
+            lastTeacherId: null,
             activePicker: null,
             date: null,
             menu: false,
-            isFormChange: false,
-            dialogEditName: false,
-            dialogEditDetail: false,
-            dialogEditAddress: false,
+            isSubmitting: false,
+            isEditingDetail: false,
+            isEditingAddress: false,
+            isAddressSame: false,
+            isEditingContract: false,
+            isEditingEducation: false,
+            showSnackbar: false,
+            snackbarMessage: '',
+            snackbarColor: '',
 
-            //User data
+            //data
             profilePic: null,
             profilePicUpload: null,
-            iconSize: 120,
-            firstNameDisplay: null,
-            lastNameDisplay: null,
-            nicknameDisplay: null,
+            firstNameEng: null,
+            lastNameEng: null,
             firstName: null,
             lastName: null,
             nickname: null,
-            school: null,
+            mobile: null,
+            email: null,
             gender: null,
-            birthDate: null,
-
+            currJob: null,
             address: {
                 houseNo: null,
                 tambon: null,
@@ -345,26 +408,42 @@ export default {
                 province: null,
                 postal: null,
             },
-            education: null,
-            teacherMobile: null,
-       
+            currAddress: {
+                houseNo: null,
+                tambon: null,
+                amphoe: null,
+                province: null,
+                postal: null,
+            },
+            idCardNumber: null,
+            idCardCopy: null,
+            contract: null,
+            workType: null,
+            classType: null,
+            classLocation: [],
+            classLocationDisplay: [],
+            startDate: null,
+            rate: null,
+            university: null,
+            faculty: null,
+            major: null,
+            subjects: [],
+            selectedSubjects: [],
 
-            //list of select
-            educationLevels:
-                [
-                    { id: "grade1", educationName: "ป.1" },
-                    { id: "grade2", educationName: "ป.2" },
-                    { id: "grade3", educationName: "ป.3" },
-                    { id: "grade4", educationName: "ป.4" },
-                    { id: "grade5", educationName: "ป.5" },
-                    { id: "grade6", educationName: "ป.6" },
-                    { id: "grade7", educationName: "ม.1" },
-                    { id: "grade8", educationName: "ม.2" },
-                    { id: "grade9", educationName: "ม.3" },
-                    { id: "grade10", educationName: "ม.4" },
-                    { id: "grade11", educationName: "ม.5" },
-                    { id: "grade12", educationName: "ม.6" },
-                ],
+            //api
+            tambons: [],
+            currTambons: [],
+            amphoes: [],
+            provinces: [],
+            selectedTambon: '',
+            selectedCurrTambon: '',
+            selectedAmphoes: '',
+            selectedCurrAmphoes: '',
+            selectedProvince: '',
+            searchTambon: '',
+            searchCurrTambon: '',
+
+            //static
             genders: [
                 'ชาย',
                 'หญิง',
@@ -372,103 +451,84 @@ export default {
                 'ไม่มีเพศ',
                 'อื่นๆ'
             ],
-            provinceOptions: [
-                'กระบี่',
-                'กรุงเทพมหานคร',
-                'กาญจนบุรี',
-                'กาฬสินธุ์',
-                'กำแพงเพชร',
-                'ขอนแก่น',
-                'จันทบุรี',
-                'ฉะเชิงเทรา',
-                'ชลบุรี',
-                'ชัยนาท',
-                'ชัยภูมิ',
-                'ชุมพร',
-                'เชียงราย',
-                'เชียงใหม่',
-                'ตรัง',
-                'ตราด',
-                'ตาก',
-                'นครนายก',
-                'นครปฐม',
-                'นครพนม',
-                'นครราชสีมา',
-                'นครศรีธรรมราช',
-                'นครสวรรค์',
-                'นนทบุรี',
-                'นราธิวาส',
-                'น่าน',
-                'บึงกาฬ',
-                'บุรีรัมย์',
-                'ปทุมธานี',
-                'ประจวบคีรีขันธ์',
-                'ปราจีนบุรี',
-                'ปัตตานี',
-                'พระนครศรีอยุธยา',
-                'พะเยา',
-                'พังงา',
-                'พัทลุง',
-                'พิจิตร',
-                'พิษณุโลก',
-                'เพชรบุรี',
-                'เพชรบูรณ์',
-                'แพร่',
-                'พะเยา',
-                'ภูเก็ต',
-                'มหาสารคาม',
-                'มุกดาหาร',
-                'แม่ฮ่องสอน',
-                'ยะลา',
-                'ยโสธร',
-                'ร้อยเอ็ด',
-                'ระนอง',
-                'ระยอง',
-                'ราชบุรี',
-                'ลพบุรี',
-                'ลำปาง',
-                'ลำพูน',
-                'เลย',
-                'ศรีสะเกษ',
-                'สกลนคร',
-                'สงขลา',
-                'สตูล',
-                'สมุทรปราการ',
-                'สมุทรสงคราม',
-                'สมุทรสาคร',
-                'สระแก้ว',
-                'สระบุรี',
-                'สิงห์บุรี',
-                'สุโขทัย',
-                'สุพรรณบุรี',
-                'สุราษฎร์ธานี',
-                'สุรินทร์',
-                'หนองคาย',
-                'หนองบัวลำภู',
-                'อ่างทอง',
-                'อำนาจเจริญ',
-                'อุดรธานี',
-                'อุตรดิตถ์',
-                'อุทัยธานี',
-                'อุบลราชธานี',
-                'อ่างขาง'
+            contracts: [
+                'พนักงานประจำ',
+                'ครูสาขา',
+                'ครูออนไลน์',
+
             ],
 
+            workTypes: [
+                'Full Time',
+                'Part Time',
+            ],
+            classTypes: [
+                'Flip class',
+                'Private',
+            ],
+            classLocations: [],
+
+
+
             //rules
+
             nameRules: [
                 v => !!v || 'Name is required',
                 v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+            ],
+            firstNameEngRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+            ],
+            lastnameEngRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+            ],
+            firstNameRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+            ],
+            lastnameRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+            ],
+            nicknameRules: [
+                v => !!v || 'Name is required',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
                 value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
                 value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
-
-            teacherMobileRules: [
-                value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
-                value => /^0\d{9}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+            idCardRules: [
+                value => !!value || 'กรุณากรอกหมายเลขบัตรประชาชน',
+                value => /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
             ],
-          
+
+            mobileRules: [
+                value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
+                value => /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+            ],
+
+            emailRules: [
+                value => !!value || 'กรุณากรอก อีเมล',
+                value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
+            ],
+
+            rateRules: [
+                value => !!value || 'กรุณากรอกเรทค่าจ้าง',
+
+            ],
+            startDateRules: [
+                value => !!value || 'กรุณาเลือกวันที่เริ่มทำงาน',
+
+            ],
+            teacherIdRules: [
+                value => !!value || 'กรุณากรอก รหัสครู',
+                value => /^FS\d{4}$/.test(value) || 'รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)'
+
+            ],
+
 
         }
     },
@@ -479,6 +539,12 @@ export default {
     mounted() {
         this.fullName();
         this.readdata();
+        this.readdata();
+        this.fetchData();
+        this.readSubject();
+        this.getlocation();
+        this.initialize();
+        this.getTeacherLocation();
     },
     components: {
 
@@ -487,15 +553,284 @@ export default {
 
     watch: {
         menu(val) {
-            val && setTimeout(() => (this.activePicker = 'YEAR'))
+            val && setTimeout(() => (this.activePicker = 'Month'))
         },
+
+        'selectedTambon': {
+            handler: 'fetchAmphoe',
+            immediate: true,
+        },
+
+        'selectedAmphoes': {
+            handler: 'fetchProvince',
+            immediate: true,
+        },
+
+        'selectedCurrTambon': {
+            handler: 'fetchCurrAmphoe',
+            immediate: true,
+        },
+        'selectedCurrAmphoes': {
+            handler: 'fetchCurrProvince',
+            immediate: true,
+        },
+
     },
     methods: {
-        getout() {
-            localStorage.clear();
-            sessionStorage.clear();
-            this.$router.push("/login");
+        typeClass() {
+            const db = this.$fireModule.database();
+            db.ref(`type_all/`).once("value", (snapshot) => {
+                let type = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    type.push({ key: key, name: childData[key].name, bath: childData[key].bath });
+                }
+                this.type_all = type;
+            })
         },
+        typePrivateClass() {
+            const db = this.$fireModule.database();
+            db.ref(`type_private_all/`).once("value", (snapshot) => {
+                let type = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    type.push({ key: key, name: childData[key].name, bath: childData[key].bath });
+                }
+                this.type_private_all = type;
+            })
+        },
+        async initialize() {
+
+            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()]);
+
+            this.getTeacherLocation();
+        },
+        getlocation() {
+            const db = this.$fireModule.database();
+            db.ref(`location/`).on("value", (snapshot) => {
+                this.classLocations = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    this.classLocations.push({ key: key, name: childData[key].name });
+                }
+            })
+
+        },
+
+        async getTeacherLocation() {
+            const db = this.$fireModule.database();
+
+            for (let i = 0; i < this.classLocation.length; i++) {
+
+                const classSnapshot = await db.ref(`location/${this.classLocation[i]}`).once("value");
+                const childClassData = classSnapshot.val();
+                this.classLocationDisplay.push(childClassData.name)
+
+            }
+        },
+
+        validateDetailEdit() {
+            return this.$refs[`detailForm`].validate();
+        },
+        validateAddressEdit() {
+            return this.$refs[`addressForm`].validate();
+        },
+        validateContractEdit() {
+            return this.$refs[`contractForm`].validate();
+        },
+        validateEducationEdit() {
+            return this.$refs[`educationForm`].validate();
+        },
+        async uploadFile(e) {
+            this.profilePic = e.target.files[0];
+            const db = this.$fireModule.database();
+            const storageRef = this.$fireModule.storage().ref();
+            const userRef = storageRef.child(`user/${this.userId}/profilePic.jpg`);
+
+            try {
+
+                const snapshot = await userRef.put(this.profilePic);
+
+                const downloadURL = await snapshot.ref.getDownloadURL();
+
+                await db.ref(`user/${this.userId}`).update({
+                    profilePic: downloadURL,
+                });
+            } catch (error) {
+                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!' + error);
+            }
+        },
+        async toEditDetail() {
+            if (this.isEditingDetail == true) {
+
+                if (this.validateDetailEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+                    const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
+                    if (isIDDuplicate && this.lastTeacherId != this.teacherId) {
+                        this.openSnackbar("error", 'รหัสของครูซ้ำ รหัสที่ซ้ำคือ ' + this.teacherId);
+                        this.isSubmitting = false;
+                        return;
+                    }
+                    await db.ref(`user/${this.userId}/`).update({
+                        
+                        nickname: this.nickname,
+                        mobile: this.mobile,
+                        email: this.email,
+                        gender: this.gender,
+                        currJob: this.currJob,
+                        idCardNumber: this.idCardNumber,
+                        idCardCopy: this.idCardCopy,
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingDetail = false;
+                        });
+
+                }
+
+            }
+            else {
+                this.isEditingDetail = true;
+            }
+        },
+
+        async checkDuplicateName(id) {
+            const db = this.$fireModule.database();
+            const snapshot = await db.ref('user').orderByChild('teacherId').equalTo(id).once('value');
+            const existingTeacher = snapshot.val();
+            return !!existingTeacher;
+        },
+        updateCurrAddress() {
+            if (this.isAddressSame) {
+
+                this.currAddress = { houseNo: null, tambon: null, amphoe: null, province: null, postal: null };
+                this.isAddressSame = false;
+
+            }
+            else {
+                this.isAddressSame = true;
+            }
+
+            if (this.address) {
+
+                this.currAddress = { ...this.address };
+
+            } else {
+                this.currAddress = null;
+            }
+        },
+        async toEditAddress() {
+            if (this.isEditingAddress == true) {
+                this.isEditingAddress = false;
+
+                if (this.validateAddressEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        address: this.address,
+                        currAddress: this.currAddress,
+                        ...(this.isAddressSame ? { currAddress: this.address } : {}),
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลที่อยู่เสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ', error);
+                            this.isSubmitting = false;
+                            this.isEditingAddress = false;
+                        });
+
+                }
+
+
+
+            }
+            else {
+                this.isEditingAddress = true;
+            }
+        },
+
+  
+
+        async toEditEducation() {
+            if (this.isEditingEducation == true) {
+                this.isEditingEducation = false;
+                if (this.validateEducationEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+                    await db.ref(`user/${this.userId}/`).update({
+                        university: this.university,
+                        faculty: this.faculty,
+                        major: this.major,
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingEducation = false;
+                        });
+
+                }
+            }
+            else {
+                this.isEditingEducation = true;
+            }
+        },
+
+        save(date) {
+            this.$refs.menu.save(date)
+        },
+
+
+
+        downloadFile() {
+            window.open(this.idCardCopy, '_blank');
+        },
+
+
+        isChecked(subjectName, level, key) {
+            const selectedSubject = this.selectedSubjects.find(subject => subject.name === subjectName);
+            return selectedSubject && selectedSubject.level.includes(level);
+        },
+
+        isSameAddress() {
+            if (this.address.length !== this.currAddress.length) {
+                return false;
+            }
+
+            for (let i = 0; i < this.address.length; i++) {
+                if (this.address[i] !== this.currAddress[i]) {
+                    return false;
+                }
+            }
+
+            return true && !this.isEditingAddress;
+        },
+
         openSnackbar(status, message) {
             this.showSnackbar = true;
             this.snackbarMessage = message;
@@ -503,259 +838,470 @@ export default {
         },
 
         async readdata() {
-            console.log('ทำงาน');
+
             const db = this.$fireModule.database();
             await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.profilePic = childData.profilePic || null;
-
+                this.lastTeacherId = childData.teacherId || null;
+                this.teacherId = childData.teacherId || null;
+                this.firstNameEng = childData.firstNameEng || null;
+                this.lastNameEng = childData.lastNameEng || null;
                 this.firstName = childData.firstName || null;
                 this.lastName = childData.lastName || null;
-                this.firstNameDisplay = childData.firstName || null;
-                this.lastNameDisplay = childData.lastName || null;
-                this.nicknameDisplay = childData.nickname || null;
                 this.nickname = childData.nickname || null;
-                this.school = childData.school || null;
+                this.mobile = childData.mobile || null;
+                this.email = childData.email || null;
                 this.gender = childData.gender || null;
-                this.birthDate = childData.birthDate || null;
-                
-                this.address.houseNo = childData.address.houseNo || null;
-                this.address.tambon = childData.address.tambon || null;
-                this.address.amphoe = childData.address.amphoe || null;
-                this.address.province = childData.address.province || null;
-                this.address.postal = childData.address.postal || null;
-       
-                this.education = childData.education || null;
-                this.teacherMobile = childData.teacherMobile || null;
-                this.parentMobile = childData.parentMobile || null;
+                this.currJob = childData.currJob || null;
+                this.idCardNumber = childData.idCardNumber || null;
+                this.idCardCopy = childData.idCardCopy || null;
+                this.contract = childData.contract || null;
+                this.workType = childData.workType || null;
+                this.classtype = childData.classtype || null;
+                this.classLocation = childData.classLocation || null;
+                this.startDate = childData.startDate || null;
+                this.rate = childData.rate;
+                this.university = childData.university || null;
+                this.faculty = childData.faculty || null;
+                this.major = childData.major || null;
+                this.type_Flip = childData.typeflip || null;
+                this.type_Private = childData.typeprivate || null;
+                try {
+                    this.address.houseNo = childData.address.houseNo || null;
+                    this.address.tambon = childData.address.tambon || null;
+                    this.address.amphoe = childData.address.amphoe || null;
+                    this.address.province = childData.address.province || null;
+                    this.address.postal = childData.address.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
+                try {
+                    this.currAddress.houseNo = childData.currAddress.houseNo || null;
+                    this.currAddress.tambon = childData.currAddress.tambon || null;
+                    this.currAddress.amphoe = childData.currAddress.amphoe || null;
+                    this.currAddress.province = childData.currAddress.province || null;
+                    this.currAddress.postal = childData.currAddress.postal || null;
+                } catch (error) {
+                    this.isLoading = false;
+                }
+
+
+                this.isLoading = false;
+
+            })
+
+
+
+        },
+
+        async fetchData() {
+            const db = this.$fireModule.database();
+            const snapshot = await db.ref(`user/${this.userId}/subject_all`).once("value");
+            const childData = snapshot.val();
+            const selectedItems = [];
+
+            for (const key in childData) {
+                const snapshotName = await db.ref(`user/${this.userId}/subject_all/${key}`).once("value");
+                const snapshotLevel = await db.ref(`user/${this.userId}/subject_all/${key}/level`).once("value");
+
+                const childDataName = snapshotName.val();
+                const childDataLevel = snapshotLevel.val();
+
+                const item = {
+                    key: key,
+                    level: childDataLevel,
+                    name: childDataName.name
+                };
+
+                selectedItems.push(item);
+            }
+
+            this.selectedSubjects = selectedItems;
+
+
+
+        },
+
+        async readSubject() {
+            const db = this.$fireModule.database();
+            await db.ref(`subject_all/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.subjects = [];
+                let items = [];
+                let subjectName = '';
+                let levelData = '';
+
+
+                for (const key in childData) {
+
+                    db.ref(`subject_all/${key}`).on("value", (snapshot) => {
+                        const childData = snapshot.val();
+                        subjectName = childData.name;
+
+                    })
+                    db.ref(`subject_all/${key}/level`).on("value", (snapshot) => {
+                        const childData = snapshot.val();
+                        levelData = childData;
+                        //console.log(levelData)
+                    })
+                    const item = {
+                        key: key,
+                        level: levelData,
+                        name: subjectName
+                    };
+
+                    items.push(item);
+                }
+                this.subjects = items;
                 this.isLoading = false;
 
             })
 
         },
 
-        validateDetailEdit() {
-            return this.$refs.detailForm.validate();
+        updateSelectedSubjects(key, level, name) {
+
+            const index = this.selectedSubjects.findIndex(s => s.name === name);
+
+            if (index === -1) {
+                this.selectedSubjects.push({ name, level: [level], key });
+
+            } else {
+
+                const subject = this.selectedSubjects[index];
+                const levelIndex = subject.level.indexOf(level);
+
+                if (levelIndex === -1) {
+
+                    subject.level.push(level);
+                } else {
+
+                    subject.level.splice(levelIndex, 1);
+                }
+
+                if (subject.level.length === 0) {
+                    this.selectedSubjects.splice(index, 1);
+                }
+            }
+            console.log(this.selectedSubjects);
 
         },
-        validateNameEdit() {
-            return this.$refs.nameForm.validate();
 
-        },
-        validateAddressEdit() {
-            return this.$refs.addressForm.validate();
-        },
+        async fetchProvince() {
+            if (this.selectedAmphoes) {
 
-        save(date) {
-            this.$refs.menu.save(date)
-        },
-
-        async saveName() {
-            const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedAmphoes.province_id;
 
                 try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
 
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
 
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.address.province = item.name_th;
+                    }
+
+
+
                 } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                    console.error("Error fetching amphoes:", error);
                 }
             }
-            // Update the other user details
-            try {
-                const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateNameEdit()) {
 
-                    await db.ref(`user/${this.keyuser}`).update({
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        nickname: this.nickname,
-                    });
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
-                }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขชื่อ');
-            } finally {
-                this.loading = false;
-            }
         },
-        async saveDetail() {
-            const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
+
+        async fetchAmphoe() {
+            if (this.selectedTambon) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedTambon.amphure_id;
+                this.address.tambon = this.selectedTambon.name_th;
+                this.address.postal = this.selectedTambon.zip_code;
 
                 try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
 
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
 
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedAmphoes = item;
+                        this.address.amphoe = this.selectedAmphoes.name_th;
+                    }
+
+
+
                 } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                    console.error("Error fetching amphoes:", error);
                 }
-            }
-
-            // Update the other user details
-            try {
-                const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateDetailEdit()) {
-                    //edit Detail
-                    await db.ref(`user/${this.keyuser}`).update({
-                        school: this.school,
-                        gender: this.gender,
-                        birthDate: this.birthDate,
-                        education: this.education,
-                        teacherMobile: this.teacherMobile,
-                        parentMobile: this.parentMobile,
-                    });
-
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
-                }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
-            } finally {
-                this.loading = false;
             }
         },
 
-        async saveAddress() {
+        async fetchTambons() {
             const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload && this.dialogEditName == true) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchTambon) {
+                tambonsRef
+                    .orderByChild("name_th") // Replace 'name' with the relevant field you want to filter by
+                    .startAt(this.searchTambon)
+                    .endAt(this.searchTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
+
+                        const tambonsData = snapshot.val();
+
+                        this.tambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.tambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        async fetchCurrProvince() {
+            if (this.selectedCurrAmphoes) {
+
+                const db = this.$fireModule.database();
+                const amphoeRef = db.ref(`RECORDS_city/`);
+                const prov_id = this.selectedCurrAmphoes.province_id;
+
 
                 try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(prov_id)
+                        .once("value");
 
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
+                    const provincesData = snapshot.val();
+                    this.provinces = [];
 
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
+                    for (const key in provincesData) {
+                        const provinceData = provincesData[key];
+                        const item = {
+                            name_th: provinceData.name_th,
+
+                        };
+                        this.currAddress.province = item.name_th;
+                    }
+
+
+
+
                 } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                    console.error("Error fetching amphoes:", error);
                 }
             }
 
-            // Update the other user details
-            try {
+        },
+
+        async fetchCurrAmphoe() {
+            if (this.selectedCurrTambon) {
+                console.log(this.selectedCurrTambon)
                 const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateAddressEdit()) {
-                    //edit Name
+                const amphoeRef = db.ref(`RECORDS_amp/`);
+                const amp_id = this.selectedCurrTambon.amphure_id;
+                this.currAddress.tambon = this.selectedCurrTambon.name_th;
+                this.currAddress.postal = this.selectedCurrTambon.zip_code;
 
-                    //edit Address
+                try {
+                    const snapshot = await amphoeRef
+                        .orderByChild("id")
+                        .equalTo(amp_id)
+                        .once("value");
 
-                    await db.ref(`user/${this.keyuser}`).update({
-                        address: this.address,
+                    const amphoesData = snapshot.val();
+                    this.amphoes = [];
 
-                    });
+                    for (const key in amphoesData) {
+                        const amphoeData = amphoesData[key];
+                        const item = {
+                            name_th: amphoeData.name_th,
+                            province_id: amphoeData.province_id,
+                        };
+                        this.selectedCurrAmphoes = item;
+                        this.currAddress.amphoe = this.selectedCurrTambon.name_th;
+                    }
 
-                    //edit Detail
 
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
+
+                } catch (error) {
+                    console.error("Error fetching amphoes:", error);
                 }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
-            } finally {
-                this.loading = false;
             }
         },
 
+        async fetchCurrTambons() {
+            const db = this.$fireModule.database();
+            const tambonsRef = db.ref(`RECORDS_tambons/`);
+            if (this.searchCurrTambon) {
+                tambonsRef
+                    .orderByChild("name_th")
+                    .startAt(this.searchCurrTambon)
+                    .endAt(this.searchCurrTambon + "\uf8ff")
+                    .once("value")
+                    .then((snapshot) => {
 
+                        const tambonsData = snapshot.val();
+
+                        this.currTambons = [];
+                        let items = [];
+                        for (const key in tambonsData) {
+                            const tambonData = tambonsData[key];
+                            const item = {
+                                name_th: tambonData.name_th,
+                                zip_code: tambonData.zip_code,
+                                amphure_id: tambonData.amphure_id,
+                            };
+                            this.currTambons.push(item);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching tambons:", error);
+                    });
+            }
+
+
+
+        },
+
+        tambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+        currTambonValue(item) {
+            return {
+                name_th: item.name_th,
+                amphure_id: item.amphure_id,
+                zip_code: item.zip_code,
+            };
+        },
+        isLetter(e) {
+            let char = String.fromCharCode(e.keyCode);
+            if (/^[A-Za-z]+$/.test(char)) return true;
+            else e.preventDefault();
+        },
 
         fullName() {
             if (localStorage.getItem('firstName') == null) {
-          this.title = sessionStorage.getItem('firstName');
-          this.status = sessionStorage.getItem('status');
-          this.keyuser = sessionStorage.getItem('lastName');
-          console.log(this.keyuser)
-        } else {
-          this.title = localStorage.getItem('firstName');
-          this.status = localStorage.getItem('status');
-          this.keyuser = sessionStorage.getItem('lastName');
-          console.log(this.keyuser)
-        }
+                this.title = sessionStorage.getItem('firstName');
+                this.status = sessionStorage.getItem('status');
+                this.keyuser = sessionStorage.getItem('lastName');
+                console.log(this.keyuser)
+            } else {
+                this.title = localStorage.getItem('firstName');
+                this.status = localStorage.getItem('status');
+                this.keyuser = sessionStorage.getItem('lastName');
+                console.log(this.keyuser)
+            }
         },
+
     },
 }
 </script>
 
-<style>
-.userSpan {
-    background-color: rgb(243 244 246);
-    color: #000000;
-    border-radius: 12px;
-    padding: 4px 10px 4px 10px;
-
-}
-
+ 
+<style scoped>
 .editButton {
-    border-radius: 32px;
-    border: 1px solid #000;
-    background: #FFF;
+    display: flex;
+    padding: 0px 12px;
     justify-content: center;
     align-items: center;
     gap: 12px;
-
-    font-size: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--brown-1, #322E2B);
+    background: var(--brown-1, #322E2B);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.editButton span,
-.editButton v-icon {
-    color: #C3CAD9;
-    text-transform: none;
+.editButton:hover {
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
 }
 
-.editButton:hover span {
-    color: #000000;
-    text-transform: none;
+.saveButton {
+    display: flex;
+    padding: 0px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--green, #29CC39);
+    background: var(--green, #29CC39);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-
-.header {
-    font-size: 25px;
+.saveButton:hover {
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    transform: translateY(-4px);
 }
-</style>
+
+hr.solid {
+    border-top: 3px solid black;
+    border-width: 3px;
+    opacity: 1;
+}
+
+.upload-label {
+    border-radius: 10px;
+    border: 1px solid var(--brown-brown-1, #322E2B);
+    color: var(--write-1, #F8F9FB);
+    background: var(--brown-brown-1, #322E2B);
+    display: flex;
+    padding: 6px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-label:hover {
+    color: var(--brown-brown-1, #322E2B);
+    background-color: #ffffff;
+}
+
+.black-label .v-label {
+    color: rgb(0, 0, 0);
+    opacity: 1;
+    font-weight: 500;
+}
+</style> 
