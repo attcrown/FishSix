@@ -36,10 +36,6 @@
       <v-avatar class="ms-2">
         <img :src=profilePic alt="โปรไฟล์">
       </v-avatar>
-
-      <!-- <v-btn icon to="/admin/basket" router exact>
-        <v-icon>mdi-logout</v-icon>
-      </v-btn> -->
     </v-app-bar>
 
 
