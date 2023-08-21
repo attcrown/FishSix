@@ -115,35 +115,35 @@
                         </v-col>
                         <v-col cols="5">
                             <v-text-field readonly label="Amount" :value="detailData.money.subject.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.level.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.level.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.location.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.location.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">{{ detailData.money.sheet.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.sheet.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.optional">
                             <v-subheader style="font-size:16px">{{ detailData.money.optional.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.optional">
                             <v-text-field readonly label="Amount" :value="detailData.money.optional.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
 
                         <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
@@ -154,7 +154,7 @@
                         <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
                             style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.typeflip.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
 
                         <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
@@ -165,34 +165,41 @@
                         <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
                             style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.typeprivate.bath"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px">ชั่วโมงสอน</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailHour" prefix="Hr."></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailHour" suffix="Hr."></v-text-field>
+                        </v-col>
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.check_name == false || detailData.check_save == false">
+                            <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.check_name == false || detailData.check_save == false">
+                            <v-text-field readonly label="Amount" :value="detailData.money.sum_send_rate_name+detailData.money.sum_money+detailData.money.sum_send_rate_save"
+                                suffix="฿"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_name && detailData.money.send_rate_name">
                             <v-subheader style="font-size:16px; color:red;" >{{ detailData.money.send_rate_name.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_name && detailData.money.send_rate_name">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath"
-                                prefix="-%"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath+'% '+'(-'+detailData.money.sum_send_rate_name+' ฿)'" 
+                                prefix="-"></v-text-field> <!----sum_send_rate_name(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_save && detailData.money.send_rate_save">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_save && detailData.money.send_rate_save">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath"
-                                prefix="-%"></v-text-field>
+                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath+'% '+'(-'+detailData.money.sum_send_rate_save+' ฿)'"
+                                prefix="-" ></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">รวมทั้งหมด</v-subheader>
+                            <v-subheader style="font-size:16px; color:#2E7D32;">ราคาสุทธิ</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="Amount" :value="detailData.money.sum_money"
-                                prefix="฿"></v-text-field>
+                                suffix="฿"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -440,7 +447,7 @@ export default {
             //     this.detailHour = hour;
             // }
             // console.log(min, min_s);
-            // console.log(this.detailData, this.detailHour);
+            console.log(this.detailData, this.detailHour);
             this.dialog = true;
         },
     },
