@@ -309,27 +309,27 @@
                                         <v-col cols="8" class="py-0"></v-col>
                                         <v-col cols="6" class="py-0 ">
                                             <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required :readonly="!isEditingDetail"
+                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required disabled
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" :readonly="!isEditingDetail"  
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" disabled 
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
+                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName" disabled
                                                 :rules="firstNameRules" :readonly="!isEditingDetail"
                                                 required></v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName"
+                                            <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName" disabled
                                                 :readonly="!isEditingDetail" :rules="lastnameRules" required></v-text-field>
                                         </v-col>
                                         <v-col cols="4" class="py-0">
-                                            <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname"
+                                            <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname" disabled
                                                 :readonly="!isEditingDetail" :rules="nicknameRules" required></v-text-field>
                                         </v-col>
                                         <v-col cols="5" class="py-0">
@@ -483,7 +483,7 @@
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลข้อมูลผู้ปกครอง</div>
-                            <div>
+                            <!-- <div>
                                 <button v-if="!isEditingParentDetail" class="editButton " @click="toEditParentDetails()">
                                     <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
                                     <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
@@ -492,7 +492,7 @@
                                     <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
 
                                 </button>
-                            </div>
+                            </div> -->
                         </v-card-title>
                         <v-card-text>
                             <v-form ref="parentDetailForm">
@@ -500,12 +500,12 @@
                                 <v-row>
 
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName"
+                                        <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName" disabled
                                             :readonly="!isEditingParentDetail" label="ชื่อผู้ปกครอง" required>
                                         </v-text-field>
                                     </v-col>
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" name="parentMobile" v-model="parentMobile"
+                                        <v-text-field class="black-label" name="parentMobile" v-model="parentMobile" disabled
                                             :readonly="!isEditingParentDetail" label="เบอร์โทรศัพท์ผู้ปกครอง" required>
                                         </v-text-field>
                                     </v-col>
@@ -513,12 +513,12 @@
 
                                     </v-col>
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" name="parentJob" v-model="parentJob"
+                                        <v-text-field class="black-label" name="parentJob" v-model="parentJob" disabled
                                             :readonly="!isEditingParentDetail" label="อาชีพ">
                                         </v-text-field>
                                     </v-col>
                                     <v-col class="py-0" cols="4">
-                                        <v-textarea class="black-label" name="expectation" v-model="expectation"
+                                        <v-textarea class="black-label" name="expectation" v-model="expectation" disabled
                                             :readonly="!isEditingParentDetail" label="ความคาดหวัง" rows="2">
                                         </v-textarea>
                                     </v-col>
@@ -1063,16 +1063,11 @@ export default {
                     // }
                     await db.ref(`user/${this.keyuser}/`).update({
 
-                        profilePic: this.profilePic,
-                        firstNameEng: this.firstNameEng,
-                        lastNameEng: this.lastNameEng,
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        nickname: this.nickname,
+                     
+                   
                         studentMobile: this.studentMobile,
                         email: this.email,
                         gender: this.gender,
-
                         idCardNumber: this.idCardNumber,
 
                     })
@@ -1160,25 +1155,25 @@ export default {
                     //     this.isSubmitting = false;
                     //     return;
                     // }
-                    await db.ref(`user/${this.keyuser}/`).update({
-                        parentFirstName: this.parentFirstName,
-                        parentJob: this.parentJob,
-                        expectation: this.expectation,
-                        parentMobile: this.parentMobile,
+                    // await db.ref(`user/${this.keyuser}/`).update({
+                    //     parentFirstName: this.parentFirstName,
+                    //     parentJob: this.parentJob,
+                    //     expectation: this.expectation,
+                    //     parentMobile: this.parentMobile,
 
-                    })
-                        .then(() => {
+                    // })
+                        // .then(() => {
 
-                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
-                            this.isSubmitting = false;
-                            this.isEditingParentDetail = false;
-                        })
-                        .catch((error) => {
+                        //     this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                        //     this.isSubmitting = false;
+                        //     this.isEditingParentDetail = false;
+                        // })
+                        // .catch((error) => {
 
-                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
-                            this.isSubmitting = false;
-                            this.isEditingParentDetail = false;
-                        });
+                        //     this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                        //     this.isSubmitting = false;
+                        //     this.isEditingParentDetail = false;
+                        // });
 
                 }
             }

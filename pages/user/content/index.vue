@@ -9,34 +9,26 @@
                 <h5><b>คลังเนื้อหา</b></h5>
                 <v-row align="center">
                     <v-col cols="12" sm="3">
-                        <v-text-field label="ชื่อวิชา" placeholder="ระบุวิชา" required></v-text-field>
+                        <v-autocomplete label="วิชา" v-model="searchSubject" :items="subjects" item-text="name"
+                            item-value="name">
+                            <template #prepend>
+                                <span class="mdi mdi-book-outline text-h6"></span>
+                            </template>
+                        </v-autocomplete>
                     </v-col>
                     <v-col cols="12" sm="3">
                         <v-text-field label="ระดับชั้น" placeholder="ระดับชั้น" required></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="4"></v-col>
-                    <v-col cols="12" sm="2">
-                        <v-btn elevation="10" small color="#322E2B" style="color:white">ค้นหาข้อมูล<span
-                                class="mdi mdi-magnify"></span></v-btn>
-                    </v-col>
+
+
                 </v-row>
             </v-container>
-            <!-- <v-container fluid>
-                <h3>เพิ่มระดับการศึกษา /ลบระดับการศึกษา</h3>
-                <v-row align="center">
-                    <v-col cols="12" sm="3">
-                        <v-text-field label="ตัวย่อระดับการศึกษา" placeholder="" v-model="name_level" @input="check_level()"></v-text-field>
-                    </v-col>                    
-                    <v-col cols="12" sm="3">
-                        <v-btn elevation="10" outline-success large :loading="loading_level" @click="save_submit_level()">SAVE</v-btn>
-                        <v-btn elevation="10" outline-success large :loading="loading_level" @click="del_level()">DELETE</v-btn>
-                    </v-col>
-                </v-row>
-            </v-container> -->
+
         </v-card>
 
 
-        <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="index" class="elevation-16 rounded-xl">
+        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents"
+            :items-per-page="-1" class="elevation-16 rounded-xl">
             <template v-slot:top>
                 <v-toolbar flat>
                     <v-toolbar-title class="ms-4"><b>เนื้อหารายวิชา</b></v-toolbar-title>
@@ -47,8 +39,18 @@
                 </v-toolbar>
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
+            <template v-slot:item.actions="{ item }">
+                <div class="icon-container">
+                    <v-icon color="#B6A7A2" class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
+                        mdi-eye
+                    </v-icon>
+                </div>
 
+            </template>
         </v-data-table>
+
+
+
     </div>
 </template>
 
@@ -60,63 +62,43 @@ export default {
     data() {
         return {
 
-
+            keyuser: null,
+            firstName: null,
+            dialog_detail: false,
+            dialog_delete: false,
             isLoading: true,
+            searchSubject: '',
+            subjectSelected: null,
+            subject: null,
+            level: null,
+            level_select: [],
+            subjectPermissions: {},
+            headers: [
+                { text: 'No.', value: 'index' },
+                {
+                    text: 'Subject',
+                    value: 'name',
+                },
+                { text: 'Level', value: 'level' },
+                { text: 'จำนวนบท', value: 'chapterCount' },
+                { text: 'จำนวนเอกสาร', value: '' },
+                { text: 'จำนวนวิดีโอ', value: '' },
+                { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
+            ],
 
-
+            subjects: [],
+            subjectContents: [],
 
         }
     },
     computed: {
-        formattedTotalHour() {
-            if (this.totalHour === null || this.totalHour === undefined) {
-                return '0 ชั่วโมง';
-            }
 
-            const hours = Math.floor(this.totalHour);
-            const minutes = ((this.totalHour - hours) * 60).toFixed(0);
-
-            if (minutes === 0) {
-                return `${hours} ชั่วโมง`;
-            } else {
-                return `${hours} ชั่วโมง ${minutes} นาที`;
-            }
-
-
-        },
-        formattedStudyHour() {
-            if (this.studyHour === null || this.studyHour === undefined) {
-                return '0 ชั่วโมง';
-            }
-
-            const hours = Math.floor(this.studyHour);
-            const minutes = ((this.studyHour - hours) * 60).toFixed(0);
-
-            if (minutes === 0) {
-                return `${hours} ชั่วโมง`;
-            } else {
-                return `${hours} ชั่วโมง ${minutes} นาที`;
-            }
-        },
-        formattedHourLeft() {
-            if (this.hourLeft === null || this.hourLeft === undefined) {
-                return '0 ชั่วโมง';
-            }
-
-            const hours = Math.floor(this.hourLeft);
-            const minutes = ((this.hourLeft - hours) * 60).toFixed(0);
-
-            if (minutes === 0) {
-                return `${hours} ชั่วโมง`;
-            } else {
-                return `${hours} ชั่วโมง ${minutes} นาที`;
-            }
-        },
 
     },
     mounted() {
         this.fullName();
-        this.readdata();
+        this.initialize();
+
     },
     components: {
 
@@ -124,242 +106,101 @@ export default {
     },
 
     watch: {
-        menu(val) {
-            val && setTimeout(() => (this.activePicker = 'YEAR'))
-        },
+
     },
     methods: {
-        getout() {
-            localStorage.clear();
-            sessionStorage.clear();
-            this.$router.push("/login");
-        },
+
         openSnackbar(status, message) {
             this.showSnackbar = true;
             this.snackbarMessage = message;
             this.snackbarColor = status;
         },
 
-        async readdata() {
-            console.log('ทำงาน');
+
+        viewItem(item) {
+            this.$router.push({ path: 'content/detail', query: { contentId: item.key } });
+            //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
+        },
+
+
+
+        initialize() {
             const db = this.$fireModule.database();
-            await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
+            db.ref("subject_all/").on("value", (snapshot) => {
+                let item = [];
+                let num = 0;
+                this.subjects = [];
                 const childData = snapshot.val();
-                this.profilePic = childData.profilePic || null;
-                this.studentId = childData.studentId || null;
-                this.firstName = childData.firstName || null;
-                this.lastName = childData.lastName || null;
-                this.firstNameDisplay = childData.firstName || null;
-                this.lastNameDisplay = childData.lastName || null;
-                this.nicknameDisplay = childData.nickname || null;
-                this.nickname = childData.nickname || null;
-                this.school = childData.school || null;
-                this.gender = childData.gender || null;
-                this.birthDate = childData.birthDate || null;
+                for (const key in childData) {
+                    const subject = childData[key];
+                    num += 1;
+                    item.push({ name: subject.name, level: subject.level, key: key, index: num });
 
-                this.totalHour = childData.totalHour || 0;
-                this.studyHour = childData.studyHour || 0;
-                this.hourLeft = childData.hourLeft || 0;
+                }
+                this.subjects = item;
 
-                this.classType = childData.classType || null;
-                this.courseHour = childData.courseHour || null;
-                this.freeHour = childData.freeHour || null;
-                this.wantedTeacher = childData.wantedTeacher || null;
-                this.annotation = childData.annotation || null;
+            })
+            db.ref(`studentHistory/${this.keyuser}`).on("value", (snapshot) => {
 
-                this.education = childData.education || null;
-                this.studentMobile = childData.studentMobile || null;
-                this.parentMobile = childData.parentMobile || null;
+                let itemPermissions = [];
+                let num = 0;
+                this.subjectContents = [];
+                const childData = snapshot.val();
+                console.log(childData)
+                let item = [];
+                for (const key in childData) {
 
-                try {
-                    this.address.houseNo = childData.address.houseNo || null;
-                    this.address.tambon = childData.address.tambon || null;
-                    this.address.amphoe = childData.address.amphoe || null;
-                    this.address.province = childData.address.province || null;
-                    this.address.postal = childData.address.postal || null;
-                } catch (error) {
-                    this.isLoading = false;
+                    const subjectData = childData[key];
+
+                    num += 1;
+                    itemPermissions.push({ subject: subjectData.subject, level: subjectData.level, keySubject: subjectData.keySubject });
+
+                    db.ref("contents/").on("value", (snapshot) => {
+
+                        let num = 0;
+
+                        const contentData = snapshot.val();
+                        for (const keyContent in contentData) {
+                            const content = contentData[keyContent];
+
+                            if ((content.key_subject == subjectData.keySubject) && (content.level == subjectData.level)) {
+                                num += 1;
+                                try {
+                                    const chapterCount = Object.keys(content.subject_contents).length;
+                                    item.push({ name: content.name, level: content.level, key: keyContent, keySubject: subjectData.keySubject, index: num, chapterCount: chapterCount });
+                                } catch (error) {
+                                    item.push({ name: content.name, level: content.level, key: keyContent, keySubject: subjectData.keySubject, index: num, chapterCount: 0 });
+                                }
+
+                            }
+                        }
+                        const filteredItem = item.filter((content, index, self) =>
+                            index === self.findIndex(c => c.key === content.key)
+                        );
+
+                        this.subjectContents = filteredItem;
+
+                        console.log(this.subjectContents)
+                    })
                 }
 
-                this.isLoading = false;
-
+                this.subjectPermissions = itemPermissions;
 
             })
 
         },
 
-        validateDetailEdit() {
-            return this.$refs.detailForm.validate();
 
-        },
-        validateNameEdit() {
-            return this.$refs.nameForm.validate();
 
-        },
-        validateAddressEdit() {
-            return this.$refs.addressForm.validate();
-        },
-
-        save(date) {
-            this.$refs.menu.save(date)
-        },
-
-        async saveName() {
+        search_level_select() {
             const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
+            db.ref(`subject_all/${this.subject}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
 
-                try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
-
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
-            // Update the other user details
-            try {
-                const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateNameEdit()) {
-
-                    await db.ref(`user/${this.keyuser}`).update({
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        nickname: this.nickname,
-                    });
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
-                }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขชื่อ');
-            } finally {
-                this.loading = false;
-            }
+                this.level_select = childData.level;
+                this.subjectSelected = childData.name;
+            })
         },
-        async saveDetail() {
-            const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
-
-                try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
-
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
-
-            // Update the other user details
-            try {
-                const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateDetailEdit()) {
-                    //edit Detail
-                    await db.ref(`user/${this.keyuser}`).update({
-                        school: this.school,
-                        gender: this.gender,
-                        birthDate: this.birthDate,
-                        education: this.education,
-                        studentMobile: this.studentMobile,
-                        parentMobile: this.parentMobile,
-                    });
-
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
-                }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async saveAddress() {
-            const db = this.$fireModule.database();
-            this.loading = true;
-            // Check if the user has uploaded a profile picture
-            if (this.profilePicUpload && this.dialogEditName == true) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
-
-                try {
-                    // Upload the file to Firebase Storage
-                    const snapshot = await userRef.put(this.profilePicUpload);
-
-                    // Get the download URL of the uploaded file
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    // Update the profile picture in the database
-                    await db.ref(`user/${this.keyuser}`).update({
-                        profilePic: downloadURL,
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
-
-            // Update the other user details
-            try {
-                const db = this.$fireModule.database();
-                this.loading = true;
-                if (this.validateAddressEdit()) {
-                    //edit Name
-
-                    //edit Address
-
-                    await db.ref(`user/${this.keyuser}`).update({
-                        address: this.address,
-
-                    });
-
-                    //edit Detail
-
-                    this.openSnackbar("success", 'แก้ไขข้อมูลเรียบร้อย');
-                    this.readdata();
-                }
-                else {
-                    this.openSnackbar("error", 'กรุณากรอกข้อมูลให้ถูกต้อง');
-                }
-            } catch (error) {
-                console.error('Error updating user details:', error);
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
-            } finally {
-                this.loading = false;
-            }
-        },
-
-
-
         fullName() {
             if (localStorage.getItem('firstName') == null) {
                 this.firstName = sessionStorage.getItem('firstName') || '';
@@ -369,11 +210,14 @@ export default {
                 this.keyuser = localStorage.getItem('lastName') || '';
             }
         },
+
+
+
     },
 }
 </script>
 
-<style>
+<style scoped>
 .userSpan {
     background-color: rgb(243 244 246);
     color: #000000;
@@ -412,4 +256,55 @@ hr.solid {
 
 .header {
     font-size: 25px;
-}</style>
+}
+
+.icon-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.icon-box {
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+
+.icon-box:hover {
+    transform: translateY(-3px);
+    color: #000000;
+
+}
+
+.hover-container {
+    position: absolute;
+    bottom: -26px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    visibility: hidden;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.icon-container:hover .hover-container {
+    opacity: 1;
+    visibility: visible;
+    bottom: -40px;
+
+}
+
+.hover-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+
+    color: rgb(0, 0, 0);
+    border-radius: 4px;
+    padding: 8px;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
