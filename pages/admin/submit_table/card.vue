@@ -1089,9 +1089,12 @@ export default {
                                             //classHistory
                                             const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
                                             db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
+                                                Idsendplan: id,
+                                                date: this.edited.date,
                                                 hour: this.edited.hour,
                                                 keySubject: this.edited.keySubject,
                                                 teacherName: this.edited.name,
+                                                keyTeacher: this.edited.keyTeacher,
                                                 level: this.edited.level,
                                                 studentId: this.edited.studentId,
                                                 subject: this.edited.subject,
@@ -1099,6 +1102,7 @@ export default {
                                                 time_e: this.edited.time_e,
                                                 time_s: this.edited.time_s,
                                                 style: this.edited.style,
+                                                createdAt: currentDate,
                                             }).then(() => {
                                                 console.log('Update student class history');
                                             })

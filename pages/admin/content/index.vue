@@ -52,7 +52,7 @@
 
                 </div>
                 <div class="icon-container">
-                    <v-icon color="red" class="mr-2  icon-box" @click="viewMaterialDialog(item)">
+                    <v-icon color="red"  class="mr-2  icon-box" @click="viewDeleteDialog(item)">
                         mdi-delete
                     </v-icon>
                 </div>
@@ -106,6 +106,36 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="dialog_delete" max-width="600px">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title class="d-flex justify-space-between">
+                    <span style="font-size: 16px">
+                        <b>ลบเนื้อหา</b>
+
+                    </span>
+
+                    <v-btn fab dark small color="#37474F" @click="dialog_delete = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                       <p class="text-danger"> การลบส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ</p>
+                        </v-row>
+                    </v-container>
+
+                </v-card-text>
+
+
+             
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -118,6 +148,7 @@ export default {
         return {
 
             dialog_detail: false,
+            dialog_delete: false,
             isLoading: true,
             searchSubject: '',
             subjectSelected: null,
@@ -168,6 +199,9 @@ export default {
 
         addContentDialog() {
             this.dialog_detail = true;
+        },
+        viewDeleteDialog() {
+            this.dialog_delete = true;
         },
 
         viewItem(item) {
@@ -363,4 +397,5 @@ hr.solid {
     width: 32px;
     height: 32px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}</style>
+}
+</style>

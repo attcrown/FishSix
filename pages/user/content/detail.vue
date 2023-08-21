@@ -3,7 +3,7 @@
 
         <div style="display: flex; justify-content: space-between;">
             <h1 class="font-weight-bold">คลังเนื้อหา</h1>
-            <v-btn to="/admin/content" router exact>ย้อนกลับ</v-btn>
+            <v-btn to="/user/content" router exact>ย้อนกลับ</v-btn>
         </div>
         <v-card class="elevation-16 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
             <v-container fluid>
@@ -23,8 +23,7 @@
 
                     <v-col cols="12" sm="3"> </v-col>
                     <v-col cols="12" sm="3" class="text-right">
-                        <v-btn elevation="10" color="#322E2B" style="color:white"
-                            @click="addContentDialog">เพิ่มเนื้อหา<span class="mdi mdi-plus"></span></v-btn>
+
                     </v-col>
                 </v-row>
             </v-container>
@@ -45,146 +44,13 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon color="indigo" large class="mr-2" @click="viewItem(item)">
-                    mdi-pencil
+                <v-icon color="#B6A7A2" class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
+                    mdi-eye
                 </v-icon>
-                <v-icon color="black" large class="mr-2" @click="viewMaterialDialog(item)">
-                    mdi-file-pdf-box
-                </v-icon>
-                <v-icon color="red" large @click="viewDeleteDialog(item)">
-                    mdi-delete
-                </v-icon>
+
             </template>
         </v-data-table>
 
-        <!-- เพิ่มเนื้อหา / บท -->
-        <v-dialog v-model="dialog_detail" max-width="600px">
-
-            <v-card class="p-4 rounded-xl">
-                <v-card-title class="d-flex justify-space-between">
-                    <span style="font-size: 16px">
-                        <b>วิชา {{ subjectName }} | {{ level }}</b>
-
-                    </span>
-
-                    <v-btn fab dark small color="#37474F" @click="dialog_detail = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-
-                </v-card-title>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field type="number" min="0" label="บทที่" v-model="subjectChapter"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="ชื่อบท" v-model="chapterName"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="รายละเอียดเนื้อหา" v-model="chapterDetail"></v-text-field>
-                            </v-col> <v-col cols="6">
-                                <v-text-field label="หมายเหตุ" v-model="annotation"></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-
-
-                <v-card-actions class="d-flex justify-center">
-
-                    <v-btn color=green @click="addContent" elevation="0" rounded>
-                        <b>บันทึก</b>
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <!-- แก้ไขเนื้อหา / บท -->
-        <v-dialog v-model="dialog_edit" max-width="600px">
-
-            <v-card class="p-4 rounded-xl">
-                <v-card-title class="d-flex justify-space-between">
-                    <span style="font-size: 16px">
-                        <b>วิชา {{ subjectName }} | {{ level }}</b>
-
-                    </span>
-
-                    <v-btn fab dark small color="#37474F" @click="dialog_detail = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-
-                </v-card-title>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col cols="6">
-                                <v-text-field type="number" min="0" label="บทที่"
-                                    v-model="selectItem.chapterNumber"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="ชื่อบท" v-model="selectItem.chapterName"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="รายละเอียดเนื้อหา" v-model="selectItem.chapterDetail"></v-text-field>
-                            </v-col> <v-col cols="6">
-                                <v-text-field label="หมายเหตุ" v-model="selectItem.annotation"></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-
-
-                <v-card-actions class="d-flex justify-center">
-
-                    <v-btn color=green @click="editContent" elevation="0" rounded>
-                        <b>บันทึก</b>
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <!-- ลบบท -->
-        <v-dialog v-model="dialog_delete" max-width="600px">
-
-            <v-card class="p-4 rounded-xl">
-                <v-card-title class="d-flex justify-space-between">
-                    <span style="font-size: 16px">
-                        <b>ลบเนื้อหา</b>
-
-                    </span>
-
-                    <v-btn fab dark small color="#37474F" @click="dialog_delete = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-
-                </v-card-title>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <p class="text-danger"> การลบส่วนนี้ จะลบทั้งไฟล์และเอกสารที่มีในบทนี้ทั้งหมด</p>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-                <v-card-actions class="d-flex justify-center">
-                    <v-spacer></v-spacer>
-
-                    <v-btn rounded color="red" dark class="mt-5 mb-5" @click="deleteChapter()">
-                        ลบ
-                    </v-btn>
-
-                    <v-spacer></v-spacer>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <!-- ดูสื่อการสอนในบททั้งหมด-->
         <v-dialog v-model="content_dialog" max-width="60%">
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
@@ -200,8 +66,7 @@
                 </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn elevation="10" small color="#322E2B" style="color:white"
-                        @click="addMaterialDialog">เพิ่มสื่อการสอน<span class="mdi mdi-plus"></span></v-btn>
+
                 </v-card-actions>
 
                 <v-card-text>
@@ -214,13 +79,12 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="indigo" large class="mr-2" @click="openEditDialog(item)">
-                                    mdi-pencil
+                                <v-icon color="#B6A7A2"  style="text-decoration: underline;" class="mr-2" @click="openEditDialog(item)">
+                                    mdi-eye
                                 </v-icon>
 
-                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)">
-                                    mdi-delete
-                                </v-icon>
+
+
                             </template>
                         </v-data-table>
                     </v-container>
@@ -232,8 +96,8 @@
 
             </v-card>
         </v-dialog>
-        <!-- เพิ่มสื่อการสอนในบท -->
-        <v-dialog v-model="material_dialog" max-width="600px">
+
+        <v-dialog v-model="viewmaterial" max-width="600px">
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
                     <span style="font-size: 24px">
@@ -251,69 +115,7 @@
                     <v-container>
                         <v-row justify="center">
                             <v-col cols="12">
-                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="MaterialName"
-                                    :rules="nameRules"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select :items="materialTypes" label="ประเภทสื่อ" v-model="materialType"></v-select>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="materialFileName"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="รายละเอียดเรื่องที่เรียน" v-model="materialDetail"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="หมายเหตุ" v-model="materialAnnotation"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field v-if="materialType === 'Video Link'" label="ลิงก์"
-                                    v-model="materialLink"></v-text-field>
-                                <v-file-input v-if="materialType === 'เอกสารประกอบการเรียน (Pdf)'" label='ไฟล์ PDF'
-                                    v-model="materialFile" accept="image/*, pdf"></v-file-input>
-                            </v-col>
-                            <v-col cols="6">
-
-                            </v-col>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="#37474F" @click="material_dialog = false">
-                        ย้อนกลับ<span class="mdi mdi-keyboard-backspace text-h6"></span>
-                    </v-btn>
-                    <v-btn rounded color="#29CC39" dark class="mt-5 mb-5" @click="addMaterial()">
-                        บันทึก <span class="mdi mdi-content-save text-h6"></span>
-                    </v-btn>
-
-                    <v-spacer></v-spacer>
-                </v-card-actions>
-
-
-            </v-card>
-        </v-dialog>
-        <!-- แก้ไขสื่อการสอนในบท -->
-        <v-dialog v-model="edit_material" max-width="600px">
-            <v-card class="p-4 rounded-xl">
-                <v-card-title>
-                    <span style="font-size: 24px">
-                        <b>{{ subjectName }} | {{ level }} | {{ selectChapter }} | ชื่อเรื่อง</b>
-                    </span>
-                    <v-spacer></v-spacer>
-                    <v-btn fab dark small color="#37474F" @click="material_dialog = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-                </v-card-title>
-
-                <v-card-text>
-                    <v-container>
-                        <v-row justify="center">
-                            <v-col cols="12">
-                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name"
+                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name"  disabled
                                     :rules="nameRules"></v-text-field>
                             </v-col>
                             <v-col cols="6">
@@ -321,83 +123,11 @@
                                     v-model="selectMaterial.type"></v-select>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"></v-text-field>
+                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName" disabled></v-text-field>
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field label="รายละเอียดเรื่องที่เรียน"
-                                    v-model="selectMaterial.detail"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <label v-if="selectMaterial.type === 'Video Link'">Link
-                                </label><br>
-                                <a v-if="selectMaterial.type === 'Video Link'" :href="selectMaterial.link"
-                                    target="_blank">{{ selectMaterial.link }}</a>
-
-                                <label v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'">เอกสารประกอบการเรียน
-                                    (Pdf)</label><br>
-                                <a v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'" href=""
-                                    @click="downloadFile()"> View</a>
-
-                            </v-col>
-                            <v-col cols="6">
-
-                            </v-col>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="#37474F" @click="material_dialog = false">
-                        ย้อนกลับ<span class="mdi mdi-keyboard-backspace text-h6"></span>
-                    </v-btn>
-                    <v-btn rounded color="#29CC39" dark class="mt-5 mb-5" @click="editMaterial()">
-                        บันทึก <span class="mdi mdi-content-save text-h6"></span>
-                    </v-btn>
-
-                    <v-spacer></v-spacer>
-                </v-card-actions>
-
-
-            </v-card>
-        </v-dialog>
-        <!-- ลบสื่อการสอน -->
-        <v-dialog v-model="delete_material" max-width="600px">
-
-            <v-card class="p-4 rounded-xl">
-                <v-card-title>
-                    <span style="font-size: 24px">
-                        <b>ลบสื่อการสอน </b>
-                    </span>
-                    <v-spacer></v-spacer>
-                    <v-btn fab dark small color="#37474F" @click="material_dialog = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-                </v-card-title>
-
-                <v-card-text>
-                    <v-container>
-                        <v-row justify="center">
-                            <v-col cols="12">
-                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name" disabled
-                                    :rules="nameRules"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select :items="materialTypes" label="ประเภทสื่อ" disabled
-                                    v-model="selectMaterial.type"></v-select>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"
-                                    disabled></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="รายละเอียดเรื่องที่เรียน" v-model="selectMaterial.detail"
-                                    disabled></v-text-field>
+                                    v-model="selectMaterial.detail" disabled ></v-text-field>
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation" disabled></v-text-field>
@@ -421,24 +151,11 @@
                     </v-container>
 
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="#37474F" @click="delete_material = false">
-                        ย้อนกลับ<span class="mdi mdi-keyboard-backspace text-h6"></span>
-                    </v-btn>
-                    <v-btn rounded color="red" dark class="mt-5 mb-5" @click="deleteMaterial()">
-                        ยืนยันการลบ <span class="mdi mdi-content-save text-h6"></span>
-                    </v-btn>
 
-                    <v-spacer></v-spacer>
-                </v-card-actions>
 
 
             </v-card>
         </v-dialog>
-        <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
-            <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
-        </v-snackbar>
     </div>
 </template>
 
@@ -446,7 +163,7 @@
 <script>
 import pageLoader from '@/components/loader.vue';
 export default {
-    layout: 'default',
+    layout: 'userNav',
     data() {
         return {
 
@@ -460,13 +177,10 @@ export default {
             selectChapterNumber: null,
 
             contentId: null,
-            dialog_detail: false,
-            dialog_edit: false,
-            dialog_delete: false,
+
             content_dialog: false,
-            material_dialog: false,
-            delete_material: false,
-            edit_material: false,
+
+            viewmaterial: false,
             isLoading: true,
             searchSubject: '',
             subjectSelected: null,
@@ -558,12 +272,13 @@ export default {
             this.selectItemDelete = item;
             this.dialog_delete = true;
         },
-        async viewMaterialDialog(item) {
+        viewItem(item) {
+            console.log('items')
             this.content_dialog = true;
             this.selectChapter = item.chapterName;
             this.selectChapterId = item.chapterNumber;
             const db = this.$fireModule.database();
-            await db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material`).on("value", (snapshot) => {
+            db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material`).on("value", (snapshot) => {
                 let items = [];
                 let num = 0;
                 this.subjects = [];
@@ -578,17 +293,17 @@ export default {
                 this.contentMaterials = items;
             })
         },
-
+        openEditDialog(item) {
+            this.viewmaterial = true;
+            this.selectMaterial = item;
+            console.log(item)
+        },
         addMaterialDialog() {
             this.material_dialog = true;
         },
 
 
-        viewItem(item) {
-            this.dialog_edit = true;
-            this.selectItem = item;
-            this.selectChapterNumber = item.chapterNumber
-        },
+
         async addContent() {
             const db = this.$fireModule.database();
 
@@ -701,9 +416,9 @@ export default {
         },
 
         openEditDialog(item) {
-            this.edit_material = true;
+            this.viewmaterial = true;
             this.selectMaterial = item;
-           
+            console.log(item)
         },
         async editMaterial() {
             const db = this.$fireModule.database();

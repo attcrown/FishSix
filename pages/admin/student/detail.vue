@@ -105,7 +105,7 @@
 
 
 
-                            <v-col cols="9" class="mb-3">
+                            <v-col cols="12" class="mb-3">
                                 <v-card style="border-radius: 20px;" elevation="0" class="px-3">
 
                                     <v-card-text class="p-4">
@@ -113,11 +113,10 @@
                                             <v-col cols="3" class="time-label" style="color: var(--label-color, #000000);">
                                                 ปรับชั่วโมงเรียน
                                             </v-col>
-                                            <v-col cols="3" class="p-0 mt-2">
+                                            <v-col cols="2" class="p-0 mt-2">
                                                 <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedAddHour"></v-select>
-
 
                                             </v-col>
                                             <v-col cols="1" class="p-0 mt-2 ms-3">
@@ -125,7 +124,7 @@
                                                     @click="addTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
 
-                                            <v-col cols="3" class="p-0 mt-2  ms-4">
+                                            <v-col cols="2" class="p-0 mt-2  ms-4">
                                                 <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedSubtractHour"></v-select>
@@ -135,6 +134,19 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('flip')">ยืนยัน</v-btn>
                                             </v-col>
+                                            <v-col cols="3" class="p-0 mt-2">
+
+                                            </v-col>
+                                            <v-col cols="2" class="p-0 mt-2 ">
+                                                <v-select class="py-0 black-label" label="ปรับวันคงเหลือ   " :items="months"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedAddFlipClassDate"></v-select>
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2 ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="addMonthsToDate('flip')">ยืนยัน</v-btn>
+                                            </v-col>
 
                                         </v-row>
                                     </v-card-text>
@@ -142,9 +154,7 @@
 
 
                             </v-col>
-                            <v-col cols="1" class="mb-3">
 
-                            </v-col>
                         </v-row>
                     </v-card>
 
@@ -215,14 +225,14 @@
 
 
 
-                            <v-col cols="9">
+                            <v-col cols="12">
                                 <v-card style="border-radius: 20px;" elevation="0" class="px-3">
                                     <v-card-text class="p-4">
                                         <v-row style="border-radius: 20px;">
                                             <v-col cols="3" class="time-label" style="color: var(--label-color, #000000);">
                                                 ปรับชั่วโมงเรียน
                                             </v-col>
-                                            <v-col cols="3" class="p-0 mt-2">
+                                            <v-col cols="2" class="p-0 mt-2">
                                                 <v-select class="py-0 black-label" label="เพิ่มชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedAddPrivateHour"></v-select>
@@ -233,7 +243,7 @@
                                                     @click="addTime('private')">ยืนยัน</v-btn>
                                             </v-col>
 
-                                            <v-col cols="3" class="p-0 mt-2  ms-4">
+                                            <v-col cols="2" class="p-0 mt-2  ms-4">
                                                 <v-select class="py-0 black-label" label="ลดชั่วโมงเรียน" :items="hours"
                                                     item-text="text" item-value="value"
                                                     v-model="selectedSubtractPrivateHour"></v-select>
@@ -243,14 +253,26 @@
                                                 <v-btn class="small-button" color="green text-white"
                                                     @click="subtractTime('private')">ยืนยัน</v-btn>
                                             </v-col>
+                                            <v-col cols="3" class="p-0 mt-2">
 
+                                            </v-col>
+                                            <v-col cols="2" class="p-0 mt-2 ">
+                                                <v-select class="py-0 black-label" label="ปรับวันคงเหลือ   " :items="months"
+                                                    item-text="text" item-value="value"
+                                                    v-model="selectedAddPrivateClassDate"></v-select>
+
+                                            </v-col>
+                                            <v-col cols="1" class="p-0 mt-2 ms-3">
+                                                <v-btn class="small-button" color="green text-white"
+                                                    @click="addMonthsToDate('private')">ยืนยัน</v-btn>
+                                            </v-col>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
 
 
                             </v-col>
-                            <v-col cols="1"></v-col>
+
                         </v-row>
                     </v-card>
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
@@ -322,8 +344,19 @@
                                     </v-menu>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="expireFlipClassDate"
-                                        :readonly="!isEditingCourse" label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                    <v-text-field class="black-label" v-model="expireFlipClassDate" v-if="!isEditingCourse"
+                                        label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                    <v-menu ref="expireFlipClassDateMenu" v-model="expireFlipClassDateMenu"
+                                        :close-on-content-click="false" v-if="isEditingCourse" transition="scale-transition"
+                                        offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="expireFlipClassDate"
+                                                label="วันที่คอร์สหมดอายุ" name="expireFlipClassDate"
+                                                prepend-icon="mdi-calendar" :disabled="!isEditingCourse" v-bind="attrs"
+                                                required v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="expireFlipClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="saveExpireFlipClass"></v-date-picker></v-menu>
                                 </v-col>
                                 <!-- <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
@@ -388,7 +421,18 @@
                                 </v-col>
                                 <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" v-model="expirePrivateClassDate"
-                                        :readonly="!isEditingCourse" label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                        v-if="!isEditingCourse" label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                    <v-menu ref="expirePrivateClassDateMenu" v-model="expirePrivateClassDateMenu"
+                                        :close-on-content-click="false" v-if="isEditingCourse" transition="scale-transition"
+                                        offset-y min-width="auto">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-text-field class="black-label" v-model="expirePrivateClassDate"
+                                                label="วันที่คอร์สหมดอายุ" name="expirePrivateClassDate"
+                                                prepend-icon="mdi-calendar" :disabled="!isEditingCourse" v-bind="attrs"
+                                                required v-on="on"></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="expirePrivateClassDate" :active-picker.sync="activePicker"
+                                            min="1950-01-01" @change="saveExpirePrivateClass"></v-date-picker></v-menu>
                                 </v-col>
                                 <!-- <v-col class="py-0" cols="4">
                                     <v-text-field class="black-label" type="number" name="hourLeft" min="0" max="99999"
@@ -753,7 +797,7 @@
             <v-card class="p-4 rounded-xl">
                 <v-card-title>
                     <span style="font-size: 24px">
-                        <b>ประวัติการปรับชั่วโมง</b>
+                        <b>ประวัติการเรียนของคุณ {{ nickname }} {{ firstName }} {{ lastName }}</b>
                     </span>
                     <v-spacer></v-spacer>
                     <v-btn fab dark small color="#37474F" @click="closeClassHistoryDialog">
@@ -766,10 +810,19 @@
                 <v-card-text>
                     <v-container>
 
-                        <v-data-table :headers="historyHeaders" :items="classHistories">
+                        <v-data-table :headers="historyHeaders" :items="classHistories" :items-per-page="-1">
                             <template v-slot:footer>
 
                             </template>
+                            <template v-slot:item.actions="{ item }">
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5"
+                                        @click="viewProgress(item)">
+                                        mdi-eye
+                                    </v-icon>
+                                </div>
+                            </template>
+
                         </v-data-table>
                     </v-container>
                 </v-card-text>
@@ -834,9 +887,8 @@
 
                         <v-data-table :headers="headers" :items="transactionHistories" item-key="transactionId"
                             :options="{ sortBy: ['transactionHistory.timestamp'], sortDesc: [true] }">
-                            <template v-slot:footer>
 
-                            </template>
+
                         </v-data-table>
                     </v-container>
                 </v-card-text>
@@ -846,6 +898,100 @@
 
 
             </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="progress_dialog" max-width="700px">
+            <v-card class="rounded-xl">
+                <v-card-title>
+                    <b class="ms-5" style="font-size:16px">เชคชื่อวันที่ {{ progress.date }} | {{ progress.time_s }}-{{
+                        progress.time_e }}</b>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="progress_dialog = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+
+                            <v-col cols="12" sm="12" style="margin-top:-20px">
+                                <hr style="border: 1px solid #000; background-color: #000;">
+                                <p style="font-size: 16px;">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="ชื่อนักเรียน" v-model="firstName" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="วิชาที่เรียน" v-model="progress.subject" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="ชื่อครู" v-model="progress.teacherName" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="จุดประสงค์ในการเรียน" v-model="progress.because"
+                                    readonly></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="selectedPlan.learn"
+                                    disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-select v-model="selectedPlan.understand" disabled
+                                    label="น้องมีความเข้าใจในเนื้อหา"></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter disabled
+                                    v-model="selectedPlan.development">
+                                    <template v-slot:append-outer>
+                                        <v-tooltip bottom>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon v-on="on">
+                                                    mdi-help-circle-outline
+                                                </v-icon>
+                                            </template>
+                                            คู่มือการเขียนพัฒนาการน้อง
+                                        </v-tooltip>
+                                    </template>
+                                </v-textarea>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" disabled
+                                    v-model="selectedPlan.problem"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="จึงใช้วิธี" v-model="selectedPlan.method" disabled> </v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="เพื่อพัฒนาน้อง" v-model="selectedPlan.to_development" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
+                                    v-model="selectedPlan.homework" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
+                                    v-model="selectedPlan.link_url" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-radio-group v-model="selectedPlan.check_sheet" disabled>
+                                    <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name" disabled
+                                        :value="items.key"></v-radio>
+                                </v-radio-group>
+                                <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
+                                    v-if="selectedPlan.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" disabled
+                                    v-model="selectedPlan.link_sheet" ></v-text-field>
+                            </v-col>
+
+
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+            </v-card>
+
         </v-dialog>
         <!-- snackbar -->
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
@@ -866,9 +1012,11 @@ export default {
             date: null,
             menu: false,
             flipDate: false,
+            expirePrivateClassDateMenu: false,
+            expireFlipClassDateMenu: false,
             isLoading: true,
             userId: null,
-
+            progress_dialog: false,
             isEditingCourse: false,
             isEditingDetail: false,
             isEditingAddress: false,
@@ -888,18 +1036,23 @@ export default {
                 { text: 'รูปแบบ', value: 'transactionHistory.type' },
             ],
             historyHeaders: [
-                { text: 'Class ID', value: 'key', sort: 'true' },
-                { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
-                { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
+                { text: 'เวลาที่บันทึก', value: 'classHistory.createdAt', sort: 'true' },
+                { text: 'วันที่สอน', value: 'classHistory.date' },
                 { text: 'ครูที่สอน', value: 'classHistory.teacherName' },
                 { text: 'วิชาที่เรียน', value: 'classHistory.subject' },
                 { text: 'ระดับชั้น', value: 'classHistory.level' },
                 { text: 'ประเภท', value: 'classHistory.style' },
+                { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
+                { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
+                { text: 'ดูพัฒนาการ', value: 'actions', sortable: false },
+
             ],
             //temporary
+
             selectedAddHour: null,
             selectedSubtractHour: null,
-
+            selectedAddFlipClassDate: null,
+            selectedAddPrivateClassDate: null,
             selectedAddPrivateHour: null,
             selectedSubtractPrivateHour: null,
             selectedAddTrialPrivateHour: null,
@@ -978,7 +1131,21 @@ export default {
             freeHour: null,
             wantedTeacher: null,
             annotation: null,
+            selectedPlan: {
+                learn: null,
+                understand: null,
+                development: null,
+                method: null,
+                link_url: null,
+                problem: null,
+                method: null,
+                to_development: null,
+                homework: null,
+                check_sheet: null,
+            },
 
+            
+            progress: {},
             //api
             tambons: [],
             currTambons: [],
@@ -1035,6 +1202,13 @@ export default {
                 { value: 32, text: "32 ชั่วโมง (ต่ออายุ 4 เดือน)" },
                 { value: 48, text: "48 ชั่วโมง (ต่ออายุ 6 เดือน)" },
                 { value: 96, text: "96 ชั่วโมง (ต่ออายุ 12 เดือน)" },
+
+            ],
+            months: [
+                { value: 0.33, text: "10 วัน" },
+
+                { value: 0.5, text: "15 วัน" },
+                { value: 1, text: "1 เดือน" },
 
             ],
 
@@ -1095,6 +1269,12 @@ export default {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
         flipDate(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
+        expireFlipClassDateMenu(val) {
+            val && setTimeout(() => (this.activePicker = 'Month'))
+        },
+        expirePrivateClassDateMenu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
         },
         'selectedTambon': {
@@ -1209,7 +1389,14 @@ export default {
             if (this.expireFlipClassDate) {
                 const now = new Date();
                 const expireDate = new Date(this.expireFlipClassDate);
-                const courseStartDate = new Date(this.purchaseFlipClassDate);
+                let courseStartDate;
+                if (this.purchaseFlipClassDate) {
+                    courseStartDate = new Date(this.purchaseFlipClassDate)
+                }
+                else {
+                    courseStartDate = new Date();
+                }
+
                 const yearDiff = expireDate.getFullYear() - courseStartDate.getFullYear();
                 const monthDiff = expireDate.getMonth() - courseStartDate.getMonth();
                 const dayDiff = expireDate.getDate() - courseStartDate.getDate();
@@ -1231,10 +1418,16 @@ export default {
             if (this.expirePrivateClassDate) {
                 const now = new Date();
                 const expireDate = new Date(this.expirePrivateClassDate);
-
-                const yearDiff = expireDate.getFullYear() - now.getFullYear();
-                const monthDiff = expireDate.getMonth() - now.getMonth();
-                const dayDiff = expireDate.getDate() - now.getDate();
+                let courseStartDate;
+                if (this.purchasePrivateClassDate) {
+                    courseStartDate = new Date(this.purchasePrivateClassDate)
+                }
+                else {
+                    courseStartDate = new Date();
+                }
+                const yearDiff = expireDate.getFullYear() - courseStartDate.getFullYear();
+                const monthDiff = expireDate.getMonth() - courseStartDate.getMonth();
+                const dayDiff = expireDate.getDate() - courseStartDate.getDate();
 
                 let months = yearDiff * 12 + monthDiff;
                 let days = dayDiff;
@@ -1259,6 +1452,15 @@ export default {
         },
         save(date) {
             this.$refs.menu.save(date);
+
+        },
+
+        saveExpireFlipClass(date) {
+            this.$refs.expireFlipClassDateMenu.save(date);
+
+        },
+        saveExpirePrivateClass(date) {
+            this.$refs.expirePrivateClassDateMenu.save(date);
 
         },
 
@@ -1312,6 +1514,30 @@ export default {
                 this.isEditingCourse = true;
             }
         },
+        async viewProgress(item) {
+            this.progress = item.classHistory;
+            this.progress_dialog = true;
+            const db = this.$fireModule.database();
+            db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.classHistory.Idsendplan}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+
+                if (childData.check_save !== undefined) {
+                    this.selectedPlan = { ...childData };
+                } else {
+
+                    this.selectedPlan.learn = null;
+                    this.selectedPlan.understand = null;
+                    this.selectedPlan.development = null;
+                    this.selectedPlan.problem = null;
+                    this.selectedPlan.link_url = null;
+                    this.selectedPlan.method = null;
+                    this.selectedPlan.to_development = null;
+                    this.selectedPlan.homework = null;
+                    this.selectedPlan.check_sheet = null;
+
+                }
+            });
+        },
 
         async toEditDetail() {
 
@@ -1320,12 +1546,7 @@ export default {
                 if (this.validateDetailEdit()) {
                     const db = this.$fireModule.database();
                     this.isSubmitting = true;
-                    // const isIDDuplicate = await this.checkDuplicateName(this.studentId);
-                    // if (isIDDuplicate && this.lastStudentId != this.studentId) {
-                    //     this.openSnackbar("error", 'รหัสของนักเรียนซ้ำ รหัสที่ซ้ำคือ ' + this.studentId);
-                    //     this.isSubmitting = false;
-                    //     return;
-                    // }
+
                     await db.ref(`user/${this.userId}/`).update({
 
                         profilePic: this.profilePic,
@@ -1499,12 +1720,7 @@ export default {
             window.open(this.idCardCopy, '_blank');
         },
 
-
-
-
-
         async readdata() {
-
             const db = this.$fireModule.database();
             await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
@@ -1531,10 +1747,8 @@ export default {
                 this.purchaseFlipClassDate = childData.purchaseFlipClassDate || null;
                 this.purchasePrivateClassDate = childData.purchasePrivateClassDate || null;
 
-
                 this.privateCourseHour = childData.privateCourseHour || 0;
                 this.privateFreeHour = childData.privateFreeHour || 0;
-
 
                 this.trialFlipclassHour = childData.trialFlipclassHour || 0;
                 this.trialPrivateClassHour = childData.trialPrivateClassHour || 0;
@@ -1566,7 +1780,6 @@ export default {
                 this.parentJob = childData.parentJob || null;
                 this.parentMobile = childData.parentMobile || null;
 
-
                 try {
                     this.address.houseNo = childData.address.houseNo || null;
                     this.address.tambon = childData.address.tambon || null;
@@ -1586,7 +1799,6 @@ export default {
                 } catch (error) {
                     this.isLoading = false;
                 }
-
 
                 this.isLoading = false;
 
@@ -1632,6 +1844,10 @@ export default {
                         // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
                         const classHistory = {
                             hour: history.hour,
+                            createdAt: history.createdAt,
+                            Idsendplan: history.Idsendplan,
+                            date: history.date,
+                            keyTeacher: history.keyTeacher,
                             keySubject: history.keySubject,
                             teacherName: history.teacherName,
                             level: history.level,
@@ -1647,7 +1863,7 @@ export default {
                         console.log(classHistory)
 
                     }
-               
+
 
                     this.classHistories = item;
                     console.log(this.classHistories)
@@ -1712,17 +1928,7 @@ export default {
             updates.expirePrivateClassDate = this.expirePrivateClassDate;
             updates.annotation = this.annotation;
             updates.wantedTeacher = this.wantedTeacher;
-            // if (this.totalHourInput !== null) {
-            //     updates.totalHour = parseFloat(this.totalHourInput);
-            //     updates.hourLeft = parseFloat(this.totalHourInput) - parseFloat(this.studyHour);
-            //     //updates.courseHour = this.totalHourInput;
-            // }
 
-            // if (this.privateTotalHourInput !== null) {
-            //     updates.privateTotalHour = parseFloat(this.privateTotalHourInput);
-            //     updates.privateHourLeft = parseFloat(this.privateTotalHourInput) - parseFloat(this.privateStudyHour);
-            //     //updates.privateCourseHour = this.privateTotalHourInput;
-            // }
 
 
             await db.ref(`user/${this.userId}/`).update(updates);
@@ -1839,6 +2045,69 @@ export default {
             }
         },
 
+        async addMonthsToDate(value) {
+            if (this.selectedAddFlipClassDate !== null && value == 'flip') {
+
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
+                const transactionData = {
+                    timestamp: timestamp,
+                    amount: this.selectedAddFlipClassDate,
+                    type: 'เพิ่มวันคงเหลือ',
+                    class: "Flip class"
+                };
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    expireFlipClassDate: this.extendExpireDays(this.selectedAddFlipClassDate, this.expireFlipClassDate) || this.expireFlipClassDate,
+                });
+
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+                this.openSnackbar("success", 'เพิ่มวันคงเหลือสำเร็จ!');
+            }
+            if (this.selectedAddPrivateClassDate !== null && value == 'private') {
+
+                const currentDate = new Date();
+                const transactionId = `ST${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+
+                var timestamp = new Date();
+                timestamp = timestamp.getTime();
+                const transactionData = {
+                    timestamp: timestamp,
+                    amount: this.selectedAddPrivateClassDate,
+                    type: 'เพิ่มวันคงเหลือ',
+                    class: "Private class"
+                };
+                const db = this.$fireModule.database();
+                await db.ref(`user/${this.userId}/`).update({
+                    expirePrivateClassDate: this.extendExpireDays(this.selectedAddPrivateClassDate, this.expirePrivateClassDate) || this.expirePrivateClassDate,
+                });
+                await db.ref(`studentTransactions/${this.userId}/${transactionId}`).set(transactionData);
+                this.openSnackbar("success", 'เพิ่มวันคงเหลือสำเร็จ!');
+            }
+        },
+        extendExpireDays(selectedValue, currentExpireDate) {
+            let formattedDate = currentExpireDate ? new Date(currentExpireDate) : new Date();
+            switch (selectedValue) {
+                case 0.33:
+                    formattedDate.setDate(formattedDate.getDate() + 10);
+                    break;
+                case 0.5:
+                    formattedDate.setDate(formattedDate.getDate() + 15);
+                    break;
+                case 1:
+                    formattedDate.setMonth(formattedDate.getMonth() + 1);
+                    break;
+                default:
+                    break;
+            }
+            if (formattedDate) {
+                formattedDate = formattedDate.toISOString().slice(0, 10);
+                return formattedDate;
+            }
+
+        },
 
         async subtractTime(value) {
 

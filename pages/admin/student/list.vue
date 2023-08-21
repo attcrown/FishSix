@@ -122,14 +122,30 @@
                                         :disabled="isExportAll" value="ระดับการศึกษา"></v-checkbox>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="ประเภทคลาส"
                                         :disabled="isExportAll" value="ประเภทคลาส"></v-checkbox>
-                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนทั้งหมด"
-                                        :disabled="isExportAll" value="ชั่วโมงเรียนทั้งหมด"></v-checkbox>
+                                    <p>&#x2022; Flip class</p>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เรียนไปแล้ว"
-                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เรียนไปแล้ว"></v-checkbox>
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เรียนไปแล้ว Flip class"></v-checkbox>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เหลืออยู่"
-                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เหลืออยู่"></v-checkbox>
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เหลืออยู่ Flip class"></v-checkbox>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่แถม"
-                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่แถม"></v-checkbox>
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่แถม Flip class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่ซื้อคอร์ส"
+                                        :disabled="isExportAll" value="วันที่ซื้อคอร์ส Flip class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่คอร์สหมดอายุ"
+                                        :disabled="isExportAll" value="วันที่คอร์สหมดอายุ Flip class"></v-checkbox>
+                                    <p>&#x2022; Private class</p>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เรียนไปแล้ว"
+                                        :disabled="isExportAll"
+                                        value="ชั่วโมงเรียนที่เรียนไปแล้ว Private class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่เหลืออยู่"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่เหลืออยู่ Private class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="ชั่วโมงเรียนที่แถม"
+                                        :disabled="isExportAll" value="ชั่วโมงเรียนที่แถม Private class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่ซื้อคอร์ส"
+                                        :disabled="isExportAll" value="วันที่ซื้อคอร์ส Private class"></v-checkbox>
+                                    <v-checkbox class="m-0" v-model="selectedHeaders" label="วันที่คอร์สหมดอายุ"
+                                        :disabled="isExportAll" value="วันที่คอร์สหมดอายุ Private class"></v-checkbox>
+                                    <p>&#x2022; ข้อมูลผู้ปกครอง</p>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="ชื่อผู้ปกครอง"
                                         :disabled="isExportAll" value="ชื่อผู้ปกครอง"></v-checkbox>
                                     <v-checkbox class="m-0" v-model="selectedHeaders" label="อาชีพผู้ปกครอง"
@@ -211,7 +227,9 @@ export default {
                 this.selectedHeaders = [];
             } else {
                 this.selectedHeaders = ['รหัสนักเรียน', 'ชื่อจริงนักเรียน', 'นามสกุลนักเรียน', 'ชื่อเล่น', 'เบอร์โทรศัพท์นักเรียน', 'เบอร์โทรศัพท์ผู้ปกครอง'
-                    , 'สถานศึกษา', 'ระดับการศึกษา', 'ประเภทคลาส', 'ชั่วโมงเรียนทั้งหมด', 'ชั่วโมงเรียนที่เรียนไปแล้ว', 'ชั่วโมงเรียนที่เหลืออยู่', 'ชั่วโมงเรียนที่แถม',
+                    , 'สถานศึกษา', 'ระดับการศึกษา', 'ประเภทคลาส',
+                    'ชั่วโมงเรียนที่เรียนไปแล้ว Flip class', 'ชั่วโมงเรียนที่เหลืออยู่ Flip class', 'ชั่วโมงเรียนที่แถม Flip class', 'วันที่ซื้อคอร์ส Flip class', 'วันที่คอร์สหมดอายุ Flip class',
+                    'ชั่วโมงเรียนที่เรียนไปแล้ว Private class', 'ชั่วโมงเรียนที่เหลืออยู่ Private class', 'ชั่วโมงเรียนที่แถม Private class', 'วันที่ซื้อคอร์ส Private class', 'วันที่คอร์สหมดอายุ Private class',
                     'ชื่อผู้ปกครอง', 'อาชีพผู้ปกครอง', 'ความคาดหวัง', 'เวลาที่บันทึกข้อมูล'];
             }
 
@@ -250,10 +268,19 @@ export default {
                     const stu = {
                         studentId: childData.studentId,
                         createdAt: childData.createdAt,
+
                         hourLeft: childData.hourLeft,
-                        totalHour: childData.totalHour,
                         studyHour: childData.studyHour,
                         freeHour: childData.freeHour,
+                        expireFlipClassDate: childData.expireFlipClassDate,
+                        purchaseFlipClassDate: childData.purchaseFlipClassDate,
+
+                        privateHourLeft: childData.privateHourLeft,
+                        privateStudyHour: childData.privateStudyHour,
+                        privateFreeHour: childData.privateFreeHour,
+                        expirePrivateClassDate: childData.expirePrivateClassDate,
+                        purchasePrivateClassDate: childData.purchasePrivateClassDate,
+
                         classTypes: childData.classTypes,
                         firstName: childData.firstName,
                         lastName: childData.lastName,
@@ -296,14 +323,29 @@ export default {
                         return item.stu.school;
                     case 'ระดับการศึกษา':
                         return item.stu.education;
-                    case 'ชั่วโมงเรียนทั้งหมด':
-                        return item.stu.totalHour;
-                    case 'ชั่วโมงเรียนที่เรียนไปแล้ว':
+
+                    case 'ชั่วโมงเรียนที่เรียนไปแล้ว Flip class':
                         return item.stu.studyHour;
-                    case 'ชั่วโมงเรียนที่เหลืออยู่':
+                    case 'ชั่วโมงเรียนที่เหลืออยู่ Flip class':
                         return item.stu.hourLeft;
-                    case 'ชั่วโมงเรียนที่แถม':
+                    case 'ชั่วโมงเรียนที่แถม Flip class':
                         return item.stu.freeHour;
+                    case 'วันที่คอร์สหมดอายุ Flip class':
+                        return item.stu.expireFlipClassDate;
+                    case 'วันที่ซื้อคอร์ส Flip class':
+                        return item.stu.purchaseFlipClassDate;
+
+                    case 'ชั่วโมงเรียนที่เรียนไปแล้ว Private class':
+                        return item.stu.privateStudyHour;
+                    case 'ชั่วโมงเรียนที่เหลืออยู่ Private class':
+                        return item.stu.privateHourLeft;
+                    case 'ชั่วโมงเรียนที่แถม Private class':
+                        return item.stu.privateFreeHour;
+                    case 'วันที่คอร์สหมดอายุ Private class':
+                        return item.stu.expirePrivateClassDate;
+                    case 'วันที่ซื้อคอร์ส Private class':
+                        return item.stu.purchasePrivateClassDate;
+
                     case 'ชื่อผู้ปกครอง':
                         return item.stu.parentFirstName;
                     case 'อาชีพผู้ปกครอง':
@@ -371,8 +413,8 @@ export default {
                     const stu = {
                         studentId: childData.studentId,
                         createdAt: sumx_date,
-                        hourLeft: childData.hourLeft || "-" ,
-                        privateHourLeft: childData.privateHourLeft || '-' ,
+                        hourLeft: childData.hourLeft || "-",
+                        privateHourLeft: childData.privateHourLeft || '-',
                         firstName: childData.firstName,
                         lastName: childData.lastName,
                         nickname: childData.nickname,
