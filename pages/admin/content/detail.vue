@@ -45,13 +45,13 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon color="indigo" large class="mr-2" @click="viewItem(item)">
+                <v-icon color="black" large class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
                     mdi-pencil
                 </v-icon>
-                <v-icon color="black" large class="mr-2" @click="viewMaterialDialog(item)">
+                <v-icon color="#B6A7A2" large class="mr-2" @click="viewMaterialDialog(item)" style="text-decoration: underline;">
                     mdi-file-pdf-box
                 </v-icon>
-                <v-icon color="red" large @click="viewDeleteDialog(item)">
+                <v-icon color="red" large @click="viewDeleteDialog(item)" style="text-decoration: underline;">
                     mdi-delete
                 </v-icon>
             </template>
@@ -214,11 +214,11 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="indigo" large class="mr-2" @click="openEditDialog(item)">
+                                <v-icon color="black" large class="mr-2" @click="openEditDialog(item)" style="text-decoration: underline;">
                                     mdi-pencil
                                 </v-icon>
 
-                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)">
+                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)" style="text-decoration: underline;">
                                     mdi-delete
                                 </v-icon>
                             </template>

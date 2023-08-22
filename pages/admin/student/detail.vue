@@ -814,9 +814,9 @@
                             <template v-slot:footer>
 
                             </template>
-                            <template v-slot:item.actions="{ item }">
+                            <template v-slot:item.actions="{ item }" >
                                 <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5"
+                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5" 
                                         @click="viewProgress(item)">
                                         mdi-eye
                                     </v-icon>
@@ -914,7 +914,7 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-row>
+                        <v-row v-if="selectedPlan.status_development=='Approved'">
 
                             <v-col cols="12" sm="12" style="margin-top:-20px">
                                 <hr style="border: 1px solid #000; background-color: #000;">
@@ -965,7 +965,8 @@
                                 <v-text-field label="จึงใช้วิธี" v-model="selectedPlan.method" disabled> </v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
-                                <v-text-field label="เพื่อพัฒนาน้อง" v-model="selectedPlan.to_development" disabled></v-text-field>
+                                <v-text-field label="เพื่อพัฒนาน้อง" v-model="selectedPlan.to_development"
+                                    disabled></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="12">
                                 <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
@@ -982,10 +983,13 @@
                                 </v-radio-group>
                                 <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
                                     v-if="selectedPlan.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" disabled
-                                    v-model="selectedPlan.link_sheet" ></v-text-field>
+                                    v-model="selectedPlan.link_sheet"></v-text-field>
                             </v-col>
 
 
+                        </v-row>
+                        <v-row v-else>
+                            ยังไม่ Approve พัฒนาการ
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -1132,6 +1136,7 @@ export default {
             wantedTeacher: null,
             annotation: null,
             selectedPlan: {
+                status_development: null,
                 learn: null,
                 understand: null,
                 development: null,
@@ -1144,8 +1149,9 @@ export default {
                 check_sheet: null,
             },
 
-            
+
             progress: {},
+            sheet_all: null,
             //api
             tambons: [],
             currTambons: [],
@@ -1262,7 +1268,7 @@ export default {
         const value = this.$route.query.userId;
         this.userId = value;
         this.readdata();
-
+        this.sheet_search();
     },
     watch: {
         menu(val) {
@@ -1515,28 +1521,45 @@ export default {
             }
         },
         async viewProgress(item) {
+       
             this.progress = item.classHistory;
             this.progress_dialog = true;
-            const db = this.$fireModule.database();
-            db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.classHistory.Idsendplan}`).on("value", (snapshot) => {
-                const childData = snapshot.val();
+            if (item.classHistory.Idsendplan == undefined) {
+                this.selectedPlan.status_development = null;
+                this.selectedPlan.learn = null;
+                this.selectedPlan.understand = null;
+                this.selectedPlan.development = null;
+                this.selectedPlan.problem = null;
+                this.selectedPlan.link_url = null;
+                this.selectedPlan.method = null;
+                this.selectedPlan.to_development = null;
+                this.selectedPlan.homework = null;
+                this.selectedPlan.check_sheet = null;
+            }
+            else {
 
-                if (childData.check_save !== undefined) {
-                    this.selectedPlan = { ...childData };
-                } else {
+                const db = this.$fireModule.database();
+                db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.classHistory.Idsendplan}`).on("value", (snapshot) => {
+                    const childData = snapshot.val();
 
-                    this.selectedPlan.learn = null;
-                    this.selectedPlan.understand = null;
-                    this.selectedPlan.development = null;
-                    this.selectedPlan.problem = null;
-                    this.selectedPlan.link_url = null;
-                    this.selectedPlan.method = null;
-                    this.selectedPlan.to_development = null;
-                    this.selectedPlan.homework = null;
-                    this.selectedPlan.check_sheet = null;
+                    if (childData.status_development !== undefined) {
+                        this.selectedPlan = { ...childData };
+                    } else {
+                        this.selectedPlan.status_development = null;
+                        this.selectedPlan.learn = null;
+                        this.selectedPlan.understand = null;
+                        this.selectedPlan.development = null;
+                        this.selectedPlan.problem = null;
+                        this.selectedPlan.link_url = null;
+                        this.selectedPlan.method = null;
+                        this.selectedPlan.to_development = null;
+                        this.selectedPlan.homework = null;
+                        this.selectedPlan.check_sheet = null;
 
-                }
-            });
+                    }
+                });
+            }
+
         },
 
         async toEditDetail() {
@@ -1835,7 +1858,7 @@ export default {
                 db.ref(`studentHistory/${this.userId}`).on("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
-                    console.log(childData)
+                    
                     for (const key in childData) {
 
                         const history = childData[key];
@@ -1860,13 +1883,13 @@ export default {
                         };
                         item.push({ key, classHistory });
 
-                        console.log(classHistory)
+                 
 
                     }
 
 
                     this.classHistories = item;
-                    console.log(this.classHistories)
+                   
                     this.isLoading = false;
                 });
             } catch (error) {
@@ -1910,7 +1933,18 @@ export default {
                 console.error('Error fetching transaction history:', error);
             }
         },
+        async sheet_search() {
+            const db = this.$fireModule.database();
+            db.ref(`sheet_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.sheet_all = item;
 
+            })
+        },
         async updateCourse() {
             if (this.totalHourInput !== null) {
                 this.totalHourInput = this.convertHourMinuteToMinutes(this.totalHourInput);

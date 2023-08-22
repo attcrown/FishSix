@@ -7,8 +7,7 @@
                 <p>
                     <v-btn class="text-white" @click="exportDialog" color="black" router exact>Export
 
-                        <v-icon color="white" x-small>mdi-arrow-down</v-icon>
-                        <v-icon color="white" x-small>mdi-arrow-up</v-icon>
+                        <v-icon color="white" > mdi-microsoft-excel</v-icon>
                     </v-btn>
                     <v-btn class="text-white" to="/admin/teacher/register" color="black" router exact>เพิ่มครู
                         <v-icon color="white">mdi-plus</v-icon>
@@ -74,17 +73,16 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                            <v-btn text icon elevation="5" @click="viewItem(item)">
-                                <v-icon color="#B6A7A2" class="text-h5">
-                                    mdi-eye
-                                </v-icon>
-                            </v-btn>
-                            <v-btn text icon elevation="5" @click="deleteItem(item)">
-                                <v-icon small color="#AD382F" class="text-h5">
-                                    mdi-delete
-                                </v-icon>
-                            </v-btn>
-
+                     
+                            <v-icon color="#B6A7A2" class="text-h5" @click="viewItem(item)" style="text-decoration: underline;">
+                                mdi-eye
+                            </v-icon>
+                       
+                 
+                            <v-icon small color="#AD382F" class="text-h5" @click="deleteItem(item)" style="text-decoration: underline;">
+                                mdi-delete
+                            </v-icon>
+                      
                         </template>
 
                     </v-data-table>

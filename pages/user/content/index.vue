@@ -146,7 +146,7 @@ export default {
                 let num = 0;
                 this.subjectContents = [];
                 const childData = snapshot.val();
-                console.log(childData)
+
                 let item = [];
                 for (const key in childData) {
 
@@ -180,7 +180,7 @@ export default {
 
                         this.subjectContents = filteredItem;
 
-                        console.log(this.subjectContents)
+
                     })
                 }
 
