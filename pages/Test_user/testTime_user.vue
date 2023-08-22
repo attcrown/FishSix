@@ -168,12 +168,41 @@
                 </template>
             </v-data-table>
         </template>
+
+        <v-dialog v-model="dialogError" max-width="300px" class="text-center">
+            <v-card>
+                <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="dialogError = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <div class="text-center">
+                    <img :src="require('~/assets/Frame.png')">
+                </div>
+                <div class="text-center mt-5">
+                    <b>{{ textError }}</b>
+                    <br>
+                </div>
+                <v-card-actions>
+                    <!-- <v-spacer></v-spacer>
+                    <v-btn rounded color="#29CC39" @click="ErrorItemConfirm" class="mt-5 mb-5">ยืนยัน</v-btn>
+                    <v-spacer></v-spacer> -->
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </div>
 </template>
 <script>
 export default {
     layout: 'login',
     data: () => ({
+        textError: '',
+        dialogError: false,
+
         date: [],
         modal: false,
 
@@ -577,11 +606,13 @@ export default {
             let hour = this.sum_hour(data.start, data.stop);
             console.log("hour", hour);
             if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour && data.select == "-NcQsFxCcoNS-uwmKUqE") {
-                alert('ชั่วโมงเรียนไม่พอ');
+                this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
+                this.dialogError = true;
                 return;
             }
             if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour && data.select == "-NcQsHB9vgG53lJKPA-i") {
-                alert('ชั่วโมงเรียนไม่พอ');
+                this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
+                this.dialogError = true;
                 return;
             }
             for (const keydate in this.date) {
@@ -599,7 +630,8 @@ export default {
                             }
 
                             if (data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
-                                alert('จองไปแล้ว ซ้ำ' + textadd + this.date[keydate]);
+                                this.textError = 'จองไปแล้ว ซ้ำ' + textadd + " " + this.date[keydate];
+                                this.dialogError = true;
                             }
                         })
                         .then(snapshot => {
@@ -617,13 +649,15 @@ export default {
                                     isSave++;
                                 }
                                 if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
-                                    alert('เต็มแล้ว' + text + this.date[keydate]);
+                                    this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
+                                    this.dialogError = true;
                                 }
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1) {
                                     console.log('send save');
                                 }
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
-                                    alert(textadd);
+                                    this.textError = textadd;
+                                    this.dialogError = true;
                                 }
                                 console.log('WorkData', maxKey, selectedObject.bath, data.time_sum.length, parseInt(key) + 1, isSave);
                                 console.log('>>>>>>', textadd.length);
@@ -664,7 +698,9 @@ export default {
                         }
                     }
                     await db.ref(`date_match/${data.student}/${this.date[keydate]}/${data.stop}/`).update({
+                        select_class: data.select,
                         teacher: data.teacher,
+                        date: this.date[keydate],
                         subject: data.subject,
                         style_subject: data.style_subject,
                         level: data.level,
@@ -677,6 +713,41 @@ export default {
                         match_vip: data.match_vip || false,
                         hour: hour,
                     });
+                    const hourMatch = await db.ref(`hour_match/${data.student}`).once("value");
+                    if (hourMatch.exists()) {
+                        let huorMatch_data = hourMatch.val();
+                        if (data.match_test == undefined || data.match_test == false) {
+                            console.log('Add_hour_match', huorMatch_data);
+                            if (huorMatch_data.hour && huorMatch_data.hour > 0) {
+                                await db.ref(`hour_match/${data.student}/`).update({
+                                    hour: parseFloat(hour) + parseFloat(huorMatch_data.hour),
+                                });
+                                console.log('ทดชม Flip');
+                            }
+                            if (huorMatch_data.hourprivate && huorMatch_data.hourprivate > 0) {
+                                await db.ref(`hour_match/${data.student}/`).update({
+                                    hourprivate: parseFloat(hour) + parseFloat(huorMatch_data.hour),
+                                });
+                                console.log('ทดชม Private');
+                            }
+                        }
+                    } else {
+                        if (data.select == '-NcQsFxCcoNS-uwmKUqE') {
+                            await db.ref(`hour_match/${data.student}/`).update({
+                                hour: parseFloat(hour),
+                                hourprivate:0 ,
+                            });
+                            console.log('ทดชม Flip');
+                        }
+                        if (data.select == '-NcQsHB9vgG53lJKPA-i') {
+                            await db.ref(`hour_match/${data.student}/`).update({
+                                hour: 0,
+                                hourprivate: parseFloat(hour),
+                            });
+                            console.log('ทดชม Private');
+                        }
+                    }
+
                 }
                 this.close();
             }

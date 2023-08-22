@@ -6,7 +6,7 @@
 </template>
     
 <script>
-import tablematch from './table_match.vue';
+import tablematch from './table_match_test.vue';
 import tableactive from './table_active.vue';
 export default {
     data() {
