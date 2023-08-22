@@ -62,6 +62,7 @@
                 </v-form>
             </template>
         </div>
+
     </div>
 </template>
 <script>
@@ -172,68 +173,6 @@ export default {
             this.$refs.form.resetValidation()
         },
 
-        // save_time() {
-        //     const db = this.$fireModule.database();
-        //     this.All_data.time = this.time_standart_sum;
-        //     const selectedObject = this.LimitedClass_all.find(item => item.key === this.All_data.select);
-        //     console.log('Selected item:', selectedObject);
-        //     const data = this.All_data;
-        //     let text = '';
-        //     // ตรวจสอบว่าค่า this.All_data.IDstu มีอยู่ในพาทนั้นหรือไม่
-        //     for (const key in data.time) {
-        //         db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).orderByValue().equalTo(data.IDstu).once("value")
-        //             .then(snapshot => {
-        //                 if (snapshot.exists()) {
-        //                     alert('จองไปแล้ว ซ้ำ'+data.time[key]);
-        //                     return;
-        //                 } else {
-        //                     db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).once("value")
-        //                         .then(snapshot => {
-        //                             let maxKey = 0; // ถ้าไม่มีข้อมูลเลยให้เริ่มที่ 0
-        //                             snapshot.forEach(childSnapshot => {
-        //                                 const key = parseInt(childSnapshot.key);
-        //                                 if (key >= maxKey) {
-        //                                     maxKey = key + 1; // เพิ่มคีย์สูงสุดขึ้นอีก 1
-        //                                 }
-        //                             });
-
-        //                             // ถ้า maxKey เกิน 7 ให้แสดงแจ้งเตือนและหยุดการทำงาน
-        //                             if (maxKey >= selectedObject.bath && data.time.length == parseInt(key) + 1) {
-        //                                 text = text.concat(" ", data.time[key]);
-        //                                 alert('เต็มแล้ว' + text);
-        //                                 return;
-        //                             }
-        //                             if (maxKey >= selectedObject.bath) {
-        //                                 console.log('เต็มแล้ว', data.time[key], data.time.length, parseInt(key) + 1);
-        //                                 text = text.concat(" ", data.time[key]);
-        //                                 savesum++;
-        //                                 return;
-        //                             }
-
-        //                             if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {
-        //                                 if (snapshot.exists()) {
-        //                                     console.log('มีคนจอง', data.time[key]);
-        //                                     return;
-        //                                 }
-        //                                 for (let x = 0; x < this.LimitedClass_all[0].bath; x++) {
-        //                                     db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
-        //                                         [x]: data.IDstu
-        //                                     });
-        //                                 }
-        //                             } else if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
-        //                                 db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
-        //                                     [maxKey]: data.IDstu
-        //                                 });
-        //                             }
-        //                             // เพิ่มข้อมูลใหม่โดยใช้คีย์สูงสุดที่ได้
-
-        //                         });
-        //                 }
-        //             });
-        //     }
-        // },
-
-        //----------------DEMO------------------------
         async save_time() {
             const db = this.$fireModule.database();
             this.All_data.time = this.time_standart_sum;
@@ -248,7 +187,7 @@ export default {
             for (const key in data.time) {
                 await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).orderByValue().equalTo(data.IDstu).once("value")
                     .then(snapshot => {
-                        if (snapshot.exists()) {                            
+                        if (snapshot.exists()) {
                             textadd = textadd.concat(' ', data.time[key])
                             isSave++;
                         }
@@ -301,7 +240,7 @@ export default {
                             snapshot.forEach(childSnapshot => {
                                 const childKey = parseInt(childSnapshot.key);
                                 if (childKey >= maxKey) {
-                                    maxKey = childKey + 1;                                   
+                                    maxKey = childKey + 1;
                                 }
                             });
                             await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
