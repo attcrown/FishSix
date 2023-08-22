@@ -421,7 +421,7 @@ export default {
                                     console.log(this.time_standart_sum);
                                     for (const key in this.time_standart_sum) {
                                         db.ref(`Time_teacher/${this.value}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                            0: ''
+                                            'start': this.value
                                         });
                                     };
                                 }
@@ -447,7 +447,7 @@ export default {
                                 });
                                 for (const key in this.time_standart_sum) {
                                     db.ref(`Time_teacher/${this.value}/${this.date1[keydate]}/S:${this.time_standart_sum[key]}:${this.save_detail.sum_people}:${id}`).set({
-                                        0: ''
+                                        'start': this.value
                                     });
                                 };
                             }

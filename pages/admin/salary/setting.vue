@@ -36,10 +36,19 @@
                     </v-btn> <br>
                     <v-btn color="primary" dark @click="dialog7 = !dialog7, optional_search() " class="mb-3">
                         ราคา Optional
-                    </v-btn>      
+                    </v-btn> 
+                    <br>     
                     <v-btn color="primary" dark @click="dialog9 = !dialog9, send_rate_search() " class="mb-3">
                         หัก%การส่งข้อมูลล่าช้า
-                    </v-btn>              
+                    </v-btn>
+                    <br>  
+                    <v-btn color="primary" dark @click="dialog10 = !dialog10, rate_special_search() " class="mb-3">
+                        เรทกรณีพิเศษ
+                    </v-btn>
+                    <br>
+                    <v-btn color="primary" dark @click="dialog11 = !dialog11, LimitedClass_search() " class="mb-3">
+                        จำนวนคนในClass
+                    </v-btn>            
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="primary" text @click="dialog = false">
@@ -299,6 +308,72 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog10" max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span>เรทกรณีพิเศษ</span>
+                    <v-spacer></v-spacer>
+                </v-card-title>
+                <v-card-text>
+                    เพิ่ม เรทกรณีพิเศษ
+                    <v-text-field label="name" type="text" v-model="rate_special.name"></v-text-field>
+                    <v-text-field label="Amount" type="number" v-model="rate_special.bath" prefix="฿"></v-text-field>
+                    <v-btn @click="save_rate_special_add()" :disabled="!rate_special.name || !rate_special.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in rate_special_all" :key="item.key">
+                        <v-col cols="6">
+                            <v-text-field v-model="item.name"></v-text-field>
+                        </v-col>
+                        <v-col cols="6">
+                            <v-text-field label="Amount" type="number" v-model="item.bath" prefix="฿"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                
+                <v-card-actions>
+                    <v-btn color="primary" text @click="dialog10 = false">
+                        Close
+                    </v-btn>
+                    <v-btn color="primary" text @click="save_rate_special_bath()">
+                        save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog11" max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span>จำนวนคนในClass</span>
+                    <v-spacer></v-spacer>
+                </v-card-title>
+                <v-card-text>
+                    เพิ่ม  จำนวนคนในClass
+                    <v-text-field label="name" type="text" v-model="LimitedClass.name"></v-text-field>
+                    <v-text-field label="จำนวน" type="number" v-model="LimitedClass.bath"></v-text-field>
+                    <v-btn @click="save_LimitedClass_add()" :disabled="!LimitedClass.name || !LimitedClass.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in LimitedClass_all" :key="item.key">
+                        <v-col cols="6">
+                            <v-text-field v-model="item.name"></v-text-field>
+                        </v-col>
+                        <v-col cols="6">
+                            <v-text-field label="จำนวน" type="number" v-model="item.bath" suffix="คน"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                
+                <v-card-actions>
+                    <v-btn color="primary" text @click="dialog11 = false">
+                        Close
+                    </v-btn>
+                    <v-btn color="primary" text @click="save_LimitedClass_bath()">
+                        save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </div>
 </template>
 <script>
@@ -314,6 +389,8 @@ export default {
             dialog7: false,
             dialog8: false,
             dialog9: false,
+            dialog10: false,
+            dialog11: false,
 
             subject_all: [],
             level: [],
@@ -330,6 +407,10 @@ export default {
             type_private_all: [],
             send_rate: [],
             send_rate_all: [],
+            rate_special: [],
+            rate_special_all: [],
+            LimitedClass: [],
+            LimitedClass_all: [],
         }
     },
     methods: {
@@ -574,6 +655,69 @@ export default {
             console.log('success save send_rate bath');
         },
         
+        rate_special_search() {
+            const db = this.$fireModule.database();
+            db.ref(`rate_special_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.rate_special_all = item;
+                console.log(this.rate_special_all);
+            })
+        },
+        save_rate_special_add(){
+            const db = this.$fireModule.database();
+            db.ref(`rate_special_all/`).push({
+                name: this.rate_special.name,
+                bath: this.rate_special.bath,
+            })
+            console.log('success save rate_special');
+        },
+        save_rate_special_bath(){
+            const db = this.$fireModule.database();
+            for (const key in this.rate_special_all) {
+                console.log(this.rate_special_all[key]);
+                db.ref(`rate_special_all/${this.rate_special_all[key].key}/`).update({
+                    bath: this.rate_special_all[key].bath,
+                    name: this.rate_special_all[key].name,
+                })
+            }
+            console.log('success save rate_special bath');
+        },
+
+        LimitedClass_search() {
+            const db = this.$fireModule.database();
+            db.ref(`LimitedClass_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.LimitedClass_all = item;
+                console.log(this.LimitedClass_all);
+            })
+        },
+        save_LimitedClass_add(){
+            const db = this.$fireModule.database();
+            db.ref(`LimitedClass_all/`).push({
+                name: this.LimitedClass.name,
+                bath: this.LimitedClass.bath,
+            })
+            console.log('success save LimitedClass');
+        },
+        save_LimitedClass_bath(){
+            const db = this.$fireModule.database();
+            for (const key in this.LimitedClass_all) {
+                console.log(this.LimitedClass_all[key]);
+                db.ref(`LimitedClass_all/${this.LimitedClass_all[key].key}/`).update({
+                    bath: this.LimitedClass_all[key].bath,
+                    name: this.LimitedClass_all[key].name,
+                })
+            }
+            console.log('success save LimitedClass bath');
+        },
     }
 }
 </script>
