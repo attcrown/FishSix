@@ -1,55 +1,178 @@
 <template>
     <div>
+        <div v-if="viewMode == 'list'">
 
-        <div style="display: flex; justify-content: space-between;">
-            <h1 class="font-weight-bold">คลังเนื้อหา</h1>
-            <v-btn to="/user/content" router exact>ย้อนกลับ</v-btn>
+            <div style="display: flex; justify-content: space-between;">
+                <h1 class="font-weight-bold">คลังเนื้อหา</h1>
+                <v-btn to="/user/content" router exact>ย้อนกลับ</v-btn>
+            </div>
+            <v-card class="elevation-16 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
+                <v-container fluid>
+                    <h5><b>คลังเนื้อหา</b></h5>
+                    <v-row align="center">
+                        <v-col cols="12" sm="3">
+                            <v-text-field label="วิชา" v-model="subjectName" disabled>
+                                <template #prepend>
+                                    <span class="mdi mdi-book-outline text-h6"></span>
+                                </template>
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="3">
+                            <v-text-field label="ระดับชั้น" v-model="level" disabled placeholder="ระดับชั้น"
+                                required></v-text-field>
+                        </v-col>
+
+                        <v-col cols="12" sm="3"> </v-col>
+                        <v-col cols="12" sm="3" class="text-right">
+
+                        </v-col>
+                    </v-row>
+                </v-container>
+
+            </v-card>
+
+
+            <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents"
+                class="elevation-16 rounded-xl">
+                <template v-slot:top>
+                    <v-toolbar flat>
+                        <v-toolbar-title class="ms-4"><b>เนื้อหารายวิชา</b></v-toolbar-title>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-spacer></v-spacer>
+
+
+                    </v-toolbar>
+                </template>
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.actions="{ item }">
+                    <v-icon color="#B6A7A2" class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
+                        mdi-eye
+                    </v-icon>
+
+                </template>
+            </v-data-table>
+
+
         </div>
-        <v-card class="elevation-16 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
-            <v-container fluid>
-                <h5><b>คลังเนื้อหา</b></h5>
-                <v-row align="center">
-                    <v-col cols="12" sm="3">
-                        <v-text-field label="วิชา" v-model="subjectName" disabled>
-                            <template #prepend>
-                                <span class="mdi mdi-book-outline text-h6"></span>
-                            </template>
-                        </v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="3">
-                        <v-text-field label="ระดับชั้น" v-model="level" disabled placeholder="ระดับชั้น"
-                            required></v-text-field>
-                    </v-col>
 
-                    <v-col cols="12" sm="3"> </v-col>
-                    <v-col cols="12" sm="3" class="text-right">
+        <div v-else-if="viewMode == 'detail'">
 
-                    </v-col>
-                </v-row>
-            </v-container>
+            <div style="display: flex; justify-content: space-between;">
+                <h1 class="font-weight-bold">คลังเนื้อหา</h1>
+                <v-btn @click="back" router exact>ย้อนกลับ</v-btn>
+            </div>
+            <v-card class="elevation-0 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
+                <v-container fluid>
 
-        </v-card>
+                    <div class="d-flex justify-space-between mt-2">
+                        <h5><b>บทที่ {{ selectChapterId }}</b></h5>
+                        <div> <v-btn color="black" class="text-white" @click="prevItem()">บทเรียนก่อนหน้า </v-btn>
+                            <v-btn color="black" class="text-white" @click="nextItem()">บทเรียนถัดไป </v-btn>
+                        </div>
+
+                    </div>
+                </v-container>
 
 
-        <v-data-table sort-by="index" :headers="headers" :search="searchSubject" :items="subjectContents"
-            class="elevation-16 rounded-xl">
-            <template v-slot:top>
-                <v-toolbar flat>
-                    <v-toolbar-title class="ms-4"><b>เนื้อหารายวิชา</b></v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-                    <v-spacer></v-spacer>
+            </v-card>
+            <v-toolbar flat>
+                <v-toolbar-title class=""><b>ชื่อบท {{ selectChapter }}</b></v-toolbar-title>
+            </v-toolbar>
+            <v-card class="elevation-0  px-5" style="background-color:#EBE4DE">
 
 
-                </v-toolbar>
-            </template>
-            <!-- eslint-disable-next-line vue/valid-v-slot -->
-            <template v-slot:item.actions="{ item }">
-                <v-icon color="#B6A7A2" class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
-                    mdi-eye
-                </v-icon>
+                <v-card-text>
+                    <style>
+                        .video-container {
+                            position: relative;
+                            padding-bottom: calc(56.25% + 10px);
+                            height: 0;
+                            overflow: hidden;
+                        }
 
-            </template>
-        </v-data-table>
+                        .video-iframe {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                        }
+                    </style>
+                    <v-card class="elevation-0  px-5 rounded-xl " style="background-color:#FFF">
+                        <div class="video-container ">
+                            <div v-if="selectLink">
+                                <iframe class="video-iframe py-2" :src="selectLink" title="YouTube video player"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen></iframe>
+                            </div>
+                            <div v-else>
+                                <div style="background-color:#FFF; display: flex; align-items: center;">
+                                    <h3>ไม่มีเนื้อหาคลิปที่เลือก</h3>
+                                </div>
+                            </div>
+
+                        </div>
+                    </v-card>
+                    <div class="tab mt-3">
+                        <button class="tablinks" @click="openTab('รายละเอียดเนื้อหา')" active>รายละเอียดเนื้อหา</button>
+                        <button class="tablinks" @click="openTab('เรื่องที่เรียน')" id="defaultOpen">เรื่องที่เรียน</button>
+
+                    </div>
+                    <div id="รายละเอียดเนื้อหา" class="tabcontent mt-5">
+
+
+                        <v-card class="elevation-0  px-5 rounded-xl "
+                            style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
+                            <h3> {{ selectContent.chapterDetail }}</h3>
+                        </v-card>
+                    </div>
+
+                    <div id="เรื่องที่เรียน" class="tabcontent mt-5">
+                        <v-card class="elevation-0  px-5 rounded-xl "
+                            style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
+                            <v-card-text>
+                                <div class="label">
+                                    <label>ชื่อเรื่องที่เรียน</label>
+                                    <h3>{{ selectChapter }}</h3>
+                                </div>
+                                <div class="label">
+                                    <label>เกี่ยวกับเรื่องที่เรียน</label>
+                                    <h3>{{ selectContent.chapterDetail }}</h3>
+                                </div>
+                                <hr>
+
+                                <label>Video</label>
+                                <div v-for="contentMaterial in contentMaterials" v-if="contentMaterial.link !== undefined">
+                                    <div class="d-flex justify-space-between mt-2">
+                                        <h5>{{ contentMaterial.name }}</h5>
+
+                                        <v-btn color="black" class="text-white"
+                                            @click="getLink(contentMaterial.link)">เล่นวีดิโอ <span
+                                                class="mdi mdi-youtube text-h6"></span></v-btn>
+                                    </div>
+
+                                </div>
+                                <label>เอกสารประกอบการเรียน (PDF)</label>
+                                <div v-for="contentMaterial in contentMaterials"
+                                    v-if="contentMaterial.pdfFileUrl !== undefined">
+                                    <div class="d-flex justify-space-between mt-2">
+                                        <h5>{{ contentMaterial.name }}</h5>
+                                        <v-btn color="black" class="text-white">ดาวน์โหลดเอกสาร <span
+                                                class="mdi mdi-file text-h6"></span></v-btn>
+                                    </div>
+
+                                </div>
+                            </v-card-text>
+
+                            <!-- <h3> {{ contentMaterials }}</h3> -->
+                        </v-card>
+                    </div>
+
+
+                </v-card-text>
+            </v-card>
+        </div>
 
         <v-dialog v-model="content_dialog" max-width="60%">
             <v-card class="p-4 rounded-xl">
@@ -79,7 +202,8 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="#B6A7A2"  style="text-decoration: underline;" class="mr-2" @click="openEditDialog(item)">
+                                <v-icon color="#B6A7A2" style="text-decoration: underline;" class="mr-2"
+                                    @click="openEditDialog(item)">
                                     mdi-eye
                                 </v-icon>
 
@@ -115,7 +239,7 @@
                     <v-container>
                         <v-row justify="center">
                             <v-col cols="12">
-                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name"  disabled
+                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name" disabled
                                     :rules="nameRules"></v-text-field>
                             </v-col>
                             <v-col cols="6">
@@ -123,11 +247,12 @@
                                     v-model="selectMaterial.type"></v-select>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName" disabled></v-text-field>
+                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"
+                                    disabled></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field label="รายละเอียดเรื่องที่เรียน"
-                                    v-model="selectMaterial.detail" disabled ></v-text-field>
+                                <v-text-field label="รายละเอียดเรื่องที่เรียน" v-model="selectMaterial.detail"
+                                    disabled></v-text-field>
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation" disabled></v-text-field>
@@ -166,7 +291,7 @@ export default {
     layout: 'userNav',
     data() {
         return {
-
+            viewMode: 'list',
             showSnackbar: false,
             snackbarMessage: '',
             snackbarColor: '',
@@ -189,6 +314,8 @@ export default {
             level: null,
             selectChapter: null,
             selectChapterId: null,
+            selectContent: null,
+            selectLink: null,
 
             subjectChapter: null,
             chapterName: null,
@@ -268,19 +395,79 @@ export default {
             this.dialog_detail = true;
         },
 
-        viewDeleteDialog(item) {
-            this.selectItemDelete = item;
-            this.dialog_delete = true;
-        },
         viewItem(item) {
             console.log('items')
-            this.content_dialog = true;
+            this.viewMode = 'detail';
+
             this.selectChapter = item.chapterName;
+            this.selectContent = item;
+
             this.selectChapterId = item.chapterNumber;
             const db = this.$fireModule.database();
             db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material`).on("value", (snapshot) => {
                 let items = [];
-                let num = 0;
+
+                this.subjects = [];
+                const childData = snapshot.val();
+
+                for (const key in childData) {
+                    const item = childData[key];
+                    items.push({ key, ...item });
+                }
+
+                console.log(items)
+                this.contentMaterials = items;
+            })
+        },
+
+        nextItem() {
+            console.log('items')
+            this.viewMode = 'detail';
+            //this.content_dialog = true;
+
+            const nextChapterId = parseInt(this.selectChapterId) + 1;
+            //this.selectChapterId = item.chapterNumber;
+            const db = this.$fireModule.database();
+            db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}`).on("value", (snapshot) => {
+                let items = [];
+
+                this.subjects = [];
+                const childData = snapshot.val();
+
+                for (const key in childData) {
+                    const item = childData[key];
+                    items.push({ key, ...item });
+                }
+
+                console.log(items)
+                this.contentMaterials = items;
+            })
+            db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}/material`).on("value", (snapshot) => {
+                let items = [];
+
+                this.subjects = [];
+                const childData = snapshot.val();
+
+                for (const key in childData) {
+                    const item = childData[key];
+                    items.push({ key, ...item });
+                }
+
+                console.log(items)
+                this.contentMaterials = items;
+            })
+        },
+        prevItem() {
+            console.log('prev')
+            this.viewMode = 'detail';
+
+
+            const nextChapterId = parseInt(this.selectChapterId) - 1;
+
+            const db = this.$fireModule.database();
+            db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}/material`).on("value", (snapshot) => {
+                let items = [];
+
                 this.subjects = [];
                 const childData = snapshot.val();
 
@@ -304,180 +491,17 @@ export default {
 
 
 
-        async addContent() {
-            const db = this.$fireModule.database();
 
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.subjectChapter}/`);
-            const snapshot = await chapterRef.once('value');
-            const chapterExists = snapshot.exists();
 
-            if (!chapterExists) {
-                const chapterData = {
-                    chapterName: this.chapterName,
-                    chapterDetail: this.chapterDetail,
-                    annotation: this.annotation
-                };
-
-                try {
-                    await chapterRef.update(chapterData);
-                    console.log('Content added to Firebase successfully!');
-                    this.openSnackbar('success', 'เพิ่มเนื้อหาเสร็จสิ้น ');
-                } catch (error) {
-                    console.error('Error adding content to Firebase:', error);
-                    this.openSnackbar('error', 'ผิดพลาดในการเพิ่มเนื้อหา ');
-                }
-            } else {
-                console.log('Chapter already exists in Firebase. Not adding content.');
-                this.openSnackbar('error', 'เลขบทซ้ำ ');
-            }
-        },
-        async editContent() {
-            const db = this.$fireModule.database();
-
-            const newChapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectItem.chapterNumber}/`);
-            const oldChapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterNumber}/`);
-
-            const chapterData = {
-                chapterName: this.selectItem.chapterName,
-                chapterDetail: this.selectItem.chapterDetail,
-                annotation: this.selectItem.annotation
-            };
-
-            try {
-                await newChapterRef.set(chapterData);
-
-                if (this.selectItem.chapterNumber !== this.selectChapterNumber) {
-                    await oldChapterRef.remove();
-                }
-
-                console.log('Content update to Firebase successfully!');
-                this.openSnackbar('success', 'แก้ไขเนื้อหาเสร็จสิ้น ');
-            } catch (error) {
-                console.error('Error update content to Firebase:', error);
-            }
-        },
-
-        async addMaterial() {
-            const db = this.$fireModule.database();
-
-            console.log(this.selectChapterId)
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material/`);
-            const newMaterial = {
-                name: this.MaterialName,
-                type: this.materialType,
-                fileName: this.materialFileName,
-                detail: this.materialDetail,
-                annotation: this.materialAnnotation,
-                link: this.materialLink || null,
-
-            };
-            if (this.materialType === 'เอกสารประกอบการเรียน (Pdf)' && this.materialFile) {
-                const storageRef = this.$fireModule.storage().ref();
-                const contentRef = storageRef.child(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/`);
-                const snapshot = await contentRef.put(this.materialFile);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                newMaterial.pdfFileUrl = downloadURL;
-            }
-
-            await chapterRef.push(newMaterial);
-
-            this.MaterialName = '';
-            this.materialType = null;
-            this.materialFileName = '';
-            this.materialDetail = '';
-            this.materialAnnotation = '';
-            this.materialFile = '';
-            newMaterial.pdfFileUrl = null;
-            this.materialLink = '';
-            this.openSnackbar('success', 'เพิ่มสื่อการสอนเสร็จสิ้น ');
-
-        },
-
-        async deleteChapter() {
-            const db = this.$fireModule.database();
-
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectItemDelete.chapterNumber}/`);
-
-            const snapshot = await chapterRef.once('value');
-            const chapterExists = snapshot.exists();
-
-            if (chapterExists) {
-                try {
-                    await chapterRef.remove();
-                    console.log('Chapter deleted from Firebase successfully!');
-                    this.openSnackbar('success', 'ลบบทเรียนเสร็จสิ้น ');
-                    window.location.reload();
-                } catch (error) {
-                    console.error('Error deleting chapter from Firebase:', error);
-                }
-            } else {
-                console.log('Chapter does not exist in Firebase. Nothing to delete.');
-            }
-        },
 
         openEditDialog(item) {
             this.viewmaterial = true;
             this.selectMaterial = item;
             console.log(item)
         },
-        async editMaterial() {
-            const db = this.$fireModule.database();
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material/${this.selectMaterial.key}`);
-            const snapshot = await chapterRef.once('value');
-            const materialData = {
-                name: this.selectMaterial.name,
-                detail: this.selectMaterial.detail,
-                fileName: this.selectMaterial.fileName,
-                annotation: this.selectMaterial.annotation
-            };
-            try {
-                await chapterRef.update(materialData);
 
 
-                console.log('Content update to Firebase successfully!');
-                this.openSnackbar('success', 'แก้ไขสื่อการสอนเสร็จสิ้น ');
-            } catch (error) {
-                console.error('Error update content to Firebase:', error);
-            }
-        },
-        openDeleteMaterialDialog(item) {
-            this.delete_material = true;
-            this.selectMaterial = item;
-            console.log(item)
-        },
-        async deleteMaterial() {
-            const db = this.$fireModule.database();
-            const chapterRef = db.ref(`contents/${this.contentId}/subject_contents/${this.selectChapterId}/material/${this.selectMaterial.key}`);
 
-            try {
-                await chapterRef.remove();
-
-                console.log('Material deleted from Firebase successfully!');
-                this.openSnackbar('success', 'ลบสื่อการสอนเสร็จสิ้น');
-            } catch (error) {
-                console.error('Error deleting material from Firebase:', error);
-            }
-
-
-        },
-        async checkIfContentExists(name, level) {
-
-            const db = this.$fireModule.database();
-            const snapshot = await db.ref('contents')
-                .orderByChild('name')
-                .equalTo(name)
-                .once('value');
-
-            let exists = false;
-            snapshot.forEach((childSnapshot) => {
-                const content = childSnapshot.val();
-                if (content.level === level) {
-                    exists = true;
-                    return;
-                }
-            });
-            return exists;
-        },
         async initialize() {
             const db = this.$fireModule.database();
             await db.ref(`contents/${this.contentId}`).on("value", (snapshot) => {
@@ -513,11 +537,31 @@ export default {
             console.log(this.subjectContents)
 
         },
+        openTab(tabName) {
+            const tabcontent = document.getElementsByClassName("tabcontent");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            const tablinks = document.getElementsByClassName("tablinks");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.classList.add("active");
+
+        },
 
         downloadFile() {
             window.open(this.selectMaterial.pdfFileUrl, '_blank');
         },
+        getLink(link) {
+            this.selectLink = link.replace("watch?v=", "embed/");
+            console.log(this.selectLink)
 
+        },
+        back() {
+            this.viewMode = 'list';
+        }
 
     },
 }
@@ -562,5 +606,39 @@ hr.solid {
 
 .header {
     font-size: 25px;
+}
+
+.tab {
+    overflow: hidden;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+
+
 }
 </style>
