@@ -1472,7 +1472,7 @@ export default {
 
         openClassHistoryDialog() {
             this.classHistoryDialog = true;
-            this.fetchHistory('Flip class');
+            this.fetchHistory();
         },
         closeClassHistoryDialog() {
             this.classHistoryDialog = false;
@@ -1852,7 +1852,7 @@ export default {
             //console.log(this.teachers)
         },
 
-        async fetchHistory(type) {
+        async fetchHistory() {
             try {
                 const db = this.$fireModule.database();
                 db.ref(`studentHistory/${this.userId}`).on("value", (snapshot) => {

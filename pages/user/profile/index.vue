@@ -5,7 +5,14 @@
             <v-row>
                 <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
-                    <v-btn to="/admin/student" router exact>ย้อนกลับ</v-btn>
+                    <div>
+                        <v-btn class="text-white" @click="openClassHistoryDialog()" color="black">ดูประวัติการเรียน
+                            <v-icon color="white" class="ms-1">mdi-eye</v-icon></v-btn>
+
+                        <v-btn to="/user/" router exact>ย้อนกลับ</v-btn>
+
+                    </div>
+
                 </div>
                 <v-col cols="12">
                     <v-card style="border-radius: 20px;background: #ffffff;border: 1px solid #000;" elevation="0"
@@ -201,14 +208,14 @@
 
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="purchaseFlipClassDate" prepend-icon="mdi-calendar" 
-                                        disabled label="วันที่ซื้อคอร์ส"></v-text-field>                              
+                                    <v-text-field class="black-label" v-model="purchaseFlipClassDate"
+                                        prepend-icon="mdi-calendar" disabled label="วันที่ซื้อคอร์ส"></v-text-field>
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="expireFlipClassDate"
-                                    disabled label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                    <v-text-field class="black-label" v-model="expireFlipClassDate" disabled
+                                        label="วันที่คอร์สหมดอายุ"></v-text-field>
                                 </v-col>
-                         
+
                                 <div class="text-center px-4 py-0">
                                     <hr class=" solid">
                                 </div>
@@ -225,15 +232,15 @@
                                 </v-col>
 
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="purchasePrivateClassDate" disabled prepend-icon="mdi-calendar" 
-                                       label="วันที่ซื้อคอร์ส"></v-text-field>
-                        
+                                    <v-text-field class="black-label" v-model="purchasePrivateClassDate" disabled
+                                        prepend-icon="mdi-calendar" label="วันที่ซื้อคอร์ส"></v-text-field>
+
                                 </v-col>
                                 <v-col class="py-0" cols="4">
-                                    <v-text-field class="black-label" v-model="expirePrivateClassDate"
-                                    disabled label="วันที่คอร์สหมดอายุ"></v-text-field>
+                                    <v-text-field class="black-label" v-model="expirePrivateClassDate" disabled
+                                        label="วันที่คอร์สหมดอายุ"></v-text-field>
                                 </v-col>
-                         
+
                                 <div class="text-center px-4 py-0">
                                     <hr class=" solid">
                                 </div>
@@ -315,7 +322,7 @@
                                         </v-col>
                                         <v-col cols="6" class="py-0">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" disabled 
+                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" disabled
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
@@ -500,13 +507,14 @@
                                 <v-row>
 
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName" disabled
-                                            :readonly="!isEditingParentDetail" label="ชื่อผู้ปกครอง" required>
+                                        <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName"
+                                            disabled :readonly="!isEditingParentDetail" label="ชื่อผู้ปกครอง" required>
                                         </v-text-field>
                                     </v-col>
                                     <v-col class="py-0" cols="4">
-                                        <v-text-field class="black-label" name="parentMobile" v-model="parentMobile" disabled
-                                            :readonly="!isEditingParentDetail" label="เบอร์โทรศัพท์ผู้ปกครอง" required>
+                                        <v-text-field class="black-label" name="parentMobile" v-model="parentMobile"
+                                            disabled :readonly="!isEditingParentDetail" label="เบอร์โทรศัพท์ผู้ปกครอง"
+                                            required>
                                         </v-text-field>
                                     </v-col>
                                     <v-col class="py-0" cols="4">
@@ -571,8 +579,144 @@
 
         </div>
         <!-- dialog -->
+        <v-dialog v-model="classHistoryDialog" max-width="80%">
+
+            <v-card class="p-4 rounded-xl">
+                <v-card-title>
+                    <span style="font-size: 24px">
+                        <b>ประวัติการเรียนของคุณ {{ nickname }} {{ firstName }} {{ lastName }}</b>
+                    </span>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="closeClassHistoryDialog">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <hr style="border: 2px solid #000; background-color: #000;">
+                <v-card-text>
+                    <v-container>
+
+                        <v-data-table :headers="historyHeaders" :items="classHistories" :items-per-page="-1">
+                            <template v-slot:footer>
+
+                            </template>
+                            <template v-slot:item.actions="{ item }">
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5"
+                                        @click="viewProgress(item)">
+                                        mdi-eye
+                                    </v-icon>
+                                </div>
+                            </template>
+
+                        </v-data-table>
+                    </v-container>
+                </v-card-text>
 
 
+
+
+
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="progress_dialog" max-width="700px">
+            <v-card class="rounded-xl">
+                <v-card-title>
+                    <b class="ms-5" style="font-size:16px">เชคชื่อวันที่ {{ progress.date }} | {{ progress.time_s }}-{{
+                        progress.time_e }}</b>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="progress_dialog = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row v-if="selectedPlan.status_development=='Approved'">
+
+                            <v-col cols="12" sm="12" style="margin-top:-20px">
+                                <hr style="border: 1px solid #000; background-color: #000;">
+                                <p style="font-size: 16px;">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="ชื่อนักเรียน" v-model="firstName" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="วิชาที่เรียน" v-model="progress.subject" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="ชื่อครู" v-model="progress.teacherName" readonly></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-text-field label="จุดประสงค์ในการเรียน" v-model="progress.because"
+                                    readonly></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="selectedPlan.learn"
+                                    disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-select v-model="selectedPlan.understand" disabled
+                                    label="น้องมีความเข้าใจในเนื้อหา"></v-select>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter disabled
+                                    v-model="selectedPlan.development">
+                                    <template v-slot:append-outer>
+                                        <v-tooltip bottom>
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon v-on="on">
+                                                    mdi-help-circle-outline
+                                                </v-icon>
+                                            </template>
+                                            คู่มือการเขียนพัฒนาการน้อง
+                                        </v-tooltip>
+                                    </template>
+                                </v-textarea>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" disabled
+                                    v-model="selectedPlan.problem"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="จึงใช้วิธี" v-model="selectedPlan.method" disabled> </v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="6">
+                                <v-text-field label="เพื่อพัฒนาน้อง" v-model="selectedPlan.to_development"
+                                    disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
+                                    v-model="selectedPlan.homework" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
+                                    v-model="selectedPlan.link_url" disabled></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12">
+                                <v-radio-group v-model="selectedPlan.check_sheet" disabled>
+                                    <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name" disabled
+                                        :value="items.key"></v-radio>
+                                </v-radio-group>
+                                <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
+                                    v-if="selectedPlan.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" disabled
+                                    v-model="selectedPlan.link_sheet"></v-text-field>
+                            </v-col>
+
+
+                        </v-row>
+                        <v-row v-else>
+                            ยังไม่มีพัฒนาการในขณะนี้
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+
+            </v-card>
+
+        </v-dialog>
 
         <!-- snackbar -->
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
@@ -680,6 +824,37 @@ export default {
             wantedTeacher: null,
             annotation: null,
 
+            //history
+            classHistoryDialog: false,
+            progress_dialog: false,
+            classHistories: [],
+            historyHeaders: [
+                { text: 'เวลาที่บันทึก', value: 'classHistory.createdAt', sort: 'true' },
+                { text: 'วันที่สอน', value: 'classHistory.date' },
+                { text: 'ครูที่สอน', value: 'classHistory.teacherName' },
+                { text: 'วิชาที่เรียน', value: 'classHistory.subject' },
+                { text: 'ระดับชั้น', value: 'classHistory.level' },
+                { text: 'ประเภท', value: 'classHistory.style' },
+                { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
+                { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
+                { text: 'ดูพัฒนาการ', value: 'actions', sortable: false },
+
+            ],
+            selectedPlan: {
+                status_development: null,
+                learn: null,
+                understand: null,
+                development: null,
+                method: null,
+                link_url: null,
+                problem: null,
+                method: null,
+                to_development: null,
+                homework: null,
+                check_sheet: null,
+            },
+            progress: {},
+            sheet_all: null,
             //api
             tambons: [],
             currTambons: [],
@@ -903,6 +1078,7 @@ export default {
     mounted() {
         this.fullName()
         this.readdata();
+        this.sheet_search();
     },
     components: {
 
@@ -942,6 +1118,16 @@ export default {
             this.snackbarMessage = message;
             this.snackbarColor = status;
         },
+
+        openClassHistoryDialog() {
+            this.classHistoryDialog = true;
+            this.fetchHistory('Flip class');
+        },
+        closeClassHistoryDialog() {
+            this.classHistoryDialog = false;
+
+        },
+
 
         async readdata() {
 
@@ -1033,7 +1219,103 @@ export default {
             })
 
         },
+        async fetchHistory() {
+            try {
+                const db = this.$fireModule.database();
+                db.ref(`studentHistory/${this.keyuser}`).on("value", (snapshot) => {
+                    let item = [];
+                    const childData = snapshot.val();
 
+                    for (const key in childData) {
+
+                        const history = childData[key];
+
+
+                        // const formattedDate = date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok', timeZoneName: 'short' });
+                        const classHistory = {
+                            hour: history.hour,
+                            createdAt: history.createdAt,
+                            Idsendplan: history.Idsendplan,
+                            date: history.date,
+                            keyTeacher: history.keyTeacher,
+                            keySubject: history.keySubject,
+                            teacherName: history.teacherName,
+                            level: history.level,
+                            studentId: history.studentId,
+                            subject: history.subject,
+                            teacherId: history.teacherId,
+                            time_e: history.time_e,
+                            time_s: history.time_s,
+                            style: history.style,
+                        };
+                        item.push({ key, classHistory });
+
+
+
+                    }
+
+
+                    this.classHistories = item;
+
+                    this.isLoading = false;
+                });
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+            }
+        },
+        async viewProgress(item) {
+
+            this.progress = item.classHistory;
+            this.progress_dialog = true;
+            if (item.classHistory.Idsendplan == undefined) {
+                this.selectedPlan.status_development = null;
+                this.selectedPlan.learn = null;
+                this.selectedPlan.understand = null;
+                this.selectedPlan.development = null;
+                this.selectedPlan.problem = null;
+                this.selectedPlan.link_url = null;
+                this.selectedPlan.method = null;
+                this.selectedPlan.to_development = null;
+                this.selectedPlan.homework = null;
+                this.selectedPlan.check_sheet = null;
+            }
+            else {
+
+                const db = this.$fireModule.database();
+                db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.classHistory.Idsendplan}`).on("value", (snapshot) => {
+                    const childData = snapshot.val();
+
+                    if (childData.status_development !== undefined) {
+                        this.selectedPlan = { ...childData };
+                    } else {
+                        this.selectedPlan.status_development = null;
+                        this.selectedPlan.learn = null;
+                        this.selectedPlan.understand = null;
+                        this.selectedPlan.development = null;
+                        this.selectedPlan.problem = null;
+                        this.selectedPlan.link_url = null;
+                        this.selectedPlan.method = null;
+                        this.selectedPlan.to_development = null;
+                        this.selectedPlan.homework = null;
+                        this.selectedPlan.check_sheet = null;
+
+                    }
+                });
+            }
+
+        },
+        async sheet_search() {
+            const db = this.$fireModule.database();
+            db.ref(`sheet_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.sheet_all = item;
+
+            })
+        },
         validateDetailEdit() {
             return this.$refs[`detailForm`].validate();
         },
@@ -1049,7 +1331,7 @@ export default {
         },
 
         async toEditDetail() {
-      
+
             if (this.isEditingDetail == true) {
 
                 if (this.validateDetailEdit()) {
@@ -1063,8 +1345,8 @@ export default {
                     // }
                     await db.ref(`user/${this.keyuser}/`).update({
 
-                     
-                   
+
+
                         studentMobile: this.studentMobile,
                         email: this.email,
                         gender: this.gender,
@@ -1162,18 +1444,18 @@ export default {
                     //     parentMobile: this.parentMobile,
 
                     // })
-                        // .then(() => {
+                    // .then(() => {
 
-                        //     this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
-                        //     this.isSubmitting = false;
-                        //     this.isEditingParentDetail = false;
-                        // })
-                        // .catch((error) => {
+                    //     this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                    //     this.isSubmitting = false;
+                    //     this.isEditingParentDetail = false;
+                    // })
+                    // .catch((error) => {
 
-                        //     this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
-                        //     this.isSubmitting = false;
-                        //     this.isEditingParentDetail = false;
-                        // });
+                    //     this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                    //     this.isSubmitting = false;
+                    //     this.isEditingParentDetail = false;
+                    // });
 
                 }
             }
@@ -1402,7 +1684,7 @@ export default {
 
         async fetchCurrAmphoe() {
             if (this.selectedCurrTambon) {
-         
+
                 const db = this.$fireModule.database();
                 const amphoeRef = db.ref(`RECORDS_amp/`);
                 const amp_id = this.selectedCurrTambon.amphure_id;
