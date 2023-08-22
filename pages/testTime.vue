@@ -248,17 +248,16 @@ export default {
             for (const key in data.time) {
                 await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).orderByValue().equalTo(data.IDstu).once("value")
                     .then(snapshot => {
-                        if (snapshot.exists()) {   
-                            console.log(parseInt(key) + 1,data.time.length);  
-                            textadd = textadd.concat(' ',data.time[key])                       
+                        if (snapshot.exists()) {                            
+                            textadd = textadd.concat(' ', data.time[key])
                             isSave++;
                         }
-                        else {                            
+                        else {
                             return db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).once("value");
                         }
-                        
-                        if(data.time.length == parseInt(key) + 1 && textadd.length != 0){
-                            alert('จองไปแล้ว ซ้ำ'+ textadd);                                                        
+
+                        if (data.time.length == parseInt(key) + 1 && textadd.length != 0) {
+                            alert('จองไปแล้ว ซ้ำ' + textadd);
                         }
                     })
                     .then(snapshot => {
@@ -271,39 +270,48 @@ export default {
                                     maxKeyOut = maxKey;
                                 }
                             });
-
                             if (maxKey >= selectedObject.bath) {
                                 text = text.concat(" ", data.time[key]);
                                 isSave++;
                             }
-
                             if (data.time.length == parseInt(key) + 1 && text.length != 0) {
                                 alert('เต็มแล้ว' + text);
                             }
-
                             if (maxKey < selectedObject.bath && data.time.length == parseInt(key) + 1) {
-                                console.log('save');
+                                console.log('send save');
                             }
-                            console.log('Work', maxKey, selectedObject.bath, data.time.length, parseInt(key) + 1, isSave);
-                            console.log('>>>>>>',textadd.length);
+                            console.log('WorkData', maxKey, selectedObject.bath, data.time.length, parseInt(key) + 1, isSave);
+                            console.log('>>>>>>', textadd.length);
                         }
                     });
             }
-
             if (isSave == 0) {
-                console.log('saveeeeeee');
+                console.log('save success');
                 for (const key in data.time) {
                     const snapshot = await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).once("value");
-                    if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {                       
+                    if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {
                         for (let x = 0; x < this.LimitedClass_all[0].bath; x++) {
                             await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
                                 [x]: data.IDstu
                             });
                         }
-                    } else if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {                        
-                        await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
-                            [maxKeyOut]: data.IDstu
-                        });
+                    } else if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
+                        if (snapshot) {
+                            let maxKey = 0;
+                            snapshot.forEach(childSnapshot => {
+                                const childKey = parseInt(childSnapshot.key);
+                                if (childKey >= maxKey) {
+                                    maxKey = childKey + 1;                                   
+                                }
+                            });
+                            await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
+                                [maxKey]: data.IDstu
+                            });
+                        } else {
+                            await db.ref(`test_time/${data.Tea}/${this.date}/${data.time[key]}/`).update({
+                                [maxKeyOut]: data.IDstu
+                            });
+                        }
                     }
                 }
             }
