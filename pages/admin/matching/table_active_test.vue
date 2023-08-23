@@ -392,31 +392,33 @@ export default {
             console.log(this.time_standart_sum);
         },
 
-        delete_match() {           
+        async delete_match() {
             if (!this.editedItem) {
                 alert("No data to delete");
                 return;
             }
             let sum = 0;
             this.validateTime(this.editedItem.time_s, this.editedItem.time_e);
-            console.log(">>>>", this.editedItem ,this.time_standart_sum);
+            console.log(">>>>", this.editedItem, this.time_standart_sum);
             let keystudent = this.editedItem;
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_s}E${this.editedItem.time_e}/invite`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 sum = childData - 1;
             })
-            if(sum == 0){
-                db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).remove();
-            }else{
-                db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).update({
-                    invite: sum
-                });
-            }
-            
+
+            db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.editedItem.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).update({
+                invite: sum
+            }).then(()=>{
+                if(sum == 0){
+                    db.ref(`date_teacher/${keystudent.key_teacher}/${keystudent.date}/${keystudent.time_s}E${keystudent.time_e}`).remove();
+                }
+            })
+
+
             db.ref(`date_match/${this.editedItem.key_student}/${this.editedItem.date}/${this.editedItem.time_e}`).remove();
-            
-            if(this.editedItem.match_vip && !this.editedItem.match_test){
+
+            if (this.editedItem.match_vip && !this.editedItem.match_test) {
                 db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.key_student}`).update({

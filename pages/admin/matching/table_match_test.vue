@@ -788,44 +788,37 @@ export default {
             let time_sum = this.time_standart_sum;
             const data = this.editedItem;
             const db = this.$fireModule.database();
+            let uniqueTimeSum = null;
+            let anyInA = false;
+            let time_old = null;
             const selectedObject = this.LimitedClass_all.find(item => item.key === this.editedItem.select);
             console.log('Selected item:', selectedObject, this.editedItem, this.old_item, time_sum);
 
-            const Work_tea = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/`).once("value");
-            console.log(Work_tea.val());
-            if (Work_tea.exists()) {
-                const Work_data_tea = Work_tea.val();
-                for (const key in Work_data_tea) {
-                    let namekey = [];
-                    namekey = key.split('E');
-                    this.validateTime(namekey[0], namekey[1]);
+            if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
+                const Work_tea = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/`).once("value");
+                console.log(Work_tea.val());
+                if (Work_tea.exists()) {
+                    const Work_data_tea = Work_tea.val();
+                    for (const key in Work_data_tea) {
+                        if (Work_data_tea[key].Class.key == '-NcQsFxCcoNS-uwmKUqE') {  //ตรวจสอบ FlipClass
+                            console.log('GOOD', Work_data_tea[key]);
 
-                    let mergedTimeSum = [...this.time_standart_sum, ...time_sum];
-                    mergedTimeSum.sort();
-
-                    // let uniqueTimeSum = [];
-                    // for (let i = 0; i < mergedTimeSum.length; i++) {
-                    //     // ตรวจสอบหากเป็นค่าแรกหรือค่าก่อนหน้ามันไม่ติดกัน ให้เพิ่มค่าลงใน uniqueTimeSum
-                    //     if (i === 0 || this.timeDiff(mergedTimeSum[i], mergedTimeSum[i - 1]) > 60) {
-                    //         uniqueTimeSum.push(mergedTimeSum[i]);
-                    //     }
-                    // }
-
-                    // console.log('Sorted and Unique Time Sum:', uniqueTimeSum );
-                    let uniqueTimeSum = mergedTimeSum.filter((value, index, self) => {
-                        return self.indexOf(value) === index;
-                    });
-                    console.log('Sorted and Unique Time Sum:', uniqueTimeSum);
-
-                    // console.log(Work_data_tea[key], key, namekey, time_sum, this.time_standart_sum, time_sum.includes(this.time_standart_sum));
-                    if (Work_data_tea[key].Class.key == '-NcQsFxCcoNS-uwmKUqE') {  //ตรวจสอบ FlipClass
-
-                        console.log('GOOD');
-                        break;
+                            time_old = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+                            anyInA = time_old.some(time => time_sum.includes(time));
+                            console.log(anyInA, time_old);
+                            if (anyInA) {
+                                let mergedTimeSum = [...time_old, ...time_sum];
+                                mergedTimeSum.sort();
+                                uniqueTimeSum = mergedTimeSum.filter((value, index, self) => {
+                                    return self.indexOf(value) === index;
+                                });
+                                console.log('Sorted and Unique Time Sum:>>>>', uniqueTimeSum);
+                            }
+                        }
                     }
                 }
-
             }
+            console.log(time_old, time_sum, uniqueTimeSum);
 
             // if (this.editedItem.date == this.date &&
             //     this.editedItem.time_s == this.old_item.time_s &&
@@ -849,30 +842,52 @@ export default {
             //         start: data.time_s,
             //         stop: data.time_e,
             //     });
-
-            //     const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`).once("value");
-            //     let people_sum = 1;
-            //     console.log(inviteData.val());
-            //     if (inviteData.exists()) {
-            //         console.log(inviteData.val());
-            //         people_sum = people_sum + inviteData.val();
+            //     if (anyInA) {
+            //         const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}/invite/`).once("value");
+            //         let people_sum = 1;
+            //         console.log(inviteData.val() ,`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}/invite/`);
+            //         if (inviteData.exists()) {
+            //             console.log(inviteData.val());
+            //             people_sum = people_sum + inviteData.val();
+            //         }
+            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${uniqueTimeSum[0]}E${uniqueTimeSum[uniqueTimeSum.length - 1]}`).update({
+            //             invite: people_sum,
+            //             sum_people: selectedObject.bath,
+            //             subject: '00000',
+            //             Class: selectedObject,
+            //             style_subject: data.style,
+            //             createAt: new Date(),
+            //             start: uniqueTimeSum[0],
+            //             stop: uniqueTimeSum[uniqueTimeSum.length - 1],
+            //         });
+            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).remove();
+            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}`).remove();
+            //     }else{
+            //         const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`).once("value");
+            //         let people_sum = 1;
+            //         console.log(inviteData.val() ,`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`);
+            //         if (inviteData.exists()) {
+            //             console.log(inviteData.val());
+            //             people_sum = people_sum + inviteData.val();
+            //         }
+            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).update({
+            //             invite: people_sum,
+            //             sum_people: selectedObject.bath,
+            //             subject: '00000',
+            //             Class: selectedObject,
+            //             style_subject: data.style,
+            //             createAt: new Date(),
+            //             start: data.time_s,
+            //             stop: data.time_e,
+            //         });    
             //     }
-            //     await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).update({
-            //         invite: people_sum,
-            //         sum_people: selectedObject.bath,
-            //         subject: '00000',
-            //         Class: selectedObject,
-            //         style_subject: data.style,
-            //         createAt: new Date(),
-            //         start: data.time_s,
-            //         stop: data.time_e,
-            //     });
-            // this.close();
+
+            //     this.close();
             // } else {
             //     this.save_check_data(this.old_item, this.editedItem, time_sum);
             // }
         },
-        
+
         async save_check_data(oldData, editDate, time_sum) {
             this.validateTime(editDate.time_s, editDate.time_e);
             console.log('oldd', oldData, 'new', editDate, time_sum);
@@ -1174,6 +1189,36 @@ export default {
             }
             console.log(this.time_standart_sum);
         },
+
+        validateTime_save(start, stop) {
+            let time_stop = [];
+            let time_sum = []; // เปลี่ยนตัวแปรนี้เป็นตัวแปร global ที่สามารถใช้ในทั้งฟังก์ชัน
+            let sum = 0;
+            for (const key in this.time_standart) {
+                if (start == this.time_standart[key] || (sum != 0)) {
+                    sum++;
+                    if (sum > 1) {
+                        time_stop.push(this.time_standart[key]);
+                    }
+                }
+            }
+            if (stop != null && start != null) {
+                sum = 0;
+                for (const key in this.time_standart) {
+                    if (stop == this.time_standart[key]) {
+                        sum = 0;
+                        time_sum.push(this.time_standart[key]);
+                        break;
+                    }
+                    else if (start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        time_sum.push(this.time_standart[key]);
+                    }
+                }
+            }
+            return time_sum;
+        },
+
     },
 }
 </script>
