@@ -2,16 +2,17 @@
     <div>
         <h1> Test Time DTAT</h1>
         <template>
-            <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+            <v-data-table :headers="headers" :items-per-page="-1" :items="desserts" sort-by="calories"
+                class="elevation-16 rounded-xl">
                 <template v-slot:top>
-                    <v-toolbar flat>
-                        <v-toolbar-title>My CRUD</v-toolbar-title>
+                    <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
+                        <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                         <v-dialog v-model="dialog" max-width="600px">
                             <template v-slot:activator="{ on, attrs }">
-                                <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                                    New Item
+                                <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="#322E2B" class="mb-2 mt-5">
+                                    จองคิวนอกตาราง<span class="mdi mdi-plus text-h6"></span>
                                 </v-btn>
                             </template>
                             <v-card class="rounded-l-xl">
@@ -39,7 +40,8 @@
                                                                 v-on="on" required></v-text-field>
                                                         </template>
                                                         <v-date-picker v-model="date" scrollable multiple
-                                                            :rules="[v => !!v || 'กรุณาเลือกวันที่']" required>
+                                                            :rules="[v => !!v || 'กรุณาเลือกวันที่']" required
+                                                            :readonly="mode == 'พร้อมเรียน'">
                                                             <v-spacer></v-spacer>
                                                             <v-btn text color="primary" @click="modal = false">
                                                                 Cancel
@@ -52,38 +54,32 @@
                                                 </v-col>
                                                 <v-col cols="12" md="6">
                                                     <v-autocomplete v-model="All_data.subject" :items="subject_select"
-                                                        item-value="key" item-text="name" label="ชื่อวิชา" @input="search_level()
-                                                        All_data.student = null,
-                                                            All_data.style_subject = null,
-                                                            All_data.teacher = null,
-                                                            All_data.level = null" :rules="[v => !!v || 'กรุณาเลือก']"
+                                                        item-value="key" item-text="name" label="ชื่อวิชา"
+                                                        @input="search_level()" :rules="[v => !!v || 'กรุณาเลือก']"
                                                         required></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" md="6">
                                                     <v-autocomplete v-model="All_data.level" :items="level_select"
-                                                        label="ระดับการศักษา" @input="search_teacher(),
-                                                            All_data.student = null,
-                                                            All_data.style_subject = null,
-                                                            All_data.teacher = null"
+                                                        label="ระดับการศักษา" @input="search_teacher()"
                                                         :rules="[v => !!v || 'กรุณาเลือก']" required></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" sm="12">
                                                     <v-autocomplete v-model="All_data.teacher" :items="teacher_select"
                                                         item-value="key" item-text="name" label="เลือกคุณครู"
-                                                        :rules="[v => !!v || 'กรุณาเลือก']"
-                                                        @input="All_data.student = null, All_data.style_subject = null"
+                                                        :readonly="mode == 'พร้อมเรียน'" :rules="[v => !!v || 'กรุณาเลือก']"
                                                         required></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" sm="12">
                                                     <v-autocomplete v-model="All_data.student" :items="student_select"
                                                         item-value="key" item-text="name" label="เลือกนักเรียน"
                                                         :rules="[v => !!v || 'กรุณาเลือก']" required
-                                                        @input="search_location(), All_data.style_subject = null"></v-autocomplete>
+                                                        @input="search_location()"></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" sm="12">
                                                     <v-autocomplete v-model="All_data.style_subject"
                                                         :items="location_select" item-value="key" item-text="name"
                                                         label="สถานที่สอน" :rules="[v => !!v || 'กรุณาเลือก']" required
+                                                        :readonly="mode == 'พร้อมเรียน'"
                                                         @input="select_class(All_data.style_subject)"></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" md="6" v-if="All_data.show_time_flip">
@@ -242,18 +238,23 @@ export default {
         //------TABLE---------
         dialog: false,
         dialogDelete: false,
+
+        arrayEvents: [],
         headers: [
             {
-                text: 'Dessert (100g serving)',
+                text: 'ชื่อครู',
                 align: 'start',
                 sortable: false,
                 value: 'name',
             },
-            { text: 'Calories', value: 'calories' },
-            { text: 'Fat (g)', value: 'fat' },
-            { text: 'Carbs (g)', value: 'carbs' },
-            { text: 'Protein (g)', value: 'protein' },
-            { text: 'Actions', value: 'actions', sortable: false },
+            // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
+            { text: 'ประเภทคลาส', value: 'style', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'วันที่สอน', value: 'date', align: 'center' },
+            { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
+            { text: 'เวลาสิ้นสุด', value: 'time_e', align: 'center' },
+            { text: 'จำนวนนักเรียน', value: 'sum_people', align: 'center' },
+            { text: 'จองคิว', value: 'actions', sortable: false, align: 'center' },
         ],
         desserts: [],
         editedIndex: -1,
@@ -267,6 +268,8 @@ export default {
         location_select: [],
 
         mode: null,
+
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
     }),
     mounted() {
 
@@ -287,12 +290,17 @@ export default {
     },
 
     created() {
-        this.initialize();
         this.LimitedClass_search();
         this.search_subject_select();
         this.search_student();
+        this.search_date_teacher();
     },
     methods: {
+        getRandomColor() {
+            const randomIndex = Math.floor(Math.random() * this.colors.length)
+            const randomColor = this.colors[randomIndex]
+            return randomColor
+        },
         sum_hour(start, end) {
             let sum = 0;
             let set = 0;
@@ -329,8 +337,10 @@ export default {
             this.All_data.show_time_private = "0";
             this.All_data.show_time_flip_match = "0";
             this.All_data.show_time_private_match = "0";
-            this.location_select = [];
             const db = this.$fireModule.database();
+            if (this.mode == 'รอยืนยัน') {
+                this.location_select = [];
+            }
             const getTeacherPromise = db.ref(`user/${this.All_data.teacher}`).once("value");
             const getStudentPromise = db.ref(`user/${this.All_data.student}`).once("value");
             const getHourMatchPromise = db.ref(`hour_match/${this.All_data.student}`).once("value");
@@ -353,15 +363,16 @@ export default {
                                 this.location_select.push({ name: childData.name, key: location.classLocation[key] });
                                 this.All_data.show_time_private = studentData.privateHourLeft;
                             }
-                            if (hourmatchData && hourmatchData.hour) {
-                                this.All_data.show_time_flip_match = hourmatchData.hour;
-                            }
-                            if (hourmatchData && hourmatchData.hourprivate) {
-                                this.All_data.show_time_flip_match = hourmatchData.hourprivate;
-                            }
                         })
                     }
+                    if (hourmatchData && hourmatchData.hour) {
+                        this.All_data.show_time_flip_match = hourmatchData.hour;
+                    }
+                    if (hourmatchData && hourmatchData.hourprivate) {
+                        this.All_data.show_time_flip_match = hourmatchData.hourprivate;
+                    }
                 })
+
         },
         search_student() {
             const db = this.$fireModule.database();
@@ -468,12 +479,53 @@ export default {
             })
         },
 
+        search_subject_match(item) {
+            let items = [];
+            for (const key in item) {
+                const detail = item[key];
+                if (key != "00000") { // ตรวจสอบชื่อก่อนเพิ่มข้อมูลเข้า array
+                    items.push({ key: key, name: detail.name, level: detail.level });
+                }
+            }
+            this.subject_select = items;
+            console.log(this.subject_select);
+        },
+
 
 
         editItem(item) {
             this.editedIndex = this.desserts.indexOf(item)
             this.All_data = Object.assign({}, item)
-            this.dialog = true
+            this.dialog = true;
+            this.check_time_select(item);
+            this.location_select.push({ name: this.All_data.full_location.name, key: this.All_data.full_location.key });
+            this.teacher_select.push({ name: this.All_data.full_teacher.name, key: this.All_data.full_teacher.key })
+            this.date = [this.All_data.date];
+            console.log(this.All_data);
+            if (this.All_data.keysubject == '00000') {
+                this.search_subject_match(this.All_data.teacher_subject);
+            } else {
+                this.subject_select = this.All_data.full_subject;
+            }
+        },
+
+        check_time_select(item) {
+            this.time_standart = [];
+            this.time_standart_stop = [];
+            let sum = 0;
+            for (const key in this.time_full) {
+                if (item.time_e == this.time_full[key]) {
+                    sum = 0;
+                    this.time_standart.push(this.time_full[key]);
+                    this.time_standart_stop.push(this.time_full[key]);
+                    break;
+                }
+                else if (item.time_s == this.time_full[key] || (sum != 0)) {
+                    sum++;
+                    this.time_standart.push(this.time_full[key]);
+                    this.time_standart_stop.push(this.time_full[key]);
+                }
+            }
         },
 
         deleteItem(item) {
@@ -491,7 +543,17 @@ export default {
             this.dialog = false
             this.date = [];
             this.$nextTick(() => {
-                this.All_data = Object.assign({}, this.defaultItem)
+                this.All_data = Object.assign({}, this.defaultItem);
+                this.time_standart = this.time_full;
+                this.time_standart_stop = null;
+                this.subject_select = [];
+                this.level_select = [];
+                this.teacher_select = [];
+                this.student_select = [];
+                this.location_select = [];
+                this.LimitedClass_search();
+                this.search_subject_select();
+                this.search_student();
                 this.editedIndex = -1
                 this.resetValidation();
             })
@@ -505,6 +567,7 @@ export default {
         },
         save(item) {
             if (this.editedIndex > -1) { //------EDIT----------
+                this.save_time();
                 // Object.assign(this.desserts[this.editedIndex], this.All_data)
             } else { //------SAVE----------
                 // this.desserts.push(item); 
@@ -605,16 +668,25 @@ export default {
             let maxKeyOut = 0;
             let hour = this.sum_hour(data.start, data.stop);
             console.log("hour", hour);
-            if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour && data.select == "-NcQsFxCcoNS-uwmKUqE") {
+
+            if (data.match_vip) {
+                if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length)) {
+                    this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
+                    this.dialogError = true;
+                    return;
+                }
+            }
+            else if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length) && data.select == "-NcQsFxCcoNS-uwmKUqE") {
                 this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
                 this.dialogError = true;
                 return;
             }
-            if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour && data.select == "-NcQsHB9vgG53lJKPA-i") {
+            else if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour * parseInt(this.date.length) && data.select == "-NcQsHB9vgG53lJKPA-i") {
                 this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
                 this.dialogError = true;
                 return;
             }
+
             for (const keydate in this.date) {
                 let text = '';
                 let textadd = '';
@@ -713,29 +785,56 @@ export default {
                         match_vip: data.match_vip || false,
                         hour: hour,
                     });
+                    if (this.mode == 'พร้อมเรียน') {
+                        const inviteData = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/invite/`).once("value");
+                        let people_sum = 1;
+                        console.log(inviteData.val());
+                        if (inviteData.exists()) {
+                            console.log(inviteData.val());
+                            people_sum = people_sum + inviteData.val();
+                        }
+                        await db.ref(`date_teacher/${data.teacher}/${this.date[keydate]}/${data.start}E${data.stop}`).update({
+                            invite: people_sum,
+                        });
+                    }
                     const hourMatch = await db.ref(`hour_match/${data.student}`).once("value");
-                    if (hourMatch.exists()) {
+                    if (data.match_vip && data.match_test != true) {
+                        if (hourMatch.exists()) {
+                            let huorMatch_data = hourMatch.val();
+                            await db.ref(`hour_match/${data.student}/`).update({
+                                hour: parseFloat(hour) + parseFloat(huorMatch_data.hour),
+                            });
+                            console.log('ทดชม Flip');
+                        } else {
+                            await db.ref(`hour_match/${data.student}/`).update({
+                                hour: parseFloat(hour),
+                                hourprivate: 0,
+                            });
+                            console.log('ทดชม Flip');
+                        }
+                    }
+                    else if (hourMatch.exists() && data.match_test != true) {
                         let huorMatch_data = hourMatch.val();
                         if (data.match_test == undefined || data.match_test == false) {
                             console.log('Add_hour_match', huorMatch_data);
-                            if (huorMatch_data.hour && huorMatch_data.hour > 0) {
+                            if (data.select == '-NcQsFxCcoNS-uwmKUqE') {
                                 await db.ref(`hour_match/${data.student}/`).update({
                                     hour: parseFloat(hour) + parseFloat(huorMatch_data.hour),
                                 });
                                 console.log('ทดชม Flip');
                             }
-                            if (huorMatch_data.hourprivate && huorMatch_data.hourprivate > 0) {
+                            if (data.select == '-NcQsHB9vgG53lJKPA-i') {
                                 await db.ref(`hour_match/${data.student}/`).update({
-                                    hourprivate: parseFloat(hour) + parseFloat(huorMatch_data.hour),
+                                    hourprivate: parseFloat(hour) + parseFloat(huorMatch_data.hourprivate),
                                 });
                                 console.log('ทดชม Private');
                             }
                         }
-                    } else {
+                    } else if (data.match_test != true) {
                         if (data.select == '-NcQsFxCcoNS-uwmKUqE') {
                             await db.ref(`hour_match/${data.student}/`).update({
                                 hour: parseFloat(hour),
-                                hourprivate:0 ,
+                                hourprivate: 0,
                             });
                             console.log('ทดชม Flip');
                         }
@@ -808,6 +907,106 @@ export default {
                         });
                 });
         },
+        search_date_teacher() {
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
+                let item = [];
+                this.desserts = [];
+                this.events = [];
+                let index = 0;
+                this.arrayEvents = [];
+                for (const key in childData) {
+                    const keydata = childData[key];
+                    for (const date in keydata) {
+                        if (parseInt(new Date(date).getTime()) >= parseInt(now.getTime())) {
+                            const datedata = keydata[date];
+                            for (const time in datedata) {
+                                const timedata = datedata[time];
+                                const getTeacherPromise = db.ref(`user/${key}`).once("value");
+                                const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                Promise.all([getTeacherPromise, getSubjectPromise, getLocationPromise])
+                                    .then((snapshots) => {
+                                        const teacherSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                        const subjectSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                                        const locationSnapshot = snapshots[2]; // เปลี่ยนตรงนี้
+                                        const teacherData = teacherSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
+                                        const locationData = locationSnapshot.val();
+                                        const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
+                                        const namesub = subjectData.name;
+                                        if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
+                                            item.push({
+                                                name: nametea,
+                                                date: date,
+                                                time_s: timedata.start,
+                                                time_e: timedata.stop,
+                                                style: locationData.name,
+                                                style_subject: timedata.style_subject,
+                                                Class: timedata.Class,
+                                                select: timedata.Class.key,
+                                                subject: namesub,
+                                                keysubject: timedata.subject,
+                                                people: timedata.sum_people,
+                                                sum_people: timedata.invite + "/" + timedata.sum_people,
+                                                invite: timedata.invite,
+                                                teacher: key,
+                                                teacher_subject: teacherData.subject_all,
+                                                full_subject: { name: namesub, key: timedata.subject },
+                                                full_location: { name: locationData.name, key: timedata.style_subject },
+                                                full_teacher: { name: nametea, key: key },
+                                            });
+                                            this.events.push(
+                                                {
+                                                    array: index,
+                                                    name: namesub,
+                                                    start: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.start.substring(0, 2),
+                                                        timedata.start.substring(3, 5)),
+                                                    end: new Date(date.substring(0, 4), date.substring(5, 7) - 1,
+                                                        date.substring(8, 10), timedata.stop.substring(0, 2),
+                                                        timedata.stop.substring(3, 5)),
+                                                    color: this.getRandomColor(),
+                                                    timed: true,
+                                                },
+                                            );
+                                            index++;
+                                            this.arrayEvents.push(date);
+                                        }
+                                    })
+                            }
+                        }
+                    }
+                }
+                this.desserts = item;
+            })
+        },
+
     },
 }
 </script>
+
+<style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+
+@media only screen and (max-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+
+    /* ซ่อน element ที่ไม่ต้องการแสดงผล */
+    .hide-on-desktop {
+        display: none;
+    }
+}
+</style>
