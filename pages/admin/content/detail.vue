@@ -48,7 +48,8 @@
                 <v-icon color="black" large class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
                     mdi-pencil
                 </v-icon>
-                <v-icon color="#B6A7A2" large class="mr-2" @click="viewMaterialDialog(item)" style="text-decoration: underline;">
+                <v-icon color="#B6A7A2" large class="mr-2" @click="viewMaterialDialog(item)"
+                    style="text-decoration: underline;">
                     mdi-file-pdf-box
                 </v-icon>
                 <v-icon color="red" large @click="viewDeleteDialog(item)" style="text-decoration: underline;">
@@ -214,11 +215,13 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="black" large class="mr-2" @click="openEditDialog(item)" style="text-decoration: underline;">
+                                <v-icon color="black" large class="mr-2" @click="openEditDialog(item)"
+                                    style="text-decoration: underline;">
                                     mdi-pencil
                                 </v-icon>
 
-                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)" style="text-decoration: underline;">
+                                <v-icon color="red" large @click="openDeleteMaterialDialog(item)"
+                                    style="text-decoration: underline;">
                                     mdi-delete
                                 </v-icon>
                             </template>
@@ -496,6 +499,8 @@ export default {
 
                 { text: 'ชื่อบท', value: 'chapterName' },
                 { text: 'รายละเอียดเนื้อหา', value: 'chapterDetail' },
+                { text: 'จำนวนเอกสาร', value: 'fileCount' },
+                { text: 'จำนวนวิดีโอ', value: 'linkCount' },
                 { text: 'ข้อมูล', value: 'actions', sortable: false, align: 'center' },
             ],
 
@@ -703,7 +708,7 @@ export default {
         openEditDialog(item) {
             this.edit_material = true;
             this.selectMaterial = item;
-           
+
         },
         async editMaterial() {
             const db = this.$fireModule.database();
@@ -781,21 +786,32 @@ export default {
 
             for (const key in childContentsData) {
                 const snapshotName = await db.ref(`contents/${this.contentId}/subject_contents/${key}`).once("value");
-
                 const childDataName = snapshotName.val();
-
+                var fileCount = 0;
+                var linkCount = 0;
+                for (const key in childDataName.material) {
+                    
+                    if (childDataName.material[key].pdfFileUrl !== undefined) {
+                        fileCount = fileCount + 1;
+                    }
+                    if (childDataName.material[key].link !== undefined) {
+                        linkCount = linkCount + 1;
+                    }
+                }
                 const item = {
                     chapterNumber: key,
                     chapterName: childDataName.chapterName,
                     chapterDetail: childDataName.chapterDetail,
-                    annotation: childDataName.annotation
+                    annotation: childDataName.annotation,
+                    fileCount: fileCount,
+                    linkCount: linkCount
                 };
 
                 subjects.push(item);
             }
 
             this.subjectContents = subjects;
-            console.log(this.subjectContents)
+
 
         },
 

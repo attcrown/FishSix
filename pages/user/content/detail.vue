@@ -158,7 +158,9 @@
                                     v-if="contentMaterial.pdfFileUrl !== undefined">
                                     <div class="d-flex justify-space-between mt-2">
                                         <h5>{{ contentMaterial.name }}</h5>
-                                        <v-btn color="black" class="text-white">ดาวน์โหลดเอกสาร <span
+
+                                        <v-btn color="black" class="text-white"
+                                            @click="downloadFile(contentMaterial.pdfFileUrl)">ดาวน์โหลดเอกสาร <span
                                                 class="mdi mdi-file text-h6"></span></v-btn>
                                     </div>
 
@@ -168,8 +170,6 @@
                             <!-- <h3> {{ contentMaterials }}</h3> -->
                         </v-card>
                     </div>
-
-
                 </v-card-text>
             </v-card>
         </div>
@@ -206,79 +206,10 @@
                                     @click="openEditDialog(item)">
                                     mdi-eye
                                 </v-icon>
-
-
-
                             </template>
                         </v-data-table>
                     </v-container>
                 </v-card-text>
-
-
-
-
-
-            </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="viewmaterial" max-width="600px">
-            <v-card class="p-4 rounded-xl">
-                <v-card-title>
-                    <span style="font-size: 24px">
-                        <b>{{ subjectName }} | {{ level }} | {{ selectChapter }} | ชื่อเรื่อง</b>
-                    </span>
-                    <v-spacer></v-spacer>
-                    <v-btn fab dark small color="#37474F" @click="material_dialog = false">
-                        <v-icon dark class="text-h5">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-                </v-card-title>
-
-                <v-card-text>
-                    <v-container>
-                        <v-row justify="center">
-                            <v-col cols="12">
-                                <v-text-field label="ชื่อเรื่องที่เรียน" v-model="selectMaterial.name" disabled
-                                    :rules="nameRules"></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-select :items="materialTypes" label="ประเภทสื่อ" disabled
-                                    v-model="selectMaterial.type"></v-select>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="ชื่อไฟล์/วิดีโอ" v-model="selectMaterial.fileName"
-                                    disabled></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="รายละเอียดเรื่องที่เรียน" v-model="selectMaterial.detail"
-                                    disabled></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-text-field label="หมายเหตุ" v-model="selectMaterial.annotation" disabled></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
-                                <label v-if="selectMaterial.type === 'Video Link'">Link
-                                </label><br>
-                                <a v-if="selectMaterial.type === 'Video Link'" :href="selectMaterial.link"
-                                    target="_blank">{{ selectMaterial.link }}</a>
-
-                                <label v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'">เอกสารประกอบการเรียน
-                                    (Pdf)</label><br>
-                                <a v-if="selectMaterial.type === 'เอกสารประกอบการเรียน (Pdf)'" href=""
-                                    @click="downloadFile()"> View</a>
-
-                            </v-col>
-                            <v-col cols="6">
-
-                            </v-col>
-                        </v-row>
-                    </v-container>
-
-                </v-card-text>
-
-
-
             </v-card>
         </v-dialog>
     </div>
@@ -337,6 +268,8 @@ export default {
 
                 { text: 'ชื่อบท', value: 'chapterName' },
                 { text: 'รายละเอียดเนื้อหา', value: 'chapterDetail' },
+                { text: 'จำนวนเอกสาร', value: 'fileCount' },
+                { text: 'จำนวนวิดีโอ', value: 'linkCount' },
                 { text: 'ข้อมูล', value: 'actions', sortable: false, align: 'center' },
             ],
 
@@ -396,9 +329,8 @@ export default {
         },
 
         viewItem(item) {
-            console.log('items')
-            this.viewMode = 'detail';
 
+            this.viewMode = 'detail';
             this.selectChapter = item.chapterName;
             this.selectContent = item;
 
@@ -415,37 +347,28 @@ export default {
                     items.push({ key, ...item });
                 }
 
-                console.log(items)
+
                 this.contentMaterials = items;
             })
         },
 
         nextItem() {
-            console.log('items')
+            this.selectLink = null;
             this.viewMode = 'detail';
-            //this.content_dialog = true;
-
             const nextChapterId = parseInt(this.selectChapterId) + 1;
-            //this.selectChapterId = item.chapterNumber;
+            if (nextChapterId > this.subjectContents.length) {
+                return;
+            }
             const db = this.$fireModule.database();
             db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}`).on("value", (snapshot) => {
-                let items = [];
-
-                this.subjects = [];
                 const childData = snapshot.val();
-
-                for (const key in childData) {
-                    const item = childData[key];
-                    items.push({ key, ...item });
-                }
-
-                console.log(items)
-                this.contentMaterials = items;
+                this.selectChapterId = nextChapterId;
+                this.selectChapter = childData.chapterName;
+                this.selectContent = childData;
             })
             db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}/material`).on("value", (snapshot) => {
                 let items = [];
 
-                this.subjects = [];
                 const childData = snapshot.val();
 
                 for (const key in childData) {
@@ -453,22 +376,27 @@ export default {
                     items.push({ key, ...item });
                 }
 
-                console.log(items)
                 this.contentMaterials = items;
             })
         },
         prevItem() {
-            console.log('prev')
+            this.selectLink = null;
             this.viewMode = 'detail';
-
-
-            const nextChapterId = parseInt(this.selectChapterId) - 1;
-
+            const prevChapterId = parseInt(this.selectChapterId) - 1;
+            if (prevChapterId == 0) {
+                return;
+            }
             const db = this.$fireModule.database();
-            db.ref(`contents/${this.contentId}/subject_contents/${nextChapterId}/material`).on("value", (snapshot) => {
+            db.ref(`contents/${this.contentId}/subject_contents/${prevChapterId}`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                this.selectChapterId = prevChapterId;
+                this.selectChapter = childData.chapterName;
+                this.selectContent = childData;
+            })
+            db.ref(`contents/${this.contentId}/subject_contents/${prevChapterId}/material`).on("value", (snapshot) => {
                 let items = [];
 
-                this.subjects = [];
+
                 const childData = snapshot.val();
 
                 for (const key in childData) {
@@ -476,7 +404,6 @@ export default {
                     items.push({ key, ...item });
                 }
 
-                console.log(items)
                 this.contentMaterials = items;
             })
         },
@@ -522,12 +449,24 @@ export default {
                 const snapshotName = await db.ref(`contents/${this.contentId}/subject_contents/${key}`).once("value");
 
                 const childDataName = snapshotName.val();
+                var fileCount = 0;
+                var linkCount = 0;
+                for (const key in childDataName.material) {
 
+                    if (childDataName.material[key].pdfFileUrl !== undefined) {
+                        fileCount = fileCount + 1;
+                    }
+                    if (childDataName.material[key].link !== undefined) {
+                        linkCount = linkCount + 1;
+                    }
+                }
                 const item = {
                     chapterNumber: key,
                     chapterName: childDataName.chapterName,
                     chapterDetail: childDataName.chapterDetail,
-                    annotation: childDataName.annotation
+                    annotation: childDataName.annotation,
+                    fileCount: fileCount,
+                    linkCount: linkCount
                 };
 
                 subjects.push(item);
@@ -551,9 +490,10 @@ export default {
 
         },
 
-        downloadFile() {
-            window.open(this.selectMaterial.pdfFileUrl, '_blank');
+        downloadFile(pdfFileUrl) {
+            window.open(pdfFileUrl, '_blank');
         },
+
         getLink(link) {
             this.selectLink = link.replace("watch?v=", "embed/");
             console.log(this.selectLink)

@@ -163,8 +163,7 @@ export default {
                 },
                 { text: 'Level', value: 'level' },
                 { text: 'จำนวนบท', value: 'chapterCount' },
-                { text: 'จำนวนเอกสาร', value: '' },
-                { text: 'จำนวนวิดีโอ', value: '' },
+              
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
             ],
 
