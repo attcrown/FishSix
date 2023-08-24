@@ -1,8 +1,9 @@
 <template>
   <v-app class="fonts500">
-    <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
-      :clipped-left="clipped" fixed app color="#B6A7A2">
-      <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 100%;"></div>
+    <v-navigation-drawer v-model="drawer" app color="#B6A7A2" :mini-variant.sync="mini" permanent expand-on-hover>
+      <div class="text-center">
+        <img :src="require('@/assets/fishsixLogo.png')" style="width: 100%;">
+      </div>
 
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
@@ -26,11 +27,12 @@
         </v-list-item>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
+
+    <v-app-bar app color="white" elevation="0">
+      <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->      
       <v-spacer />
       <p class="m-0">
-      Operation
+        Operation
       </p>
       <v-avatar class="ms-2">
         <v-icon style=" font-size: 40px;" color="grey">
@@ -57,12 +59,13 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
+      drawer: true,
       drawerWidth: 200,
       drawerMaxWidth: 350,
       clipped: true,
       drawer: false,
       fixed: false,
-
+      mini: true,
 
       email: null,
 
@@ -126,7 +129,7 @@ export default {
           icon: 'mdi-cash-fast',
           title: 'รายได้ครู',
           to: '/admin/salary',
-        },       
+        },
       ],
       miniVariant: false,
       right: true,

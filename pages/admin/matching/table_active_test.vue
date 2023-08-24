@@ -392,7 +392,7 @@ export default {
             console.log(this.time_standart_sum);
         },
 
-        async delete_match() {
+        delete_match() {
             if (!this.editedItem) {
                 alert("No data to delete");
                 return;
