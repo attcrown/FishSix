@@ -1,6 +1,87 @@
 <template>
     <div>
-        <h1> Test Time DTAT</h1>
+        <div class="mb-3 "> <!--hide-on-mobile-->
+            <v-row class="fill-height">
+                <v-col>
+                    <v-sheet height="64">
+                        <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
+                            <v-btn outlined class="mr-4" color="grey lighten-5" @click="setToday">
+                                Today
+                            </v-btn>
+                            <v-btn fab text small color="grey lighten-5" @click="prev">
+                                <v-icon small>
+                                    mdi-chevron-left
+                                </v-icon>
+                            </v-btn>
+                            <v-btn fab text small color="grey lighten-5" @click="next">
+                                <v-icon small>
+                                    mdi-chevron-right
+                                </v-icon>
+                            </v-btn>
+
+                            <v-toolbar-title v-if="$refs.calendar" style="color:#FAFAFA">
+                                {{ $refs.calendar.title }}
+                            </v-toolbar-title>
+
+                            <v-spacer></v-spacer>
+                            <v-menu bottom right>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn outlined color="grey lighten-5" v-bind="attrs" v-on="on">
+                                        <span>{{ typeToLabel[type] }}</span>
+                                        <v-icon right>
+                                            mdi-menu-down
+                                        </v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item @click="type = 'day'">
+                                        <v-list-item-title>Day</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="type = 'week'">
+                                        <v-list-item-title>Week</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item @click="type = 'month'">
+                                        <v-list-item-title>Month</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-toolbar>
+                    </v-sheet>
+                    <v-sheet height="600">
+                        <v-calendar ref="calendar" v-model="focus" color="primary" :events="events"
+                            :event-color="getEventColor" :type="type" @click:event="showEvent" @click:more="viewDay"
+                            @click:date="viewDay"></v-calendar>
+                        <!-- <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement"
+                            offset-x>
+                            <v-card color="grey lighten-4" min-width="350px" flat>
+                                <v-toolbar :color="selectedEvent.color" dark>
+                                    <v-btn icon>
+                                        <v-icon>mdi-pencil</v-icon>
+                                    </v-btn> -->
+                        <!--eslint-disable-next-line vue/no-v-text-v-html-on-component-->
+                        <!-- <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn icon>
+                                        <v-icon>mdi-heart</v-icon>
+                                    </v-btn>
+                                    <v-btn icon>
+                                        <v-icon>mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <span v-html="selectedEvent.details"></span>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn text color="secondary" @click="selectedOpen = false">
+                                        Cancel
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-menu> -->
+                    </v-sheet>
+                </v-col>
+            </v-row>
+        </div>
         <template>
             <v-data-table :headers="headers" :items-per-page="-1" :items="desserts" sort-by="calories"
                 class="elevation-16 rounded-xl">
@@ -270,6 +351,18 @@ export default {
         mode: null,
 
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+        focus: '',
+        type: 'week',
+        typeToLabel: {
+            month: 'Month',
+            week: 'Week',
+            day: 'Day', '4day': '4 Days',
+        },
+        selectedEvent: {},
+        selectedElement: null,
+        selectedOpen: false,
+        events: [],
+        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted() {
 

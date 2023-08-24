@@ -144,7 +144,7 @@
                                                             v-on="on"></v-text-field>
                                                     </template>
                                                     <v-date-picker v-model="date" no-title scrollable
-                                                        :readonly="status != 'admin'">
+                                                        readonly>
                                                         <v-spacer></v-spacer>
                                                         <v-btn text color="primary" @click="menu = false">
                                                             Cancel
@@ -160,17 +160,17 @@
                                                 <v-select :items="time_standart" v-model="editedItem.time_s"
                                                     label="เวลาเริ่มต้น"
                                                     @change="validateTime(editedItem.time_s, null), editedItem.time_e = null"
-                                                    :readonly="status != 'admin'"></v-select>
+                                                    readonly></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart_stop" v-model="editedItem.time_e"
                                                     @change="validateTime(editedItem.time_s, editedItem.time_e)"
-                                                    label="เวลาสิ้นสุด" :readonly="status != 'admin'"></v-select>
+                                                    label="เวลาสิ้นสุด" readonly></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
                                                     v-model="editedItem.style" item-text="name" item-value="key"
-                                                    :readonly="status != 'admin'"
+                                                    readonly
                                                     @input="select_class(editedItem.style)"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
@@ -784,13 +784,13 @@ export default {
         },
 
         async save() {
-            this.validateTime(this.editedItem.time_s, this.editedItem.time_e);
-            let time_sum = this.time_standart_sum;
+            let time_sum = this.validateTime_save(this.editedItem.time_s, this.editedItem.time_e);;
             const data = this.editedItem;
             const db = this.$fireModule.database();
             let uniqueTimeSum = null;
             let anyInA = false;
-            let time_old = null;
+            let time_data_tea = null;
+            let sum_people_new_tea = 1;
             const selectedObject = this.LimitedClass_all.find(item => item.key === this.editedItem.select);
             console.log('Selected item:', selectedObject, this.editedItem, this.old_item, time_sum);
 
@@ -800,273 +800,47 @@ export default {
                 if (Work_tea.exists()) {
                     const Work_data_tea = Work_tea.val();
                     for (const key in Work_data_tea) {
-                        if (Work_data_tea[key].Class.key == '-NcQsFxCcoNS-uwmKUqE') {  //ตรวจสอบ FlipClass
+                        if (Work_data_tea[key].Class.key == '-NcQsFxCcoNS-uwmKUqE' && Work_data_tea[key].style_subject == data.style) {  //ตรวจสอบ FlipClass
                             console.log('GOOD', Work_data_tea[key]);
 
-                            time_old = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
-                            anyInA = time_old.some(time => time_sum.includes(time));
-                            console.log(anyInA, time_old);
+                            time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+                            anyInA = time_data_tea.some(time => time_sum.includes(time));
+                            console.log(anyInA, time_data_tea, key);
                             if (anyInA) {
-                                let mergedTimeSum = [...time_old, ...time_sum];
+                                sum_people_new_tea += Work_data_tea[key].invite;
+                                let mergedTimeSum = [...time_data_tea, ...time_sum];
                                 mergedTimeSum.sort();
                                 uniqueTimeSum = mergedTimeSum.filter((value, index, self) => {
                                     return self.indexOf(value) === index;
                                 });
-                                console.log('Sorted and Unique Time Sum:>>>>', uniqueTimeSum);
+                                time_sum = uniqueTimeSum;
+                                db.ref(`date_teacher/${data.key_teacher}/${data.date}/${key}`).remove();
+                                console.log('รวมเวลา', time_sum, sum_people_new_tea);
                             }
                         }
                     }
-                }
-            }
-            console.log(time_old, time_sum, uniqueTimeSum);
-
-            // if (this.editedItem.date == this.date &&
-            //     this.editedItem.time_s == this.old_item.time_s &&
-            //     this.editedItem.time_e == this.old_item.time_e &&
-            //     this.editedItem.style == this.old_item.style
-            // ) {
-            //     console.log('save update', `date_match/${data.key_student}/${data.date}/${data.time_e}`, this.time_standart_sum);
-            //     await db.ref(`date_match/${data.key_student}/${data.date}/${data.time_e}`).update({
-            //         subject: data.subject,
-            //         style_subject: data.style,
-            //         level: data.level,
-            //         status: 'พร้อมเรียน',
-            //         createAt: new Date(),
-            //     });
-            //     await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).update({
-            //         sum_people: selectedObject.bath,
-            //         subject: '00000',
-            //         Class: selectedObject,
-            //         style_subject: data.style,
-            //         createAt: new Date(),
-            //         start: data.time_s,
-            //         stop: data.time_e,
-            //     });
-            //     if (anyInA) {
-            //         const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}/invite/`).once("value");
-            //         let people_sum = 1;
-            //         console.log(inviteData.val() ,`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}/invite/`);
-            //         if (inviteData.exists()) {
-            //             console.log(inviteData.val());
-            //             people_sum = people_sum + inviteData.val();
-            //         }
-            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${uniqueTimeSum[0]}E${uniqueTimeSum[uniqueTimeSum.length - 1]}`).update({
-            //             invite: people_sum,
-            //             sum_people: selectedObject.bath,
-            //             subject: '00000',
-            //             Class: selectedObject,
-            //             style_subject: data.style,
-            //             createAt: new Date(),
-            //             start: uniqueTimeSum[0],
-            //             stop: uniqueTimeSum[uniqueTimeSum.length - 1],
-            //         });
-            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).remove();
-            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.time_standart_sum[0]}E${this.time_standart_sum[this.time_standart_sum.length -1]}`).remove();
-            //     }else{
-            //         const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`).once("value");
-            //         let people_sum = 1;
-            //         console.log(inviteData.val() ,`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`);
-            //         if (inviteData.exists()) {
-            //             console.log(inviteData.val());
-            //             people_sum = people_sum + inviteData.val();
-            //         }
-            //         await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).update({
-            //             invite: people_sum,
-            //             sum_people: selectedObject.bath,
-            //             subject: '00000',
-            //             Class: selectedObject,
-            //             style_subject: data.style,
-            //             createAt: new Date(),
-            //             start: data.time_s,
-            //             stop: data.time_e,
-            //         });    
-            //     }
-
-            //     this.close();
-            // } else {
-            //     this.save_check_data(this.old_item, this.editedItem, time_sum);
-            // }
-        },
-
-        async save_check_data(oldData, editDate, time_sum) {
-            this.validateTime(editDate.time_s, editDate.time_e);
-            console.log('oldd', oldData, 'new', editDate, time_sum);
-            this.select_class(editDate.style);
-            const db = this.$fireModule.database();
-            const selectedObject = this.LimitedClass_all.find(item => item.key === editDate.select);
-            console.log('Selected item:', selectedObject);
-            const data = editDate;
-            let isSave = 0;
-            let maxKeyOut = 0;
-            let hour = this.sum_hour(data.time_s, data.time_e);
-            console.log("hour", hour);
-
-            if (data.match_vip) {
-                if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour) {
-                    this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
-                    this.dialogError = true;
-                    return;
-                }
-            }
-            else if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour && data.select == "-NcQsFxCcoNS-uwmKUqE") {
-                this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
-                this.dialogError = true;
-                return;
-            }
-            else if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour && data.select == "-NcQsHB9vgG53lJKPA-i") {
-                this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
-                this.dialogError = true;
-                return;
-            }
-
-            let text = '';
-            let textadd = '';
-            for (const key in time_sum) {
-                await db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).orderByValue().equalTo(data.key_student).once("value")
-                    .then(snapshot => {
-                        // if (snapshot.exists()) {
-                        //     textadd = textadd.concat(' ', time_sum[key])
-                        //     isSave++;
-                        // }
-                        // else {
-                        //     return db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).once("value");
-                        // }
-
-                        // if (time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
-                        //     this.textError = 'จองไปแล้ว ซ้ำ' + textadd + " " + this.date;
-                        //     this.dialogError = true;
-                        // }
-                    })
-                    .then(snapshot => {
-                        if (snapshot) {
-                            let maxKey = 0;
-                            snapshot.forEach(childSnapshot => {
-                                const childKey = parseInt(childSnapshot.key);
-                                if (childKey >= maxKey) {
-                                    maxKey = childKey + 1;
-                                    maxKeyOut = maxKey;
-                                }
-                            });
-                            if (maxKey >= selectedObject.bath) {
-                                text = text.concat(" ", time_sum[key]);
-                                isSave++;
-                            }
-                            if (time_sum.length == parseInt(key) + 1 && text.length != 0) {
-                                this.textError = 'เต็มแล้ว' + text + " " + this.date;
-                                this.dialogError = true;
-                            }
-                            if (maxKey < selectedObject.bath && time_sum.length == parseInt(key) + 1) {
-                                console.log('send save');
-                            }
-                            if (maxKey < selectedObject.bath && time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
-                                this.textError = textadd;
-                                this.dialogError = true;
-                            }
-                            console.log('WorkData', maxKey, selectedObject.bath, time_sum.length, parseInt(key) + 1, isSave);
-                            console.log('>>>>>>', textadd.length);
-                        }
+                    console.log(time_sum, sum_people_new_tea);
+                    db.ref(`date_teacher/${data.key_teacher}/${data.date}/${time_sum[0]}E${time_sum[time_sum.length - 1]}`).update({
+                        Class: selectedObject,
+                        createAt: new Date(),
+                        invite: sum_people_new_tea,
+                        start: time_sum[0],
+                        stop: time_sum[time_sum.length - 1],
+                        style_subject: data.style,
+                        subject: "00000",
+                        sum_people: selectedObject.bath
                     });
+                }
             }
-            this.delete_match();
-            if (isSave == 0) {
-                console.log('save success');
-                console.log(this.date, time_sum);
-                for (const key in time_sum) {
-                    const snapshot = await db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).once("value");
-                    if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {
-                        for (let x = 0; x < this.LimitedClass_all[0].bath; x++) {
-                            await db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).update({
-                                [x]: data.key_student
-                            });
-                        }
-                    } else if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
-                        if (snapshot) {
-                            let maxKey = 0;
-                            snapshot.forEach(childSnapshot => {
-                                const childKey = parseInt(childSnapshot.key);
-                                if (childKey >= maxKey) {
-                                    maxKey = childKey + 1;
-                                }
-                            });
-                            await db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).update({
-                                [maxKey]: data.key_student
-                            });
-                        } else {
-                            await db.ref(`Time_teacher/${data.key_teacher}/${this.date}/${time_sum[key]}/`).update({
-                                [maxKeyOut]: data.key_student
-                            });
-                        }
-                    }
-                }
-                await db.ref(`date_match/${data.key_student}/${this.date}/${data.time_e}/`).update({
-                    select_class: data.select,
-                    teacher: data.key_teacher,
-                    date: this.date,
-                    subject: data.subject,
-                    style_subject: data.style,
-                    level: data.level,
-                    start: data.time_s,
-                    stop: data.time_e,
-                    because: data.because,
-                    status: 'พร้อมเรียน',
-                    createAt: new Date(),
-                    match_test: data.match_test || false,
-                    match_vip: data.match_vip || false,
-                    hour: hour,
-                });
-                const inviteData = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).once("value");
-                let people = 0;
-                if (inviteData.exists()) {
-                    let inviteData_sum = inviteData.val();
-                    people = people + inviteData_sum.invite;
-                }
-                await db.ref(`date_teacher/${data.key_teacher}/${data.date}/${data.time_s}E${data.time_e}`).update({
-                    invite: people,
-                    sum_people: selectedObject.bath,
-                    subject: '00000',
-                    Class: selectedObject,
-                    style_subject: data.style,
-                    createAt: new Date(),
-                    start: data.time_s,
-                    stop: data.time_e,
-                });
 
-                const hourMatch = await db.ref(`hour_match/${data.key_student}`).once("value");
-                if (hourMatch.exists()) {
-                    let huorMatch_data = hourMatch.val();
-                    if (data.match_test == undefined || data.match_test == false) {
-                        console.log('Add_hour_match', huorMatch_data);
-                        if (huorMatch_data.hour && huorMatch_data.hour > 0) {
-                            await db.ref(`hour_match/${data.key_student}/`).update({
-                                hour: parseFloat(hour) + parseFloat(huorMatch_data.hour),
-                            });
-                            console.log('ทดชม Flip');
-                        }
-                        if (huorMatch_data.hourprivate && huorMatch_data.hourprivate > 0) {
-                            await db.ref(`hour_match/${data.key_student}/`).update({
-                                hourprivate: parseFloat(hour) + parseFloat(huorMatch_data.hour),
-                            });
-                            console.log('ทดชม Private');
-                        }
-                    }
-                } else {
-                    if (data.select == '-NcQsFxCcoNS-uwmKUqE') {
-                        await db.ref(`hour_match/${data.key_student}/`).update({
-                            hour: parseFloat(hour),
-                            hourprivate: 0,
-                        });
-                        console.log('ทดชม Flip');
-                    }
-                    if (data.select == '-NcQsHB9vgG53lJKPA-i') {
-                        await db.ref(`hour_match/${data.key_student}/`).update({
-                            hour: 0,
-                            hourprivate: parseFloat(hour),
-                        });
-                        console.log('ทดชม Private');
-                    }
-                }
-                this.close();
-            }
+            await db.ref(`date_match/${data.key_student}/${data.date}/${data.time_e}`).update({
+                subject: data.subject,                
+                level: data.level,
+                status: 'พร้อมเรียน',
+                createAt: new Date(),
+            });   
+
+            this.close();
         },
 
         delete_match() {
