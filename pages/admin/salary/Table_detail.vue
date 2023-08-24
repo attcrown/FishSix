@@ -1,59 +1,81 @@
 <template>
     <div>
         <template>
-            <v-row>
-                <v-col cols="12" md="2">
-                    <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
-                        label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
-                                v-bind="attrs" v-on="on"></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
-                            event-color="green lighten-1">
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="modal = false">
-                                Cancel
-                            </v-btn>
-                            <v-btn text color="primary"
-                                @click="$refs.dialog.save(date), date_month = null, date_year = null">
-                                OK
-                            </v-btn>
-                        </v-date-picker>
-                    </v-dialog>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date_month"
-                        transition="scale-transition" offset-y max-width="290px" min-width="auto">
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-text-field v-model="date_month" label="ค้นหาแบบเดือน" prepend-icon="mdi-calendar" readonly
-                                v-bind="attrs" v-on="on"></v-text-field>
-                        </template>
-                        <v-date-picker v-model="date_month" type="month" no-title scrollable :max="date_now">
-                            <v-spacer></v-spacer>
-                            <v-btn text color="primary" @click="menu = false">
-                                Cancel
-                            </v-btn>
-                            <v-btn text color="primary" @click="$refs.menu.save(date_month), date = null, date_year = null">
-                                OK
-                            </v-btn>
-                        </v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
-                        @change="date = null, date_month = null"></v-select>
-                </v-col>
-                <v-col cols="12" md="2">
-                    <v-btn :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
-                        @click="search_data_money()">
-                        ค้นหา
-                    </v-btn>
-                </v-col>
-            </v-row>
+            <div class="d-flex">
+                <div>
+                    <v-hover v-slot="{ hover }">
+                        <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5"
+                            style="background: #ffffff;" height="244px" width="341px">
+                            <v-row>
+                                <v-col cols="auto" class="mr-auto">
+                                    <img :src="require('~/assets/cashcoin.png')" class="pt-10 ps-8">
+                                </v-col>
+                                <v-col cols="auto" class="pt-14 mt-16 me-5" style="font-size:30px;">
+                                    {{ sum_money_all }} ฿
+                                </v-col>
+                                <v-col cols="auto" class="ml-auto me-7 mt-5">
+                                    <p style="font-size: 16px; margin-top: -50px;">รวมเงินเดือนครู
+                                    </p>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </v-hover>
+                </div>
+                <div class="ms-10" style="margin-top:130px">
+                    <v-card flat class="d-flex elevation-16 rounded-xl px-5 pt-8" style="background-color:#EBE4DE">
+                        <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
+                            label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
+
+                        <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
+                                    v-bind="attrs" v-on="on"></v-text-field>
+                            </template>
+                            <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
+                                event-color="green lighten-1">
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="modal = false">
+                                    Cancel
+                                </v-btn>
+                                <v-btn text color="primary"
+                                    @click="$refs.dialog.save(date), date_month = null, date_year = null">
+                                    OK
+                                </v-btn>
+                            </v-date-picker>
+                        </v-dialog>
+
+                        <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date_month"
+                            transition="scale-transition" offset-y max-width="290px" min-width="auto">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-text-field v-model="date_month" label="ค้นหาแบบเดือน" prepend-icon="mdi-calendar"
+                                    readonly v-bind="attrs" v-on="on"></v-text-field>
+                            </template>
+                            <v-date-picker v-model="date_month" type="month" no-title scrollable :max="date_now">
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="menu = false">
+                                    Cancel
+                                </v-btn>
+                                <v-btn text color="primary"
+                                    @click="$refs.menu.save(date_month), date = null, date_year = null">
+                                    OK
+                                </v-btn>
+                            </v-date-picker>
+                        </v-menu>
+
+                        <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
+                            @change="date = null, date_month = null"></v-select>
+
+                        <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
+                            :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
+                            @click="search_data_money(), export_menu = true" rounded>
+                            ค้นหา<span class="mdi mdi-magnify text-h6"></span>
+                        </v-btn>
+                        <v-btn elevation="10" color="#322E2B" class="ms-2 mt-3" style="color:white" :disabled="!export_menu"
+                            type="submit" rounded>Export<span class="mdi mdi-microsoft-excel text-h6"></span>
+                        </v-btn>
+                    </v-card>
+                </div>
+            </div>
         </template>
 
         <v-expansion-panels v-model="panel" multiple class="mt-8">
@@ -96,7 +118,8 @@
                     <hr>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <h6>รวม {{ calculateTotalIncome(teacherData) }} บาท</h6>
+                            <p style="font-size:20px" class="mt-3"><b>เงินเดือนสุทธิ {{ calculateTotalIncome(teacherData) }}
+                                    บาท</b></p>
                         </v-col>
                     </v-row>
                 </v-expansion-panel-content>
@@ -104,111 +127,132 @@
         </v-expansion-panels>
 
         <v-dialog v-model="dialog" max-width="500">
-            <v-card>
-                <v-card-title style="font-size:24px">
-                    รายละเอียด
+            <v-card class="rounded-xl p-3">
+                <v-card-title style="font-size:16px">
+                    <b>รายละเอียด</b>
+                    <v-spacer></v-spacer>
+                    <v-btn fab dark small color="#37474F" @click="dialog = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
                 </v-card-title>
                 <v-card-text>
                     <v-row v-if="detailData">
                         <v-col cols="7" style="margin-top: 10px">
-                            <v-subheader style="font-size:16px">{{ detailData.money.subject.name }}</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.subject.name
+                            }}</v-subheader>
                         </v-col>
                         <v-col cols="5">
-                            <v-text-field readonly label="Amount" :value="detailData.money.subject.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.subject.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">{{ detailData.money.level.name }}</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.level.name
+                            }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.level.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.level.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">{{ detailData.money.location.name }}</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.location.name
+                            }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.location.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.location.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">{{ detailData.money.sheet.name }}</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.sheet.name
+                            }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.sheet.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.sheet.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.optional">
-                            <v-subheader style="font-size:16px">{{ detailData.money.optional.name }}</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.optional.name
+                            }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.optional">
-                            <v-text-field readonly label="Amount" :value="detailData.money.optional.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.optional.bath + ' บาท'"></v-text-field>
                         </v-col>
 
                         <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
                             style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeflip.name
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeflip.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
                             style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.typeflip.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.typeflip.bath + ' บาท'"></v-text-field>
                         </v-col>
 
                         <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
                             style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">Type & Tire {{ detailData.money.typeprivate.name
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeprivate.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
                             style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.typeprivate.bath"
-                                suffix="฿"></v-text-field>
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.typeprivate.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px">ชั่วโมงสอน</v-subheader>
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">ชั่วโมงสอน</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailHour" suffix="Hr."></v-text-field>
+                            <v-text-field readonly label="ค่าสอน" :value="detailHour + ' Hr.'"></v-text-field>
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.check_name == false || detailData.check_save == false">
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="detailData.check_name == false || detailData.check_save == false">
                             <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.check_name == false || detailData.check_save == false">
-                            <v-text-field readonly label="Amount" :value="detailData.money.sum_send_rate_name+detailData.money.sum_money+detailData.money.sum_send_rate_save"
-                                suffix="฿"></v-text-field>
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="detailData.check_name == false || detailData.check_save == false">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.sum_send_rate_name + detailData.money.sum_money + detailData.money.sum_send_rate_save + ' บาท'"></v-text-field>
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_name && detailData.money.send_rate_name">
-                            <v-subheader style="font-size:16px; color:red;" >{{ detailData.money.send_rate_name.name }}</v-subheader>
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_name.name
+                            }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_name && detailData.money.send_rate_name">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_name.bath+'% '+'(-'+detailData.money.sum_send_rate_name+' ฿)'" 
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.send_rate_name.bath + '% ' + '(-' + detailData.money.sum_send_rate_name + ' บาท)'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_name(detailData.money) + ---->
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px" v-if="!detailData.check_save && detailData.money.send_rate_save">
-                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name }}</v-subheader>
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name
+                            }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px" v-if="!detailData.check_save && detailData.money.send_rate_save">
-                            <v-text-field readonly label="Amount" :value="detailData.money.send_rate_save.bath+'% '+'(-'+detailData.money.sum_send_rate_save+' ฿)'"
-                                prefix="-" ></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.send_rate_save.bath + '% ' + '(-' + detailData.money.sum_send_rate_save + ' บาท)'"
+                                prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px">
+                        <!-- <v-col cols="7" style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:#2E7D32;">ราคาสุทธิ</v-subheader>
-                        </v-col>
-                        <v-col cols="5" style="margin-top:-30px">
-                            <v-text-field readonly label="Amount" :value="detailData.money.sum_money"
-                                suffix="฿"></v-text-field>
+                        </v-col> -->
+                        <v-col cols="12" style="margin-top:-30px">
+                            <v-text-field readonly label="ราคาสุทธิ"
+                                :value="detailData.money.sum_money + ' บาท'"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-spacer></v-spacer>
+                    <!-- <v-spacer></v-spacer>
                     <v-btn color="green darken-1" text @click="dialog = false">
                         Close
-                    </v-btn>
+                    </v-btn> -->
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -218,6 +262,7 @@
 <script>
 export default {
     data: () => ({
+        sum_money_all: 0,
         arrayEvents: [],
 
         detailHour: null,
@@ -335,6 +380,7 @@ export default {
             let tea = "";
             let day_search_start = null;
             let day_search_end = null;
+            this.sum_money_all = 0;
             if (this.value_tea == '00000') {
                 tea = "";
             } else {
@@ -390,6 +436,7 @@ export default {
                                             send_plan: data_all[data],
                                             IdKey: data,
                                         })
+                                        this.sum_money_all += data_all[data].money.sum_money;
                                     })
                             }
                         }
@@ -426,6 +473,7 @@ export default {
                                         send_plan: data_all[data],
                                         IdKey: data,
                                     })
+                                    this.sum_money_all += data_all[data].money.sum_money;
                                 })
                         }
                     }

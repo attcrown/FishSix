@@ -29,7 +29,7 @@
     </v-navigation-drawer>
 
     <v-app-bar app color="white" elevation="0">
-      <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->      
+      <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->
       <v-spacer />
       <p class="m-0">
         Operation
@@ -96,6 +96,11 @@ export default {
           to: '/admin/content',
         },
         {
+          icon: 'mdi-cash-fast',
+          title: 'เงินเดือนครู',
+          to: '/admin/salary',
+        },
+        {
           icon: 'mdi-account-school',
           title: 'ครู',
           to: '',
@@ -125,12 +130,9 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/admin/student',
         },
-        {
-          icon: 'mdi-cash-fast',
-          title: 'รายได้ครู',
-          to: '/admin/salary',
-        },
+        
       ],
+
       miniVariant: false,
       right: true,
       rightDrawer: false,
@@ -142,6 +144,7 @@ export default {
     this.check();
   },
   methods: {
+
     check() {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();

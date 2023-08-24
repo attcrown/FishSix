@@ -937,7 +937,7 @@ export default {
                                         const locationData = locationSnapshot.val();
                                         const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
                                         const namesub = subjectData.name;
-                                        if (parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
+                                        if (true){//parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({
                                                 name: nametea,
                                                 date: date,

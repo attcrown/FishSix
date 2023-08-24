@@ -1,7 +1,6 @@
 <template>
     <div class="mx-15">
         <setting></setting>
-        <h1>รายได้ครู</h1>
         <Table_detail>></Table_detail>
     </div>
 </template>
