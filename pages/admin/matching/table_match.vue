@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div>
         <template>
             <div>
                 <div class="mb-3" style="max-width:100%;"> <!--style="max-width:900px"-->
@@ -116,6 +116,10 @@
                                         class="ms-3">
                                         ทดลองเรียน
                                     </v-chip>
+                                    <v-chip color="#EF5350" text-color="white" dark v-if="editedItem.match_vip"
+                                        class="ms-3">
+                                        กรณีพิเศษ
+                                    </v-chip>
                                     <v-spacer></v-spacer>
                                     <v-btn fab dark small color="#37474F" @click="close">
                                         <v-icon dark class="text-h5">
@@ -139,7 +143,8 @@
                                                             prepend-icon="mdi-calendar" readonly v-bind="attrs"
                                                             v-on="on"></v-text-field>
                                                     </template>
-                                                    <v-date-picker v-model="date" no-title scrollable :readonly="status != 'admin'">
+                                                    <v-date-picker v-model="date" no-title scrollable
+                                                        readonly>
                                                         <v-spacer></v-spacer>
                                                         <v-btn text color="primary" @click="menu = false">
                                                             Cancel
@@ -154,24 +159,29 @@
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart" v-model="editedItem.time_s"
                                                     label="เวลาเริ่มต้น"
-                                                    @change="validateTime(), editedItem.time_e = null" :readonly="status != 'admin'"></v-select>
+                                                    @change="validateTime(editedItem.time_s, null), editedItem.time_e = null"
+                                                    readonly></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="time_standart_stop" v-model="editedItem.time_e"
-                                                    @change="validateTime()" label="เวลาสิ้นสุด" :readonly="status != 'admin'"></v-select>
+                                                    @change="validateTime(editedItem.time_s, editedItem.time_e)"
+                                                    label="เวลาสิ้นสุด" readonly></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
-                                                    v-model="editedItem.style" item-text="name" item-value="key" :readonly="status != 'admin'"></v-select>
+                                                    v-model="editedItem.style" item-text="name" item-value="key"
+                                                    readonly
+                                                    @input="select_class(editedItem.style)"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
                                                     item-value="key" v-model="editedItem.subject"
-                                                    @input="search_select_level(editedItem.subject), editedItem.level = null" :readonly="status != 'admin'"></v-select>
+                                                    @input="search_select_level(editedItem.subject), editedItem.level = null"
+                                                    :readonly="status != 'admin'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
-                                                <v-select :items="select_level" label="ระดับชั้น"
-                                                    v-model="editedItem.level" :readonly="status != 'admin'">
+                                                <v-select :items="select_level" label="ระดับชั้น" v-model="editedItem.level"
+                                                    :readonly="status != 'admin'">
                                                 </v-select>
                                             </v-col>
                                         </v-row>
@@ -256,6 +266,31 @@
                             </v-card>
                         </v-dialog> -->
 
+                        <v-dialog v-model="dialogError" max-width="300px" class="text-center">
+                            <v-card>
+                                <v-card-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn fab dark small color="#37474F" @click="dialogError = false">
+                                        <v-icon dark class="text-h5">
+                                            mdi-close
+                                        </v-icon>
+                                    </v-btn>
+                                </v-card-title>
+                                <div class="text-center">
+                                    <img :src="require('~/assets/Frame.png')">
+                                </div>
+                                <div class="text-center mt-5">
+                                    <b>{{ textError }}</b>
+                                    <br>
+                                </div>
+                                <v-card-actions>
+                                    <!-- <v-spacer></v-spacer>
+                    <v-btn rounded color="#29CC39" @click="ErrorItemConfirm" class="mt-5 mb-5">ยืนยัน</v-btn>
+                    <v-spacer></v-spacer> -->
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+
                     </v-toolbar>
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -284,6 +319,9 @@
 <script>
 export default {
     data: () => ({
+        textError: '',
+        dialogError: false,
+
         keyuser: null,
         status: null,
         focus: '',
@@ -355,6 +393,8 @@ export default {
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
         time_standart_stop: [],
         time_standart_sum: [],
+
+        LimitedClass_all: [],
     }),
 
     computed: {
@@ -389,10 +429,23 @@ export default {
     mounted() {
         this.fullName();
         this.initialize();
+        this.LimitedClass_search();
         this.$refs.calendar.checkChange();
     },
 
     methods: {
+        LimitedClass_search() {
+            const db = this.$fireModule.database();
+            db.ref(`LimitedClass_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.LimitedClass_all = item;
+                console.log(this.LimitedClass_all);
+            })
+        },
         fullName() {
             if (localStorage.getItem('firstName') == null) {
                 this.keyuser = sessionStorage.getItem('lastName') || '';
@@ -449,6 +502,7 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_match/`).on("value", (snapshot) => {
                 const childData = snapshot.val();
+                console.log(childData);
                 this.desserts_student = [];
                 let item = [];
                 let index = 0;
@@ -466,41 +520,50 @@ export default {
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                const getHourMatchPromise = db.ref(`hour_match/${key}/`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise, getHourMatchPromise]) //
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot, hourmatchSnapshot]) => {      //                        
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
                                         const subjectData = subjectSnapshot.val();
                                         const locationData = locationSnapshot.val();
+                                        let hourmatchData = [];
+                                        if (hourmatchSnapshot.exists()) {
+                                            hourmatchData = hourmatchSnapshot.val()
+                                        }
+                                        // const hourmatchData = hourmatchSnapshot.val();
+                                        // console.log(teacherData, studentData, subjectData, locationData); //
                                         let sumx_date = "-";
                                         if (timedata.createAt) {
                                             let sum_date = new Date(timedata.createAt).toString().split(" ");
                                             sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
                                         }
                                         item.push({
-                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
-                                            subject: timedata.subject,
-                                            name_subject: subjectData.name,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            time_s_tea: timedata.start_tea,
-                                            time_e_tea: timedata.stop_tea,
-                                            style: timedata.style_subject,
-                                            name_style: locationData.name,
-                                            status: timedata.status,
-                                            key_student: key,
-                                            key_teacher: timedata.teacher,
-                                            phone_student: studentData.studentMobile,
-                                            phone_teacher: teacherData.mobile,
-                                            // class: timedata.class,
-                                            level: timedata.level,
-                                            because: timedata.because,
-                                            id: timedata.ID,
-                                            createAt: sumx_date,
-                                            match_test: timedata.match_test,
-                                            hour: timedata.hour
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName || null,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname || null,
+                                            subject: timedata.subject || null,
+                                            name_subject: subjectData.name || null,
+                                            date: date || null,
+                                            time_s: timedata.start || null,
+                                            time_e: timedata.stop || null,
+                                            style: timedata.style_subject || null,
+                                            name_style: locationData.name || null,
+                                            status: timedata.status || null,
+                                            key_student: key || null,
+                                            key_teacher: timedata.teacher || null,
+                                            phone_student: studentData.studentMobile || null,
+                                            phone_teacher: teacherData.mobile || null,
+                                            level: timedata.level || null,
+                                            because: timedata.because || null,
+                                            createAt: sumx_date || null,
+                                            match_vip: timedata.match_vip || false,
+                                            select: timedata.select_class || null,
+                                            hour: timedata.hour || null,
+                                            match_test: timedata.match_test || false,
+                                            show_time_flip: studentData.hourLeft || 0,
+                                            show_time_private: studentData.privateHourLeft || 0,
+                                            show_time_flip_match: hourmatchData.hour || 0,
+                                            show_time_private_match: hourmatchData.hourprivate || 0,
                                         });
                                         this.events.push(
                                             {
@@ -526,41 +589,53 @@ export default {
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                const getHourMatchPromise = db.ref(`hour_match/${timedata.key}/`).once("value");
+                                Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise, getHourMatchPromise])
+                                    .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot, hourmatchSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
                                         const studentData = studentSnapshot.val();
                                         const subjectData = subjectSnapshot.val();
                                         const locationData = locationSnapshot.val();
+                                        let hourmatchData = [];
+
+                                        if (hourmatchSnapshot.exists()) {
+                                            hourmatchData = hourmatchSnapshot.val()
+                                        }
                                         let sumx_date = "-";
                                         if (timedata.createAt) {
                                             let sum_date = new Date(timedata.createAt).toString().split(" ");
                                             sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
                                         }
                                         item.push({
-                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
-                                            subject: timedata.subject,
-                                            name_subject: subjectData.name,
-                                            date: date,
-                                            time_s: timedata.start,
-                                            time_e: timedata.stop,
-                                            time_s_tea: timedata.start_tea,
-                                            time_e_tea: timedata.stop_tea,
-                                            style: timedata.style_subject,
-                                            name_style: locationData.name,
-                                            status: timedata.status,
-                                            key_student: key,
-                                            key_teacher: timedata.teacher,
-                                            phone_student: studentData.studentMobile,
-                                            phone_teacher: teacherData.mobile,
-                                            // class: timedata.class,
-                                            level: timedata.level,
-                                            because: timedata.because,
-                                            id: timedata.ID,
-                                            createAt: sumx_date,
-                                            match_test: timedata.match_test,
-                                            hour: timedata.hour
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName || null,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname || null,
+                                            subject: timedata.subject || null,
+                                            name_subject: subjectData.name || null,
+                                            date: date || null,
+                                            time_s: timedata.start || null,
+                                            time_e: timedata.stop || null,
+                                            time_s_tea: timedata.start_tea || null,
+                                            time_e_tea: timedata.stop_tea || null,
+                                            style: timedata.style_subject || null,
+                                            name_style: locationData.name || null,
+                                            status: timedata.status || null,
+                                            key_student: key || null,
+                                            key_teacher: timedata.teacher || null,
+                                            phone_student: studentData.studentMobile || null,
+                                            phone_teacher: teacherData.mobile || null,
+                                            // class: timedata.class|| null,
+                                            level: timedata.level || null,
+                                            because: timedata.because || null,
+                                            id: timedata.ID || null,
+                                            createAt: sumx_date || null,
+                                            match_test: timedata.match_test || false,
+                                            match_vip: timedata.match_vip || false,
+                                            select: timedata.select_class || null,
+                                            hour: timedata.hour || null,
+                                            show_time_flip: studentData.hourLeft || 0,
+                                            show_time_private: studentData.privateHourLeft || 0,
+                                            show_time_flip_match: hourmatchData.hour || 0,
+                                            show_time_private_match: hourmatchData.hourprivate || 0,
                                         });
                                         this.events.push(
                                             {
@@ -685,138 +760,185 @@ export default {
             }
         },
 
-        save() {
-            this.validateTime();
-            const db = this.$fireModule.database();
-            const getTimePromise = db.ref(`Time_student/${this.editedItem.key_student}/${this.date}`).once("value");
-            const getTimeTeaPromise = db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}`).once("value");
-            let sum_hour = this.sum_hour(this.editedItem.time_s, this.editedItem.time_e);
-            Promise.all([getTimePromise, getTimeTeaPromise])
-                .then(([timeSnapshot, timeteaSnapshot]) => {
-                    // if (timeSnapshot.exists()) {
-                    //     const timeData = timeSnapshot.val();
-                    //     const ed_timeData = Object.keys(timeData).map(key => key.substring(2, 7));
-                    //     if (this.time_standart_sum.some(time => ed_timeData.includes(time))) {
-                    //         alert('เวลาซ้ำกันกรุณาลงใหม่อีกครั้ง');
-                    //         return;
-                    //     }
-                    // }
-                    if (timeteaSnapshot.exists()) {
-                        const timeteaData = timeteaSnapshot.val();
-                        const ed_timeteaData = Object.keys(timeteaData).map(key => key.substring(2, 7));
-                        if (this.time_standart_sum.some(time => ed_timeteaData.includes(time))) {
-                            alert('เวลาทับกับของครูกรุณาลงใหม่อีกครั้ง');
-                            return;
-                        }
-                    }
-                    if (true) {
-                        console.log('update>>', this.editedItem, this.date);
-                        let id = new Date().getTime();//this.editedItem.id;
-                        db.ref(`date_match/${this.editedItem.key_student}/${this.date}/${this.editedItem.time_e}/`).update({
-                            teacher: this.editedItem.key_teacher,
-                            subject: this.editedItem.subject,
-                            style_subject: this.editedItem.style,
-                            level: this.editedItem.level,
-                            createAt: new Date(),
-                            start: this.editedItem.time_s,
-                            stop: this.editedItem.time_e,
-                            start_tea: this.editedItem.time_s,
-                            stop_tea: this.editedItem.time_e,
-                            because: this.editedItem.because,
-                            status: "พร้อมเรียน",
-                            ID: id,
-                            hour: sum_hour,
-                        });
-                        db.ref(`date_teacher/${this.editedItem.key_teacher}/${this.date}/${this.editedItem.time_e}/`).update({
-                            invite: '1',
-                            sum_people: '1',
-                            subject: this.editedItem.subject,
-                            style_subject: this.editedItem.style,
-                            createAt: new Date(),
-                            start: this.editedItem.time_s,
-                            stop: this.editedItem.time_e,
-                            ID: id
-                        });
-
-                        let keystudent = this.old_item;
-                        let keystudent_new = this.editedItem;
-                        console.log('>>>>>', keystudent_new.name_style.includes("Flip"), !keystudent_new.match_test);
-                        if (keystudent_new.name_style.includes("Flip") && !keystudent_new.match_test) {
-                            db.ref(`hour_match/${keystudent_new.key_student}`).once("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                console.log(childData.hour, keystudent.hour, keystudent_new.hour);
-                                db.ref(`hour_match/${keystudent.key_student}`).update({
-                                    hour: (childData.hour - keystudent.hour) + sum_hour,
-                                });
-                            })
-                        }
-                        if (keystudent_new.name_style.includes("Private") && !keystudent_new.match_test) {
-                            db.ref(`hour_match/${keystudent_new.key_student}`).once("value", (snapshot) => {
-                                const childData = snapshot.val();
-                                db.ref(`hour_match/${keystudent.key_student}`).update({
-                                    hourprivate: (childData.hourprivate - keystudent.hour) + sum_hour,
-                                });
-                            })
-                        }
-
-                        for (const key in this.time_standart_sum) {
-                            db.ref(`Time_teacher/${this.editedItem.key_teacher}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
-                                0: this.editedItem.key_student
-                            });
-                        };
-                        for (const key in this.time_standart_sum) {
-                            db.ref(`Time_student/${this.editedItem.key_student}/${this.date}/S:${this.time_standart_sum[key]}:1:${id}/`).set({
-                                0: this.editedItem.key_teacher
-                            });
-                        };
-                        if (this.date != this.old_item.date || this.editedItem.time_e != this.old_item.time_e || this.editedItem.ID != id) {
-                            this.delete_match(id);
-                        }
-                        this.close();
-                    }
-                })
-
+        select_class(items) {
+            console.log(this.editedItem);
+            if (!this.editedItem.key_teacher) {
+                return;
+            }
+            if (this.editedItem.match_vip) {
+                this.editedItem.select = '-NcQsHB9vgG53lJKPA-i';
+                return;
+            }
+            const selectedObject = this.select_location.find(item => item.key === items);
+            if (selectedObject.name.includes('Flip')) {
+                this.editedItem.select = '-NcQsFxCcoNS-uwmKUqE';
+            } else if (selectedObject.name.includes('Private')) {
+                this.editedItem.select = '-NcQsHB9vgG53lJKPA-i';
+            }
         },
 
-        delete_match(id) {
-            console.log('del>>', this.old_item);
+        timeDiff(time1, time2) {
+            const [hour1, minute1] = time1.split(':').map(Number);
+            const [hour2, minute2] = time2.split(':').map(Number);
+            return (hour1 - hour2) * 60 + (minute1 - minute2);
+        },
+
+        async save() {
+            let time_sum = this.validateTime_save(this.editedItem.time_s, this.editedItem.time_e);;
+            const data = this.editedItem;
             const db = this.$fireModule.database();
-            let keystudent = this.editedItem;
+            let uniqueTimeSum = null;
+            let anyInA = false;
+            let time_data_tea = null;
+            let sum_people_new_tea = 1;
+            const selectedObject = this.LimitedClass_all.find(item => item.key === this.editedItem.select);
+            console.log('Selected item:', selectedObject, this.editedItem, this.old_item, time_sum);
+
+            if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
+                const Work_tea = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/`).once("value");
+                console.log(Work_tea.val());
+                if (Work_tea.exists()) {
+                    const Work_data_tea = Work_tea.val();
+                    for (const key in Work_data_tea) {
+                        if (Work_data_tea[key].Class.key == '-NcQsFxCcoNS-uwmKUqE' && Work_data_tea[key].style_subject == data.style) {  //ตรวจสอบ FlipClass
+                            console.log('GOOD', Work_data_tea[key]);
+
+                            time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+                            anyInA = time_data_tea.some(time => time_sum.includes(time));
+                            console.log(anyInA, time_data_tea, key);
+                            if (anyInA) {
+                                sum_people_new_tea += Work_data_tea[key].invite;
+                                let mergedTimeSum = [...time_data_tea, ...time_sum];
+                                mergedTimeSum.sort();
+                                uniqueTimeSum = mergedTimeSum.filter((value, index, self) => {
+                                    return self.indexOf(value) === index;
+                                });
+                                time_sum = uniqueTimeSum;
+                                db.ref(`date_teacher/${data.key_teacher}/${data.date}/${key}`).remove();
+                                console.log('รวมเวลา', time_sum, sum_people_new_tea);
+                            }
+                        }
+                    }
+                    console.log(time_sum, sum_people_new_tea);
+                    db.ref(`date_teacher/${data.key_teacher}/${data.date}/${time_sum[0]}E${time_sum[time_sum.length - 1]}`).update({
+                        Class: selectedObject,
+                        createAt: new Date(),
+                        invite: sum_people_new_tea,
+                        start: time_sum[0],
+                        stop: time_sum[time_sum.length - 1],
+                        style_subject: data.style,
+                        subject: "00000",
+                        sum_people: selectedObject.bath
+                    });
+                }else{
+                    db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).update({
+                        Class: selectedObject,
+                        createAt: new Date(),
+                        invite: 1,
+                        start: this.editedItem.time_s,
+                        stop: this.editedItem.time_e,
+                        style_subject: data.style,
+                        subject: "00000",
+                        sum_people: selectedObject.bath
+                    });
+                }
+            }
+
+            await db.ref(`date_match/${data.key_student}/${data.date}/${data.time_e}`).update({
+                subject: data.subject,                
+                level: data.level,
+                status: 'พร้อมเรียน',
+                createAt: new Date(),
+            });   
+
+            this.close();
+        },
+
+        delete_match() {
+            const db = this.$fireModule.database();
             let olditem = this.old_item;
-            if (!(this.editedItem.ID != id)) {
-                db.ref(`date_match/${this.old_item.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
-                    .then(() => {
-                        console.log("success del");
+            this.validateTime(olditem.time_s, olditem.time_e);
+            console.log('del>>', this.old_item, this.time_standart_sum);
+
+
+            db.ref(`date_match/${olditem.key_student}/${this.old_item.date}/${this.old_item.time_e}`).remove()
+                .then(() => {
+                    console.log("success del");
+                });
+
+
+            // ลบข้อมูลออกจากพาท
+            for (const key in this.time_standart_sum) {
+                db.ref(`Time_teacher/${olditem.key_teacher}/${olditem.date}/${this.time_standart_sum[key]}/`).orderByValue().equalTo(olditem.key_student).once("value")
+                    .then(snapshot => {
+                        snapshot.forEach(childSnapshot => {
+                            childSnapshot.ref.remove()
+                                .then(() => {
+                                    console.log("Data removed successfully");
+                                    this.renewDate(olditem, this.time_standart_sum[key]);
+                                })
+                                .catch(error => {
+                                    console.error("Error removing data:", error);
+                                    return;
+                                });
+                        });
                     });
             }
 
-            db.ref(`Time_student/${olditem.key_student}/${olditem.date}`).once("value", (snapshot) => {
-                const childData = snapshot.val();
-                console.log('sssss', childData);
-                for (const key in childData) {
-                    const detail = key.split(":");
-                    if (detail[4] == olditem.id) {
-                        db.ref(`Time_student/${olditem.key_student}/${olditem.date}/${key}`).remove();
-                        console.log('ลบ', key, detail[4]);
-                    }
-                }
-            });
-            if (this.editedItem.name_style.includes("Flip") && !this.editedItem.match_test) {
-                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+            if (olditem.match_vip && !olditem.match_test) {
+                db.ref(`hour_match/${olditem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.key_student}`).update({
-                        hour: childData.hour - keystudent.hour,
+                    db.ref(`hour_match/${olditem.key_student}`).update({
+                        hour: childData.hour - olditem.hour,
                     });
                 })
             }
-            if (this.editedItem.name_style.includes("Private") && !this.editedItem.match_test) {
-                db.ref(`hour_match/${this.editedItem.key_student}`).once("value", (snapshot) => {
+            else if (olditem.name_style.includes("Flip") && !olditem.match_test) {
+                db.ref(`hour_match/${olditem.key_student}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.key_student}`).update({
-                        hourprivate: childData.hourprivate - keystudent.hour,
+                    db.ref(`hour_match/${olditem.key_student}`).update({
+                        hour: childData.hour - olditem.hour,
                     });
                 })
             }
+            else if (olditem.name_style.includes("Private") && !olditem.match_test) {
+                db.ref(`hour_match/${olditem.key_student}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${olditem.key_student}`).update({
+                        hourprivate: childData.hourprivate - olditem.hour,
+                    });
+                })
+            }
+        },
+        renewDate(item, time) {
+            const data = item;
+            // ดึงข้อมูลทั้งหมดที่เหลือในพาท
+            const db = this.$fireModule.database();
+            db.ref(`Time_teacher/${data.key_teacher}/${data.date}/${time}/`).once("value")
+                .then(snapshot => {
+                    const remainingData = [];
+                    snapshot.forEach(childSnapshot => {
+                        const value = childSnapshot.val();
+                        if (value !== data.key_student) {
+                            remainingData.push(value);
+                        }
+                    });
+
+                    // ลบข้อมูลเดิมทั้งหมดออกจากพาท
+                    db.ref(`Time_teacher/${data.key_teacher}/${data.date}/${time}/`).remove()
+                        .then(() => {
+                            // เพิ่มข้อมูลใหม่เพื่อเรียงลำดับคีย์ใหม่
+                            remainingData.forEach((value, index) => {
+                                db.ref(`Time_teacher/${data.key_teacher}/${data.date}/${time}/`).update({
+                                    [index]: value
+                                });
+                            });
+                            console.log("Data reordered successfully");
+                        })
+                        .catch(error => {
+                            console.error("Error reordering data:", error);
+                        });
+                });
         },
 
         getColor(stutus) {
@@ -825,40 +947,63 @@ export default {
             else return 'red'
         },
 
-        validateTime() {
-            // this.time_standart_stop = [];
-            if (true) {//this.editedItem.time_e == null) {
-                this.time_standart_stop = [];
-                let sum = 0;
-                for (const key in this.time_standart) {
-                    if (this.editedItem.time_s == this.time_standart[key] || (sum != 0)) {
-                        sum++;
-                        if (sum > 1) {
-                            // console.log(this.time_standart[key]);
-                            this.time_standart_stop.push(this.time_standart[key]);
-                        }
+        validateTime(start, stop) {
+            this.time_standart_stop = [];
+            let sum = 0;
+            for (const key in this.time_standart) {
+                if (start == this.time_standart[key] || (sum != 0)) {
+                    sum++;
+                    if (sum > 1) {
+                        this.time_standart_stop.push(this.time_standart[key]);
                     }
                 }
-            } if (this.editedItem.time_e != null && this.editedItem.time_s != null) {
+            }
+            if (stop != null && start != null) {
                 this.time_standart_sum = [];
                 let sum = 0;
                 for (const key in this.time_standart) {
-                    if (this.editedItem.time_e == this.time_standart[key]) {
+                    if (stop == this.time_standart[key]) {
                         sum = 0;
-                        // this.time_standart_sum.push(this.time_standart[key]);
                         break;
                     }
-                    else if (this.editedItem.time_s == this.time_standart[key] || (sum != 0)) {
+                    else if (start == this.time_standart[key] || (sum != 0)) {
                         sum++;
                         this.time_standart_sum.push(this.time_standart[key]);
                     }
                 }
-                console.log(this.time_standart_sum);
             }
-            // else {
-            //     alert("ลงเวลาไม่ถูกต้อง");
-            // }
+            console.log(this.time_standart_sum);
         },
+
+        validateTime_save(start, stop) {
+            let time_stop = [];
+            let time_sum = []; // เปลี่ยนตัวแปรนี้เป็นตัวแปร global ที่สามารถใช้ในทั้งฟังก์ชัน
+            let sum = 0;
+            for (const key in this.time_standart) {
+                if (start == this.time_standart[key] || (sum != 0)) {
+                    sum++;
+                    if (sum > 1) {
+                        time_stop.push(this.time_standart[key]);
+                    }
+                }
+            }
+            if (stop != null && start != null) {
+                sum = 0;
+                for (const key in this.time_standart) {
+                    if (stop == this.time_standart[key]) {
+                        sum = 0;
+                        time_sum.push(this.time_standart[key]);
+                        break;
+                    }
+                    else if (start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        time_sum.push(this.time_standart[key]);
+                    }
+                }
+            }
+            return time_sum;
+        },
+
     },
 }
 </script>
