@@ -543,6 +543,8 @@ export default {
                 bath: this.level.bath,
             })
             console.log('success save level');
+            this.level_search();
+            this.level = [];
         },
 
         type_search() {
@@ -564,6 +566,8 @@ export default {
                 bath: this.type.bath,
             })
             console.log('success save type');
+            this.type_search();
+            this.type = [];
         },
         save_type_bath() {
             const db = this.$fireModule.database();
@@ -596,6 +600,8 @@ export default {
                 bath: this.type_private.bath,
             })
             console.log('success save type_private');
+            this.type_private_search();
+            this.type_private = [];
         },
         save_type_private_bath() {
             const db = this.$fireModule.database();
@@ -628,6 +634,8 @@ export default {
                 bath: this.sheet.bath,
             })
             console.log('success save sheet');
+            this.sheet_search();
+            this.sheet = [];
         },
         save_sheet_bath() {
             const db = this.$fireModule.database();
@@ -684,6 +692,8 @@ export default {
                 bath: this.optional.bath,
             })
             console.log('success save optional');
+            this.optional_search();
+            this.optional = [];
         },
         save_optional_bath() {
             const db = this.$fireModule.database();
@@ -716,6 +726,8 @@ export default {
                 bath: this.send_rate.bath,
             })
             console.log('success save send_rate');
+            this.send_rate_search();
+            this.send_rate = [];
         },
         save_send_rate_bath() {
             const db = this.$fireModule.database();
@@ -748,6 +760,8 @@ export default {
                 bath: this.rate_special.bath,
             })
             console.log('success save rate_special');
+            this.rate_special_search();
+            this.rate_special = [];
         },
         save_rate_special_bath() {
             const db = this.$fireModule.database();
@@ -780,6 +794,8 @@ export default {
                 bath: this.LimitedClass.bath,
             })
             console.log('success save LimitedClass');
+            this.LimitedClass_search();
+            this.LimitedClass = [];
         },
         save_LimitedClass_bath() {
             const db = this.$fireModule.database();
