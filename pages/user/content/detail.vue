@@ -98,37 +98,31 @@
                             height: 100%;
                         }
                     </style>
-                    <v-card class="elevation-0  px-5 rounded-xl " style="background-color:#FFF">
+                    <v-card v-if="selectLink" class="elevation-0  px-5 rounded-xl " style="background-color:#FFF">
                         <div class="video-container ">
-                            <div v-if="selectLink">
+                            <div>
                                 <iframe class="video-iframe py-2" :src="selectLink" title="YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen></iframe>
                             </div>
-                            <div v-else>
-                                <div style="background-color:#FFF; display: flex; align-items: center;">
-                                    <h3>ไม่มีเนื้อหาคลิปที่เลือก</h3>
-                                </div>
-                            </div>
+
 
                         </div>
                     </v-card>
                     <div class="tab mt-3">
-                        <button class="tablinks" @click="openTab('รายละเอียดเนื้อหา')" active>รายละเอียดเนื้อหา</button>
-                        <button class="tablinks" @click="openTab('เรื่องที่เรียน')" id="defaultOpen">เรื่องที่เรียน</button>
+                        <button class="tablinks active" @click="openTab('รายละเอียดเนื้อหา')" active>รายละเอียดเนื้อหา</button>
+                        <button class="tablinks" @click="openTab('เรื่องที่เรียน')" >เรื่องที่เรียน</button>
 
                     </div>
-                    <div id="รายละเอียดเนื้อหา" class="tabcontent mt-5">
-
-
+                    <div id="รายละเอียดเนื้อหา" class="tabcontent mt-5" style="display: block;">
                         <v-card class="elevation-0  px-5 rounded-xl "
                             style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
-                            <h3> {{ selectContent.chapterDetail }}</h3>
+                            <v-card-text>{{ selectContent.chapterDetail }} </v-card-text>
                         </v-card>
                     </div>
 
-                    <div id="เรื่องที่เรียน" class="tabcontent mt-5">
+                    <div id="เรื่องที่เรียน" class="tabcontent mt-5" >
                         <v-card class="elevation-0  px-5 rounded-xl "
                             style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
                             <v-card-text>
@@ -577,8 +571,5 @@ hr.solid {
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
-
-
 }
 </style>
