@@ -745,9 +745,7 @@
                             <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ"
                                 :disabled="isExportAll" value="สถานะพัฒนาการ"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="Comment" :disabled="isExportAll"
-                                value="Comment"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[26]" label="เรทค่าสอน" :disabled="isExportAll"
-                                value="เรทค่าสอน"></v-checkbox>
+                                value="Comment"></v-checkbox>                            
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -2093,8 +2091,7 @@ export default {
                     "เพื่อพัฒนาน้อง",
                     "การบ้าน",
                     "สถานะพัฒนาการ",
-                    "Comment",
-                    "เรทค่าสอน"]
+                    "Comment"]
             } else { this.selectedHeaders = []; }
         },
         exportToExcel() {
@@ -2293,14 +2290,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }
-                    if (this.selectedHeaders[26]) {
-                        if (item.sendplanAll && item.sendplanAll.rate) {
-                            row.push(item.sendplanAll.rate);
-                        } else {
-                            row.push("");
-                        }
-                    }
+                    }                    
                     //----------------------------------------------------
                 } else {
                     if (this.selectedHeaders[0]) {
@@ -2538,16 +2528,7 @@ export default {
                         }
                     } else {
                         row.push("");
-                    }
-                    if (this.selectedHeaders[26]) {
-                        if (item.sendplanAll && item.sendplanAll.rate) {
-                            row.push(item.sendplanAll.rate);
-                        } else {
-                            row.push("");
-                        }
-                    } else {
-                        row.push("");
-                    }
+                    }                    
                 }
                 // ... เพิ่มตามลำดับ
                 return row;
