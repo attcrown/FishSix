@@ -370,11 +370,17 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" style="margin-top:-15px">
-                                    <v-chip color="#29CC39" text-color="white" v-if="check_time">
-                                        ส่งภายในเวลา
+                                    <v-chip color="#29CC39" text-color="white"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key == '-NcGcM3iD1BtbI6Z0E1R'">
+                                        เช็คชื่อภายในเวลา
                                     </v-chip>
-                                    <v-chip color="#AD382F" text-color="white" v-if="!check_time">
-                                        ส่งล่าช้า
+                                    <v-chip color="#AD382F" text-color="white"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key == '-NceGu4glfnFwb-01M0K'">
+                                        เช็คชื่อล่าช้า
+                                    </v-chip>
+                                    <v-chip color="#AD382F" text-color="white"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW'">
+                                        ลากระทันหัน
                                     </v-chip>
                                     <v-chip color="#FFC107" text-color="black" v-if="edited.match_test">
                                         ทดลองเรียน
@@ -397,35 +403,15 @@
                                     <v-text-field label="เรื่องที่เรียน" v-model="edited.because" readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6">
-                                    <!-- <v-select v-model="edited.status_study" :items="because_check_study"
-                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
-                                    <v-radio-group v-model="edited.status_study_column" column
-                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
-                                        <p>เช็คชื่อนักเรียนเข้าเรียน</p>
-                                        <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
-                                        <v-radio label="น้องมาสาย" value="true2"></v-radio>
-                                        <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
-                                        <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
-                                    </v-radio-group>
-                                </v-col>
-                                <v-col cols="12" sm="6">
-                                    <!-- <v-select v-model="edited.status_study_tea" :items="because_check_study_tea"
-                                        :rules="[v => !!v || 'กรุณาเลือก']" label="เช็คชื่อเข้าเรียน" required></v-select> -->
                                     <v-radio-group v-model="edited.status_study_column_tea" column1
                                         :rules="[v => !!v || 'กรุณาเลือก']" required>
                                         <p>เช็คชื่อครูเข้าสอน</p>
-                                        <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
-                                        <v-radio label="ครูมาสาย" value="true2"></v-radio>
-                                        <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
+                                        <v-radio v-for="(items, key) in send_rate_all" :key="key" :label="items.name"
+                                            :value="items"></v-radio>
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="12" sm="6">
                                     <v-file-input :rules="rules.img" v-model="fileToUpload"
-                                        accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
-                                        label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
-                                </v-col>
-                                <v-col cols="12" sm="6">
-                                    <v-file-input :rules="rules.img" v-model="fileToUpload1"
                                         accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
                                         label="รูปภาพ Check-In เข้าสอน" required></v-file-input>
                                 </v-col>
@@ -459,10 +445,12 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" style="margin-top:-15px">
-                                    <v-chip color="#29CC39" text-color="white" v-if="check_time">
+                                    <v-chip color="#29CC39" text-color="white"
+                                        v-if="edited.status_send_method && edited.status_send_method.key == '-NceIch1uzRsSqZgmimp'">
                                         ส่งภายในเวลา
                                     </v-chip>
-                                    <v-chip color="#AD382F" text-color="white" v-if="!check_time">
+                                    <v-chip color="#AD382F" text-color="white"
+                                        v-if="edited.status_send_method && edited.status_send_method.key == '-NceWufpfrQ1vSJabvVb'">
                                         ส่งล่าช้า
                                     </v-chip>
                                     <v-chip color="#FFC107" text-color="black" v-if="edited.match_test">
@@ -486,39 +474,16 @@
                                     <v-text-field label="จุดประสงค์ในการเรียน" v-model="edited.because"
                                         readonly></v-text-field>
                                 </v-col>
-                                <!-- <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-text-field label="เช็คชื่อนักเรียน" v-model="edited.status_study"
-                                        readonly></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-text-field label="เช็คชื่อครู" v-model="edited.status_study_tea"
-                                        readonly></v-text-field>
-                                </v-col> -->
-                                <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-radio-group v-model="edited.status_study_column" column readonly>
-                                        <p>เช็คชื่อนักเรียนเข้าเรียน</p>
-                                        <v-radio label="น้องมาตรงเวลา" value="true1"></v-radio>
-                                        <v-radio label="น้องมาสาย" value="true2"></v-radio>
-                                        <v-radio label="น้องลาหักชม.เรียนของน้องให้ชม.ครู" value="true3"></v-radio>
-                                        <v-radio label="น้องลาไม่หักชม.เรียนของน้องให้ชม.ครู" value="true4"></v-radio>
-                                    </v-radio-group>
-                                </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
                                     <v-radio-group v-model="edited.status_study_column_tea" column1 readonly>
                                         <p>เช็คชื่อครูเข้าสอน</p>
-                                        <v-radio label="ครูมาสอนตรงเวลา" value="true1"></v-radio>
-                                        <v-radio label="ครูมาสาย" value="true2"></v-radio>
-                                        <v-radio label="ครูลากระทันหัน" value="true3"></v-radio>
+                                        <v-radio v-for="(items, key) in send_rate_all" :key="key" :label="items.name"
+                                            :value="items"></v-radio>
                                     </v-radio-group>
                                 </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
                                     <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
-                                        @click="img_show = true">ดูรูปภาพนักเรียน <span
-                                            class="mdi mdi-image-area text-h6"></span></v-btn>
-                                </v-col>
-                                <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
-                                        @click="img_show_1 = true">ดูรูปภาพครู <span
+                                        @click="img_show = true">ดูรูปภาพครู <span
                                             class="mdi mdi-image-area text-h6"></span></v-btn>
                                 </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt_OP">
@@ -529,16 +494,54 @@
                                     <v-text-field label="เวลาส่งเช็คชื่อ (ครูบันทึก)" v-model="edited.createAt"
                                         readonly></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+
+                                <v-col cols="12" sm="6" style="margin-top:-30px"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    <v-radio-group v-model="edited.status_study_column" column
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                        <p>เช็คชื่อนักเรียนเข้าเรียน</p>
+                                        <v-radio v-for="(items, key) in send_rate_teacher_all" :key="key"
+                                            :label="items.name" :value="items"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+
+                                <v-col cols="12" sm="6"
+                                    v-if="!edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    <v-file-input :rules="rules.img" v-model="fileToUpload1"
+                                        accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
+                                        label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
+                                </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px"
+                                    v-if="edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
+                                        @click="img_show_1 = true">ดูรูปภาพนักเรียน <span
+                                            class="mdi mdi-image-area text-h6"></span></v-btn>
+                                </v-col>
+
+                                <v-col cols="12" sm="6" style="margin-top:-30px"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    <v-radio-group v-model="edited.status_send_method" column2
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                        <p>ส่งพัฒนาการ</p>
+                                        <v-radio v-for="(items, key) in send_rate_student_all" :key="key"
+                                            :label="items.name" :value="items"></v-radio>
+                                    </v-radio-group>
+                                </v-col>
+                                <v-col cols="12" sm="6"></v-col>
+
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="edited.learn" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-select v-model="edited.understand" :items="items"
                                         :rules="[v => !!v || 'กรุณาลงคะแนน']" label="น้องมีความเข้าใจในเนื้อหา"
                                         required></v-select>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter
                                         v-model="edited.development" :rules="rules.textarea" required>
                                         <template v-slot:append-outer>
@@ -553,35 +556,41 @@
                                         </template>
                                     </v-textarea>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
                                         :rules="rules.text" required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="จึงใช้วิธี" v-model="edited.method" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="เพื่อพัฒนาน้อง" v-model="edited.to_development" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12">
+                                <v-col cols="12" sm="12"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
                                         v-model="edited.homework" :rules="rules.text" required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12">
+                                <v-col cols="12" sm="12"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
                                         v-model="edited.link_url" :rules="rules.text" required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12">
-                                    <v-radio-group v-model="edited.check_sheet" :rules="[v => !!v || 'กรุณาเลือก']"
+                                <v-col cols="12" sm="12"
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    <v-radio-group v-model="edited.status_check_sheet" :rules="[v => !!v || 'กรุณาเลือก']"
                                         required>
                                         <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name"
-                                            :value="items.key"></v-radio>
+                                            :value="items"></v-radio>
                                     </v-radio-group>
                                     <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
-                                        v-if="edited.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" v-model="edited.link_sheet"
-                                        :rules="rules.text" required></v-text-field>
+                                        v-if="edited.status_check_sheet && edited.status_check_sheet.key == '-NcBOFy1oXhSI-dVzWkp'"
+                                        v-model="edited.link_sheet" :rules="rules.text" required></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'admin'">
                                     <hr style="border: 1px solid #000; background-color: #000;">
@@ -616,7 +625,6 @@
                                     <v-select v-model="edited.optional" :items="optional_all" item-value="key"
                                         item-text="name" label="Optional" readonly></v-select>
                                 </v-col>
-
                             </v-row>
                         </v-container>
                     </v-card-text>
@@ -745,7 +753,7 @@
                             <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ"
                                 :disabled="isExportAll" value="สถานะพัฒนาการ"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="Comment" :disabled="isExportAll"
-                                value="Comment"></v-checkbox>                            
+                                value="Comment"></v-checkbox>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -762,7 +770,6 @@
     </div>
 </template>
 <script>
-
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 import * as XLSX from 'xlsx';
@@ -801,6 +808,7 @@ export default {
 
             column: null,
             column1: null,
+            column2: null,
 
             check_time: false,
 
@@ -815,6 +823,7 @@ export default {
             valid_confirm: false,
 
             imageURL: '', // เก็บ URL ของรูปภาพ
+            imageURL_1: '',
             fileToUpload: null,
             fileToUpload1: null,
 
@@ -857,11 +866,15 @@ export default {
             items: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             items_development: ['Pending', 'Rejected', 'Approved'],
 
-            because_check_study: ["น้องมาตรงเวลา", "น้องมาสาย", "น้องลา หักชม.เรียน ของน้อง ให้ชม. ครู", "น้องลา ไม่หักชม.เรียน ของน้อง ให้ชม. ครู"],
-            because_check_study_tea: ["ครูมาสอนตรงเวลา", "ครูมาสาย", "ครูลากระทันหัน"],
+            send_rate_all: [],
+            send_rate_student_all: [],
+            send_rate_teacher_all: [],
         }
     },
     mounted() {
+        this.send_rate_search();
+        this.send_rate_student_search();
+        this.send_rate_teacher_search();
         this.sheet_search();
         this.optional_search();
         this.fullName();
@@ -947,6 +960,42 @@ export default {
     },
 
     methods: {
+        send_rate_teacher_search() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_teacher_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_teacher_all = item;
+                console.log(this.send_rate_teacher_all);
+            })
+        },
+        send_rate_student_search() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_student_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_student_all = item;
+                console.log(this.send_rate_student_all);
+            })
+        },
+        send_rate_search() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_all = item;
+                console.log(this.send_rate_all);
+            })
+        },
         optional_search() {
             const db = this.$fireModule.database();
             db.ref(`optional_all/`).once("value", (snapshot) => {
@@ -992,18 +1041,22 @@ export default {
                 console.log(this.edited);
                 this.dialog_confirm = false;
                 this.save_confirm();
+            } else {
+                console.log(this.edited);
             }
         },
+
+        //----------ตรวจอสอบการส่งเช็คชื่อ------------------
         check_sendplan(item) {
             this.dialog = true;
             this.edited = item;
-            this.summ_hour = this.sum_hour(this.edited.time_s, this.edited.time_e);
-            if (parseInt(new Date(this.edited.date).getTime()) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime())) {
-                this.check_time = true;
-            } else {
-                this.check_time = false;
-            }
-            console.log(this.edited, this.summ_hour, this.check_time);
+            // this.summ_hour = this.sum_hour(this.edited.time_s, this.edited.time_e);
+            // if (parseInt(new Date(this.edited.date).getTime()) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime())) {
+            //     this.check_time = true;
+            // } else {
+            //     this.check_time = false;
+            // }
+            console.log(this.edited, this.check_time);
         },
         check_confirm(item) {
             this.edited = item;
@@ -1037,6 +1090,7 @@ export default {
 
         clear_dialog() {
             this.imageURL = '';
+            this.imageURL_1 = '';
             this.edited = [];
             this.fileToUpload = null;
             this.fileToUpload1 = null;
@@ -1049,236 +1103,106 @@ export default {
             let id = new Date().getTime();
             const storageRef = firebase.storage().ref();
             const file = this.fileToUpload;
-            const file1 = this.fileToUpload1;
-
             const imageRef = storageRef.child(`send_check/${id}.jpg`);
-            imageRef
-                .put(file)
-                .then(() => {
-                    console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
-                    const storage = firebase.storage();
-                    const image = storage.ref(`send_check/${id}.jpg`);
-                    image.getDownloadURL()
-                        .then((url) => {
-                            this.imageURL = url;
-                            console.log(this.imageURL);
+            imageRef.put(file).then(() => {
+                console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
+                const storage = firebase.storage();
+                const image = storage.ref(`send_check/${id}.jpg`);
+                image.getDownloadURL()
+                    .then((url) => {
+                        this.imageURL = url;
+                        console.log(this.imageURL);
+                        // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
+                        const db = this.$fireModule.database();
+                        db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
+                            sendplan: true,
+                            Idsendplan: id,
+                        }).then(() => {
+                            console.log('save date_match');
+                        })
 
-                            const imageRef1 = storageRef.child(`send_check/${id}_1.jpg`);
-                            imageRef1
-                                .put(file1)
-                                .then(() => {
-                                    console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
-                                    const storage = firebase.storage();
-                                    const image1 = storage.ref(`send_check/${id}_1.jpg`);
-                                    image1.getDownloadURL()
-                                        .then((url_1) => {
-                                            this.imageURL_1 = url_1;
-                                            console.log(this.imageURL_1);
-                                            // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
-                                            const db = this.$fireModule.database();
-                                            db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
-                                                sendplan: true,
-                                                Idsendplan: id,
-                                            }).then(() => {
-                                                console.log('save date_match');
-                                            })
+                        const currentDate = new Date();
+                        //classHistory
+                        const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
+                        db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
+                            Idsendplan: id,
+                            date: this.edited.date,
+                            hour: this.edited.hour,
+                            keySubject: this.edited.keySubject,
+                            teacherName: this.edited.name,
+                            keyTeacher: this.edited.keyTeacher,
+                            level: this.edited.level,
+                            studentId: this.edited.studentId,
+                            subject: this.edited.subject,
+                            teacherId: this.edited.teacherId,
+                            time_e: this.edited.time_e,
+                            time_s: this.edited.time_s,
+                            style: this.edited.style,
+                            createdAt: currentDate,
+                        }).then(() => {
+                            console.log('Update student class history');
+                        })
 
-                                            const currentDate = new Date();
-                                            //classHistory
-                                            const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
-                                            db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
-                                                Idsendplan: id,
-                                                date: this.edited.date,
-                                                hour: this.edited.hour,
-                                                keySubject: this.edited.keySubject,
-                                                teacherName: this.edited.name,
-                                                keyTeacher: this.edited.keyTeacher,
-                                                level: this.edited.level,
-                                                studentId: this.edited.studentId,
-                                                subject: this.edited.subject,
-                                                teacherId: this.edited.teacherId,
-                                                time_e: this.edited.time_e,
-                                                time_s: this.edited.time_s,
-                                                style: this.edited.style,
-                                                createdAt: currentDate,
-                                            }).then(() => {
-                                                console.log('Update student class history');
-                                            })
+                        db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
+                            img: this.imageURL,
+                            hour: this.edited.hour,
+                            status_study_column_tea: this.edited.status_study_column_tea,
+                            createAt_OP: new Date(),
+                            keystudent: this.edited.keyStudent,
+                            date_learn: this.edited.date,
+                            time_learn: this.edited.time_e,
+                            time_learn_start: this.edited.time_s,
+                            level: this.edited.level,
+                            keysubject: this.edited.keySubject,
+                        }).then(() => {
+                            console.log('save send_plan');
+                            if (this.date == null) {
+                                this.search_date_teacher_All();
+                            } else {
+                                this.search_date_teacher();
+                            }
+                        })
+                        console.log("ไม่มีการลบ ชม. นักเรียน");
+                        this.loadsave = false;
+                        this.clear_dialog();
+                    }).catch((error) => {
+                        console.log("Url", error);
+                    });
 
-                                            db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
-                                                img: this.imageURL,
-                                                img_1: this.imageURL_1,
-                                                hour: this.summ_hour,
-                                                status_study_column: this.edited.status_study_column,
-                                                status_study_column_tea: this.edited.status_study_column_tea,
-                                                createAt_OP: new Date(),
-                                                keystudent: this.edited.keyStudent,
-                                                date_learn: this.edited.date,
-                                                time_learn: this.edited.time_e,
-                                                level: this.edited.level,
-                                                keysubject: this.edited.keySubject,
-                                                check_name: this.check_time,
-                                            }).then(() => {
-                                                console.log('save send_plan');
-                                                if (this.date == null) {
-                                                    this.search_date_teacher_All();
-                                                } else {
-                                                    this.search_date_teacher();
-                                                }
-                                            })
-
-                                            let keystudent = this.edited;
-                                            if (keystudent.style.includes("Flip") && !this.edited.match_test) {
-                                                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                                                    const childData = snapshot.val();
-                                                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                                                        hour: childData.hour - keystudent.hour,
-                                                    });
-                                                })
-                                            }
-                                            if (keystudent.style.includes("Private") && !this.edited.match_test) {
-                                                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                                                    const childData = snapshot.val();
-                                                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                                                        hourprivate: childData.hourprivate - keystudent.hour,
-                                                    });
-                                                })
-                                            }
-
-                                            if (this.edited.match_test) {
-                                                const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
-                                                Promise.all([getTeacherPromise])
-                                                    .then(([teacherSnapshot]) => {
-                                                        const studentData = teacherSnapshot.val();
-                                                        console.log(studentData);
-                                                        if (studentData.trialFlipclassHour && studentData.trialPrivateClassHour) {
-                                                            if (this.edited.style.substring(0, 4) === "Flip") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) + this.summ_hour,
-                                                                })
-                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) + this.summ_hour,
-                                                                })
-                                                            } else {
-                                                                console.log("Error");
-                                                            }
-                                                            console.log('ลบ ชม. ทดลอง');
-                                                            this.loadsave = false;
-                                                            this.clear_dialog();
-                                                        } else {
-                                                            console.log('>>> freeHour privateFreeHour No DATA');
-
-                                                            if (this.edited.style.substring(0, 4) === "Flip") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialFlipclassHour: this.summ_hour,
-                                                                })
-                                                            } else if (this.edited.style.substring(0, 7) === "Private") {
-                                                                db.ref(`user/${this.edited.keyStudent}/`).update({
-                                                                    trialPrivateClassHour: this.summ_hour,
-                                                                })
-                                                            } else {
-                                                                console.log("Error");
-                                                            }
-                                                            console.log('เพิ่ม ชม. ทดลอง');
-                                                            this.loadsave = false;
-                                                            this.clear_dialog();
-                                                        }
-                                                    })
-                                            } else if (this.edited.status_study_column == "true3" || this.edited.status_study_column == "true2" || this.edited.status_study_column == "true1") {
-                                                const getTeacherPromise = db.ref(`user/${this.edited.keyStudent}`).once("value");
-                                                Promise.all([getTeacherPromise])
-                                                    .then(([teacherSnapshot]) => {
-                                                        const studentData = teacherSnapshot.val();
-                                                        console.log(studentData);
-                                                        let data_edit = this.edited;
-                                                        if (studentData.studyHour != undefined) {
-                                                            if (data_edit.style.substring(0, 4) === "Flip") {
-                                                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                                                    studyHour: parseInt(studentData.studyHour) + this.summ_hour,
-                                                                    hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
-                                                                })
-                                                            } else {
-                                                                console.log("Error");
-                                                            }
-                                                            console.log('ลบ ชม. class จริง', data_edit.style);
-                                                            this.loadsave = false;
-                                                            this.clear_dialog();
-                                                        } else if (studentData.studyHour == undefined) {
-                                                            db.ref(`user/${data_edit.keyStudent}/`).update({
-                                                                studyHour: this.summ_hour,
-                                                                hourLeft: parseInt(studentData.hourLeft) - this.summ_hour
-                                                            })
-                                                        } else {
-                                                            console.log('>>>Hour flipHour No DATA Flip');
-                                                        }
-
-                                                        if (studentData.privateStudyHour != undefined) {
-                                                            if (data_edit.style.substring(0, 7) === "Private") {
-                                                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                                                    privateStudyHour: parseInt(studentData.privateStudyHour) + this.summ_hour,
-                                                                    privateHourLeft: parseInt(studentData.privateHourLeft) - this.summ_hour,
-                                                                })
-                                                            } else {
-                                                                console.log("Error");
-                                                            }
-                                                            console.log('ลบ ชม. class จริง', data_edit.style);
-                                                            this.loadsave = false;
-                                                            this.clear_dialog();
-                                                        } else if (studentData.privateStudyHour == undefined) {
-                                                            db.ref(`user/${data_edit.keyStudent}/`).update({
-                                                                privateStudyHour: this.summ_hour,
-                                                                privateHourLeft: parseInt(studentData.privateHourLeft) - this.summ_hour,
-                                                            })
-                                                        } else {
-                                                            console.log('>>>Hour privateHour No DATA Private');
-                                                        }
-                                                    })
-                                            } else {
-                                                console.log("ไม่มีการลบ ชม.");
-                                                this.loadsave = false;
-                                                this.clear_dialog();
-                                            }
-                                        })
-                                }).catch((error) => {
-                                    console.log("รูปสอง", error);
-                                });
-                        }).catch((error) => {
-                            console.log("รูปหนึ่ง", error);
-                        });
-                })
-                .catch((error) => {
-                    console.error('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ:', error);
-                });
+            }).catch((error) => {
+                console.log("รูปหนึ่ง", error);
+            });
         },
+
         save_confirm() {
             const db = this.$fireModule.database();
+            let item_data = this.edited;
             if (this.edited.status_development == "Approved") {
                 let level_search = null;
-                const getsubjectPromise = db.ref(`subject_all/${this.edited.keySubject}/`).once("value");
+                const getsubjectPromise = db.ref(`subject_all/${item_data.keySubject}/`).once("value");
                 const getlevelPromise = db.ref(`level_all/`).once("value");
-                const gettypeflipPromise = db.ref(`type_all/${this.edited.teacherAll.typeflip}`).once("value");
-                const gettypeprivatePromise = db.ref(`type_private_all/${this.edited.teacherAll.typeprivate}`).once("value");
-                const getlocationPromise = db.ref(`location/${this.edited.keystyle}`).once("value");
-                const getsheetPromise = db.ref(`sheet_all/${this.edited.check_sheet}`).once("value");
-                const getoptionalPromise = db.ref(`optional_all/${this.edited.optional}`).once("value");
+                const gettypeflipPromise = db.ref(`type_all/${item_data.teacherAll.typeflip}`).once("value");
+                const gettypeprivatePromise = db.ref(`type_private_all/${item_data.teacherAll.typeprivate}`).once("value");
+                const getlocationPromise = db.ref(`location/${item_data.keystyle}`).once("value");
+                const getoptionalPromise = db.ref(`optional_all/${item_data.optional}`).once("value");
                 const getsend_ratePromise = db.ref(`send_rate_all/`).once("value");
-                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getsheetPromise, getoptionalPromise, getsend_ratePromise])
+                const getSelect_classPromise = db.ref(`LimitedClass_all/${item_data.select_class}/`).once("value");
+                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise])
                     .then((snapshots) => {
                         const subject_data = snapshots[0].val();
                         const level_data = snapshots[1].val();
                         const typeflip_data = snapshots[2].val();
                         const typeprivate_data = snapshots[3].val();
                         const location_data = snapshots[4].val();
-                        const sheet_data = snapshots[5].val();
-                        const optional_data = snapshots[6].val();
-                        const send_rate_data = snapshots[7].val();
-                        console.log(subject_data, level_data, typeflip_data, typeprivate_data, location_data, sheet_data, optional_data, send_rate_data);
+                        const optional_data = snapshots[5].val();
+                        const send_rate_data = snapshots[6].val();
+                        const select_class_date = snapshots[7].val();
+                        console.log(subject_data, level_data, typeflip_data, typeprivate_data, location_data, optional_data, send_rate_data, select_class_date);
                         for (const key in level_data) {
                             console.log(level_data[key].name);
-                            if (level_data[key].name.includes(this.edited.level)) {
+                            if (level_data[key].name.includes(item_data.level)) {
                                 level_search = { key: key, name: level_data[key].name, bath: level_data[key].bath };
-                                console.log(level_search, this.edited.level);
+                                console.log(level_search, item_data.level);
                                 break;
                             }
                         }
@@ -1286,120 +1210,273 @@ export default {
                         let sum = 0;
                         let del_send_rate_name = 0;
                         let del_send_rate_save = 0;
-                        if (this.edited.style.substring(0, 4).includes('Flip') && optional_data != undefined) {
-                            console.log('1', this.edited.style.substring(0, 4), optional_data);
-                            sum = (parseFloat(subject_data.bath) +
-                                parseFloat(level_search.bath) +
-                                parseFloat(typeflip_data.bath) +
-                                parseFloat(location_data.bath) +
-                                parseFloat(sheet_data.bath) +
-                                parseFloat(optional_data.bath)) * parseFloat(this.edited.hour);
-                            if (this.edited.check_name == false) {
-                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+                        let del_send_rate_stu = 0;
 
-                            } if (this.edited.check_save == false) {
-                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
-                            }
-                            console.log(sum ,del_send_rate_name,del_send_rate_save);
-                        } else if (this.edited.style.substring(0, 7).includes('Private') && optional_data != undefined) {
-                            console.log('2', this.edited.style.substring(0, 4), optional_data);
-                            sum = (parseFloat(subject_data.bath) +
-                                parseFloat(level_search.bath) +
-                                parseFloat(typeprivate_data.bath || 0) +
-                                parseFloat(location_data.bath) +
-                                parseFloat(sheet_data.bath) +
-                                parseFloat(optional_data.bath)) * parseFloat(this.edited.hour);
-                            if (this.edited.check_name == false) {
-                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+                        sum += parseFloat(subject_data.bath);
 
-                            } if (this.edited.check_save == false) {
-                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
-                            }
-                            console.log(sum ,del_send_rate_name,del_send_rate_save);
-                        } else if (this.edited.style.substring(0, 4).includes('Flip') && optional_data == undefined) {
-                            console.log('3', this.edited.style.substring(0, 4), optional_data);
-                            sum = (parseFloat(subject_data.bath) +
-                                parseFloat(level_search.bath) +
-                                parseFloat(typeflip_data.bath) +
-                                parseFloat(location_data.bath) +
-                                parseFloat(sheet_data.bath)) * parseFloat(this.edited.hour);
-                            if (this.edited.check_name == false) {
-                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+                        sum += parseFloat(level_search.bath);
 
-                            } if (this.edited.check_save == false) {
-                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
-                            }
-                            console.log(sum ,del_send_rate_name,del_send_rate_save);
-                        } else if (this.edited.style.substring(0, 7).includes('Private') && optional_data == undefined) {
-                            console.log('4', this.edited.style.substring(0, 4), optional_data);
-                            sum = (parseFloat(subject_data.bath) +
-                                parseFloat(level_search.bath) +
-                                parseFloat(typeprivate_data.bath) +
-                                parseFloat(location_data.bath) +
-                                parseFloat(sheet_data.bath)) * parseFloat(this.edited.hour);
-                            if (this.edited.check_name == false) {
-                                del_send_rate_name = sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcM3iD1BtbI6Z0E1R'].bath) / 100);
+                        if (item_data.select_class == '-NcQsFxCcoNS-uwmKUqE') { //FlipClass
+                            sum += parseFloat(typeflip_data.bath);
+                        } else if (item_data.select_class == '-NcQsHB9vgG53lJKPA-i') { //PrivateClass
+                            sum += parseFloat(typeprivate_data.bath);
+                        }
 
-                            } if (this.edited.check_save == false) {
-                                del_send_rate_save = sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100;
-                                sum = sum - (sum * parseFloat(send_rate_data['-NcGcQ5V7RjIzzAJaerY'].bath) / 100);
-                            }
-                            console.log(sum ,del_send_rate_name,del_send_rate_save);
-                        } else { alert('คำนวนล้มเหลว'); }
+                        sum += parseFloat(location_data.bath);
+                        if (item_data.status_check_sheet) {
+                            sum += parseFloat(item_data.status_check_sheet.bath);
+                        } else {
+                            console.log('ไม่มี Sheet ลา');
+                        }
 
-                        db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/money`).update({
+
+                        if (item_data.optional) {
+                            sum += parseFloat(optional_data.bath);
+                        }
+                        sum = sum * item_data.hour;
+
+                        if (item_data.status_study_column_tea.bath == '0') {
+                            console.log(item_data.status_study_column_tea.name)
+                        } else {
+                            sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
+                            console.log(item_data.status_study_column_tea.name)
+                            del_send_rate_name = sum;
+                        }
+                        //--------เช็คชื่อช้าหรือไม่-------------------
+
+                        if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
+                            console.log(item_data.status_send_method.name)
+                        } else if (item_data.status_send_method) {
+                            sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
+                            del_send_rate_save = sum;
+                        }
+                        //--------ส่งพัฒนาการช้าหรือไม่-------------------
+
+                        if (item_data.status_study_column && item_data.status_study_column.bath == '0') {
+                            console.log(item_data.status_study_column.name)
+                        } else if (item_data.status_study_column) {
+                            sum = sum - (parseFloat(item_data.status_study_column.bath) * sum / 100);
+                            del_send_rate_stu = sum;
+                        }
+                        //---------น้องมาเรียนปกติไหม--------------------
+
+                        console.log(sum);
+
+                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
                             subject: subject_data || null,
                             level: level_search || null,
                             typeflip: typeflip_data || null,
                             typeprivate: typeprivate_data || null,
                             location: location_data || null,
-                            sheet: sheet_data || null,
+                            sheet: item_data.status_sheet_data || null,
                             optional: optional_data || null,
-                            send_rate_save: send_rate_data['-NcGcQ5V7RjIzzAJaerY'],
-                            send_rate_name: send_rate_data['-NcGcM3iD1BtbI6Z0E1R'],
-                            sum_money: sum || null,
+                            send_rate_save: item_data.status_send_method || null,
+                            send_rate_name: item_data.status_study_column_tea || null,
+                            send_rate_stu: item_data.status_study_column || null,
+                            sum_money: sum,
                             sum_send_rate_name: del_send_rate_name,
                             sum_send_rate_save: del_send_rate_save,
+                            sum_send_rate_stu: del_send_rate_stu
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");
                         })
 
                     })
             }
-            db.ref(`send_plan/${this.edited.keyTeacher}/${this.edited.Idsendplan}/`).update({
-                learn: this.edited.learn || null,
-                understand: this.edited.understand || null,
-                development: this.edited.development || null,
-                problem: this.edited.problem || null,
-                method: this.edited.method || null,
-                to_development: this.edited.to_development || null,
-                homework: this.edited.homework || null,
-                status_development: this.edited.status_development || null,
-                comment: this.edited.comment || null,
-                check_save: this.check_time,
-                optional: this.edited.optional || null,
-                link_url: this.edited.link_url || null,
-                link_sheet: this.edited.link_sheet || null,
-                check_sheet: this.edited.check_sheet || null,
+            if (item_data.img_1 == undefined) {
+                console.log(item_data)
+                const storageRef = firebase.storage().ref();
+                const file1 = this.fileToUpload1;
+                const imageRef1 = storageRef.child(`send_check/${item_data.Idsendplan}_1.jpg`);
+                imageRef1
+                    .put(file1)
+                    .then(() => {
+                        console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
+                        const storage = firebase.storage();
+                        const image1 = storage.ref(`send_check/${item_data.Idsendplan}_1.jpg`);
+                        image1.getDownloadURL()
+                            .then((url_1) => {
+                                this.imageURL_1 = url_1;
+                                db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
+                                    img_1: this.imageURL_1
+                                })
+                                console.log(this.imageURL_1);
+                            }).catch((error) => {
+                                console.log("รูปสอง", error);
+                            });
+                    })
+            }
+            db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
+                status_study_column: item_data.status_study_column || null,
+                status_send_method: item_data.status_send_method || null,
+                status_check_sheet: item_data.status_check_sheet || null,
+
+                learn: item_data.learn || null,
+                understand: item_data.understand || null,
+                development: item_data.development || null,
+                problem: item_data.problem || null,
+                method: item_data.method || null,
+                to_development: item_data.to_development || null,
+                homework: item_data.homework || null,
+                status_development: item_data.status_development || null,
+                comment: item_data.comment || null,
+                optional: item_data.optional || null,
+                link_url: item_data.link_url || null,
+                link_sheet: item_data.link_sheet || null,
                 createAt_rate_OP: new Date()
             }).then(() => {
-                console.log('save send_plan' ,this.edited);
+                console.log('save send_plan', item_data);
+
+            })
+
+            if (!item_data.del_time) {
+                this.clear_time_student();
+            } else {
                 this.clear_dialog();
                 if (this.date == null) {
                     this.search_date_teacher_All();
                 } else {
                     this.search_date_teacher();
                 }
-            })
+            }
         },
 
+        clear_time_student() {
+            const db = this.$fireModule.database();
+            let keystudent = this.edited;
+            db.ref(`date_match/${keystudent.keyStudent}/${keystudent.date}/${keystudent.time_e}/`).update({
+                del_time: true,
+            }).then(() => {
+                console.log('save date_match');
+            })
+            if (keystudent.style.includes("Flip") && !keystudent.match_test) {
+                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                        hour: childData.hour - keystudent.hour,
+                    });
+                })
+            }
+            if (keystudent.style.includes("Private") && !keystudent.match_test) {
+                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                        hourprivate: childData.hourprivate - keystudent.hour,
+                    });
+                })
+            }
+            if (keystudent.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW') {
+                console.log('END ', keystudent.status_study_column_tea.name);
+                return;
+            }
+            if (keystudent.match_test && keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
+                const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
+                Promise.all([getTeacherPromise])
+                    .then(([teacherSnapshot]) => {
+                        const studentData = teacherSnapshot.val();
+                        console.log(studentData);
+                        if (studentData.trialFlipclassHour && studentData.trialPrivateClassHour) {
+                            if (keystudent.style.substring(0, 4) === "Flip") {
+                                db.ref(`user/${keystudent.keyStudent}/`).update({
+                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) + keystudent.hour,
+                                })
+                            } else if (keystudent.style.substring(0, 7) === "Private") {
+                                db.ref(`user/${keystudent.keyStudent}/`).update({
+                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) + keystudent.hour,
+                                })
+                            } else {
+                                console.log("Error");
+                            }
+                            console.log('ลบ ชม. ทดลอง');
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else {
+                            console.log('>>> freeHour privateFreeHour No DATA');
+
+                            if (keystudent.style.substring(0, 4) === "Flip") {
+                                db.ref(`user/${keystudent.keyStudent}/`).update({
+                                    trialFlipclassHour: keystudent.hour,
+                                })
+                            } else if (keystudent.style.substring(0, 7) === "Private") {
+                                db.ref(`user/${keystudent.keyStudent}/`).update({
+                                    trialPrivateClassHour: keystudent.hour,
+                                })
+                            } else {
+                                console.log("Error");
+                            }
+                            console.log('เพิ่ม ชม. ทดลอง');
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        }
+                    })
+            }
+            else if (keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
+                keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" &&
+                keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
+                const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
+                Promise.all([getTeacherPromise])
+                    .then(([teacherSnapshot]) => {
+                        const studentData = teacherSnapshot.val();
+                        console.log(studentData);
+                        let data_edit = keystudent;
+                        if (studentData.studyHour != undefined) {
+                            if (data_edit.style.substring(0, 4) === "Flip") {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHour: parseInt(studentData.studyHour) + keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
+                                })
+                            } else {
+                                console.log("Error");
+                            }
+                            console.log('ลบ ชม. class จริง', data_edit.style);
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else if (studentData.studyHour == undefined) {
+                            db.ref(`user/${data_edit.keyStudent}/`).update({
+                                studyHour: keystudent.hour,
+                                hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
+                            })
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else {
+                            console.log('>>>Hour flipHour No DATA Flip');
+                        }
+
+                        if (studentData.privateStudyHour != undefined) {
+                            if (data_edit.style.substring(0, 7) === "Private") {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    privateStudyHour: parseInt(studentData.privateStudyHour) + keystudent.hour,
+                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                                })
+                            } else {
+                                console.log("Error");
+                            }
+                            console.log('ลบ ชม. class จริง', data_edit.style);
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else if (studentData.privateStudyHour == undefined) {
+                            db.ref(`user/${data_edit.keyStudent}/`).update({
+                                privateStudyHour: keystudent.hour,
+                                privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                            })
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else {
+                            console.log('>>>Hour privateHour No DATA Private');
+                        }
+                    })
+            }
+            else {
+                console.log("ไม่มีการลบ ชม.");
+                this.loadsave = false;
+                this.clear_dialog();
+            }
+            if (this.date == null) {
+                this.search_date_teacher_All();
+            } else {
+                this.search_date_teacher();
+            }
+        },
         sum_hour(start, end) {
             // console.log('ทำsum',start,end);
             let sum = 0;
@@ -1507,7 +1584,9 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 } else if (sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
@@ -1535,7 +1614,9 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 } else if (!sendplanData?.homework && timedata?.Idsendplan) {
                                                     this.dash_active++;
@@ -1561,7 +1642,9 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 }
                                             }
@@ -1582,14 +1665,14 @@ export default {
                                                     studentId: studentData.studentId,
                                                     teacherId: teacherData.teacherId,
                                                     namestu: namestu,
-                                                    sendplan: timedata.sendplan,
                                                     because: timedata.because,
-                                                    Idsendplan: timedata.Idsendplan,
                                                     match_test: timedata.match_test,
+                                                    match_vip: timedata.match_vip,
                                                     hour: timedata.hour,
-                                                    sendplanAll: sendplanData,
                                                     teacherAll: teacherData,
-                                                    studentAll: studentData
+                                                    studentAll: studentData,
+                                                    del_time: timedata.del_time,
+                                                    select_class: timedata.select_class
                                                 });
                                             }
                                         }
@@ -1643,11 +1726,14 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 } else if (sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
-                                                    || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                    || sendplanData.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW'
+                                                    || sendplanData.homework) {
                                                     this.dash_noall++;
                                                     item1.push({
                                                         level: timedata.level,
@@ -1671,7 +1757,9 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 } else if (!sendplanData?.homework && timedata?.Idsendplan) {
                                                     this.dash_active++;
@@ -1697,7 +1785,9 @@ export default {
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 }
                                             }
@@ -1718,14 +1808,14 @@ export default {
                                                     studentId: studentData.studentId,
                                                     teacherId: teacherData.teacherId,
                                                     namestu: namestu,
-                                                    sendplan: timedata.sendplan,
                                                     because: timedata.because,
-                                                    Idsendplan: timedata.Idsendplan,
                                                     match_test: timedata.match_test,
+                                                    match_vip: timedata.match_vip,
                                                     hour: timedata.hour,
-                                                    sendplanAll: sendplanData,
                                                     teacherAll: teacherData,
-                                                    studentAll: studentData
+                                                    studentAll: studentData,
+                                                    del_time: timedata.del_time,
+                                                    select_class: timedata.select_class
                                                 });
                                             }
                                         }
@@ -1821,7 +1911,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     } else if (sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
@@ -1849,7 +1941,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     } else if (!sendplanData?.homework && timedata?.Idsendplan) {
                                                         this.dash_active++;
@@ -1875,7 +1969,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     }
                                                 }
@@ -1897,14 +1993,14 @@ export default {
                                                         studentId: studentData.studentId,
                                                         teacherId: teacherData.teacherId,
                                                         namestu: namestu,
-                                                        sendplan: timedata.sendplan,
                                                         because: timedata.because,
-                                                        Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
-                                                        sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 }
                                             }
@@ -1959,7 +2055,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     } else if (sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
@@ -1987,7 +2085,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     } else if (!sendplanData?.homework && timedata?.Idsendplan) {
                                                         this.dash_active++;
@@ -2013,7 +2113,9 @@ export default {
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
-                                                            studentAll: studentData
+                                                            studentAll: studentData,
+                                                            del_time: timedata.del_time,
+                                                            select_class: timedata.select_class
                                                         });
                                                     }
                                                 }
@@ -2035,14 +2137,14 @@ export default {
                                                         studentId: studentData.studentId,
                                                         teacherId: teacherData.teacherId,
                                                         namestu: namestu,
-                                                        sendplan: timedata.sendplan,
                                                         because: timedata.because,
-                                                        Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
-                                                        sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
-                                                        studentAll: studentData
+                                                        studentAll: studentData,
+                                                        del_time: timedata.del_time,
+                                                        select_class: timedata.select_class
                                                     });
                                                 }
                                             }
@@ -2290,7 +2392,7 @@ export default {
                         } else {
                             row.push("");
                         }
-                    }                    
+                    }
                     //----------------------------------------------------
                 } else {
                     if (this.selectedHeaders[0]) {
@@ -2528,7 +2630,7 @@ export default {
                         }
                     } else {
                         row.push("");
-                    }                    
+                    }
                 }
                 // ... เพิ่มตามลำดับ
                 return row;

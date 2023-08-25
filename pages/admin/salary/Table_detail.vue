@@ -149,7 +149,7 @@
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.subject.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5">
+                        <v-col cols="5" v-if="detailData.money.subject">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.subject.bath + ' บาท'"></v-text-field>
                         </v-col>
@@ -157,11 +157,11 @@
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.level.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px">
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.level">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.level.bath + ' บาท'"></v-text-field>
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px">
+                        <v-col cols="7" style="margin-top:-20px" >
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.location.name
                             }}</v-subheader>
                         </v-col>
@@ -169,13 +169,13 @@
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.location.bath + ' บาท'"></v-text-field>
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.sheet.name
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.status_check_sheet">
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.status_check_sheet.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px">
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.status_check_sheet">
                             <v-text-field readonly label="ค่าสอน"
-                                :value="detailData.money.sheet.bath + ' บาท'"></v-text-field>
+                                :value="detailData.status_check_sheet.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.optional">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.optional.name
@@ -214,39 +214,51 @@
                             <v-text-field readonly label="ค่าสอน" :value="detailHour + ' Hr.'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px"
-                            v-if="detailData.check_name == false || detailData.check_save == false">
+                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0">
                             <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px"
-                            v-if="detailData.check_name == false || detailData.check_save == false">
+                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0">
                             <v-text-field readonly label="ค่าสอน"
-                                :value="detailData.money.sum_send_rate_name + detailData.money.sum_money + detailData.money.sum_send_rate_save + ' บาท'"></v-text-field>
+                                :value="detailData.money.sum_send_rate_name 
+                                + detailData.money.sum_money 
+                                + detailData.money.sum_send_rate_save 
+                                + detailData.money.sum_send_rate_stu
+                                + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px"
-                            v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            v-if="detailData.money.send_rate_name && detailData.money.send_rate_name.bath != 0">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_name.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px"
-                            v-if="!detailData.check_name && detailData.money.send_rate_name">
+                            v-if="detailData.money.send_rate_name && detailData.money.send_rate_name.bath != 0">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.send_rate_name.bath + '% ' + '(-' + detailData.money.sum_send_rate_name + ' บาท)'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_name(detailData.money) + ---->
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px"
-                            v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            v-if="detailData.money.send_rate_save && detailData.money.send_rate_save.bath != 0">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px"
-                            v-if="!detailData.check_save && detailData.money.send_rate_save">
+                            v-if="detailData.money.sum_send_rate_save && detailData.money.sum_send_rate_save.bath != 0">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.send_rate_save.bath + '% ' + '(-' + detailData.money.sum_send_rate_save + ' บาท)'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
-                        <!-- <v-col cols="7" style="margin-top:-20px">
-                            <v-subheader style="font-size:16px; color:#2E7D32;">ราคาสุทธิ</v-subheader>
-                        </v-col> -->
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="detailData.money.send_rate_stu && detailData.money.send_rate_stu.bath != 0">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_stu.name
+                            }}</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="detailData.money.send_rate_stu && detailData.money.send_rate_stu.bath != 0">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.send_rate_stu.bath + '% ' + '(-' + detailData.money.sum_send_rate_stu + ' บาท)'"
+                                prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
+                        </v-col>
                         <v-col cols="12" style="margin-top:-30px">
                             <v-text-field readonly label="ราคาสุทธิ"
                                 :value="detailData.money.sum_money + ' บาท'"></v-text-field>

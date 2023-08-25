@@ -292,10 +292,10 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <!-- <v-text-field label="name" type="text" v-model="send_rate.name"></v-text-field>
-                    <v-text-field label="ค่าสอน" type="number" v-model="send_rate.bath" prefix="%"></v-text-field>
+                    <v-text-field label="name" type="text" v-model="send_rate.name"></v-text-field>
+                    <v-text-field label="หัก" type="number" v-model="send_rate.bath" prefix="%"></v-text-field>
                     <v-btn @click="save_send_rate_add()" :disabled="!send_rate.name || !send_rate.bath">Add</v-btn>
-                    <hr> -->
+                    <hr>
                     <v-row v-for="item in send_rate_all" :key="item.key">
                         <v-col cols="8">
                             <v-text-field v-model="item.name"></v-text-field>
@@ -308,7 +308,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_bath(), dialog4 = false">บันทึก
+                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_bath(), dialog9 = false">บันทึก
                         <span class="mdi mdi-content-save text-h6"></span>
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -394,6 +394,78 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog12" max-width="585px">
+            <v-card class="p-3 rounded-xl">
+                <v-card-title class="mb-10">
+                    <span>หัก %</span>
+                    <v-spacer></v-spacer>
+                    <v-btn class="ms-16" fab dark small color="#37474F" @click="dialog12 = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field label="name" type="text" v-model="send_rate_student.name"></v-text-field>
+                    <v-text-field label="หัก" type="number" v-model="send_rate_student.bath" prefix="%"></v-text-field>
+                    <v-btn @click="save_send_rate_student_add()" :disabled="!send_rate_student.name || !send_rate_student.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in send_rate_student_all" :key="item.key">
+                        <v-col cols="8">
+                            <v-text-field v-model="item.name"></v-text-field>
+                            <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="ค่าสอน" send_rate_student="number" v-model="item.bath" prefix="%"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_student_bath(), dialog12 = false">บันทึก
+                        <span class="mdi mdi-content-save text-h6"></span>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog13" max-width="585px">
+            <v-card class="p-3 rounded-xl">
+                <v-card-title class="mb-10">
+                    <span>ให้ % ในกรณีน้องมีปัญหา</span>
+                    <v-spacer></v-spacer>
+                    <v-btn class="ms-16" fab dark small color="#37474F" @click="dialog13 = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field label="name" type="text" v-model="send_rate_teacher.name"></v-text-field>
+                    <v-text-field label="หัก" type="number" v-model="send_rate_teacher.bath" prefix="%"></v-text-field>
+                    <v-btn @click="save_send_rate_teacher_add()" :disabled="!send_rate_teacher.name || !send_rate_teacher.bath">Add</v-btn>
+                    <hr>
+                    <v-row v-for="item in send_rate_teacher_all" :key="item.key">
+                        <v-col cols="8">
+                            <v-text-field v-model="item.name"></v-text-field>
+                            <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="ค่าสอน" send_rate_teacher="number" v-model="item.bath" prefix="%"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_teacher_bath(), dialog13 = false">บันทึก
+                        <span class="mdi mdi-content-save text-h6"></span>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-overlay :value="overlay" class="d-flex justify-end align-start">
             <v-card style="background-color: white; color:black;" max-width="400px" height="1000px">
                 <v-card-title>
@@ -430,13 +502,21 @@
                     </v-btn>
                     <br>
                     <v-btn color="#322E2B" rounded dark @click="dialog9 = !dialog9, send_rate_search()" class="mb-3 mt-5">
-                        หัก % การส่งข้อมูลล่าช้า
+                        หัก % เช็คชื่อครู
                     </v-btn>
                     <br>
-                    <v-btn color="#322E2B" rounded dark @click="dialog10 = !dialog10, rate_special_search()"
+                    <v-btn color="#322E2B" rounded dark @click="dialog12 = !dialog12, send_rate_student_search()" class="mb-3 mt-5">
+                        หัก % ส่งพัฒนาการนักเรียน
+                    </v-btn>
+                    <br>
+                    <v-btn color="#322E2B" rounded dark @click="dialog13 = !dialog13, send_rate_teacher_search()" class="mb-3 mt-5">
+                        ให้ % ครูในกรณีน้องมีปัญหา
+                    </v-btn>
+                    <!-- <br> -->
+                    <!-- <v-btn color="#322E2B" rounded dark @click="dialog10 = !dialog10, rate_special_search()" 
                         class="mb-3 mt-5">
                         ราคาเรทกรณีพิเศษ
-                    </v-btn>
+                    </v-btn> -->
                     <br>
                     <v-btn color="#322E2B" rounded dark @click="dialog11 = !dialog11, LimitedClass_search()"
                         class="mb-3 mt-5">
@@ -465,6 +545,8 @@ export default {
             dialog9: false,
             dialog10: false,
             dialog11: false,
+            dialog12: false,
+            dialog13: false,
 
             subject_all: [],
             level: [],
@@ -481,6 +563,10 @@ export default {
             type_private_all: [],
             send_rate: [],
             send_rate_all: [],
+            send_rate_student: [],
+            send_rate_student_all: [],
+            send_rate_teacher: [],
+            send_rate_teacher_all: [],
             rate_special: [],
             rate_special_all: [],
             LimitedClass: [],
@@ -739,6 +825,74 @@ export default {
                 })
             }
             console.log('success save send_rate bath');
+        },
+
+        send_rate_student_search() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_student_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_student_all = item;
+                console.log(this.send_rate_student_all);
+            })
+        },
+        save_send_rate_student_add() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_student_all/`).push({
+                name: this.send_rate_student.name,
+                bath: this.send_rate_student.bath,
+            })
+            console.log('success save send_rate_student');
+            this.send_rate_student_search();
+            this.send_rate_student = [];
+        },
+        save_send_rate_student_bath() {
+            const db = this.$fireModule.database();
+            for (const key in this.send_rate_student_all) {
+                console.log(this.send_rate_student_all[key]);
+                db.ref(`send_rate_student_all/${this.send_rate_student_all[key].key}/`).update({
+                    bath: this.send_rate_student_all[key].bath,
+                    name: this.send_rate_student_all[key].name,
+                })
+            }
+            console.log('success save send_rate_student bath');
+        },
+
+        send_rate_teacher_search() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_teacher_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                }
+                this.send_rate_teacher_all = item;
+                console.log(this.send_rate_teacher_all);
+            })
+        },
+        save_send_rate_teacher_add() {
+            const db = this.$fireModule.database();
+            db.ref(`send_rate_teacher_all/`).push({
+                name: this.send_rate_teacher.name,
+                bath: this.send_rate_teacher.bath,
+            })
+            console.log('success save send_rate_teacher');
+            this.send_rate_teacher_search();
+            this.send_rate_teacher = [];
+        },
+        save_send_rate_teacher_bath() {
+            const db = this.$fireModule.database();
+            for (const key in this.send_rate_teacher_all) {
+                console.log(this.send_rate_teacher_all[key]);
+                db.ref(`send_rate_teacher_all/${this.send_rate_teacher_all[key].key}/`).update({
+                    bath: this.send_rate_teacher_all[key].bath,
+                    name: this.send_rate_teacher_all[key].name,
+                })
+            }
+            console.log('success save send_rate_teacher bath');
         },
 
         rate_special_search() {

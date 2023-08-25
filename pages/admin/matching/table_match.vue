@@ -504,6 +504,7 @@ export default {
                 const childData = snapshot.val();
                 console.log(childData);
                 this.desserts_student = [];
+                this.selectedEvent= [];
                 let item = [];
                 let index = 0;
                 this.events = [];
