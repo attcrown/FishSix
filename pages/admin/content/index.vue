@@ -46,13 +46,13 @@
             <template v-slot:item.actions="{ item }">
                 <div class="icon-container">
 
-                    <v-icon color="black" large class="mr-2 icon-box" @click="viewItem(item)" style="text-decoration: underline;">
+                    <v-icon color="black"  class="mr-2 icon-box" @click="viewItem(item)" style="text-decoration: underline;">
                         mdi-pencil
                     </v-icon>
 
                 </div>
                 <div class="icon-container">
-                    <v-icon color="red" large class="mr-2  icon-box" @click="viewDeleteDialog(item)" style="text-decoration: underline;">
+                    <v-icon color="red"  class="mr-2  icon-box" @click="viewDeleteDialog(item)" style="text-decoration: underline;">
                         mdi-delete
                     </v-icon>
                 </div>
