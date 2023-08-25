@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-16">        
+    <div class="mx-3">        
         <tablematch class="mb-10"></tablematch>
         <tableactive></tableactive>
     </div>
