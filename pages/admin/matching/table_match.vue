@@ -300,11 +300,11 @@
                             mdi-pencil
                         </v-icon>
                     </v-btn> -->
-                    <v-btn text icon elevation="5" @click="editItem(item)">
-                        <v-icon class="text-h5" color="#26415B">
+                    
+                        <v-icon class="text-h5" @click="editItem(item)" color="#26415B" style="text-decoration: underline;">
                             mdi-pencil
                         </v-icon>
-                    </v-btn>
+                
 
                 </template>
                 <template v-slot:no-data>
