@@ -1238,25 +1238,28 @@ export default {
                         if (item_data.status_study_column_tea.bath == '0') {
                             console.log(item_data.status_study_column_tea.name)
                         } else {
+                            del_send_rate_name = (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             console.log(item_data.status_study_column_tea.name)
-                            del_send_rate_name = sum;
+                            
                         }
                         //--------เช็คชื่อช้าหรือไม่-------------------
 
                         if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
                             console.log(item_data.status_send_method.name)
                         } else if (item_data.status_send_method) {
+                            del_send_rate_save = (parseFloat(item_data.status_send_method.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
-                            del_send_rate_save = sum;
+                            
                         }
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
                         if (item_data.status_study_column && item_data.status_study_column.bath == '0') {
                             console.log(item_data.status_study_column.name)
                         } else if (item_data.status_study_column) {
+                            del_send_rate_stu = (parseFloat(item_data.status_study_column.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_study_column.bath) * sum / 100);
-                            del_send_rate_stu = sum;
+                            
                         }
                         //---------น้องมาเรียนปกติไหม--------------------
 
