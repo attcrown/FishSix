@@ -445,8 +445,9 @@ export default {
                         end = new Date(edit);
                     }
                 } else if (this.search_date == 'Month') {
+                    now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8))) + '-01');
                     edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
-                    end = new Date(edit);
+                    end = new Date(edit);                    
                 } else if (this.search_date == 'All') {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
@@ -461,9 +462,9 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
-                            // console.log(new Date(date).getTime() , now.getTime() ,end.getTime() ,date);
-                            if (new Date(date).getTime() >= now.getTime() &&
-                                new Date(date).getTime() <= end.getTime()) {
+                            console.log(now , new Date(date) ,end);
+                            if (end.getTime() >= new Date(date).getTime() &&
+                                new Date(date).getTime() >= now.getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
                                     if (this.status == 'admin') {

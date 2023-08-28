@@ -619,6 +619,7 @@ export default {
             }
         },
         search_level() {
+            console.log(this.subject_select ,this.All_data.subject);
             const selectedObject = this.subject_select.find(item => item.key === this.All_data.subject);
             this.level_select = selectedObject.level;
             console.log(selectedObject);
@@ -1077,6 +1078,7 @@ export default {
                 this.events = [];
                 let index = 0;
                 this.arrayEvents = [];
+                let subject_show = [];
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -1097,6 +1099,11 @@ export default {
                                         const locationData = locationSnapshot.val();
                                         const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
                                         const namesub = subjectData.name;
+                                        if(timedata.subject == '00000'){
+                                            subject_show = { name: namesub, key: timedata.subject};
+                                        }else{
+                                            subject_show = { name: namesub, key: timedata.subject ,level:teacherData.subject_all[timedata.subject].level};
+                                        }
                                         if (true) {//parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({
                                                 name: nametea,
@@ -1114,7 +1121,7 @@ export default {
                                                 invite: timedata.invite,
                                                 teacher: key,
                                                 teacher_subject: teacherData.subject_all,
-                                                full_subject: { name: namesub, key: timedata.subject },
+                                                full_subject: subject_show,
                                                 full_location: { name: locationData.name, key: timedata.style_subject },
                                                 full_teacher: { name: nametea, key: key },
                                             });
@@ -1141,6 +1148,7 @@ export default {
                     }
                 }
                 this.desserts = item;
+                console.log(this.desserts);
             })
         },
 

@@ -132,16 +132,16 @@
                                             :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" label="ประเภทคลาส"
                                             v-model="save_detail.style" required></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="8">
+                                    <v-col cols="12" sm="12">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
                                             :rules="[v => !!v || 'กรุณาเลือกวิชา']" v-model="save_detail.subject"
                                             required></v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="4">
+                                    <!-- <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนที่รับสูงสุดต่อชม." v-model="save_detail.sum_people"
                                             :rules="rules.text" :disabled="mode == 'edit'" type="number"
                                             required></v-text-field>
-                                    </v-col>
+                                    </v-col> -->
                                 </v-row>
                             </v-container>
                         </v-card-text>

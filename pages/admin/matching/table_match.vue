@@ -143,8 +143,7 @@
                                                             prepend-icon="mdi-calendar" readonly v-bind="attrs"
                                                             v-on="on"></v-text-field>
                                                     </template>
-                                                    <v-date-picker v-model="date" no-title scrollable
-                                                        readonly>
+                                                    <v-date-picker v-model="date" no-title scrollable readonly>
                                                         <v-spacer></v-spacer>
                                                         <v-btn text color="primary" @click="menu = false">
                                                             Cancel
@@ -169,8 +168,7 @@
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_location" label="รูปแบบการสอน"
-                                                    v-model="editedItem.style" item-text="name" item-value="key"
-                                                    readonly
+                                                    v-model="editedItem.style" item-text="name" item-value="key" readonly
                                                     @input="select_class(editedItem.style)"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
@@ -300,11 +298,11 @@
                             mdi-pencil
                         </v-icon>
                     </v-btn> -->
-                    
-                        <v-icon class="text-h5" @click="editItem(item)" color="#26415B" style="text-decoration: underline;">
-                            mdi-pencil
-                        </v-icon>
-                
+
+                    <v-icon class="text-h5" @click="editItem(item)" color="#26415B" style="text-decoration: underline;">
+                        mdi-pencil
+                    </v-icon>
+
 
                 </template>
                 <template v-slot:no-data>
@@ -832,7 +830,7 @@ export default {
                         subject: "00000",
                         sum_people: selectedObject.bath
                     });
-                }else{
+                } else {
                     db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).update({
                         Class: selectedObject,
                         createAt: new Date(),
@@ -845,13 +843,62 @@ export default {
                     });
                 }
             }
+            // else if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {
+            //     const Work_tea = await db.ref(`date_teacher/${data.key_teacher}/${data.date}/`).once("value");
+            //     console.log(Work_tea.val());
+            //     if (Work_tea.exists()) {
+            //         const Work_data_tea = Work_tea.val();
+            //         for (const key in Work_data_tea) {
+            //             if (Work_data_tea[key].Class.key == '-NcQsHB9vgG53lJKPA-i' && Work_data_tea[key].style_subject == data.style) {  //ตรวจสอบ FlipClass
+            //                 console.log('GOOD', Work_data_tea[key]);
+
+            //                 time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+            //                 anyInA = time_data_tea.some(time => time_sum.includes(time));
+            //                 console.log(anyInA, time_data_tea, key);
+            //                 if (anyInA) {
+            //                     sum_people_new_tea += Work_data_tea[key].invite;
+            //                     let mergedTimeSum = [...time_data_tea, ...time_sum];
+            //                     mergedTimeSum.sort();
+            //                     uniqueTimeSum = mergedTimeSum.filter((value, index, self) => {
+            //                         return self.indexOf(value) === index;
+            //                     });
+            //                     time_sum = uniqueTimeSum;
+            //                     db.ref(`date_teacher/${data.key_teacher}/${data.date}/${key}`).remove();
+            //                     console.log('รวมเวลา', time_sum, sum_people_new_tea);
+            //                 }
+            //             }
+            //         }
+            //         console.log(time_sum, sum_people_new_tea);
+            //         db.ref(`date_teacher/${data.key_teacher}/${data.date}/${time_sum[0]}E${time_sum[time_sum.length - 1]}`).update({
+            //             Class: selectedObject,
+            //             createAt: new Date(),
+            //             invite: sum_people_new_tea,
+            //             start: time_sum[0],
+            //             stop: time_sum[time_sum.length - 1],
+            //             style_subject: data.style,
+            //             subject: this.editedItem.subject,
+            //             sum_people: selectedObject.bath
+            //         });
+            //     } else {
+            //         db.ref(`date_teacher/${data.key_teacher}/${data.date}/${this.editedItem.time_s}E${this.editedItem.time_e}`).update({
+            //             Class: selectedObject,
+            //             createAt: new Date(),
+            //             invite: 1,
+            //             start: this.editedItem.time_s,
+            //             stop: this.editedItem.time_e,
+            //             style_subject: data.style,
+            //             subject: this.editedItem.subject,
+            //             sum_people: selectedObject.bath
+            //         });
+            //     }
+            // }
 
             await db.ref(`date_match/${data.key_student}/${data.date}/${data.time_e}`).update({
-                subject: data.subject,                
+                subject: data.subject,
                 level: data.level,
                 status: 'พร้อมเรียน',
                 createAt: new Date(),
-            });   
+            });
             this.initialize();
             this.close();
         },
