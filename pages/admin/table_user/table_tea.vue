@@ -666,7 +666,7 @@ export default {
             if (this.All_data.keysubject == '00000') {
                 this.search_subject_match(this.All_data.teacher_subject);
             } else {
-                this.subject_select = this.All_data.full_subject;
+                this.subject_select = [{name:this.All_data.full_subject.name ,key:this.All_data.full_subject.key ,level:this.All_data.full_subject.level}];
             }
         },
 
@@ -1010,6 +1010,9 @@ export default {
 
                 }
                 this.close();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 300);
             }
         },
 

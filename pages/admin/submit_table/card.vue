@@ -1330,17 +1330,16 @@ export default {
             }).then(() => {
                 console.log('save send_plan', item_data);
 
-            })
-
+            })            
             if (!item_data.del_time) {
                 this.clear_time_student();
             } else {
                 this.clear_dialog();
-                if (this.date == null) {
-                    this.search_date_teacher_All();
-                } else {
-                    this.search_date_teacher();
-                }
+                // if (this.date == null) {
+                //     this.search_date_teacher_All();
+                // } else {
+                //     this.search_date_teacher();
+                // }
             }
         },
 
@@ -1474,11 +1473,11 @@ export default {
                 this.loadsave = false;
                 this.clear_dialog();
             }
-            if (this.date == null) {
-                this.search_date_teacher_All();
-            } else {
-                this.search_date_teacher();
-            }
+            // if (this.date == null) {
+            //     this.search_date_teacher_All();
+            // } else {
+            //     this.search_date_teacher();
+            // }
         },
         sum_hour(start, end) {
             // console.log('ทำsum',start,end);
