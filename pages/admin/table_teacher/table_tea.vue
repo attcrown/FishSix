@@ -94,7 +94,7 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12" sm="6" md="12">
-                                        <v-text-field v-model="date1" label="วันที่สอน" @click="dialog_select_date = true" :readonly="mode == 'edit'">
+                                        <v-text-field v-model="date1" label="วันที่สอน" :disabled="mode == 'edit'" @click="dialog_select_date = true" >
                                             <template #prepend>
                                                 <span class="mdi mdi-calendar-outline text-h6"></span>
                                             </template>
@@ -473,6 +473,7 @@ export default {
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
                         });
+                        this.dialog_detail = false;
                         this.clear_item();
                         this.search_date_teacher();
                     } else {
@@ -486,6 +487,7 @@ export default {
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
                         });
+                        this.dialog_detail = false;
                         this.clear_item();
                         this.search_date_teacher();
                     }
@@ -540,7 +542,8 @@ export default {
                             style_subject: this.save_detail.style,
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
-                        });
+                        });                        
+                        this.dialog_detail = false;
                         this.clear_item();
                         this.search_date_teacher();
                     } else {
@@ -554,6 +557,7 @@ export default {
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
                         });
+                        this.dialog_detail = false;
                         this.clear_item();
                         this.search_date_teacher();
                     }
@@ -571,11 +575,7 @@ export default {
             this.time_standart_sum = [];
             this.picker_start = null;
             this.picker_stop = null;
-            this.date1 = [];
-            this.dialog_detail = false;
-            setTimeout(() => {
-                window.location.reload();
-            }, 300);
+            this.date1 = [];            
         },
         allowedDates: val => {
             const currentDate = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
