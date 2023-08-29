@@ -633,8 +633,17 @@
                         <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()">บันทึก <span
                                 class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
-
                     </v-card-actions>
+                    <v-card-text v-if="edited.status_development && edited.status_development == 'Approved'">
+                        <hr style="border: 1px solid #000; background-color: #000;">
+                        <p>แจ้งพัฒนาการเรียนของน้อง {{ edited.namestu || 'ไม่มี' }} <br>
+                        วันที่ 10/8/2023 วิชา {{ edited.subject || 'ไม่มี' }} ครูผู้สอน : {{ edited.name || 'ไม่มี' }} <br>
+                        วันนี้น้องเรียนเรื่อง {{edited.learn|| 'ไม่มี' }} มีความเข้าใจในเนื้อหา {{ edited.understand || '-' }}/10 คะแนน <br>
+                        สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้นคือ {{ edited.development || 'ไม่มี'  }} <br>
+                        ปัญหาที่เกิดกับน้องในการเรียน คือ {{ edited.problem || 'ไม่มี' }} <br>
+                        จึงใช้วิธี {{ edited.method || 'ไม่มี' }} เพื่อพัฒนาน้อง<br>
+                        การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ {{ edited.homework || 'ไม่มี' }}</p>
+                    </v-card-text>
                 </v-card>
             </v-form>
         </v-dialog>
