@@ -494,6 +494,10 @@
                                     <v-text-field label="เวลาส่งเช็คชื่อ (ครูบันทึก)" v-model="edited.createAt"
                                         readonly></v-text-field>
                                 </v-col>
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="edited.createAt_rate_OP">
+                                    <v-text-field label="เวลาส่งพัฒนาการ" v-model="edited.createAt_rate_OP"
+                                        readonly></v-text-field>
+                                </v-col>
 
                                 <v-col cols="12" sm="6" style="margin-top:-30px"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
@@ -1074,6 +1078,7 @@ export default {
                 const childData = snapshot.val();
                 let sumx_date = "-";
                 let sumx_date_tea = "-";
+                let sumx_date_stu = "-";
                 if (childData.createAt_OP) {
                     let sum_date = new Date(childData.createAt_OP).toString().split(" ");
                     sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
@@ -1083,6 +1088,11 @@ export default {
                     let sum_date_tea = new Date(childData.createAt).toString().split(" ");
                     sumx_date_tea = `${sum_date_tea[1]} ${sum_date_tea[2]} ${sum_date_tea[3]} ${sum_date_tea[4]}`
                     childData.createAt = sumx_date_tea;
+                }
+                if (childData.createAt_rate_OP) {
+                    let sum_date_stu = new Date(childData.createAt_rate_OP).toString().split(" ");
+                    sumx_date_stu = `${sum_date_stu[1]} ${sum_date_stu[2]} ${sum_date_stu[3]} ${sum_date_stu[4]}`
+                    childData.createAt_rate_OP = sumx_date_stu;
                 }
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
                 if (childData.check_save) {
