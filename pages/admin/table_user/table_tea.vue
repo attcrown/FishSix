@@ -814,7 +814,7 @@ export default {
                 console.log('บันทึกผ่าน>>>', this.All_data);
                 this.save(this.All_data);
             }else{
-                dialog_load = false;
+                setTimeout(() => (this.dialog_load = false), 300)
             }
         },
         //----------------------------------------------
@@ -845,21 +845,24 @@ export default {
             if (data.match_vip) {
                 if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length)) {
                     this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
+                    setTimeout(() => (this.dialog_load = false), 300)
                     this.dialogError = true;
-                    this.dialog_load = false;
+                    
                     return;
                 }
             }
             else if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length) && data.select == "-NcQsFxCcoNS-uwmKUqE") {
                 this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
+                setTimeout(() => (this.dialog_load = false), 300)
                 this.dialogError = true;
-                this.dialog_load = false;
+                
                 return;
             }
             else if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour * parseInt(this.date.length) && data.select == "-NcQsHB9vgG53lJKPA-i") {
                 this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
+                setTimeout(() => (this.dialog_load = false), 300)
                 this.dialogError = true;
-                this.dialog_load = false;
+                
                 return;
             }
 
@@ -880,7 +883,7 @@ export default {
                             if (data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
                                 this.textError = 'จองไปแล้ว ซ้ำ' + textadd + " " + this.date[keydate];
                                 this.dialogError = true;
-                                this.dialog_load = false;
+                                setTimeout(() => (this.dialog_load = false), 300)
                             }
                         })
                         .then(snapshot => {
@@ -900,7 +903,7 @@ export default {
                                 if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
                                     this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
                                     this.dialogError = true;
-                                    this.dialog_load = false;
+                                    setTimeout(() => (this.dialog_load = false), 300)
                                 }
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1) {
                                     console.log('send save');
@@ -908,7 +911,7 @@ export default {
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
                                     this.textError = textadd;
                                     this.dialogError = true;
-                                    this.dialog_load = false;
+                                    setTimeout(() => (this.dialog_load = false), 300)
                                 }
                                 console.log('WorkData', maxKey, selectedObject.bath, data.time_sum.length, parseInt(key) + 1, isSave);
                                 console.log('>>>>>>', textadd.length);
