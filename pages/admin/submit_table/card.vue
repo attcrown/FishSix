@@ -561,16 +561,16 @@
                                     <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
                                         :rules="rules.text" required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6"
+                                <v-col cols="12" sm="6" md="12"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="จึงใช้วิธี" v-model="edited.method" :rules="rules.text"
+                                    <v-text-field label="จึงใช้วิธี...เพื่อพัฒนาน้อง" v-model="edited.method" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6"
+                                <!-- <v-col cols="12" sm="6" md="6"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="เพื่อพัฒนาน้อง" v-model="edited.to_development" :rules="rules.text"
                                         required></v-text-field>
-                                </v-col>
+                                </v-col> -->
                                 <v-col cols="12" sm="12"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
@@ -745,14 +745,14 @@
                                 :disabled="isExportAll" value="ปัญหาในการสอน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="วิธีแก้" :disabled="isExportAll"
                                 value="วิธีแก้"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="เพื่อพัฒนาน้อง"
-                                :disabled="isExportAll" value="เพื่อพัฒนาน้อง"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="การบ้าน" :disabled="isExportAll"
+                            <!-- <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="เพื่อพัฒนาน้อง"
+                                :disabled="isExportAll" value="เพื่อพัฒนาน้อง"></v-checkbox> -->
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="การบ้าน" :disabled="isExportAll"
                                 value="การบ้าน"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="สถานะพัฒนาการ"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="สถานะพัฒนาการ"
                                 :disabled="isExportAll" value="สถานะพัฒนาการ"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="Comment" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="Comment" :disabled="isExportAll"
                                 value="Comment"></v-checkbox>
                         </v-row>
                     </v-container>
@@ -1265,7 +1265,7 @@ export default {
 
                         console.log(sum);
 
-                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
+                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({                         
                             subject: subject_data || null,
                             level: level_search || null,
                             typeflip: typeflip_data || null,
@@ -1314,12 +1314,13 @@ export default {
                 status_send_method: item_data.status_send_method || null,
                 status_check_sheet: item_data.status_check_sheet || null,
 
+                match_vip: item_data.match_vip || false, 
                 learn: item_data.learn || null,
                 understand: item_data.understand || null,
                 development: item_data.development || null,
                 problem: item_data.problem || null,
                 method: item_data.method || null,
-                to_development: item_data.to_development || null,
+                // to_development: item_data.to_development || null,
                 homework: item_data.homework || null,
                 status_development: item_data.status_development || null,
                 comment: item_data.comment || null,
@@ -1331,19 +1332,20 @@ export default {
                 console.log('save send_plan', item_data);
 
             })            
-            if (!item_data.del_time) {
+            if (!item_data.del_time || item_data.del_time == undefined) {
                 this.clear_time_student();
             } else {
                 this.clear_dialog();
-                // if (this.date == null) {
-                //     this.search_date_teacher_All();
-                // } else {
-                //     this.search_date_teacher();
-                // }
+                if (this.date == null) {
+                    this.search_date_teacher_All();
+                } else {
+                    this.search_date_teacher();
+                }
             }
         },
 
         clear_time_student() {
+            console.log('clear_time_student',this.edited);
             const db = this.$fireModule.database();
             let keystudent = this.edited;
             db.ref(`date_match/${keystudent.keyStudent}/${keystudent.date}/${keystudent.time_e}/`).update({
@@ -1351,22 +1353,44 @@ export default {
             }).then(() => {
                 console.log('save date_match');
             })
-            if (keystudent.style.includes("Flip") && !keystudent.match_test) {
+            if (keystudent.style.includes("Flip") && !keystudent.match_test && !keystudent.match_vip) {
                 db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.keyStudent}`).update({
                         hour: childData.hour - keystudent.hour,
                     });
                 })
+                console.log('ลบชมทด Flip');
             }
-            if (keystudent.style.includes("Private") && !keystudent.match_test) {
+            if (keystudent.style.includes("Private") && !keystudent.match_test && !keystudent.match_vip) {
                 db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
                     const childData = snapshot.val();
                     db.ref(`hour_match/${keystudent.keyStudent}`).update({
                         hourprivate: childData.hourprivate - keystudent.hour,
                     });
                 })
+                console.log('ลบชมทด Private');
             }
+            if (keystudent.style.includes("Flip") && !keystudent.match_test && keystudent.match_vip) {
+                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                        hour: childData.hour - keystudent.hour,
+                    });
+                })
+                console.log('ลบชมทด Flip VIP');
+            }
+            if (keystudent.style.includes("Private") && !keystudent.match_test && keystudent.match_vip) {
+                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
+                        hour: childData.hour - keystudent.hour,
+                    });
+                })
+                console.log('ลบชมทด Private VIP');
+            }
+
+
             if (keystudent.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW') {
                 console.log('END ', keystudent.status_study_column_tea.name);
                 return;
@@ -1444,7 +1468,7 @@ export default {
                             console.log('>>>Hour flipHour No DATA Flip');
                         }
 
-                        if (studentData.privateStudyHour != undefined) {
+                        if (studentData.privateStudyHour != undefined && !keystudent.match_vip) {
                             if (data_edit.style.substring(0, 7) === "Private") {
                                 db.ref(`user/${data_edit.keyStudent}/`).update({
                                     privateStudyHour: parseInt(studentData.privateStudyHour) + keystudent.hour,
@@ -1456,10 +1480,33 @@ export default {
                             console.log('ลบ ชม. class จริง', data_edit.style);
                             this.loadsave = false;
                             this.clear_dialog();
-                        } else if (studentData.privateStudyHour == undefined) {
+                        } else if (studentData.privateStudyHour == undefined && !keystudent.match_vip) {
                             db.ref(`user/${data_edit.keyStudent}/`).update({
                                 privateStudyHour: keystudent.hour,
                                 privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                            })
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else {
+                            console.log('>>>Hour privateHour No DATA Private');
+                        }
+
+                        if (studentData.studyHour != undefined && keystudent.match_vip) {
+                            if (data_edit.style.substring(0, 7) === "Private") {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHour: parseInt(studentData.studyHour) + keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
+                                })
+                            } else {
+                                console.log("Error");
+                            }
+                            console.log('ลบ ชม. class จริง', data_edit.style);
+                            this.loadsave = false;
+                            this.clear_dialog();
+                        } else if (studentData.studyHour == undefined && keystudent.match_vip) {
+                            db.ref(`user/${data_edit.keyStudent}/`).update({
+                                studyHour: keystudent.hour,
+                                hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
                             })
                             this.loadsave = false;
                             this.clear_dialog();
@@ -1473,11 +1520,11 @@ export default {
                 this.loadsave = false;
                 this.clear_dialog();
             }
-            // if (this.date == null) {
-            //     this.search_date_teacher_All();
-            // } else {
-            //     this.search_date_teacher();
-            // }
+            if (this.date == null) {
+                this.search_date_teacher_All();
+            } else {
+                this.search_date_teacher();
+            }
         },
         sum_hour(start, end) {
             // console.log('ทำsum',start,end);
@@ -1517,7 +1564,7 @@ export default {
         },
         search_date_teacher() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.dash_all = 0;
                 this.dash_noall = 0;
@@ -1583,6 +1630,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1613,6 +1661,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1641,6 +1690,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1725,6 +1775,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1756,6 +1807,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1784,6 +1836,7 @@ export default {
                                                         because: timedata.because,
                                                         Idsendplan: timedata.Idsendplan,
                                                         match_test: timedata.match_test,
+                                                        match_vip: timedata.match_vip,
                                                         hour: timedata.hour,
                                                         sendplanAll: sendplanData,
                                                         teacherAll: teacherData,
@@ -1841,7 +1894,7 @@ export default {
                 this.panel3
             );
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 this.dash_all = 0;
                 this.dash_noall = 0;
@@ -1910,6 +1963,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -1940,6 +1994,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -1968,6 +2023,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -2054,6 +2110,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -2084,6 +2141,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -2112,6 +2170,7 @@ export default {
                                                             because: timedata.because,
                                                             Idsendplan: timedata.Idsendplan,
                                                             match_test: timedata.match_test,
+                                                            match_vip: timedata.match_vip,
                                                             hour: timedata.hour,
                                                             sendplanAll: sendplanData,
                                                             teacherAll: teacherData,
@@ -2367,28 +2426,28 @@ export default {
                             row.push("");
                         }
                     }
+                    // if (this.selectedHeaders[22]) {
+                    //     if (item.sendplanAll && item.sendplanAll.to_development) {
+                    //         row.push(item.sendplanAll.to_development);
+                    //     } else {
+                    //         row.push("");
+                    //     }
+                    // }
                     if (this.selectedHeaders[22]) {
-                        if (item.sendplanAll && item.sendplanAll.to_development) {
-                            row.push(item.sendplanAll.to_development);
-                        } else {
-                            row.push("");
-                        }
-                    }
-                    if (this.selectedHeaders[23]) {
                         if (item.sendplanAll && item.sendplanAll.homework) {
                             row.push(item.sendplanAll.homework);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[24]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.sendplanAll && item.sendplanAll.status_development) {
                             row.push(item.sendplanAll.status_development);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[25]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.sendplanAll && item.sendplanAll.comment) {
                             row.push(item.sendplanAll.comment);
                         } else {
@@ -2597,16 +2656,16 @@ export default {
                     } else {
                         row.push("");
                     }
+                    // if (this.selectedHeaders[22]) {
+                    //     if (item.sendplanAll && item.sendplanAll.to_development) {
+                    //         row.push(item.sendplanAll.to_development);
+                    //     } else {
+                    //         row.push("");
+                    //     }
+                    // } else {
+                    //     row.push("");
+                    // }
                     if (this.selectedHeaders[22]) {
-                        if (item.sendplanAll && item.sendplanAll.to_development) {
-                            row.push(item.sendplanAll.to_development);
-                        } else {
-                            row.push("");
-                        }
-                    } else {
-                        row.push("");
-                    }
-                    if (this.selectedHeaders[23]) {
                         if (item.sendplanAll && item.sendplanAll.homework) {
                             row.push(item.sendplanAll.homework);
                         } else {
@@ -2615,7 +2674,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[24]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.sendplanAll && item.sendplanAll.status_development) {
                             row.push(item.sendplanAll.status_development);
                         } else {
@@ -2624,7 +2683,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[25]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.sendplanAll && item.sendplanAll.comment) {
                             row.push(item.sendplanAll.comment);
                         } else {

@@ -208,7 +208,7 @@
 
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn rounded color="#29CC39" class="mb-5" @click="validate_add()" dark>
+                                    <v-btn rounded color="#29CC39" class="mb-5" @click="validate_add() ,dialog_load = true" dark>
                                         บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                     </v-btn>
                                     <v-spacer></v-spacer>
@@ -270,12 +270,22 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog_load" hide-overlay persistent width="300">
+            <v-card color="primary" dark>
+                <v-card-text>
+                    Please stand by
+                    <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
     </div>
 </template>
 <script>
 export default {
     layout: 'login',
     data: () => ({
+        dialog_load: false,
         textError: '',
         dialogError: false,
 
@@ -619,7 +629,7 @@ export default {
             }
         },
         search_level() {
-            console.log(this.subject_select ,this.All_data.subject);
+            console.log(this.subject_select, this.All_data.subject);
             const selectedObject = this.subject_select.find(item => item.key === this.All_data.subject);
             this.level_select = selectedObject.level;
             console.log(selectedObject);
@@ -666,7 +676,7 @@ export default {
             if (this.All_data.keysubject == '00000') {
                 this.search_subject_match(this.All_data.teacher_subject);
             } else {
-                this.subject_select = [{name:this.All_data.full_subject.name ,key:this.All_data.full_subject.key ,level:this.All_data.full_subject.level}];
+                this.subject_select = [{ name: this.All_data.full_subject.name, key: this.All_data.full_subject.key, level: this.All_data.full_subject.level }];
             }
         },
 
@@ -803,6 +813,8 @@ export default {
             if (this.$refs.form_add.validate()) {
                 console.log('บันทึกผ่าน>>>', this.All_data);
                 this.save(this.All_data);
+            }else{
+                dialog_load = false;
             }
         },
         //----------------------------------------------
@@ -834,17 +846,20 @@ export default {
                 if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length)) {
                     this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
                     this.dialogError = true;
+                    this.dialog_load = false;
                     return;
                 }
             }
             else if (parseFloat(data.show_time_flip) + parseFloat(data.show_time_flip_match) < hour * parseInt(this.date.length) && data.select == "-NcQsFxCcoNS-uwmKUqE") {
                 this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
                 this.dialogError = true;
+                this.dialog_load = false;
                 return;
             }
             else if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour * parseInt(this.date.length) && data.select == "-NcQsHB9vgG53lJKPA-i") {
                 this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
                 this.dialogError = true;
+                this.dialog_load = false;
                 return;
             }
 
@@ -865,6 +880,7 @@ export default {
                             if (data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
                                 this.textError = 'จองไปแล้ว ซ้ำ' + textadd + " " + this.date[keydate];
                                 this.dialogError = true;
+                                this.dialog_load = false;
                             }
                         })
                         .then(snapshot => {
@@ -884,6 +900,7 @@ export default {
                                 if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
                                     this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
                                     this.dialogError = true;
+                                    this.dialog_load = false;
                                 }
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1) {
                                     console.log('send save');
@@ -891,6 +908,7 @@ export default {
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1 && textadd.length != 0) {
                                     this.textError = textadd;
                                     this.dialogError = true;
+                                    this.dialog_load = false;
                                 }
                                 console.log('WorkData', maxKey, selectedObject.bath, data.time_sum.length, parseInt(key) + 1, isSave);
                                 console.log('>>>>>>', textadd.length);
@@ -1102,10 +1120,10 @@ export default {
                                         const locationData = locationSnapshot.val();
                                         const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
                                         const namesub = subjectData.name;
-                                        if(timedata.subject == '00000'){
-                                            subject_show = { name: namesub, key: timedata.subject};
-                                        }else{
-                                            subject_show = { name: namesub, key: timedata.subject ,level:teacherData.subject_all[timedata.subject].level};
+                                        if (timedata.subject == '00000') {
+                                            subject_show = { name: namesub, key: timedata.subject };
+                                        } else {
+                                            subject_show = { name: namesub, key: timedata.subject, level: teacherData.subject_all[timedata.subject].level };
                                         }
                                         if (true) {//parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({

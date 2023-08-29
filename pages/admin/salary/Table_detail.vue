@@ -91,6 +91,7 @@
                             <tr>
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">วิชาที่สอน</th>
+                                <th class="p-2">ลูกค้าที่เรียน</th>
                                 <th class="p-2">ระดับชั้น</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>
@@ -103,6 +104,9 @@
                             <tr v-for="item in teacherData" :key="item.send_plan.key">
                                 <td class="p-2">{{ item.send_plan.date_learn }}</td>
                                 <td class="p-2">{{ item.send_plan.money.subject.name }}</td>
+                                <td class="p-2">{{ item.studentData.studentId }} 
+                                    {{ item.studentData.nickname }} 
+                                    ({{ item.studentData.firstName }})</td>
                                 <td class="p-2">{{ item.send_plan.level }}</td>
                                 <td class="p-2">{{ item.datematchData.start }}</td>
                                 <td class="p-2">{{ item.datematchData.stop }}</td>
@@ -186,23 +190,23 @@
                                 :value="detailData.money.optional.bath + ' บาท'"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
+                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) == 'Flip' && !detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeflip.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) == 'Flip'"
+                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) == 'Flip' && !detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeflip.bath + ' บาท'"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
+                        <v-col cols="7" v-if="detailData.money.location.name.substring(0, 4) != 'Flip' || detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeprivate.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) != 'Flip'"
+                        <v-col cols="5" v-if="detailData.money.location.name.substring(0, 4) != 'Flip' || detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeprivate.bath + ' บาท'"></v-text-field>
@@ -383,6 +387,8 @@ export default {
         items_year: [],
 
         data_all: [],
+
+        detailData_tea: null,
     }),
     mounted() {
         this.search_tea();
