@@ -10,7 +10,7 @@
                 elevation="16" v-show="login_go === 'off'">
                 <v-sheet style="background: rgba(255, 255, 255, 0.918)" class="rounded-5 p-4 m-3" elevation="16">
                     <form class="">
-                        <v-text-field v-model="name" :error-messages="nameErrors" :counter="10" label="Username" required
+                        <v-text-field v-model="name" :error-messages="nameErrors" :counter="20" label="Username" required
                             @input="$v.name.$touch()" @blur="$v.name.$touch()"></v-text-field>
 
                         <v-text-field v-model="pass" :error-messages="passErrors" :counter="20" label="Password"
@@ -58,7 +58,7 @@ export default {
     mixins: [validationMixin],
 
     validations: {
-        name: { required, maxLength: maxLength(10), minLength: minLength(6) },
+        name: { required, maxLength: maxLength(20), minLength: minLength(6) },
         email: { required, email },
         select: { required },
         status: { required },
@@ -79,7 +79,7 @@ export default {
         select: null,
         status: null,
         items: ['MEN', 'WOMEN'],
-        status_items: ['admin', 'teacher', 'user'],
+        status_items: ['admin', 'teacher', 'user','opFS','opsupFS'],
         checkbox: false,
     }),
 

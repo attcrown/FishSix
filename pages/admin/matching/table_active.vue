@@ -136,7 +136,7 @@
                 </template>
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
-                    <v-btn text icon elevation="5" @click="editItem(item)" v-if="status == 'admin'">
+                    <v-btn text icon elevation="5" @click="editItem(item)" v-if="status == 'admin' || status == 'opsupFS'">
                         <v-icon class="text-h5" color="#AD382F">
                             mdi-delete
                         </v-icon>
@@ -249,7 +249,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.status == 'admin' && timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
+                            if ((this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS')  && timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

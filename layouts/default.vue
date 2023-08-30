@@ -32,7 +32,7 @@
       <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->
       <v-spacer />
       <p class="m-0">
-        Operation
+        {{ title }}
       </p>
       <v-avatar class="ms-2">
         <v-icon style=" font-size: 40px;" color="grey">
@@ -55,10 +55,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
   name: 'DefaultLayout',
   data() {
     return {
+      title: "",
       drawer: true,
       drawerWidth: 200,
       drawerMaxWidth: 350,
@@ -144,20 +146,29 @@ export default {
     this.check();
   },
   methods: {
-
+    ...mapMutations(['setFirstName', 'setStatus']),
     check() {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      else if (sessionStorage.getItem('status') != 'admin' && localStorage.getItem('status') != 'admin') {
+      else if (sessionStorage.getItem('status') != 'admin' && 
+              sessionStorage.getItem('status') != 'opFS'&& 
+              sessionStorage.getItem('status') != 'opsupFS'&&
+              localStorage.getItem('status') != 'admin' &&
+              localStorage.getItem('status') != 'opFS' &&
+              localStorage.getItem('status') != 'opsupFS') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
+          this.setFirstName(sessionStorage.getItem('firstName'));
+          this.setStatus(sessionStorage.getItem('status'));
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
+          this.setFirstName(localStorage.getItem('firstName'));
+          this.setStatus(localStorage.getItem('status'));
         }
       }
     },

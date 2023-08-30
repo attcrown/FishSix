@@ -629,7 +629,7 @@ export default {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
-                                if (this.status == 'admin') {
+                                if (this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') {
                                     const getTeacherPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                     const getLocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");

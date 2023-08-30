@@ -74,7 +74,7 @@
                 </v-icon>
             </v-btn> -->
         
-                <v-icon class="text-h5" color="#26415B" style="text-decoration: underline;">
+                <v-icon class="text-h5" @click="editItem(item)" color="#26415B" style="text-decoration: underline;" v-if="status != 'opFS'">
                     mdi-pencil
                 </v-icon>
            
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
     data: () => ({
         search: '',
@@ -138,6 +139,7 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
+        ...mapState(['firstName', 'status']),
     },
 
     watch: {
@@ -151,6 +153,9 @@ export default {
 
     created() {
         this.initialize()
+    },
+    mounted(){
+
     },
 
     methods: {

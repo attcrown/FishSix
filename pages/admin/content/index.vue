@@ -46,13 +46,14 @@
             <template v-slot:item.actions="{ item }">
                 <div class="icon-container">
 
-                    <v-icon color="black"  class="mr-2 icon-box" @click="viewItem(item)" style="text-decoration: underline;">
+                    <v-icon color="black" class="mr-2 icon-box" @click="viewItem(item)" style="text-decoration: underline;">
                         mdi-pencil
                     </v-icon>
 
                 </div>
-                <div class="icon-container">
-                    <v-icon color="red"  class="mr-2  icon-box" @click="viewDeleteDialog(item)" style="text-decoration: underline;">
+                <div class="icon-container" v-if="status != 'opFS'">
+                    <v-icon color="red" class="mr-2  icon-box" @click="viewDeleteDialog(item)"
+                        style="text-decoration: underline;">
                         mdi-delete
                     </v-icon>
                 </div>
@@ -126,14 +127,14 @@
                 <v-card-text>
                     <v-container>
                         <v-row>
-                       <p class="text-danger"> การลบส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ</p>
+                            <p class="text-danger"> การลบส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ</p>
                         </v-row>
                     </v-container>
 
                 </v-card-text>
 
 
-             
+
             </v-card>
         </v-dialog>
     </div>
@@ -142,6 +143,7 @@
 
 <script>
 import pageLoader from '@/components/loader.vue';
+import { mapState } from 'vuex';
 export default {
     layout: 'default',
     data() {
@@ -163,7 +165,7 @@ export default {
                 },
                 { text: 'Level', value: 'level' },
                 { text: 'จำนวนบท', value: 'chapterCount' },
-              
+
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
             ],
 
@@ -173,8 +175,7 @@ export default {
         }
     },
     computed: {
-
-
+        ...mapState(['firstName', 'status']),
     },
     mounted() {
 
@@ -185,9 +186,6 @@ export default {
         pageLoader
     },
 
-    watch: {
-
-    },
     methods: {
 
         openSnackbar(status, message) {

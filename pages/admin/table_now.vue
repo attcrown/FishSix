@@ -40,7 +40,7 @@
                             </v-text-field>
 
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
-                                rounded @click="dialog_excel = true" v-if="status == 'admin'">
+                                rounded @click="dialog_excel = true" v-if="status == 'admin' || status == 'opFS' || status == 'opsupFS'">
                                 Export
                                 <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>

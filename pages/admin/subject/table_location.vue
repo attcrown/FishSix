@@ -62,7 +62,7 @@
                 </v-icon>
             </v-btn> -->
             
-                <v-icon class="text-h5" @click="editItem(item)" color="#26415B"  style="text-decoration: underline;">
+                <v-icon class="text-h5" @click="editItem(item)" color="#26415B"  style="text-decoration: underline;" v-if="status != 'opFS'">
                 mdi-pencil
             </v-icon>
           
@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
     data() {
         const defaultForm = Object.freeze({
@@ -121,6 +122,7 @@ export default {
                 this.form.first && this.form.bio
             );
         },
+        ...mapState(['firstName', 'status']),
     },
 
     watch: {
@@ -135,8 +137,10 @@ export default {
     created() {
         this.initialize()
     },
-
-    methods: {
+    mounted(){
+        
+    },
+    methods: {        
         initialize() {
             const db = this.$fireModule.database();
             db.ref("location/").on("value", (snapshot) => {

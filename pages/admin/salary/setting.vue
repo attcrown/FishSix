@@ -81,7 +81,7 @@
         <v-dialog v-model="dialog4" max-width="585px">
             <v-card class="p-3 rounded-xl">
                 <v-card-title class="mb-10">
-                    <span>ราคาต่อ Type & Tier Private class</span>
+                    <span>ราคาต่อ Type & Tier Flip class</span>
                     <v-spacer></v-spacer>
                     <v-btn class="ms-16" fab dark small color="#37474F" @click="dialog4 = false">
                         <v-icon dark class="text-h5">
@@ -90,7 +90,7 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <div class="d-flex">
+                    <div class="d-flex" v-if="status == 'admin'">
                         <v-text-field class="me-3" label="เพิ่ม Type & Tier" type="text" v-model="type.name"></v-text-field>
                         <v-text-field class="me-3" label="ค่าสอน" type="number" v-model="type.bath"
                             suffix="บาท"></v-text-field>
@@ -238,7 +238,7 @@
         <v-dialog v-model="dialog8" max-width="585px">
             <v-card class="p-3 rounded-xl">
                 <v-card-title class="mb-10">
-                    <span>ราคาต่อ TYPE & TIER PrivateClass</span>
+                    <span>ราคาต่อ TYPE & TIER Private Class</span>
                     <v-spacer></v-spacer>
                     <v-btn class="ms-16" fab dark small color="#37474F" @click="dialog8 = false">
                         <v-icon dark class="text-h5">
@@ -247,7 +247,7 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <div class="d-flex">
+                    <div class="d-flex" v-if="status == 'admin'">
                         <v-text-field class="me-3" label="เพิ่ม Type & Tier" type="text"
                             v-model="type_private.name"></v-text-field>
                         <v-text-field class="me-3" label="ค่าสอน" type="number" v-model="type_private.bath"
@@ -329,8 +329,10 @@
                 </v-card-title>
                 <v-card-text>
                     <div class="d-flex">
-                        <v-text-field  class="me-3" label="เพิ่มเรทกรณีพิเศษ" type="text" v-model="rate_special.name"></v-text-field>
-                        <v-text-field class="me-3" label="ค่าสอน" type="number" v-model="rate_special.bath" suffix="บาท"></v-text-field>
+                        <v-text-field class="me-3" label="เพิ่มเรทกรณีพิเศษ" type="text"
+                            v-model="rate_special.name"></v-text-field>
+                        <v-text-field class="me-3" label="ค่าสอน" type="number" v-model="rate_special.bath"
+                            suffix="บาท"></v-text-field>
                         <v-btn class="ms-3 mt-3 white--text" @click="save_rate_special_add()"
                             :disabled="!rate_special.name || !rate_special.bath" color="#322E2B" rounded>
                             เพิ่ม<span class="mdi mdi-plus text-h6"></span>
@@ -349,7 +351,8 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_rate_special_bath(), dialog10 = false">บันทึก
+                    <v-btn rounded color="#29CC39" class="mb-5" dark
+                        @click="save_rate_special_bath(), dialog10 = false">บันทึก
                         <span class="mdi mdi-content-save text-h6"></span>
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -386,7 +389,8 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_LimitedClass_bath(), dialog11 = false">บันทึก
+                    <v-btn rounded color="#29CC39" class="mb-5" dark
+                        @click="save_LimitedClass_bath(), dialog11 = false">บันทึก
                         <span class="mdi mdi-content-save text-h6"></span>
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -408,7 +412,8 @@
                 <v-card-text>
                     <v-text-field label="name" type="text" v-model="send_rate_student.name"></v-text-field>
                     <v-text-field label="หัก" type="number" v-model="send_rate_student.bath" prefix="%"></v-text-field>
-                    <v-btn @click="save_send_rate_student_add()" :disabled="!send_rate_student.name || !send_rate_student.bath">Add</v-btn>
+                    <v-btn @click="save_send_rate_student_add()"
+                        :disabled="!send_rate_student.name || !send_rate_student.bath">Add</v-btn>
                     <hr>
                     <v-row v-for="item in send_rate_student_all" :key="item.key">
                         <v-col cols="8">
@@ -416,13 +421,15 @@
                             <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="ค่าสอน" send_rate_student="number" v-model="item.bath" prefix="%"></v-text-field>
+                            <v-text-field label="ค่าสอน" send_rate_student="number" v-model="item.bath"
+                                prefix="%"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_student_bath(), dialog12 = false">บันทึก
+                    <v-btn rounded color="#29CC39" class="mb-5" dark
+                        @click="save_send_rate_student_bath(), dialog12 = false">บันทึก
                         <span class="mdi mdi-content-save text-h6"></span>
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -442,9 +449,10 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <v-text-field label="name" type="text" v-model="send_rate_teacher.name"></v-text-field>
-                    <v-text-field label="หัก" type="number" v-model="send_rate_teacher.bath" prefix="%"></v-text-field>
-                    <v-btn @click="save_send_rate_teacher_add()" :disabled="!send_rate_teacher.name || !send_rate_teacher.bath">Add</v-btn>
+                    <v-text-field label="name" type="text" v-model="send_rate_teacher.name" v-if="status == 'admin'"></v-text-field>
+                    <v-text-field label="หัก" type="number" v-model="send_rate_teacher.bath" prefix="%" v-if="status == 'admin'"></v-text-field>
+                    <v-btn @click="save_send_rate_teacher_add()" v-if="status == 'admin'"
+                        :disabled="!send_rate_teacher.name || !send_rate_teacher.bath">Add</v-btn>
                     <hr>
                     <v-row v-for="item in send_rate_teacher_all" :key="item.key">
                         <v-col cols="8">
@@ -452,13 +460,15 @@
                             <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="ค่าสอน" send_rate_teacher="number" v-model="item.bath" prefix="%"></v-text-field>
+                            <v-text-field label="ค่าสอน" send_rate_teacher="number" v-model="item.bath"
+                                prefix="%"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn rounded color="#29CC39" class="mb-5" dark @click="save_send_rate_teacher_bath(), dialog13 = false">บันทึก
+                    <v-btn rounded color="#29CC39" class="mb-5" dark
+                        @click="save_send_rate_teacher_bath(), dialog13 = false">บันทึก
                         <span class="mdi mdi-content-save text-h6"></span>
                     </v-btn>
                     <v-spacer></v-spacer>
@@ -505,11 +515,13 @@
                         หัก % เช็คชื่อครู
                     </v-btn>
                     <br>
-                    <v-btn color="#322E2B" rounded dark @click="dialog12 = !dialog12, send_rate_student_search()" class="mb-3 mt-5">
+                    <v-btn color="#322E2B" rounded dark @click="dialog12 = !dialog12, send_rate_student_search()"
+                        class="mb-3 mt-5">
                         หัก % ส่งพัฒนาการนักเรียน
                     </v-btn>
                     <br>
-                    <v-btn color="#322E2B" rounded dark @click="dialog13 = !dialog13, send_rate_teacher_search()" class="mb-3 mt-5">
+                    <v-btn color="#322E2B" rounded dark @click="dialog13 = !dialog13, send_rate_teacher_search()"
+                        class="mb-3 mt-5">
                         ให้ % ครูในกรณีน้องมีปัญหา
                     </v-btn>
                     <!-- <br> -->
@@ -529,6 +541,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
     data() {
         return {
@@ -572,6 +585,11 @@ export default {
             LimitedClass: [],
             LimitedClass_all: [],
         }
+    },
+    computed: {
+        // ใช้ mapState เพื่อเข้าถึงค่าใน state ใน store
+        ...mapState(['firstName', 'status']),
+        // ...
     },
     methods: {
         subject() {

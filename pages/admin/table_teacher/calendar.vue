@@ -176,7 +176,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.status == 'admin') {
+                            if (this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') {
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
                                 Promise.all([getSubjectPromise, getTeacherPromise])

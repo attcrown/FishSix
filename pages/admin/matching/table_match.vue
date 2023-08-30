@@ -175,11 +175,11 @@
                                                 <v-select :items="select_subject" label="วิชา" item-text="name"
                                                     item-value="key" v-model="editedItem.subject"
                                                     @input="search_select_level(editedItem.subject), editedItem.level = null"
-                                                    :readonly="status != 'admin'"></v-select>
+                                                    :readonly="status == 'teacher'"></v-select>
                                             </v-col>
                                             <v-col cols="12" sm="6">
                                                 <v-select :items="select_level" label="ระดับชั้น" v-model="editedItem.level"
-                                                    :readonly="status != 'admin'">
+                                                    :readonly="status == 'teacher'">
                                                 </v-select>
                                             </v-col>
                                         </v-row>
@@ -515,7 +515,7 @@ export default {
                         const datedata = keydata[date];
                         for (const time in datedata) {
                             const timedata = datedata[time];
-                            if (this.status == 'admin' && timedata.status == 'รอยืนยัน') {
+                            if ((this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') && timedata.status == 'รอยืนยัน') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

@@ -45,14 +45,13 @@
             </template>
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template v-slot:item.actions="{ item }">
-                <v-icon color="black"  class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
+                <v-icon color="black" class="mr-2" @click="viewItem(item)" style="text-decoration: underline;">
                     mdi-pencil
                 </v-icon>
-                <v-icon color="#B6A7A2"  class="mr-2" @click="viewMaterialDialog(item)"
-                    style="text-decoration: underline;">
+                <v-icon color="#B6A7A2" class="mr-2" @click="viewMaterialDialog(item)" style="text-decoration: underline;">
                     mdi-file-pdf-box
                 </v-icon>
-                <v-icon color="red"  @click="viewDeleteDialog(item)" style="text-decoration: underline;">
+                <v-icon color="red" @click="viewDeleteDialog(item)" style="text-decoration: underline;">
                     mdi-delete
                 </v-icon>
             </template>
@@ -215,12 +214,12 @@
                             </template>
                             <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
-                                <v-icon color="black"  class="mr-2" @click="openEditDialog(item)"
+                                <v-icon color="black" class="mr-2" @click="openEditDialog(item)"
                                     style="text-decoration: underline;">
                                     mdi-pencil
                                 </v-icon>
 
-                                <v-icon color="red"  @click="openDeleteMaterialDialog(item)"
+                                <v-icon color="red" @click="openDeleteMaterialDialog(item)" 
                                     style="text-decoration: underline;">
                                     mdi-delete
                                 </v-icon>
@@ -529,10 +528,7 @@ export default {
 
         }
     },
-    computed: {
-
-
-    },
+    
     mounted() {
         const value = this.$route.query.contentId;
         this.contentId = value;
@@ -790,7 +786,7 @@ export default {
                 var fileCount = 0;
                 var linkCount = 0;
                 for (const key in childDataName.material) {
-                    
+
                     if (childDataName.material[key].pdfFileUrl !== undefined) {
                         fileCount = fileCount + 1;
                     }

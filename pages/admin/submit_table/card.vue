@@ -1751,7 +1751,7 @@ export default {
                                             }
                                         }
                                     })
-                            } else if (this.status == 'admin') {
+                            } else if (this.status != 'teacher') {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

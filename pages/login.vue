@@ -88,7 +88,6 @@
 
 <script>
 import { exit } from 'process'
-
 export default {
   layout: 'login',
   data: () => ({
@@ -132,13 +131,21 @@ export default {
               if (this.ex4) {
                 localStorage.setItem('firstName', childData.name)
                 localStorage.setItem('lastName', this.encode(this.firstName))
-                localStorage.setItem('status', childData.status)
-                this.$router.push(`/${localStorage.getItem('status')}`)
+                localStorage.setItem('status', childData.status)                
+                if(localStorage.getItem('status') == 'opFS' || localStorage.getItem('status') == 'opsupFS'){
+                  this.$router.push(`/admin`)
+                }else{
+                  this.$router.push(`/${localStorage.getItem('status')}`)
+                }                
               } else {
                 sessionStorage.setItem('firstName', childData.name)
                 sessionStorage.setItem('lastName', this.encode(this.firstName))
-                sessionStorage.setItem('status', childData.status)
-                this.$router.push(`/${sessionStorage.getItem('status')}`)
+                sessionStorage.setItem('status', childData.status)                
+                if(sessionStorage.getItem('status') == 'opFS' || sessionStorage.getItem('status') == 'opsupFS'){
+                  this.$router.push(`/admin`)
+                }else{
+                  this.$router.push(`/${sessionStorage.getItem('status')}`)
+                }  
               }
             } else {
               this.dialog = true
@@ -155,6 +162,20 @@ export default {
       ) {
         this.$router.push('/admin');
       }
+      if (
+        localStorage.getItem('status') == 'opFS' ||
+        sessionStorage.getItem('status') == 'opFS'
+      ) {
+        this.$router.push('/admin');
+      }
+      if (
+        localStorage.getItem('status') == 'opsupFS' ||
+        sessionStorage.getItem('status') == 'opsupFS'
+      ) {
+        this.$router.push('/admin');
+      }
+
+
       if (
         localStorage.getItem('status') == 'user' ||
         sessionStorage.getItem('status') == 'user'

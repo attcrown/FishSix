@@ -6,8 +6,8 @@
                 <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
                 <p> <v-btn class="text-white" @click="exportDialog" color="black" router exact>Export
 
-                        <v-icon color="white" > mdi-microsoft-excel</v-icon>
-                        
+                        <v-icon color="white"> mdi-microsoft-excel</v-icon>
+
                     </v-btn>
                     <v-btn class="text-white" to="/admin/student/register" color="black" router exact>เพิ่มนักเรียน
                         <v-icon color="white">mdi-plus</v-icon>
@@ -71,16 +71,17 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                     
-                            <v-icon color="#B6A7A2" class="text-h5" @click="viewItem(item)" style="text-decoration: underline;">
-                                mdi-eye
-                            </v-icon>
-                       
-                 
-                            <v-icon small color="#AD382F" class="text-h5" @click="deleteItem(item)" style="text-decoration: underline;">
-                                mdi-delete
-                            </v-icon>
-                      
+
+                        <v-icon color="#B6A7A2" class="text-h5" @click="viewItem(item)" style="text-decoration: underline;">
+                            mdi-eye
+                        </v-icon>
+
+
+                        <v-icon small color="#AD382F" class="text-h5" @click="deleteItem(item)"
+                            style="text-decoration: underline;" v-if="status != 'opFS'">
+                            mdi-delete
+                        </v-icon>
+
                     </template>
                 </v-data-table>
 
@@ -174,6 +175,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import pageLoader from '@/components/loader.vue';
 import { Timestamp } from "firebase/firestore";
 import * as XLSX from 'xlsx';
@@ -213,7 +215,9 @@ export default {
         }
     },
     computed: {
-
+        // ใช้ mapState เพื่อเข้าถึงค่าใน state ใน store
+        ...mapState(['firstName', 'status']),
+        // ...
     },
     watch: {
         dialog(val) {

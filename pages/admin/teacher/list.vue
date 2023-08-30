@@ -7,7 +7,7 @@
                 <p>
                     <v-btn class="text-white" @click="exportDialog" color="black" router exact>Export
 
-                        <v-icon color="white" > mdi-microsoft-excel</v-icon>
+                        <v-icon color="white"> mdi-microsoft-excel</v-icon>
                     </v-btn>
                     <v-btn class="text-white" to="/admin/teacher/register" color="black" router exact>เพิ่มครู
                         <v-icon color="white">mdi-plus</v-icon>
@@ -73,16 +73,18 @@
                         </template>
                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                         <template v-slot:item.actions="{ item }">
-                     
-                            <v-icon color="#B6A7A2" class="text-h5" @click="viewItem(item)" style="text-decoration: underline;">
+
+                            <v-icon color="#B6A7A2" class="text-h5" @click="viewItem(item)"
+                                style="text-decoration: underline;">
                                 mdi-eye
                             </v-icon>
-                       
-                 
-                            <v-icon small color="#AD382F" class="text-h5" @click="deleteItem(item)" style="text-decoration: underline;">
+
+
+                            <v-icon small color="#AD382F" class="text-h5" @click="deleteItem(item)"
+                                style="text-decoration: underline;" v-if="status != 'opFS'">
                                 mdi-delete
                             </v-icon>
-                      
+
                         </template>
 
                     </v-data-table>
@@ -150,7 +152,7 @@
                                 <v-btn class="text-white" @click="exportData" color="green" :loading="isExport">ยืนยัน
 
                                     <v-icon color="white" small> mdi-content-save</v-icon>
-                               
+
                                 </v-btn>
                             </v-card-title>
 
@@ -163,6 +165,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import pageLoader from '@/components/loader.vue';
 import { Timestamp } from "firebase/firestore";
 import * as XLSX from 'xlsx';
@@ -198,7 +201,9 @@ export default {
         }
     },
     computed: {
-
+        // ใช้ mapState เพื่อเข้าถึงค่าใน state ใน store
+        ...mapState(['firstName', 'status']),
+        // ...
     },
     watch: {
         dialog(val) {
@@ -358,7 +363,7 @@ export default {
                 const selectedData = await Promise.all(selectedDataPromises);
 
                 const data = [this.selectedHeaders, ...selectedData];
-             
+
 
                 const createdAt = Timestamp.fromDate(new Date()).toDate().toISOString();
 
@@ -385,7 +390,7 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-      
+
                     if (childData[key].status == 'teacher') {
 
                         const teacher = {
