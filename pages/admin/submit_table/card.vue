@@ -1948,11 +1948,11 @@ export default {
                 let item1 = [];
                 let item2 = [];
                 let item3 = [];
-                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
+                let now = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {
-                        if (new Date(date).getTime() <= now.getTime()) {
+                    for (const date in keydata) {                        
+                        if (true) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
@@ -2261,6 +2261,7 @@ export default {
                 this.dessertsNotData = item2;
                 this.dessertsNotapprove = item1;
                 this.dessertsApprove = item;
+                console.log(this.dessertsApprove);
             })
         },
 
