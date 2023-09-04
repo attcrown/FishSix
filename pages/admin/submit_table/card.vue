@@ -606,19 +606,19 @@
                                             v-model="edited.link_sheet" :rules="rules.text" required></v-text-field>
                                     </v-col>
                                 </v-row>
-                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'admin'">
+                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'admin'">
+                                <v-col cols="12" sm="6" md="6" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-select v-model="edited.status_development" :items="items_development"
                                         :rules="[v => !!v || 'กรุณาลงสถานะ']" label="สถานะพัฒนาการ" required></v-select>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" v-if="this.status == 'admin'">
+                                <v-col cols="12" sm="6" md="6" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12" v-if="edited.match_test && this.status == 'admin'">
+                                <v-col cols="12" sm="12" v-if="edited.match_test && this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-select v-model="edited.optional" :items="optional_all" item-value="key"
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
                                         required></v-select>
