@@ -94,7 +94,8 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12" sm="6" md="12">
-                                        <v-text-field v-model="date1" label="วันที่สอน" :disabled="mode == 'edit'" @click="dialog_select_date = true" >
+                                        <v-text-field v-model="date1" label="วันที่สอน" :disabled="mode == 'edit'"
+                                            @click="dialog_select_date = true">
                                             <template #prepend>
                                                 <span class="mdi mdi-calendar-outline text-h6"></span>
                                             </template>
@@ -125,8 +126,8 @@
                                     </v-col>
                                     <v-col cols="12" sm="12">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
-                                            :rules="[v => !!v || 'กรุณาเลือกวิชา']" v-model="save_detail.subject" :readonly="mode == 'edit'"
-                                            required></v-select>
+                                            :rules="[v => !!v || 'กรุณาเลือกวิชา']" v-model="save_detail.subject"
+                                            :readonly="mode == 'edit'" required></v-select>
                                     </v-col>
                                     <!-- <v-col cols="12" sm="4">
                                         <v-text-field label="จำนวนคนที่รับสูงสุดต่อชม." v-model="save_detail.sum_people"
@@ -191,7 +192,7 @@
     </div>
 </template>
 <script>
-import { Timestamp } from "firebase/firestore";
+import { CalendarEventBus } from './calendar.vue';
 export default {
     data: () => ({
         keyuser: null,
@@ -474,7 +475,7 @@ export default {
                             sum_people: selectedClass.bath
                         });
                         this.dialog_detail = false;
-                        this.clear_item();
+                        // this.clear_item();
                         this.search_date_teacher();
                     } else {
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${this.picker_start}E${this.picker_stop}`).update({
@@ -488,7 +489,7 @@ export default {
                             sum_people: selectedClass.bath
                         });
                         this.dialog_detail = false;
-                        this.clear_item();
+                        // this.clear_item();
                         this.search_date_teacher();
                     }
                 }
@@ -499,7 +500,7 @@ export default {
                     if (Work_tea.exists()) {
                         const Work_data_tea = Work_tea.val();
                         for (const key in Work_data_tea) {
-                            if (Work_data_tea[key].Class.key == '-NcQsHB9vgG53lJKPA-i' && 
+                            if (Work_data_tea[key].Class.key == '-NcQsHB9vgG53lJKPA-i' &&
                                 Work_data_tea[key].style_subject == this.save_detail.style &&
                                 Work_data_tea[key].subject == this.save_detail.subject) {  //ตรวจสอบ FlipClass
                                 console.log('GOOD', Work_data_tea[key]);
@@ -542,10 +543,8 @@ export default {
                             style_subject: this.save_detail.style,
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
-                        });                        
+                        });
                         this.dialog_detail = false;
-                        this.clear_item();
-                        this.search_date_teacher();
                     } else {
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${this.picker_start}E${this.picker_stop}`).update({
                             Class: selectedClass,
@@ -557,12 +556,12 @@ export default {
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
                         });
-                        this.dialog_detail = false;
-                        this.clear_item();
-                        this.search_date_teacher();
+                        this.dialog_detail = false;             
                     }
                 }
             }
+            this.clear_item();
+            this.search_date_teacher(); 
         },
 
         clear_item() {
@@ -575,7 +574,10 @@ export default {
             this.time_standart_sum = [];
             this.picker_start = null;
             this.picker_stop = null;
-            this.date1 = [];            
+            this.date1 = [];
+            setTimeout(() => {
+                CalendarEventBus.$emit('call-calendar-method');
+            }, 300);            
         },
         allowedDates: val => {
             const currentDate = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
@@ -620,7 +622,7 @@ export default {
                 const childData = snapshot.val();
                 const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 this.desserts = [];
-                this.arrayEvents = [];                
+                this.arrayEvents = [];
                 let item = [];
                 for (const key in childData) {
                     const keydata = childData[key];
@@ -765,7 +767,8 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/${this.delcon.key}/${this.delcon.date}/${this.delcon.time_s}E${this.delcon.time_e}`).remove();
             this.delcon = [];
-            this.closeDelete()
+            this.closeDelete();
+            this.clear_item();
         },
 
         close() {
@@ -776,12 +779,12 @@ export default {
             })
         },
 
-        closeDelete() {
+        closeDelete() {            
             this.dialogDelete = false
             this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.clear_item())
+                this.editedItem = Object.assign({})
                 this.editedIndex = -1
-            })
+            })            
         },
         search_teacher() {
             const db = this.$fireModule.database();

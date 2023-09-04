@@ -1603,6 +1603,7 @@ export default {
             })
         },
         search_date_teacher() {
+            console.log('search_date_teacher');
             const db = this.$fireModule.database();
             db.ref(`date_match/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
@@ -1927,6 +1928,7 @@ export default {
         },
 
         search_date_teacher_All() {
+            console.log('search_date_teacher_all');
             console.log(
                 this.panel,
                 this.panel1,

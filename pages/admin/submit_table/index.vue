@@ -23,18 +23,9 @@ export default {
 
     },
     mounted() {
-        this.fullName();
     },
     methods: {
-        fullName() {
-            if (localStorage.getItem('firstName') == null) {
-                this.firstName = sessionStorage.getItem('firstName') || '';
-                this.keyuser = sessionStorage.getItem('lastName') || '';
-            } else {
-                this.firstName = localStorage.getItem('firstName') || '';
-                this.keyuser = localStorage.getItem('lastName') || '';
-            }
-        },
+        
     },
 }
 </script>

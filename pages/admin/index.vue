@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-0">
+  <div class="mx-10">
     <table_now></table_now>
   </div>
 </template>
@@ -21,18 +21,10 @@ export default {
     
   },
   mounted() {
-    this.fullName();
+    
   },
   methods: {
-    fullName() {
-      if (localStorage.getItem('firstName') == null) {
-        this.firstName = sessionStorage.getItem('firstName') || '';
-        this.keyuser = sessionStorage.getItem('lastName') || '';
-      } else {
-        this.firstName = localStorage.getItem('firstName') || '';
-        this.keyuser = localStorage.getItem('lastName') || '';
-      }
-    },
+    
   },
 }
 </script>

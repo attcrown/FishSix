@@ -89,10 +89,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import Vue from 'vue';
+export const CalendarEventBus = new Vue();
 export default {
     data: () => ({
-        keyuser: null,
-        status: null,
         focus: '',
         type: 'week',
         typeToLabel: {
@@ -108,21 +109,19 @@ export default {
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted() {
-        this.fullName();
         this.search_date_teacher();
         this.$refs.calendar.checkChange();
     },
+    computed: {
+        ...mapState(['firstName', 'status']),
+        // ...
+    },
+    created() {
+        CalendarEventBus.$on('call-calendar-method', () => {
+            this.search_date_teacher();
+        });
+    },
     methods: {
-        fullName() {
-            if (localStorage.getItem('firstName') == null) {
-                this.keyuser = sessionStorage.getItem('lastName') || '';
-                this.status = sessionStorage.getItem('status') || '';
-            } else {
-                this.keyuser = localStorage.getItem('lastName') || '';
-                this.status = localStorage.getItem('status') || '';
-            }
-            console.log(">>>>>", this.keyuser, this.status);
-        },
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
@@ -163,12 +162,14 @@ export default {
             nativeEvent.stopPropagation()
         },
         search_date_teacher() {
+            console.log('calendar search');
             const db = this.$fireModule.database();
-            db.ref(`date_teacher/`).on("value", (snapshot) => {
+            db.ref(`date_teacher/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
+                this.selectedEvent = {};
+                this.selectedElement = null;
+                this.selectedOpen = false;
                 this.events = [];
-                this.selectedEvent= {};
-                this.selectedElement= null;
                 const now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
@@ -198,7 +199,7 @@ export default {
                                             },
                                         );
                                     })
-                            } else if (this.status == 'teacher' && this.keyuser == key) {
+                            } else if (this.status == 'teacher' && this.firstName == key) {
                                 const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getTeacherPromise = db.ref(`user/${key}`).once("value");
                                 Promise.all([getSubjectPromise, getTeacherPromise])
