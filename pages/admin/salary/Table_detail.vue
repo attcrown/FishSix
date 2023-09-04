@@ -10,8 +10,8 @@
                                 <v-col cols="auto" class="mr-auto">
                                     <img :src="require('~/assets/cashcoin.png')" class="pt-10 ps-8">
                                 </v-col>
-                                <v-col cols="auto" class="pt-14 mt-16 me-5" style="font-size:30px;">
-                                    {{ sum_money_all }} ฿
+                                <v-col cols="auto" class="pt-14 mt-16 me-5" style="font-size:20px;">
+                                    <b>{{ sum_money_all }} ฿</b> 
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7 mt-5">
                                     <p style="font-size: 16px; margin-top: -50px;">รวมเงินเดือนครู

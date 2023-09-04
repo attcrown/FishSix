@@ -499,7 +499,7 @@
                                         readonly></v-text-field>
                                 </v-col>
 
-                                <v-col cols="12" sm="6" style="margin-top:-30px"
+                                <v-col cols="12" sm="12" style="margin-top:-30px"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-radio-group v-model="edited.status_study_column" column
                                         :rules="[v => !!v || 'กรุณาเลือก']" required>
@@ -508,19 +508,25 @@
                                             :label="items.name" :value="items"></v-radio>
                                     </v-radio-group>
                                 </v-col>
+                                <v-row v-if="edited.status_study_column &&
+                                    (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
+                                        edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
+                                    <v-col cols="12" sm="12" v-if="!edited.img_1 &&
+                                        edited.status_study_column_tea &&
+                                        (edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW')">
+                                        <v-file-input :rules="rules.img" v-model="fileToUpload1"
+                                            accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
+                                            label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
+                                    </v-col>
 
-                                <v-col cols="12" sm="6"
-                                    v-if="!edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-file-input :rules="rules.img" v-model="fileToUpload1"
-                                        accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
-                                        label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
-                                </v-col>
-                                <v-col cols="12" sm="6" style="margin-top:-30px"
-                                    v-if="edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
-                                        @click="img_show_1 = true">ดูรูปภาพนักเรียน <span
-                                            class="mdi mdi-image-area text-h6"></span></v-btn>
-                                </v-col>
+
+                                    <v-col cols="12" sm="6" style="margin-top:-30px"
+                                        v-if="edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
+                                            @click="img_show_1 = true">ดูรูปภาพนักเรียน <span
+                                                class="mdi mdi-image-area text-h6"></span></v-btn>
+                                    </v-col>
+                                </v-row>
 
                                 <v-col cols="12" sm="6" style="margin-top:-30px"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
@@ -533,69 +539,73 @@
                                 </v-col>
                                 <v-col cols="12" sm="6"></v-col>
 
-                                <v-col cols="12" sm="6" md="6"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="edited.learn" :rules="rules.text"
-                                        required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-select v-model="edited.understand" :items="items"
-                                        :rules="[v => !!v || 'กรุณาลงคะแนน']" label="น้องมีความเข้าใจในเนื้อหา"
-                                        required></v-select>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter
-                                        v-model="edited.development" :rules="rules.textarea" required>
-                                        <template v-slot:append-outer>
-                                            <v-tooltip bottom>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-icon v-on="on">
-                                                        mdi-help-circle-outline
-                                                    </v-icon>
-                                                </template>
-                                                คู่มือการเขียนพัฒนาการน้อง
-                                            </v-tooltip>
-                                        </template>
-                                    </v-textarea>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="6"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
-                                        :rules="rules.text" required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="12"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="จึงใช้วิธี...เพื่อพัฒนาน้อง" v-model="edited.method" :rules="rules.text"
-                                        required></v-text-field>
-                                </v-col>
-                                <!-- <v-col cols="12" sm="6" md="6"
+                                <v-row v-if="edited.status_study_column &&
+                                    (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
+                                        edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
+                                    <v-col cols="12" sm="6" md="6"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="edited.learn"
+                                            :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="6"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-select v-model="edited.understand" :items="items"
+                                            :rules="[v => !!v || 'กรุณาลงคะแนน']" label="น้องมีความเข้าใจในเนื้อหา"
+                                            required></v-select>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="6"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter
+                                            v-model="edited.development" :rules="rules.textarea" required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    คู่มือการเขียนพัฒนาการน้อง
+                                                </v-tooltip>
+                                            </template>
+                                        </v-textarea>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="6"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
+                                            :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="6" md="12"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-text-field label="จึงใช้วิธี...เพื่อพัฒนาน้อง" v-model="edited.method"
+                                            :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                    <!-- <v-col cols="12" sm="6" md="6"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-text-field label="เพื่อพัฒนาน้อง" v-model="edited.to_development" :rules="rules.text"
                                         required></v-text-field>
-                                </v-col> -->
-                                <v-col cols="12" sm="12"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
-                                        v-model="edited.homework" :rules="rules.text" required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="12"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
-                                        v-model="edited.link_url" :rules="rules.text" required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="12"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                    <v-radio-group v-model="edited.status_check_sheet" :rules="[v => !!v || 'กรุณาเลือก']"
-                                        required>
-                                        <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name"
-                                            :value="items"></v-radio>
-                                    </v-radio-group>
-                                    <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
-                                        v-if="edited.status_check_sheet && edited.status_check_sheet.key == '-NcBOFy1oXhSI-dVzWkp'"
-                                        v-model="edited.link_sheet" :rules="rules.text" required></v-text-field>
-                                </v-col>
+                                    </v-col> -->
+                                    <v-col cols="12" sm="12"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
+                                            v-model="edited.homework" :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="12"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
+                                            v-model="edited.link_url" :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" sm="12"
+                                        v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                        <v-radio-group v-model="edited.status_check_sheet"
+                                            :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                            <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name"
+                                                :value="items"></v-radio>
+                                        </v-radio-group>
+                                        <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
+                                            v-if="edited.status_check_sheet && edited.status_check_sheet.key == '-NcBOFy1oXhSI-dVzWkp'"
+                                            v-model="edited.link_sheet" :rules="rules.text" required></v-text-field>
+                                    </v-col>
+                                </v-row>
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'admin'">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
@@ -638,18 +648,20 @@
                                 class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
-                    <v-card-text style="color: black;" v-if="edited.status_development && edited.status_development == 'Approved'">
+                    <v-card-text style="color: black;"
+                        v-if="edited.status_development && edited.status_development == 'Approved'">
                         <hr style="border: 1px solid #000; background-color: #000;">
                         <p><b>แจ้งพัฒนาการเรียนของน้อง :</b> {{ edited.namestu || 'ไม่มี' }} <br>
-                        <b>วันที่ :</b> {{ edited.date }} <br>
-                        <b>วิชา :</b> {{ edited.subject || 'ไม่มี' }} <br>
-                        <b>ครูผู้สอน :</b> {{ edited.name || 'ไม่มี' }} <br>
-                        <b>วันนี้น้องเรียนเรื่อง :</b> {{edited.learn|| 'ไม่มี' }} <br>
-                        <b>มีความเข้าใจในเนื้อหา :</b> {{ edited.understand || '-' }}/10 คะแนน <br>
-                        <b>สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้นคือ : </b> {{ edited.development || 'ไม่มี'  }} <br>
-                        <b>ปัญหาที่เกิดกับน้องในการเรียนคือ :</b> {{ edited.problem || 'ไม่มี' }} <br>
-                        <b>จึงใช้วิธี : </b> {{ edited.method || 'ไม่มี' }}เพื่อพัฒนาน้อง<br>
-                        <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}</p>
+                            <b>วันที่ :</b> {{ edited.date }} <br>
+                            <b>วิชา :</b> {{ edited.subject || 'ไม่มี' }} <br>
+                            <b>ครูผู้สอน :</b> {{ edited.name || 'ไม่มี' }} <br>
+                            <b>วันนี้น้องเรียนเรื่อง :</b> {{ edited.learn || 'ไม่มี' }} <br>
+                            <b>มีความเข้าใจในเนื้อหา :</b> {{ edited.understand || '-' }}/10 คะแนน <br>
+                            <b>สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้นคือ : </b> {{ edited.development || 'ไม่มี' }} <br>
+                            <b>ปัญหาที่เกิดกับน้องในการเรียนคือ :</b> {{ edited.problem || 'ไม่มี' }} <br>
+                            <b>จึงใช้วิธี : </b> {{ edited.method || 'ไม่มี' }}เพื่อพัฒนาน้อง<br>
+                            <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}
+                        </p>
                     </v-card-text>
                 </v-card>
             </v-form>
@@ -1263,7 +1275,7 @@ export default {
                             del_send_rate_name = (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             console.log(item_data.status_study_column_tea.name)
-                            
+
                         }
                         //--------เช็คชื่อช้าหรือไม่-------------------
 
@@ -1272,7 +1284,7 @@ export default {
                         } else if (item_data.status_send_method) {
                             del_send_rate_save = (parseFloat(item_data.status_send_method.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
-                            
+
                         }
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
@@ -1281,13 +1293,13 @@ export default {
                         } else if (item_data.status_study_column) {
                             del_send_rate_stu = (parseFloat(item_data.status_study_column.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_study_column.bath) * sum / 100);
-                            
+
                         }
                         //---------น้องมาเรียนปกติไหม--------------------
 
                         console.log(sum);
 
-                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({                         
+                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
                             subject: subject_data || null,
                             level: level_search || null,
                             typeflip: typeflip_data || null,
@@ -1336,7 +1348,7 @@ export default {
                 status_send_method: item_data.status_send_method || null,
                 status_check_sheet: item_data.status_check_sheet || null,
 
-                match_vip: item_data.match_vip || false, 
+                match_vip: item_data.match_vip || false,
                 learn: item_data.learn || null,
                 understand: item_data.understand || null,
                 development: item_data.development || null,
@@ -1353,7 +1365,7 @@ export default {
             }).then(() => {
                 console.log('save send_plan', item_data);
 
-            })            
+            })
             if (!item_data.del_time || item_data.del_time == undefined) {
                 this.clear_time_student();
             } else {
@@ -1367,7 +1379,7 @@ export default {
         },
 
         clear_time_student() {
-            console.log('clear_time_student',this.edited);
+            console.log('clear_time_student', this.edited);
             const db = this.$fireModule.database();
             let keystudent = this.edited;
             db.ref(`date_match/${keystudent.keyStudent}/${keystudent.date}/${keystudent.time_e}/`).update({
@@ -1412,11 +1424,13 @@ export default {
                 console.log('ลบชมทด Private VIP');
             }
 
-
+            //-------ครูลากระทันหัน---------(ไม่หักชม น้อง)
             if (keystudent.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW') {
                 console.log('END ', keystudent.status_study_column_tea.name);
                 return;
             }
+
+
             if (keystudent.match_test && keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
                 const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
                 Promise.all([getTeacherPromise])
@@ -1457,9 +1471,13 @@ export default {
                             this.clear_dialog();
                         }
                     })
-            }
-            else if (keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
-                keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" &&
+
+                //------------------หัก ชม นักเรียน------------------
+            } else if ((keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
+                keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" ||
+                keystudent.status_study_column.key == "-NceLxBOS65TrhT6Dbw_" ||
+                keystudent.status_study_column.key == "-NceM0EF_D69DhFS-LTF" ||
+                keystudent.status_study_column.key == '-NdSzEfsKszFmW0unZwX') &&
                 keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
                 const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
                 Promise.all([getTeacherPromise])
@@ -1930,7 +1948,7 @@ export default {
                 let item1 = [];
                 let item2 = [];
                 let item3 = [];
-                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
+                let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
@@ -1939,6 +1957,7 @@ export default {
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 if (this.status == "teacher" && this.keyuser == timedata.teacher) {
+                                    console.log('Doing');
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -2085,7 +2104,8 @@ export default {
                                                 }
                                             }
                                         })
-                                } else if (this.status == 'admin') {
+                                } else if (this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') {
+                                    console.log('Doing');
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
