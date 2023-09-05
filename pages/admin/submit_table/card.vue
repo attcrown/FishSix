@@ -475,7 +475,7 @@
                                         readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" style="margin-top:-30px">
-                                    <v-radio-group v-model="edited.status_study_column_tea" column1 readonly>
+                                    <v-radio-group v-model="edited.status_study_column_tea" column1>
                                         <p>เช็คชื่อครูเข้าสอน</p>
                                         <v-radio v-for="(items, key) in send_rate_all" :key="key" :label="items.name"
                                             :value="items"></v-radio>
@@ -499,10 +499,10 @@
                                         readonly></v-text-field>
                                 </v-col>
 
-                                <v-col cols="12" sm="12" style="margin-top:-30px"
+                                <v-col cols="12" sm="6" style="margin-top:-30px"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                     <v-radio-group v-model="edited.status_study_column" column
-                                        :rules="[v => !!v || 'กรุณาเลือก']" required>
+                                        :rules="[v => !!v || 'กรุณาเลือก']" @change="send_rate_student_search()" required>
                                         <p>เช็คชื่อนักเรียนเข้าเรียน</p>
                                         <v-radio v-for="(items, key) in send_rate_teacher_all" :key="key"
                                             :label="items.name" :value="items"></v-radio>
@@ -511,7 +511,7 @@
                                 <v-row v-if="edited.status_study_column &&
                                     (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
                                         edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
-                                    <v-col cols="12" sm="12" v-if="!edited.img_1 &&
+                                    <v-col cols="12" sm="6" v-if="!edited.img_1 &&
                                         edited.status_study_column_tea &&
                                         (edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW')">
                                         <v-file-input :rules="rules.img" v-model="fileToUpload1"
@@ -529,7 +529,7 @@
                                 </v-row>
 
                                 <v-col cols="12" sm="6" style="margin-top:-30px"
-                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
+                                    v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW' && edited.status_study_column">
                                     <v-radio-group v-model="edited.status_send_method" column2
                                         :rules="[v => !!v || 'กรุณาเลือก']" required>
                                         <p>ส่งพัฒนาการ</p>
@@ -542,20 +542,42 @@
                                 <v-row v-if="edited.status_study_column &&
                                     (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
                                         edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
-                                    <v-col cols="12" sm="6" md="6"
+                                    <v-col cols="12" sm="9" md="9"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                         <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="edited.learn"
-                                            :rules="rules.text" required></v-text-field>
+                                            :rules="rules.text" required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    ตัวอย่าง ทบทวนเตรียมสอบกลางภาค เรื่อง สารอาหาร การจำแนกสิ่งมีชีวิต
+                                                </v-tooltip>
+                                            </template>
+                                        </v-text-field>
                                     </v-col>
-                                    <v-col cols="12" sm="6" md="6"
+                                    <v-col cols="12" sm="3" md="3"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
                                         <v-select v-model="edited.understand" :items="items"
                                             :rules="[v => !!v || 'กรุณาลงคะแนน']" label="น้องมีความเข้าใจในเนื้อหา"
-                                            required></v-select>
+                                            required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    ตัวอย่าง น้องมีความเข้าใจในเนื้อหา 10/10 คะแนน
+                                                </v-tooltip>
+                                            </template>
+                                        </v-select>
                                     </v-col>
-                                    <v-col cols="12" sm="6" md="6"
+                                    <v-col cols="12" sm="6" md="12"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                        <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter
+                                        <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="3" counter
                                             v-model="edited.development" :rules="rules.textarea" required>
                                             <template v-slot:append-outer>
                                                 <v-tooltip bottom>
@@ -564,20 +586,64 @@
                                                             mdi-help-circle-outline
                                                         </v-icon>
                                                     </template>
-                                                    คู่มือการเขียนพัฒนาการน้อง
+                                                    ตัวอย่าง น้องจุนซู มีความตั้งใจดีมาก สมาธินิ่ง<br>
+                                                    พร้อมที่จะเรียนรู้และตื่นตัวสำหรับการเรียนมากนะคะ<br>
+                                                    น้องค่อนข้างเป็นคนที่เรียนรู้ได้ไว จับใจความได้ดี สามารถจับจุดสำคัญ<br>
+                                                    ในการทบทวนความรู้เรื่อง สารอาหาร การจำแนกสิ่งมีชีวิต<br>
+                                                    น้องสามารถตอบคำถามกับคุณครูและแลกเปลี่ยนความคิดเห็นได้ดีกับคุณครูค่ะ<br>
+                                                    คุณครูขอชื่นชม จุนซูสามารถทำแบบฝึกหัดได้ในเกณฑ์ระดับดีมากเลยนะคะ<br>
+                                                    น้องสามารถอธิบายที่มาของคำตอบได้ดีมากค่ะ วันนี้ครูพลอยลองให้น้อง<br>
+                                                    ทำแนวข้อสอบเนื้อหาจะค่อนข้างยากกว่าที่น้องเรียนมานะคะ<br>
+                                                    แต่เป็นเนื้อหาเดียวกันที่น้องเรียนในชั้นเรียน แค่แนวโจทย์ซับซ้อนกว่า<br>
+                                                    พบว่าน้องสามารถทำแนวข้อสอบได้ 90% มีผิดแค่บางข้อเท่านั้นเองค่ะ<br>
+                                                    ซึ่งอยู่ในระดับเกณฑ์ค่อนข้างดีค่ะ โดยรวมวันนี้น้องมีพัฒนาการที่ดี<br>
+                                                    เรียนรู้สิ่งใหม่ๆแล้ว สามารถทำแนวข้อสอบยากๆได้ในระดับค่อนข้างดีเลยนะคะ
+                                                    ^_^<br>
                                                 </v-tooltip>
                                             </template>
                                         </v-textarea>
                                     </v-col>
-                                    <v-col cols="12" sm="6" md="6"
+                                    <v-col cols="12" sm="12" md="12"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                        <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" v-model="edited.problem"
-                                            :rules="rules.text" required></v-text-field>
+                                        <v-textarea label="ปัญหาที่เกิดกับน้องในการเรียน" rows="3" counter
+                                            v-model="edited.problem" :rules="rules.text" required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    ตัวอย่าง พบเพียงแค่เล็กน้อยเท่านั้นค่ะ ในเรื่องสารอาหาร 5 หมู่<br>
+                                                    น้องยังไม่แม่นในเรื่องสารอาหารเป็นบางหมู่เท่านั้น<br>
+                                                    ส่วนในเรื่องการจำแนกสิ่งมีชีวิต ติดแค่ในเรื่องส่วนประกอบของพืช<br>
+                                                    น้องมีจำสลับกันบ้างค่ะ ครูพลอยได้แนะนำในการสังเกต<br>
+                                                    และทำความเข้าใจในชั่วโมงไปแล้วเรียบร้อยนะคะ<br>
+                                                    ครูพลอยเลยลองให้น้องลองทำแนวข้อสอบคล้ายๆกัน<br>
+                                                    น้องสามารถทำข้อสอบได้ในที่สุดค่ะ<br>
+                                                </v-tooltip>
+                                            </template>
+                                        </v-textarea>
                                     </v-col>
                                     <v-col cols="12" sm="6" md="12"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                        <v-text-field label="จึงใช้วิธี...เพื่อพัฒนาน้อง" v-model="edited.method"
-                                            :rules="rules.text" required></v-text-field>
+                                        <v-textarea label="จึงใช้วิธี...เพื่อพัฒนาน้อง" rows="3" counter
+                                            v-model="edited.method" :rules="rules.text" required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    ตัวอย่าง จึงใช้วิธีเน้นให้น้องถามตอบกับคุณครู
+                                                    กล้าแสดงออกแสดงความคิดเห็น<br>
+                                                    และทำแบบฝึกหัดไปพร้อมๆกับคุณครู<br>
+                                                    เพื่อพัฒนาน้องให้มีความกล้าแสดงออก<br>
+                                                    ตอบคำถามได้อย่างมั่นใจและพัฒนาศักยภาพการคิดวิเคราะห์มีความชำนาญมากยิ่งขึ้น<br>
+                                                </v-tooltip>
+                                            </template>
+                                        </v-textarea>
                                     </v-col>
                                     <!-- <v-col cols="12" sm="6" md="6"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
@@ -586,8 +652,22 @@
                                     </v-col> -->
                                     <v-col cols="12" sm="12"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                        <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
-                                            v-model="edited.homework" :rules="rules.text" required></v-text-field>
+                                        <v-textarea label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้" rows="3" counter
+                                            v-model="edited.homework" :rules="rules.text" required>
+                                            <template v-slot:append-outer>
+                                                <v-tooltip bottom>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon v-on="on">
+                                                            mdi-help-circle-outline
+                                                        </v-icon>
+                                                    </template>
+                                                    ตัวอย่าง แบบทดสอบ ทบทวนเตรียมสอบกลางภาค เรื่อง<br>
+                                                    สารอาหาร การจำแนกสิ่งมีชีวิต<br>
+                                                    (ทำในชม.ที่เรียน และทดสอบแนวข้อสอบจับเวลาในช่วงเวลาเรียนนะคะ)<br>
+                                                    วันนี้ไม่การบ้านนะคะ<br>
+                                                </v-tooltip>
+                                            </template>
+                                        </v-textarea>
                                     </v-col>
                                     <v-col cols="12" sm="12"
                                         v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
@@ -606,19 +686,23 @@
                                             v-model="edited.link_sheet" :rules="rules.text" required></v-text-field>
                                     </v-col>
                                 </v-row>
-                                <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                <v-col cols="12" sm="12" style="margin-top:-30px"
+                                    v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px; color:#000;">Operation ตรวจสอบ</p>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-select v-model="edited.status_development" :items="items_development"
                                         :rules="[v => !!v || 'กรุณาลงสถานะ']" label="สถานะพัฒนาการ" required></v-select>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                <v-col cols="12" sm="6" md="6"
+                                    v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-text-field label="Comment/อื่นๆ" v-model="edited.comment" :rules="rules.text"
                                         required></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="12" v-if="edited.match_test && this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                <v-col cols="12" sm="12"
+                                    v-if="edited.match_test && this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-select v-model="edited.optional" :items="optional_all" item-value="key"
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
                                         required></v-select>
@@ -659,7 +743,7 @@
                             <b>มีความเข้าใจในเนื้อหา :</b> {{ edited.understand || '-' }}/10 คะแนน <br>
                             <b>สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้นคือ : </b> {{ edited.development || 'ไม่มี' }} <br>
                             <b>ปัญหาที่เกิดกับน้องในการเรียนคือ :</b> {{ edited.problem || 'ไม่มี' }} <br>
-                            <b>จึงใช้วิธี : </b> {{ edited.method || 'ไม่มี' }}เพื่อพัฒนาน้อง<br>
+                            <b>จึงใช้วิธี : </b> {{ edited.method || 'ไม่มี' }}<br>
                             <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}
                         </p>
                     </v-card-text>
@@ -901,7 +985,6 @@ export default {
     },
     mounted() {
         this.send_rate_search();
-        this.send_rate_student_search();
         this.send_rate_teacher_search();
         this.sheet_search();
         this.optional_search();
@@ -1006,9 +1089,21 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                    if (this.edited.status_study_column && (this.edited.status_study_column.key == '-NceLxBOS65TrhT6Dbw_' || this.edited.status_study_column.key == '-NdT-vGRfJ-XcIpWCJmh')) {
+                        if (key == '-NceIch1uzRsSqZgmimp' || key == '-NdT-X4ccBXLq3v9qpRB') {
+                            item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                        }
+
+                    } else {
+                        if (key == '-NceIch1uzRsSqZgmimp' || key == '-NceWufpfrQ1vSJabvVb') {
+                            item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
+                        }
+                    }
                 }
                 this.send_rate_student_all = item;
+                // if (this.edited.status_send_method != undefined) {
+                //     this.send_rate_student_all = [this.edited.status_send_method];
+                // }             
                 console.log(this.send_rate_student_all);
             })
         },
@@ -1120,6 +1215,7 @@ export default {
                 console.log(this.edited, this.check_time);
             });
             this.dialog_confirm = true;
+            this.send_rate_student_search();
         },
 
         clear_dialog() {
@@ -1190,11 +1286,6 @@ export default {
                             keysubject: this.edited.keySubject,
                         }).then(() => {
                             console.log('save send_plan');
-                            if (this.date == null) {
-                                this.search_date_teacher_All();
-                            } else {
-                                this.search_date_teacher();
-                            }
                         })
                         console.log("ไม่มีการลบ ชม. นักเรียน");
                         this.loadsave = false;
@@ -1206,9 +1297,17 @@ export default {
             }).catch((error) => {
                 console.log("รูปหนึ่ง", error);
             });
+            setTimeout(() => {
+                if (this.date == null) {
+                    this.search_date_teacher_All();
+                } else {
+                    this.search_date_teacher();
+                }
+            }, 300);
         },
 
         save_confirm() {
+            console.log('save_confirm')
             const db = this.$fireModule.database();
             let item_data = this.edited;
             if (this.edited.status_development == "Approved") {
@@ -1279,15 +1378,6 @@ export default {
                         }
                         //--------เช็คชื่อช้าหรือไม่-------------------
 
-                        if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
-                            console.log(item_data.status_send_method.name)
-                        } else if (item_data.status_send_method) {
-                            del_send_rate_save = (parseFloat(item_data.status_send_method.bath) * sum / 100);
-                            sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
-
-                        }
-                        //--------ส่งพัฒนาการช้าหรือไม่-------------------
-
                         if (item_data.status_study_column && item_data.status_study_column.bath == '0') {
                             console.log(item_data.status_study_column.name)
                         } else if (item_data.status_study_column) {
@@ -1296,6 +1386,15 @@ export default {
 
                         }
                         //---------น้องมาเรียนปกติไหม--------------------
+
+                        if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
+                            console.log(item_data.status_send_method.name)
+                        } else if (item_data.status_send_method) {
+                            del_send_rate_save = (parseFloat(item_data.status_send_method.bath) * sum / 100);
+                            sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
+
+                        }
+                        //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
                         console.log(sum);
 
@@ -1348,6 +1447,7 @@ export default {
                 status_send_method: item_data.status_send_method || null,
                 status_check_sheet: item_data.status_check_sheet || null,
 
+                status_study_column_tea: item_data.status_study_column_tea || null,
                 match_vip: item_data.match_vip || false,
                 learn: item_data.learn || null,
                 understand: item_data.understand || null,
@@ -1370,11 +1470,13 @@ export default {
                 this.clear_time_student();
             } else {
                 this.clear_dialog();
-                if (this.date == null) {
-                    this.search_date_teacher_All();
-                } else {
-                    this.search_date_teacher();
-                }
+                setTimeout(() => {
+                    if (this.date == null) {
+                        this.search_date_teacher_All();
+                    } else {
+                        this.search_date_teacher();
+                    }
+                }, 300);
             }
         },
 
@@ -1475,9 +1577,7 @@ export default {
                 //------------------หัก ชม นักเรียน------------------
             } else if ((keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
                 keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" ||
-                keystudent.status_study_column.key == "-NceLxBOS65TrhT6Dbw_" ||
-                keystudent.status_study_column.key == "-NceM0EF_D69DhFS-LTF" ||
-                keystudent.status_study_column.key == '-NdSzEfsKszFmW0unZwX') &&
+                keystudent.status_study_column.key == "-NceLxBOS65TrhT6Dbw_") &&
                 keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
                 const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
                 Promise.all([getTeacherPromise])
@@ -1560,11 +1660,13 @@ export default {
                 this.loadsave = false;
                 this.clear_dialog();
             }
-            if (this.date == null) {
-                this.search_date_teacher_All();
-            } else {
-                this.search_date_teacher();
-            }
+            setTimeout(() => {
+                if (this.date == null) {
+                    this.search_date_teacher_All();
+                } else {
+                    this.search_date_teacher();
+                }
+            }, 300);
         },
         sum_hour(start, end) {
             // console.log('ทำsum',start,end);
@@ -1679,9 +1781,9 @@ export default {
                                                         del_time: timedata.del_time,
                                                         select_class: timedata.select_class
                                                     });
-                                                } else if (sendplanData.status_development == 'Pending'
+                                                } else if ((sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
-                                                    || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                    || sendplanData.status_development == undefined) && sendplanData.createAt_rate_OP != undefined) {
                                                     this.dash_noall++;
                                                     item1.push({
                                                         level: timedata.level,
@@ -1710,7 +1812,7 @@ export default {
                                                         del_time: timedata.del_time,
                                                         select_class: timedata.select_class
                                                     });
-                                                } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                } else if (!sendplanData?.createAt_rate_OP && timedata?.Idsendplan) {
                                                     this.dash_active++;
                                                     item2.push({
                                                         level: timedata.level,
@@ -1824,10 +1926,11 @@ export default {
                                                         del_time: timedata.del_time,
                                                         select_class: timedata.select_class
                                                     });
-                                                } else if (sendplanData.status_development == 'Pending'
+                                                } else if ((sendplanData.status_development == 'Pending'
                                                     || sendplanData.status_development == 'Rejected'
-                                                    || sendplanData.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW'
-                                                    || sendplanData.homework) {
+                                                    || sendplanData.status_development == undefined
+                                                    || sendplanData.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW')
+                                                    && sendplanData.createAt_rate_OP != undefined) {
                                                     this.dash_noall++;
                                                     item1.push({
                                                         level: timedata.level,
@@ -1856,7 +1959,7 @@ export default {
                                                         del_time: timedata.del_time,
                                                         select_class: timedata.select_class
                                                     });
-                                                } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                } else if (sendplanData.createAt_rate_OP == undefined && timedata?.Idsendplan) {
                                                     this.dash_active++;
                                                     item2.push({
                                                         level: timedata.level,
@@ -1953,7 +2056,7 @@ export default {
                 let now = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
                 for (const key in childData) {
                     const keydata = childData[key];
-                    for (const date in keydata) {                        
+                    for (const date in keydata) {
                         if (true) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
@@ -2014,9 +2117,9 @@ export default {
                                                             del_time: timedata.del_time,
                                                             select_class: timedata.select_class
                                                         });
-                                                    } else if (sendplanData.status_development == 'Pending'
+                                                    } else if ((sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
-                                                        || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                        || sendplanData.status_development == undefined) && sendplanData.createAt_rate_OP != undefined) {
                                                         this.dash_noall++;
                                                         item1.push({
                                                             level: timedata.level,
@@ -2045,7 +2148,7 @@ export default {
                                                             del_time: timedata.del_time,
                                                             select_class: timedata.select_class
                                                         });
-                                                    } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                    } else if (!sendplanData?.createAt_rate_OP && timedata?.Idsendplan) {
                                                         this.dash_active++;
                                                         item2.push({
                                                             level: timedata.level,
@@ -2162,9 +2265,9 @@ export default {
                                                             del_time: timedata.del_time,
                                                             select_class: timedata.select_class
                                                         });
-                                                    } else if (sendplanData.status_development == 'Pending'
+                                                    } else if ((sendplanData.status_development == 'Pending'
                                                         || sendplanData.status_development == 'Rejected'
-                                                        || sendplanData.status_development == undefined && sendplanData.homework) {
+                                                        || sendplanData.status_development == undefined) && sendplanData.createAt_rate_OP != undefined) {
                                                         this.dash_noall++;
                                                         item1.push({
                                                             level: timedata.level,
@@ -2193,7 +2296,7 @@ export default {
                                                             del_time: timedata.del_time,
                                                             select_class: timedata.select_class
                                                         });
-                                                    } else if (!sendplanData?.homework && timedata?.Idsendplan) {
+                                                    } else if (!sendplanData?.createAt_rate_OP && timedata?.Idsendplan) {
                                                         this.dash_active++;
                                                         item2.push({
                                                             level: timedata.level,

@@ -230,6 +230,7 @@
                                 + detailData.money.sum_send_rate_stu
                                 + ' บาท'"></v-text-field>
                         </v-col>
+
                         <v-col cols="7" style="margin-top:-20px"
                             v-if="detailData.money.send_rate_name && detailData.money.send_rate_name.bath != 0">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_name.name
@@ -241,17 +242,8 @@
                                 :value="detailData.money.send_rate_name.bath + '% ' + '(-' + detailData.money.sum_send_rate_name + ' บาท)'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_name(detailData.money) + ---->
                         </v-col>
-                        <v-col cols="7" style="margin-top:-20px"
-                            v-if="detailData.money.send_rate_save && detailData.money.send_rate_save.bath != 0">
-                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name
-                            }}</v-subheader>
-                        </v-col>
-                        <v-col cols="5" style="margin-top:-30px"
-                            v-if="detailData.money.sum_send_rate_save && detailData.money.sum_send_rate_save.bath != 0">
-                            <v-text-field readonly label="ค่าสอน"
-                                :value="detailData.money.send_rate_save.bath + '% ' + '(-' + detailData.money.sum_send_rate_save + ' บาท)'"
-                                prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
-                        </v-col>
+                        
+                       
                         <v-col cols="7" style="margin-top:-20px"
                             v-if="detailData.money.send_rate_stu && detailData.money.send_rate_stu.bath != 0">
                             <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_stu.name
@@ -263,6 +255,19 @@
                                 :value="detailData.money.send_rate_stu.bath + '% ' + '(-' + detailData.money.sum_send_rate_stu + ' บาท)'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
+
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="detailData.money.send_rate_save && detailData.money.send_rate_save.bath != 0">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_rate_save.name
+                            }}</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="detailData.money.sum_send_rate_save && detailData.money.sum_send_rate_save.bath != 0">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.send_rate_save.bath + '% ' + '(-' + detailData.money.sum_send_rate_save + ' บาท)'"
+                                prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
+                        </v-col>
+                        
                         <v-col cols="12" style="margin-top:-30px">
                             <v-text-field readonly label="ราคาสุทธิ"
                                 :value="detailData.money.sum_money + ' บาท'"></v-text-field>
