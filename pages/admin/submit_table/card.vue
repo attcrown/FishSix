@@ -1286,6 +1286,13 @@ export default {
                             keysubject: this.edited.keySubject,
                         }).then(() => {
                             console.log('save send_plan');
+                            setTimeout(() => {
+                                if (this.date == null) {
+                                    this.search_date_teacher_All();
+                                } else {
+                                    this.search_date_teacher();
+                                }
+                            }, 300);
                         })
                         console.log("ไม่มีการลบ ชม. นักเรียน");
                         this.loadsave = false;
@@ -1297,13 +1304,7 @@ export default {
             }).catch((error) => {
                 console.log("รูปหนึ่ง", error);
             });
-            setTimeout(() => {
-                if (this.date == null) {
-                    this.search_date_teacher_All();
-                } else {
-                    this.search_date_teacher();
-                }
-            }, 300);
+
         },
 
         save_confirm() {
