@@ -342,7 +342,8 @@
                                 </td>
                                 <td class="p-2">
                                     <v-btn text icon elevation="5" :disabled="item.sendplan == undefined"
-                                        @click="check_confirm(item)">
+                                        @click="check_confirm(item)"
+                                        :color="item.sendplanAll.send_line === true ? 'green' : (item.sendplanAll.send_line === false || item.sendplanAll.send_line === undefined ? '' : '')">
                                         <span class="mdi mdi-clipboard-text-outline text-h5"></span>
                                     </v-btn>
                                 </td>
@@ -508,25 +509,29 @@
                                             :label="items.name" :value="items"></v-radio>
                                     </v-radio-group>
                                 </v-col>
-                                <v-row v-if="edited.status_study_column &&
+
+                                <v-col cols="12" sm="6" v-if="!edited.img_1 &&
+                                    edited.status_study_column_tea &&
+                                    (edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') &&
+
+                                    edited.status_study_column &&
                                     (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
                                         edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
-                                    <v-col cols="12" sm="6" v-if="!edited.img_1 &&
-                                        edited.status_study_column_tea &&
-                                        (edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW')">
-                                        <v-file-input :rules="rules.img" v-model="fileToUpload1"
-                                            accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
-                                            label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
-                                    </v-col>
+                                    <v-file-input :rules="rules.img" v-model="fileToUpload1"
+                                        accept="image/png, image/jpeg, image/bmp" prepend-icon="mdi-camera"
+                                        label="รูปภาพ Check-In เข้าเรียน" required></v-file-input>
+                                </v-col>
+                                <v-col cols="12" sm="6" style="margin-top:-30px" v-if="edited.img_1 &&
+                                    edited.status_study_column_tea &&
+                                    edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW' &&
 
-
-                                    <v-col cols="12" sm="6" style="margin-top:-30px"
-                                        v-if="edited.img_1 && edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW'">
-                                        <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
-                                            @click="img_show_1 = true">ดูรูปภาพนักเรียน <span
-                                                class="mdi mdi-image-area text-h6"></span></v-btn>
-                                    </v-col>
-                                </v-row>
+                                    edited.status_study_column &&
+                                    (edited.status_study_column.key == '-NceLGrMN5SDXyyXe6fp' ||
+                                        edited.status_study_column.key == '-NceLJGyxs0COh1TYVdg')">
+                                    <v-btn rounded color="#42A5F5" class="mt-5 mb-5" small dark
+                                        @click="img_show_1 = true">ดูรูปภาพนักเรียน <span
+                                            class="mdi mdi-image-area text-h6"></span></v-btn>
+                                </v-col>
 
                                 <v-col cols="12" sm="6" style="margin-top:-30px"
                                     v-if="edited.status_study_column_tea && edited.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW' && edited.status_study_column">
@@ -746,6 +751,9 @@
                             <b>จึงใช้วิธี : </b> {{ edited.method || 'ไม่มี' }}<br>
                             <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}
                         </p>
+                        <hr style="border: 1px solid #000; background-color: #000;">
+                        <v-checkbox v-model="edited.send_line" label="ส่งพัฒนาการให้ผู้ปกครองแล้ว" color="success"
+                            @change="check_send_stu(edited)"></v-checkbox>
                     </v-card-text>
                 </v-card>
             </v-form>
@@ -886,6 +894,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { CheckedEventBus } from './card_controller.vue';
 export default {
     data() {
         return {
@@ -1071,6 +1080,16 @@ export default {
     },
 
     methods: {
+        handleCalendarResult(result) {
+            // ทำอะไรกับค่าที่ถูกส่งกลับมาได้ที่นี่
+            console.log('result:', result);
+        },
+        check_send_stu(item) {
+            CheckedEventBus.$emit('save_send_user', item,(result) => {
+                this.handleCalendarResult(result);
+            });
+            console.log('check_send_stu');
+        },
         send_rate_teacher_search() {
             const db = this.$fireModule.database();
             db.ref(`send_rate_teacher_all/`).once("value", (snapshot) => {

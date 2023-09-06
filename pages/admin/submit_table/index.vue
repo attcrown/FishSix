@@ -2,13 +2,13 @@
     <div class="mx-15">
         <h3 style="font-size:32px"><b>เช็คชื่อ/ส่งพัฒนาการ</b></h3>
         <card></card>
+        <card_controller></card_controller>
     </div>
 </template>
     
 <script>
-
-// import table_now from './table_now.vue';
 import card from './card.vue';
+import card_controller from './card_controller.vue';
 export default {
     data() {
         return {
@@ -17,7 +17,8 @@ export default {
     },
 
     components: {
-        card
+        card,
+        card_controller
     },
     created() {
 
