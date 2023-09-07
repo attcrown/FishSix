@@ -197,9 +197,10 @@
                                                 v-model="currAddress.houseNo"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-if="!isEditingAddress|| isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
-                                                readonly :disabled="isAddressSame" v-model="currAddress.tambon"></v-text-field>
-                                           
+                                            <v-text-field v-if="!isEditingAddress || isAddressSame" name="curr_tambon"
+                                                label="ตำบล/แขวง" readonly :disabled="isAddressSame"
+                                                v-model="currAddress.tambon"></v-text-field>
+
                                             <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
                                                 :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
                                                 :item-value="currTambonValue" item-text="name_th"
@@ -259,11 +260,9 @@
                                         <v-text-field v-if="!isEditingContract" name="workType" label="ประเภทการทำงาน"
                                             :readonly="!isEditingContract" v-model="workType"></v-text-field>
                                         <v-select v-if="isEditingContract" v-model="workType" :items="workTypes"
-                                            label="ประเภทการทำงาน" required></v-select>
+                                            label="ประเภทการทำงาน"></v-select>
                                     </v-col>
-                                    <v-col cols="4">
 
-                                    </v-col>
                                     <v-col cols="4">
                                         <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
                                             :readonly="!isEditingContract" v-model="startDate"></v-text-field>
@@ -273,19 +272,13 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
                                                     prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                    :rules="startDateRules" required v-on="on"></v-text-field>
+                                                    v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
                                                 min="1950-01-01" @change="save"></v-date-picker>
                                         </v-menu>
                                     </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="rate" v-model="rate"
-                                            :readonly="!isEditingContract" label="เรทค่าสอน/ชั่วโมง"></v-text-field>
-                                        <v-text-field v-if="isEditingContract" name="rate" type="number"
-                                            label="เรทค่าสอน/ชั่วโมง" min="0" max="99999" maxlength="5" :rules="rateRules"
-                                            oninput="validity.valid||(value='');" v-model="rate"></v-text-field>
-                                    </v-col>
+
                                     <v-col cols="4">
                                         <v-select v-if="!isEditingContract" class="black-label" v-model="classLocation"
                                             :items="classLocations" item-text="name" item-value="key"
@@ -296,14 +289,14 @@
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select class="black-label" v-model="type_Flip"
-                                            :items="type_all" item-text="name" item-value="key"
-                                            label="Type & Tier FlipClass" :readonly="!isEditingContract"></v-select>
+                                        <v-select class="black-label" v-model="type_Flip" :items="type_all" item-text="name"
+                                            item-value="key" label="Type & Tier FlipClass"
+                                            :readonly="!isEditingContract"></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select class="black-label" v-model="type_Private"
-                                            :items="type_private_all" item-text="name" item-value="key"
-                                            label="Type & Tier PrivateClass" :readonly="!isEditingContract"></v-select>
+                                        <v-select class="black-label" v-model="type_Private" :items="type_private_all"
+                                            item-text="name" item-value="key" label="Type & Tier PrivateClass"
+                                            :readonly="!isEditingContract"></v-select>
                                     </v-col>
                                 </v-row>
 
@@ -359,7 +352,7 @@
                                                         <v-checkbox class="m-0"
                                                             :input-value="isChecked(subject.name, level, subject.key)"
                                                             @click="updateSelectedSubjects(subject.key, level, subject.name)"
-                                                            :label="level" disabled>
+                                                            :label="level" :disabled="!isEditingEducation">
                                                         </v-checkbox>
                                                     </td>
                                                 </tr>
@@ -389,10 +382,10 @@ export default {
 
     data() {
         return {
-            type_Flip:null,
-            type_Private:null,
-            type_all:[],
-            type_private_all:[],
+            type_Flip: null,
+            type_Private: null,
+            type_all: [],
+            type_private_all: [],
             //status
             isLoading: true,
             userId: null,
@@ -496,15 +489,15 @@ export default {
 
             nameRules: [
                 v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             firstNameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 10 characters',
+
+                v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             lastnameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+
+                v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             firstNameRules: [
                 v => !!v || 'Name is required',
@@ -519,32 +512,24 @@ export default {
                 v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
-                value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
-                value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
+                value => !value || /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
+
             idCardRules: [
-                value => !!value || 'กรุณากรอกหมายเลขบัตรประชาชน',
-                value => /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
+
+                value => !value || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
             ],
 
             mobileRules: [
-                value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
-                value => /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+
+                value => !value || /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
             ],
 
             emailRules: [
-                value => !!value || 'กรุณากรอก อีเมล',
-                value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
+
+                value =>  !value ||/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
             ],
 
-            rateRules: [
-                value => !!value || 'กรุณากรอกเรทค่าจ้าง',
-
-            ],
-            startDateRules: [
-                value => !!value || 'กรุณาเลือกวันที่เริ่มทำงาน',
-
-            ],
             teacherIdRules: [
                 value => !!value || 'กรุณากรอก รหัสครู',
                 value => /^FS\d{4}$/.test(value) || 'รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)'
@@ -600,33 +585,33 @@ export default {
     },
 
     methods: {
-        typeClass(){
+        typeClass() {
             const db = this.$fireModule.database();
             db.ref(`type_all/`).once("value", (snapshot) => {
                 let type = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    type.push({ key: key, name: childData[key].name, bath:childData[key].bath});
+                    type.push({ key: key, name: childData[key].name, bath: childData[key].bath });
                 }
                 this.type_all = type;
             })
         },
-        typePrivateClass(){
+        typePrivateClass() {
             const db = this.$fireModule.database();
             db.ref(`type_private_all/`).once("value", (snapshot) => {
                 let type = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-                    type.push({ key: key, name: childData[key].name, bath:childData[key].bath});
+                    type.push({ key: key, name: childData[key].name, bath: childData[key].bath });
                 }
                 this.type_private_all = type;
             })
         },
         async initialize() {
 
-            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()]);
+            await Promise.all([this.fetchData(), this.readdata(), this.readSubject()]).then(this.getTeacherLocation());
 
-            this.getTeacherLocation();
+
         },
         getlocation() {
             const db = this.$fireModule.database();
@@ -642,7 +627,9 @@ export default {
 
         async getTeacherLocation() {
             const db = this.$fireModule.database();
-
+            if (this.classLocation == undefined) {
+                return;
+            }
             for (let i = 0; i < this.classLocation.length; i++) {
 
                 const classSnapshot = await db.ref(`location/${this.classLocation[i]}`).once("value");
@@ -797,7 +784,8 @@ export default {
         async toEditContract() {
             if (this.isEditingContract == true) {
                 this.isEditingContract = false;
-
+                console.log(this.$refs[`contractForm`])
+                console.log(this.$refs[`contractForm`].validate())
                 if (this.validateContractEdit()) {
                     const db = this.$fireModule.database();
                     this.isSubmitting = true;
@@ -810,8 +798,8 @@ export default {
                         startDate: this.startDate,
                         rate: this.rate,
                         classLocation: this.classLocation,
-                        typeflip : this.type_Flip,
-                        typeprivate : this.type_Private
+                        typeflip: this.type_Flip,
+                        typeprivate: this.type_Private
                     })
                         .then(() => {
 
@@ -845,7 +833,7 @@ export default {
                         university: this.university,
                         faculty: this.faculty,
                         major: this.major,
-
+                        selectedSubjects: this.selectedSubjects,
                     })
                         .then(() => {
 
@@ -855,11 +843,24 @@ export default {
                         })
                         .catch((error) => {
 
-                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ', error);
                             this.isSubmitting = false;
                             this.isEditingEducation = false;
                         });
 
+                    if (this.selectedSubjects.length !== 0) {
+                        for (let subject of this.selectedSubjects) {
+
+                            await db.ref(`user/${this.userId}/subject_all/${subject.key}`).set({
+                                name: subject.name,
+                                level: subject.level,
+
+                            });
+                        }
+                    }
+                    else {
+                        await db.ref(`user/${this.userId}/subject_all/`).remove();
+                    }
                 }
             }
             else {
@@ -908,6 +909,7 @@ export default {
             const db = this.$fireModule.database();
             await db.ref(`user/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
+                console.log(snapshot.val())
                 this.profilePic = childData.profilePic || null;
                 this.lastTeacherId = childData.teacherId || null;
                 this.teacherId = childData.teacherId || null;
@@ -927,7 +929,7 @@ export default {
                 this.classtype = childData.classtype || null;
                 this.classLocation = childData.classLocation || null;
                 this.startDate = childData.startDate || null;
-                this.rate = childData.rate;
+
                 this.university = childData.university || null;
                 this.faculty = childData.faculty || null;
                 this.major = childData.major || null;

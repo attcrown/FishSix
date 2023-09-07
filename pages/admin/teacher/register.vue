@@ -831,7 +831,7 @@ export default {
                 && this.firstNameErrors == 0 && this.lastNameErrors == 0 && this.nameErrors == 0
                 && this.idErrors.length == 0 && this.mobileErrors.length == 0
                 && this.emailErrors.length == 0 && this.genderErrors.length == 0
-                && this.classLocationErrors.length == 0 && this.universityErrors.length == 0 && this.selectedSubjects != 0) {
+                && this.classLocationErrors.length == 0 && this.universityErrors.length == 0 ) {
                 console.log("Save");
                 this.registerTeacher();
             } else {  this.openSnackbar("error", 'ข้อมูลที่กรอกไม่ครบถ้วน ');}
