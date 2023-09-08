@@ -519,15 +519,15 @@ export default {
 
                 value => !value || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
             ],
-
             mobileRules: [
 
-                value => !value || /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
-            ],
+                value => !value || /^(\d|-){9,13}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+            ]
+            ,
 
             emailRules: [
 
-                value =>  !value ||/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
+                value => !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
             ],
 
             teacherIdRules: [
