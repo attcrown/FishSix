@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-5">
+    <div>
         <v-row>
             <v-col cols="12">
                 <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="-1"

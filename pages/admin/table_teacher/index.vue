@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-15">
+    <div class="mx-0">
         <calendar></calendar>
         <tabletea></tabletea>
     </div>
