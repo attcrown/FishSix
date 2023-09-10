@@ -814,9 +814,9 @@
                             <template v-slot:footer>
 
                             </template>
-                            <template v-slot:item.actions="{ item }" >
+                            <template v-slot:item.actions="{ item }">
                                 <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5" 
+                                    <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5"
                                         @click="viewProgress(item)">
                                         mdi-eye
                                     </v-icon>
@@ -914,7 +914,7 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-row v-if="selectedPlan.status_development=='Approved'">
+                        <v-row v-if="selectedPlan.status_development == 'Approved'">
 
                             <v-col cols="12" sm="12" style="margin-top:-20px">
                                 <hr style="border: 1px solid #000; background-color: #000;">
@@ -1220,12 +1220,12 @@ export default {
 
             //rules
             firstNameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+
+                v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             lastnameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+
+                v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             firstNameRules: [
                 v => !!v || 'Name is required',
@@ -1240,21 +1240,22 @@ export default {
                 v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
-                value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
-                value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
+
+                value => !value || /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
             idCardRules: [
 
-                value => value === '' || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
+                value => !value || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
             ],
-
             mobileRules: [
-                value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
-                value => /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
-            ],
+
+    value =>!value || /^(\d|-){9,13}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+]
+,
+
 
             emailRules: [
-                value => value === '' || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
+                value => !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'รูปแบบอีเมลไม่ถูกต้อง'
             ],
 
 
@@ -1521,7 +1522,7 @@ export default {
             }
         },
         async viewProgress(item) {
-       
+
             this.progress = item.classHistory;
             this.progress_dialog = true;
             if (item.classHistory.Idsendplan == undefined) {
@@ -1858,7 +1859,7 @@ export default {
                 db.ref(`studentHistory/${this.userId}`).on("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
-                    
+
                     for (const key in childData) {
 
                         const history = childData[key];
@@ -1883,13 +1884,13 @@ export default {
                         };
                         item.push({ key, classHistory });
 
-                 
+
 
                     }
 
 
                     this.classHistories = item;
-                   
+
                     this.isLoading = false;
                 });
             } catch (error) {
