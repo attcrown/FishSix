@@ -71,13 +71,27 @@
 
                                     <v-card-text class="p-4">
                                         <v-row>
-                                            <div class="des-label">Flip class </div>
+                                            <div class="des-label">Flip class สาขา</div>
                                             <div class="time-label my-3">{{ formattedStudyHour }} </div>
                                             <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
+
+                            <v-col>
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-2 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Flip class Online</div>
+                                            <div class="time-label my-3">{{ formattedStudyHourOnline }} </div>
+                                            <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-2 mt-5">
 
@@ -190,13 +204,27 @@
 
                                     <v-card-text class="p-4">
                                         <v-row>
-                                            <div class="des-label">Private class </div>
+                                            <div class="des-label">Private class สาขา</div>
                                             <div class="time-label my-3">{{ formattedPrivateStudyHour }} </div>
                                             <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
+
+                            <v-col>
+                                <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
+
+                                    <v-card-text class="p-4">
+                                        <v-row>
+                                            <div class="des-label">Private class Online</div>
+                                            <div class="time-label my-3">{{ formattedPrivateStudyHourOnline }} </div>
+                                            <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
+                                        </v-row>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
 
@@ -814,6 +842,7 @@
                             <template v-slot:footer>
 
                             </template>
+                            <!-- eslint-disable-next-line vue/valid-v-slot -->
                             <template v-slot:item.actions="{ item }">
                                 <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                                     <v-icon style="text-decoration: underline;" large color="#B6A7A2" class="text-h5"
@@ -1110,6 +1139,7 @@ export default {
             expirePrivateClassDate: null,
             totalHourDisplay: null,
             studyHourDisplay: null,
+            studyHourOnlineDisplay: null,
             hourLeftDisplay: null,
             isAddressSame: false,
 
@@ -1124,6 +1154,7 @@ export default {
 
             privateTotalHourDisplay: null,
             privateStudyHourDisplay: null,
+            privateStudyHourOnlineDisplay: null,
             privateHourLeftDisplay: null,
 
             privateTotalHourInput: null,
@@ -1334,6 +1365,20 @@ export default {
                 return `${hours} ชั่วโมง ${minutes} นาที`;
             }
         },
+        formattedStudyHourOnline() {
+            if (this.studyHourOnlineDisplay === null || this.studyHourOnlineDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.studyHourOnlineDisplay);
+            const minutes = ((this.studyHourOnlineDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
         formattedHourLeft() {
             if (this.hourLeftDisplay === null || this.hourLeftDisplay === undefined) {
                 return '0 ชั่วโมง';
@@ -1371,6 +1416,20 @@ export default {
 
             const hours = Math.floor(this.privateStudyHourDisplay);
             const minutes = ((this.privateStudyHourDisplay - hours) * 60).toFixed(0);
+
+            if (minutes === 0) {
+                return `${hours} ชั่วโมง`;
+            } else {
+                return `${hours} ชั่วโมง ${minutes} นาที`;
+            }
+        },
+        formattedPrivateStudyHourOnline() {
+            if (this.privateStudyHourOnlineDisplay === null || this.privateStudyHourOnlineDisplay === undefined) {
+                return '0 ชั่วโมง';
+            }
+
+            const hours = Math.floor(this.privateStudyHourOnlineDisplay);
+            const minutes = ((this.privateStudyHourOnlineDisplay - hours) * 60).toFixed(0);
 
             if (minutes === 0) {
                 return `${hours} ชั่วโมง`;
@@ -1757,6 +1816,7 @@ export default {
                 this.hourLeft = childData.hourLeft || 0;
                 this.totalHourDisplay = childData.totalHour || 0;
                 this.studyHourDisplay = childData.studyHour || 0;
+                this.studyHourOnlineDisplay = childData.studyHourOnline || 0;
                 this.hourLeftDisplay = childData.hourLeft || 0;
 
                 this.privateTotalHour = childData.privateTotalHour || 0;
@@ -1764,6 +1824,7 @@ export default {
                 this.privateHourLeft = childData.privateHourLeft || 0;
                 this.privateTotalHourDisplay = childData.privateTotalHour || 0;
                 this.privateStudyHourDisplay = childData.privateStudyHour || 0;
+                this.privateStudyHourOnlineDisplay = childData.privateStudyHourOnline || 0;
                 this.privateHourLeftDisplay = childData.privateHourLeft || 0;
 
                 this.expireFlipClassDate = childData.expireFlipClassDate || null;
