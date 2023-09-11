@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-10">
+  <div>
     <table_now></table_now>
   </div>
 </template>

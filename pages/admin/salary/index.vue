@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-15">
+    <div class="mx-0">
         <setting :hidden="status == 'opFS'"></setting>
         <Table_detail>></Table_detail>
     </div>

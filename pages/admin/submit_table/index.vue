@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-15">
+    <div class="mx-0">
         <h3 style="font-size:32px"><b>เช็คชื่อ/ส่งพัฒนาการ</b></h3>
         <card></card>
         <card_controller></card_controller>

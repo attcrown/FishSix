@@ -1606,22 +1606,34 @@ export default {
                         console.log(studentData);
                         let data_edit = keystudent;
                         if (studentData.studyHour != undefined) {
-                            if (data_edit.style.substring(0, 4) === "Flip") {
+                            if (data_edit.style.includes("Flip") && data_edit.style.includes("Online")) {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHourOnline: parseInt(studentData.studyHour) + keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
+                                })
+                            } else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
                                 db.ref(`user/${data_edit.keyStudent}/`).update({
                                     studyHour: parseInt(studentData.studyHour) + keystudent.hour,
                                     hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
                                 })
-                            } else {
-                                console.log("Error");
+                            } else{
+                                console.log('error')
                             }
                             console.log('ลบ ชม. class จริง', data_edit.style);
                             this.loadsave = false;
                             this.clear_dialog();
                         } else if (studentData.studyHour == undefined) {
-                            db.ref(`user/${data_edit.keyStudent}/`).update({
-                                studyHour: keystudent.hour,
-                                hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
-                            })
+                            if(data_edit.style.includes("Flip") && data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHourOnline: keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
+                                })
+                            }else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHour: keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
+                                })
+                            }
                             this.loadsave = false;
                             this.clear_dialog();
                         } else {
@@ -1629,7 +1641,12 @@ export default {
                         }
 
                         if (studentData.privateStudyHour != undefined && !keystudent.match_vip) {
-                            if (data_edit.style.substring(0, 7) === "Private") {
+                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    privateStudyHourOnline: parseInt(studentData.privateStudyHour) + keystudent.hour,
+                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                                })
+                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
                                 db.ref(`user/${data_edit.keyStudent}/`).update({
                                     privateStudyHour: parseInt(studentData.privateStudyHour) + keystudent.hour,
                                     privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
@@ -1641,10 +1658,19 @@ export default {
                             this.loadsave = false;
                             this.clear_dialog();
                         } else if (studentData.privateStudyHour == undefined && !keystudent.match_vip) {
-                            db.ref(`user/${data_edit.keyStudent}/`).update({
-                                privateStudyHour: keystudent.hour,
-                                privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
-                            })
+                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    privateStudyHourOnline: keystudent.hour,
+                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                                })
+                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    privateStudyHour: keystudent.hour,
+                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
+                                })
+                            }else{
+                                console.log("Error");
+                            }
                             this.loadsave = false;
                             this.clear_dialog();
                         } else {
@@ -1652,7 +1678,12 @@ export default {
                         }
 
                         if (studentData.studyHour != undefined && keystudent.match_vip) {
-                            if (data_edit.style.substring(0, 7) === "Private") {
+                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHourOnline: parseInt(studentData.studyHour) + keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
+                                })
+                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
                                 db.ref(`user/${data_edit.keyStudent}/`).update({
                                     studyHour: parseInt(studentData.studyHour) + keystudent.hour,
                                     hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
@@ -1664,10 +1695,19 @@ export default {
                             this.loadsave = false;
                             this.clear_dialog();
                         } else if (studentData.studyHour == undefined && keystudent.match_vip) {
-                            db.ref(`user/${data_edit.keyStudent}/`).update({
-                                studyHour: keystudent.hour,
-                                hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
-                            })
+                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHourOnline: keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
+                                })
+                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
+                                db.ref(`user/${data_edit.keyStudent}/`).update({
+                                    studyHour: keystudent.hour,
+                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
+                                })
+                            }else{
+                                console.log("Error");
+                            }
                             this.loadsave = false;
                             this.clear_dialog();
                         } else {
