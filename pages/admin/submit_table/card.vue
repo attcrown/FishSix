@@ -1382,7 +1382,6 @@ export default {
                             console.log('ไม่มี Sheet ลา');
                         }
 
-
                         if (item_data.optional) {
                             sum += parseFloat(optional_data.bath);
                         }
@@ -1394,7 +1393,6 @@ export default {
                             del_send_rate_name = (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             console.log(item_data.status_study_column_tea.name)
-
                         }
                         //--------เช็คชื่อช้าหรือไม่-------------------
 

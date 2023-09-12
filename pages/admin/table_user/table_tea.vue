@@ -539,7 +539,7 @@ export default {
                         this.All_data.show_time_flip_match = hourmatchData.hour;
                     }
                     if (hourmatchData && hourmatchData.hourprivate) {
-                        this.All_data.show_time_flip_match = hourmatchData.hourprivate;
+                        this.All_data.show_time_private_match = hourmatchData.hourprivate;
                     }
                 })
 
