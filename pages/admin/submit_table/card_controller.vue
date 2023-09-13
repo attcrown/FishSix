@@ -23,7 +23,7 @@ export default {
             db.ref(`send_plan/${item.keyTeacher}/${item.Idsendplan}`).update({
                 send_line:item.send_line || false,
             }).then(() => {
-                const result = item;
+                const result = item.send_line;
                 callback(result);
             })
              // เรียก callback function แล้วส่งค่าที่คุณต้องการส่งกลับ

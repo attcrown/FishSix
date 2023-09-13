@@ -1086,6 +1086,7 @@ export default {
         },
         check_send_stu(item) {
             CheckedEventBus.$emit('save_send_user', item,(result) => {
+                item.sendplanAll.send_line = result;
                 this.handleCalendarResult(result);
             });
             console.log('check_send_stu');
@@ -2111,11 +2112,18 @@ export default {
                 let item1 = [];
                 let item2 = [];
                 let item3 = [];
-                let now = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
+                let month = '';
+                if(`${(new Date().getMonth() + 1)}`.length <= 1){
+                    month = `0${new Date().getMonth() + 1}`;
+                }else{
+                    month = new Date().getMonth() + 1
+                }
+                let now = `${new Date().getFullYear()}-${month}-${new Date().getDate()}`;
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        if (true) {
+                        console.log(date,new Date(date).getTime() , now,new Date(now).getTime());
+                        if (new Date(date).getTime() <= new Date(now).getTime()) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];

@@ -106,7 +106,7 @@
                                 </v-card>
                             </v-col>
 
-                            <v-col>
+                            <!-- <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-2 mt-5">
 
                                     <v-card-text class="p-4">
@@ -117,7 +117,7 @@
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
-                            </v-col>
+                            </v-col> -->
 
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-2 mt-5">
@@ -309,7 +309,7 @@
                                 </v-card>
                             </v-col>
 
-                            <v-col>
+                            <!-- <v-col>
                                 <v-card style="border-radius: 20px;background: #26415B;" elevation="0" class="px-3 mt-5">
 
                                     <v-card-text class="p-4">
@@ -320,7 +320,7 @@
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
-                            </v-col>
+                            </v-col> -->
 
                             <v-col>
                                 <v-card style="border-radius: 20px;background: #AD382F;" elevation="0" class="px-3 mt-5">
