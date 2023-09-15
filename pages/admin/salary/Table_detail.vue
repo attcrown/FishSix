@@ -99,6 +99,7 @@
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">วิชาที่สอน</th>
                                 <th class="p-2">ลูกค้าที่เรียน</th>
+                                <th class="p-2">ประเภท class</th>
                                 <th class="p-2">ระดับชั้น</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>
@@ -114,6 +115,7 @@
                                 <td class="p-2">{{ item.studentData.studentId }} 
                                     {{ item.studentData.nickname }} 
                                     ({{ item.studentData.firstName }})</td>
+                                    <td class="p-2">{{ search_class_table(item.datematchData.select_class) }}</td>   
                                 <td class="p-2">{{ item.send_plan.level }}</td>
                                 <td class="p-2">{{ item.datematchData.start }}</td>
                                 <td class="p-2">{{ item.datematchData.stop }}</td>
@@ -517,6 +519,14 @@ export default {
                 this.class_all = item;
             })
         },
+        search_class_table(id) {
+            for(const key in this.class_all){
+                if(this.class_all[key].key == id){
+                    return this.class_all[key].name;
+                }
+            }
+        },
+
         search_data_money() {
             let tea = "";
             let day_search_start = null;
@@ -569,7 +579,8 @@ export default {
                                         const studentData = studentSnapshot.val();
                                         const datematchData = dateMatchSnapshot.val();
 
-                                        console.log(datematchData.select_class);
+                                        console.log(studentData,datematchData, datematchData.select_class);
+
                                         if(this.class_see == datematchData.select_class){
                                             item.push({
                                                 name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
@@ -619,7 +630,7 @@ export default {
                                     const studentData = studentSnapshot.val();
                                     const datematchData = dateMatchSnapshot.val();
 
-                                    console.log(datematchData);
+                                    console.log(studentData,datematchData,datematchData.select_class);
 
                                     if(this.class_see == datematchData.select_class){
                                         item.push({
