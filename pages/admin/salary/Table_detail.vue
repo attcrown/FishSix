@@ -21,61 +21,68 @@
                         </v-card>
                     </v-hover>
                 </div>
-                <div class="ms-10" style="margin-top:130px">
-                    <v-card flat class="d-flex elevation-16 rounded-xl px-5 pt-8" style="background-color:#EBE4DE">
-                        <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
-                            label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
+                <div class="ms-10" style="margin-top:50px">
+                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16">
+                        <v-card flat class="d-flex  rounded-xl px-5 pt-8" style="background-color:rgba(255, 255, 255, 0)">
+                            <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
+                                label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
 
-                        <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
-                                    v-bind="attrs" v-on="on"></v-text-field>
-                            </template>
-                            <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
-                                event-color="green lighten-1">
-                                <v-spacer></v-spacer>
-                                <v-btn text color="primary" @click="modal = false">
-                                    Cancel
-                                </v-btn>
-                                <v-btn text color="primary"
-                                    @click="$refs.dialog.save(date), date_month = null, date_year = null">
-                                    OK
-                                </v-btn>
-                            </v-date-picker>
-                        </v-dialog>
+                            <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
+                                        v-bind="attrs" v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
+                                    event-color="green lighten-1">
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click="modal = false">
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn text color="primary"
+                                        @click="$refs.dialog.save(date), date_month = null, date_year = null">
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-dialog>
 
-                        <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date_month"
-                            transition="scale-transition" offset-y max-width="290px" min-width="auto">
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-text-field v-model="date_month" label="ค้นหาแบบเดือน" prepend-icon="mdi-calendar"
-                                    readonly v-bind="attrs" v-on="on"></v-text-field>
-                            </template>
-                            <v-date-picker v-model="date_month" type="month" no-title scrollable :max="date_now">
-                                <v-spacer></v-spacer>
-                                <v-btn text color="primary" @click="menu = false">
-                                    Cancel
-                                </v-btn>
-                                <v-btn text color="primary"
-                                    @click="$refs.menu.save(date_month), date = null, date_year = null">
-                                    OK
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                            <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date_month"
+                                transition="scale-transition" offset-y max-width="290px" min-width="auto">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field v-model="date_month" label="ค้นหาแบบเดือน" prepend-icon="mdi-calendar"
+                                        readonly v-bind="attrs" v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker v-model="date_month" type="month" no-title scrollable :max="date_now">
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click="menu = false">
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn text color="primary"
+                                        @click="$refs.menu.save(date_month), date = null, date_year = null">
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-menu>
 
-                        <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
-                            @change="date = null, date_month = null"></v-select>
+                            <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
+                                @change="date = null, date_month = null"></v-select>
+                            
+                            <v-select v-model="class_see" :items="class_all" item-text="name" item-value="key" label="ค้นหา Class" prepend-icon="mdi-calendar"
+                                @change="date = null, date_month = null"></v-select>    
+                        </v-card>
 
-                        <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
-                            :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
-                            @click="search_data_money(), export_menu = true" rounded>
-                            ค้นหา<span class="mdi mdi-magnify text-h6"></span>
-                        </v-btn>
-                        <v-btn elevation="10" color="#322E2B" class="ms-2 mt-3" style="color:white" :disabled="!export_menu"
-                            type="submit" rounded
-                            @click="dialog_excel = true"
-                            >Export<span class="mdi mdi-microsoft-excel text-h6"></span>
-                        </v-btn>
-                    </v-card>
+                        <div class="d-flex justify-end p-3">
+                            <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
+                                :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
+                                @click="search_data_money(), export_menu = true" rounded>
+                                ค้นหา<span class="mdi mdi-magnify text-h6"></span>
+                            </v-btn>
+                            <v-btn elevation="10" color="#322E2B" class="ms-2 mt-3" style="color:white" :disabled="!export_menu"
+                                type="submit" rounded
+                                @click="dialog_excel = true"
+                                >Export<span class="mdi mdi-microsoft-excel text-h6"></span>
+                            </v-btn>
+                        </div>
+                    </div>                   
                 </div>
             </div>
         </template>
@@ -400,10 +407,13 @@ export default {
         data_all: [],
 
         detailData_tea: null,
+        class_all:[],
+        class_see: '00000',
     }),
     mounted() {
         this.search_tea();
         this.year_gen();
+        this.search_class();
     },
     computed: {
         groupedTeachers() {
@@ -494,6 +504,19 @@ export default {
                 this.value_tea_all = item;
             })
         },
+        search_class(){
+            const db = this.$fireModule.database();
+            db.ref(`LimitedClass_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                        item.push({ key: key, name: childData[key].name})
+                }
+                item.push({key:'00000', name: 'ทั้งหมด'});
+                console.log(item);
+                this.class_all = item;
+            })
+        },
         search_data_money() {
             let tea = "";
             let day_search_start = null;
@@ -546,15 +569,28 @@ export default {
                                         const studentData = studentSnapshot.val();
                                         const datematchData = dateMatchSnapshot.val();
 
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all[data],
-                                            IdKey: data,
-                                        })
-                                        this.sum_money_all += data_all[data].money.sum_money;
+                                        console.log(datematchData.select_class);
+                                        if(this.class_see == datematchData.select_class){
+                                            item.push({
+                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                                teacherData: teacherData,
+                                                studentData: studentData,
+                                                datematchData: datematchData,
+                                                send_plan: data_all[data],
+                                                IdKey: data,
+                                            })
+                                            this.sum_money_all += data_all[data].money.sum_money;
+                                        }else if(this.class_see == '00000'){
+                                            item.push({
+                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                                teacherData: teacherData,
+                                                studentData: studentData,
+                                                datematchData: datematchData,
+                                                send_plan: data_all[data],
+                                                IdKey: data,
+                                            })
+                                            this.sum_money_all += data_all[data].money.sum_money;
+                                        }                                        
                                     })
                             }
                         }
@@ -583,15 +619,29 @@ export default {
                                     const studentData = studentSnapshot.val();
                                     const datematchData = dateMatchSnapshot.val();
 
-                                    item.push({
-                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                        teacherData: teacherData,
-                                        studentData: studentData,
-                                        datematchData: datematchData,
-                                        send_plan: data_all[data],
-                                        IdKey: data,
-                                    })
-                                    this.sum_money_all += data_all[data].money.sum_money;
+                                    console.log(datematchData);
+
+                                    if(this.class_see == datematchData.select_class){
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all[data],
+                                            IdKey: data,
+                                        })
+                                        this.sum_money_all += data_all[data].money.sum_money;
+                                    }else if(this.class_see == '00000'){
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all[data],
+                                            IdKey: data,
+                                        })
+                                        this.sum_money_all += data_all[data].money.sum_money;
+                                    }   
                                 })
                         }
                     }
