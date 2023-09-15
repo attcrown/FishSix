@@ -7,18 +7,31 @@
 </template>
 <script>
 export default {
-    layout:'login',
+    layout: 'login',
     data() {
         return {
-            item:[],
-            
+            item: { user: 'name', lastName: 'name', nickname: "Att" },
+
         }
     },
-    mounted(){
-        
+    mounted() {
+
     },
-    methods: {        
-        readdata(){
+    methods: {
+        generateRandomId(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charactersLength);
+                result += characters.charAt(randomIndex);
+            }
+
+            return result;
+        },
+
+        readdata() {
             console.log('ทำงาน');
             const db = this.$fireModule.database();
             db.ref("test/").on("value", (snapshot) => {
@@ -27,21 +40,21 @@ export default {
                 this.item = childData;
             })
         },
-        write(){
+        write() {
+            let id = this.generateRandomId(10);
             const db = this.$fireModule.database();
-            db.ref("test/").set({
-            date: 19,
-            name: 'fff',
+            db.ref(`test/`).set({
+                [id]: this.item
             });
         },
-        write_genID(){
+        write_genID() {
             const db = this.$fireModule.database();
             db.ref("test/").push({
-            date: 19,
-            name: 'fff',
+                date: 19,
+                name: 'fff',
             });
         },
-        deletedddd(){
+        deletedddd() {
             const db = this.$fireModule.database();
             db.ref(`test/`).remove();
         }

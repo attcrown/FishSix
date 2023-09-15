@@ -1331,6 +1331,7 @@ export default {
             console.log('save_confirm')
             const db = this.$fireModule.database();
             let item_data = this.edited;
+            console.log(item_data);
             if (this.edited.status_development == "Approved") {
                 let level_search = null;
                 const getsubjectPromise = db.ref(`subject_all/${item_data.keySubject}/`).once("value");
@@ -1341,7 +1342,11 @@ export default {
                 const getoptionalPromise = db.ref(`optional_all/${item_data.optional}`).once("value");
                 const getsend_ratePromise = db.ref(`send_rate_all/`).once("value");
                 const getSelect_classPromise = db.ref(`LimitedClass_all/${item_data.select_class}/`).once("value");
-                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise])
+                const getTimeTeaPromise = db.ref(`Time_teacher/${item_data.keyTeacher}/${item_data.date_learn}/${item_data.time_learn_start}`).once("value");
+                const getrate_specialPromise = db.ref(`rate_special_all/`).once("value");
+                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, 
+                                getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise,
+                                getTimeTeaPromise ,getrate_specialPromise])
                     .then((snapshots) => {
                         const subject_data = snapshots[0].val();
                         const level_data = snapshots[1].val();
@@ -1351,7 +1356,11 @@ export default {
                         const optional_data = snapshots[5].val();
                         const send_rate_data = snapshots[6].val();
                         const select_class_date = snapshots[7].val();
-                        console.log(subject_data, level_data, typeflip_data, typeprivate_data, location_data, optional_data, send_rate_data, select_class_date);
+                        const time_tea_data = snapshots[8].val();
+                        const rate_special_data = snapshots[9].val();
+                        console.log(subject_data, level_data, typeflip_data, typeprivate_data, 
+                                    location_data, optional_data, send_rate_data, select_class_date
+                                    ,time_tea_data ,rate_special_data);
                         for (const key in level_data) {
                             console.log(level_data[key].name);
                             if (level_data[key].name.includes(item_data.level)) {
@@ -1386,7 +1395,22 @@ export default {
                         if (item_data.optional) {
                             sum += parseFloat(optional_data.bath);
                         }
+                        
                         sum = sum * item_data.hour;
+                        //-------คูณชม.----------------
+
+                        if(time_tea_data && time_tea_data[0] == item_data.keyStudent){                            
+                            db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
+                                sum_seqNo : false,
+                            });
+                        }else{
+                            sum = sum + 25;
+                            db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
+                                sum_seqNo : true,
+                                send_rate_special : rate_special_data,
+                            });
+                        }
+                        //------Check คนแรกหรือไม่---------
 
                         if (item_data.status_study_column_tea.bath == '0') {
                             console.log(item_data.status_study_column_tea.name)

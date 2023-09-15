@@ -328,7 +328,7 @@
                     </v-btn>
                 </v-card-title>
                 <v-card-text>
-                    <div class="d-flex">
+                    <!-- <div class="d-flex">
                         <v-text-field class="me-3" label="เพิ่มเรทกรณีพิเศษ" type="text"
                             v-model="rate_special.name"></v-text-field>
                         <v-text-field class="me-3" label="ค่าสอน" type="number" v-model="rate_special.bath"
@@ -337,7 +337,7 @@
                             :disabled="!rate_special.name || !rate_special.bath" color="#322E2B" rounded>
                             เพิ่ม<span class="mdi mdi-plus text-h6"></span>
                         </v-btn>
-                    </div>
+                    </div> -->
                     <hr>
                     <v-row v-for="item in rate_special_all" :key="item.key">
                         <v-col cols="6">
@@ -476,8 +476,9 @@
             </v-card>
         </v-dialog>
 
-        <v-overlay :value="overlay" class="d-flex justify-end align-start">
-            <v-card style="background-color: white; color:black;" max-width="400px" height="1000px">
+        <!-- <v-dialog v-model="overlay" max-width="400px" overlay class="d-flex justify-end align-start"> -->
+        <v-overlay :value="overlay" max-width="400px" class="d-flex justify-end align-start overflow-y-auto">
+            <v-card style="background-color: white; color:black;">
                 <v-card-title>
                     <span class="me-16">ตั้งค่าเรทราคา</span>
                     <v-spacer></v-spacer>
@@ -509,27 +510,27 @@
                     </v-btn> <br>
                     <v-btn color="#322E2B" rounded dark @click="dialog7 = !dialog7, optional_search()" class="mb-3 mt-5">
                         ราคาทดลองเรียน
-                    </v-btn>
-                    <br>
+                    </v-btn> <br>
+                    
                     <v-btn color="#322E2B" rounded dark @click="dialog9 = !dialog9, send_rate_search()" class="mb-3 mt-5">
                         หัก % เช็คชื่อครู
-                    </v-btn>
-                    <br>
+                    </v-btn><br>
+                    
                     <v-btn color="#322E2B" rounded dark @click="dialog12 = !dialog12, send_rate_student_search()"
                         class="mb-3 mt-5">
                         หัก % ส่งพัฒนาการนักเรียน
-                    </v-btn>
-                    <br>
+                    </v-btn><br>
+                    
                     <v-btn color="#322E2B" rounded dark @click="dialog13 = !dialog13, send_rate_teacher_search()"
                         class="mb-3 mt-5">
                         ให้ % ครูในกรณีน้องมีปัญหา
-                    </v-btn>
-                    <!-- <br> -->
-                    <!-- <v-btn color="#322E2B" rounded dark @click="dialog10 = !dialog10, rate_special_search()" 
+                    </v-btn><br>
+                    
+                    <v-btn color="#322E2B" rounded dark @click="dialog10 = !dialog10, rate_special_search()" 
                         class="mb-3 mt-5">
-                        ราคาเรทกรณีพิเศษ
-                    </v-btn> -->
-                    <br>
+                        ราคาเสริมสำหรับสอนพร้อมกัน
+                    </v-btn><br>
+                    
                     <v-btn color="#322E2B" rounded dark @click="dialog11 = !dialog11, LimitedClass_search()"
                         class="mb-3 mt-5">
                         จำนวนคนใน Class
@@ -918,9 +919,8 @@ export default {
             db.ref(`rate_special_all/`).once("value", (snapshot) => {
                 let item = [];
                 const childData = snapshot.val();
-                for (const key in childData) {
-                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
-                }
+                console.log(childData);
+                item.push({name: childData.name, bath: childData.bath || '0' });
                 this.rate_special_all = item;
                 console.log(this.rate_special_all);
             })
@@ -937,13 +937,11 @@ export default {
         },
         save_rate_special_bath() {
             const db = this.$fireModule.database();
-            for (const key in this.rate_special_all) {
-                console.log(this.rate_special_all[key]);
-                db.ref(`rate_special_all/${this.rate_special_all[key].key}/`).update({
-                    bath: this.rate_special_all[key].bath,
-                    name: this.rate_special_all[key].name,
-                })
-            }
+            console.log(this.rate_special_all);
+            db.ref(`rate_special_all/`).update({
+                bath: this.rate_special_all[0].bath,
+                name: this.rate_special_all[0].name,
+            })        
             console.log('success save rate_special bath');
         },
 

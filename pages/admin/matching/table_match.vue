@@ -539,6 +539,7 @@ export default {
                                             sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
                                         }
                                         item.push({
+                                            // idclass : timedata.idclass,
                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName || null,
                                             name: teacherData.teacherId + " ครู" + teacherData.nickname || null,
                                             subject: timedata.subject || null,
@@ -607,6 +608,7 @@ export default {
                                             sumx_date = `${sum_date[1]} ${sum_date[2]} ${sum_date[3]} ${sum_date[4]}`
                                         }
                                         item.push({
+                                            // idclass : timedata.idclass,
                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName || null,
                                             name: teacherData.teacherId + " ครู" + teacherData.nickname || null,
                                             subject: timedata.subject || null,
@@ -784,7 +786,7 @@ export default {
         },
 
         async save() {
-            let time_sum = this.validateTime_save(this.editedItem.time_s, this.editedItem.time_e);;
+            let time_sum = this.validateTime_save(this.editedItem.time_s, this.editedItem.time_e);
             const data = this.editedItem;
             const db = this.$fireModule.database();
             let uniqueTimeSum = null;
@@ -893,7 +895,6 @@ export default {
                     });
                 }
             }
-
             await db.ref(`date_match/${data.key_student}/${data.date}/${data.time_e}`).update({
                 subject: data.subject,
                 level: data.level,

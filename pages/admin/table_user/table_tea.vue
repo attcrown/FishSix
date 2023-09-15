@@ -832,6 +832,19 @@ export default {
             this.$refs.form_add.resetValidation()
         },
 
+        generateRandomId(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charactersLength);
+                result += characters.charAt(randomIndex);
+            }
+
+            return result;
+        },
+
         async save_time() {
             const db = this.$fireModule.database();
             const selectedObject = this.LimitedClass_all.find(item => item.key === this.All_data.select);
@@ -952,6 +965,7 @@ export default {
                         }
                     }
                     await db.ref(`date_match/${data.student}/${this.date[keydate]}/${data.stop}/`).update({
+                        // idclass : this.generateRandomId(10),
                         select_class: data.select,
                         teacher: data.teacher,
                         date: this.date[keydate],
@@ -969,10 +983,16 @@ export default {
                     });
                     if (this.mode == 'พร้อมเรียน') {
                         const inviteData = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/invite/`).once("value");
+                        // const idclassTea = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/idclass/`).once("value");
                         let people_sum = 1;
                         console.log(inviteData.val());
+                        // console.log(idclassTea.val());
+                        // if(idclassTea.exists()){
+                        //     await db.ref(`date_match/${data.student}/${this.date[keydate]}/${data.stop}/`).update({
+                        //         idclass : idclassTea.val(),
+                        //     });
+                        // }
                         if (inviteData.exists()) {
-                            console.log(inviteData.val());
                             people_sum = people_sum + inviteData.val();
                         }
                         await db.ref(`date_teacher/${data.teacher}/${this.date[keydate]}/${data.start}E${data.stop}`).update({
@@ -1130,6 +1150,7 @@ export default {
                                         }
                                         if (true) {//parseInt(timedata.invite) < parseInt(timedata.sum_people)) {
                                             item.push({
+                                                idclass: timedata.idclass,
                                                 name: nametea,
                                                 date: date,
                                                 time_s: timedata.start,

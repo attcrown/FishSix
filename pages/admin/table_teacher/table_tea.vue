@@ -401,6 +401,19 @@ export default {
             } else { this.dialog_save_error = true; }
         },
 
+        generateRandomId(length) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charactersLength);
+                result += characters.charAt(randomIndex);
+            }
+
+            return result;
+        },
+
         async save_detail_data() {
             console.log('บันทึก', this.save_detail.style, this.save_detail.subject
                 , this.picker_start, this.picker_stop, this.value, this.date1);
@@ -465,6 +478,7 @@ export default {
                         }
                         console.log(time_sum, sum_people_new_tea);
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${time_sum[0]}E${time_sum[time_sum.length - 1]}`).update({
+                            // idclass : this.generateRandomId(10),
                             Class: selectedClass,
                             createAt: new Date(),
                             invite: sum_people_new_tea,
@@ -479,6 +493,7 @@ export default {
                         this.search_date_teacher();
                     } else {
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${this.picker_start}E${this.picker_stop}`).update({
+                            // idclass : this.generateRandomId(10),
                             Class: selectedClass,
                             createAt: new Date(),
                             invite: 0,
@@ -535,6 +550,7 @@ export default {
                         }
                         console.log(time_sum, sum_people_new_tea);
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${time_sum[0]}E${time_sum[time_sum.length - 1]}`).update({
+                            // idclass : this.generateRandomId(10),
                             Class: selectedClass,
                             createAt: new Date(),
                             invite: sum_people_new_tea,
@@ -547,6 +563,7 @@ export default {
                         this.dialog_detail = false;
                     } else {
                         db.ref(`date_teacher/${this.value}/${this.date1[date]}/${this.picker_start}E${this.picker_stop}`).update({
+                            // idclass : this.generateRandomId(10),
                             Class: selectedClass,
                             createAt: new Date(),
                             invite: 0,
@@ -649,6 +666,7 @@ export default {
                                             const namesub = subjectData.name;
                                             if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                                 item.push({
+                                                    // idclass : timedata.idclass,
                                                     userid: teacherData.teacherId,
                                                     name: nametea,
                                                     date: date,
@@ -656,14 +674,13 @@ export default {
                                                     time_e: timedata.stop,
                                                     style: locationData.name,
                                                     keystyle: timedata.style_subject,
-                                                    // class: timedata.class,
+                                                    Class: timedata.Class,
                                                     subject: namesub,
                                                     keySubject: timedata.subject,
                                                     people: timedata.sum_people,
                                                     sum_people: timedata.invite + "/" + timedata.sum_people,
                                                     invite: timedata.invite,
                                                     key: key,
-                                                    IdTime: timedata.ID,
                                                 });
                                                 this.arrayEvents.push(date);
                                             }
@@ -686,6 +703,7 @@ export default {
                                             const namesub = subjectData.name;
                                             if (true) {//this.search_value == key && this.search_style_sub == timedata.style_subject && this.search_class == timedata.class) {
                                                 item.push({
+                                                    // idclass: timedata.idclass,
                                                     userid: teacherData.teacherId,
                                                     name: nametea,
                                                     date: date,
@@ -693,14 +711,13 @@ export default {
                                                     time_e: timedata.stop,
                                                     style: locationData.name,
                                                     keystyle: timedata.style_subject,
-                                                    // class: timedata.class,
+                                                    Class: timedata.Class,
                                                     subject: namesub,
                                                     keySubject: timedata.subject,
                                                     people: timedata.sum_people,
                                                     sum_people: timedata.invite + "/" + timedata.sum_people,
                                                     invite: timedata.invite,
                                                     key: key,
-                                                    IdTime: timedata.ID,
                                                 });
                                                 this.arrayEvents.push(date);
                                             }

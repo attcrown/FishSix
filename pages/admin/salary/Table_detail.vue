@@ -217,6 +217,12 @@
                         <v-col cols="5" style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน" :value="detailHour + ' Hr.'"></v-text-field>
                         </v-col>
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.sum_seqNo == true">
+                            <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">กรณีสอนพร้อมกัน</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.sum_seqNo == true">
+                            <v-text-field readonly label="ค่าสอน" :value="detailData.money.send_rate_special.bath + ' บาท'"></v-text-field>
+                        </v-col>
                         <v-col cols="7" style="margin-top:-20px"
                             v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0">
                             <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
