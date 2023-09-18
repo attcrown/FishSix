@@ -66,8 +66,7 @@
                             <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
                                 @change="date = null, date_month = null"></v-select>
                             
-                            <v-select v-model="class_see" :items="class_all" item-text="name" item-value="key" label="ค้นหา Class" prepend-icon="mdi-calendar"
-                                @change="date = null, date_month = null"></v-select>    
+                            <v-select v-model="class_see" :items="class_all" item-text="name" item-value="key" label="ค้นหา Class" prepend-icon="mdi-calendar"></v-select>    
                         </v-card>
 
                         <div class="d-flex justify-end p-3">
@@ -354,13 +353,17 @@
                                 value="Type & tier"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="ชั่วโมงที่สอนไป" :disabled="isExportAll"
                                 value="ชั่วโมงที่สอนไป"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="รายได้ทั้งหมดไม่รวมหัก"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="กรณีสอนพร้อมกัน" :disabled="isExportAll"
+                                value="กรณีสอนพร้อมกัน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="รายได้ทั้งหมดไม่รวมหัก"
                                 :disabled="isExportAll" value="รายได้ทั้งหมดไม่รวมหัก"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="หักรายได้เช็คชื่อล่าช้า"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="หักรายได้เช็คชื่อล่าช้า"
                                 :disabled="isExportAll" value="หักรายได้เช็คชื่อล่าช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="หักรายได้ส่งพัฒนาการช้า" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="หักรายได้ส่งพัฒนาการช้า" :disabled="isExportAll"
                                 value="หักรายได้ส่งพัฒนาการช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="รายได้สุทธิ์"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="หักรายกรณีน้องลากระทันหัน" :disabled="isExportAll"
+                                value="หักรายกรณีน้องลากระทันหัน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="รายได้สุทธิ์"
                                 :disabled="isExportAll" value="รายได้สุทธิ์"></v-checkbox>                         
                         </v-row>
                     </v-container>
@@ -701,9 +704,11 @@ export default {
                     "รายได้เอกสารใช้สอน",
                     "Type & tier",
                     "ชั่วโมงที่สอนไป",
+                    "กรณีสอนพร้อมกัน",
                     "รายได้ทั้งหมดไม่รวมหัก",
                     "หักรายได้เช็คชื่อล่าช้า",
                     "หักรายได้ส่งพัฒนาการช้า",
+                    "หักรายกรณีน้องลากระทันหัน",
                     "รายได้สุทธิ์",
                     ]
             } else { this.selectedHeaders = []; }
@@ -717,8 +722,8 @@ export default {
                 const row = [];
                 if (this.isExportAll) {
                     if (this.selectedHeaders[0]) {
-                        if (item.datematchData) {
-                            row.push(item.datematchData.teacher);
+                        if (item.teacherData.teacherId) {
+                            row.push(item.teacherData.teacherId);
                         } else {
                             row.push("");
                         }
@@ -752,8 +757,8 @@ export default {
                         }
                     }
                     if (this.selectedHeaders[5]) {
-                        if (item.send_plan.keystudent) {
-                            row.push(item.send_plan.keystudent);
+                        if (item.studentData.studentId) {
+                            row.push(item.studentData.studentId);
                         } else {
                             row.push("");
                         }
@@ -815,7 +820,7 @@ export default {
                         }
                     }
                     if (this.selectedHeaders[14]) {
-                        if (item.send_plan.money.sheet.bath) {
+                        if (item.send_plan.money.sheet && item.send_plan.money.sheet.bath) {
                             row.push(item.send_plan.money.sheet.bath);
                         } else {
                             row.push("");
@@ -842,6 +847,13 @@ export default {
                         }
                     }
                     if (this.selectedHeaders[17]) {
+                        if (item.send_plan.money.send_rate_special) {
+                            row.push(item.send_plan.money.send_rate_special.bath);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
                         } else if(item.send_plan.money && item.send_plan.money.sum_send_rate_name){
@@ -854,21 +866,28 @@ export default {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[18]) {
-                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
-                            row.push(item.send_plan.money.sum_send_rate_name);
-                        } else{
-                            row.push("");
-                        }
-                    }
                     if (this.selectedHeaders[19]) {
-                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
-                            row.push(item.send_plan.money.sum_send_rate_save);
+                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
+                            row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else{
                             row.push("");
                         }
                     }
                     if (this.selectedHeaders[20]) {
+                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
+                            row.push(`-${item.send_plan.money.sum_send_rate_save}`);
+                        } else{
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[21]) {
+                        if (item.send_plan.status_study_column) {
+                            row.push(`-${item.send_plan.status_study_column.bath}%`);
+                        } else{
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else{
@@ -878,11 +897,13 @@ export default {
                     //----------------------------------------------------
                 } else {
                     if (this.selectedHeaders[0]) {
-                        if (item.datematchData) {
-                            row.push(item.datematchData.teacher);
+                        if (item.teacherData.teacherId) {
+                            row.push(item.teacherData.teacherId);
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[1]) {
                         if (item.teacherData.firstName) {
@@ -890,6 +911,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[2]) {
                         if (item.teacherData.lastName) {
@@ -897,6 +920,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[3]) {
                         if (item.teacherData.nickname) {
@@ -904,6 +929,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[4]) {
                         if (item.teacherData.mobile) {
@@ -911,13 +938,17 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[5]) {
-                        if (item.send_plan.keystudent) {
-                            row.push(item.send_plan.keystudent);
+                        if (item.studentData.studentId) {
+                            row.push(item.studentData.studentId);
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[6]) {
                         if (item.studentData.firstName) {
@@ -925,6 +956,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[7]) {
                         if (item.studentData.lastName) {
@@ -932,6 +965,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[8]) {
                         if (item.studentData.nickname) {
@@ -939,6 +974,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[9]) {
                         if (item.studentData.studentMobile) {
@@ -946,6 +983,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[10]) {
                         if (item.send_plan && item.send_plan.date_learn) {
@@ -953,6 +992,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[11]) {
                         if (item.send_plan && item.send_plan.money.subject.bath) {
@@ -960,6 +1001,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[12]) {
                         if (item.send_plan && item.send_plan.money.level.bath) {
@@ -967,6 +1010,8 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[13]) {
                         if (item.send_plan && item.send_plan.money.location.bath) {
@@ -974,13 +1019,17 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[14]) {
-                        if (item.send_plan.money.sheet.bath) {
+                        if (item.send_plan.money.sheet && item.send_plan.money.sheet.bath) {
                             row.push(item.send_plan.money.sheet.bath);
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[15]) {
                         if (item.send_plan && 
@@ -994,6 +1043,8 @@ export default {
                         } else{
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[16]) {
                         if (item.send_plan.hour) {
@@ -1001,41 +1052,69 @@ export default {
                         } else {
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[17]) {
+                        if (item.send_plan.money.send_rate_special) {
+                            row.push(item.send_plan.money.send_rate_special.bath);
+                        } else {
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
-                        } else if(item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0){
-                            row.push(item.send_plan.money.sum_money+(item.send_plan.money.sum_send_rate_save.bath*item.send_plan.money.sum_money/100));
-                        }else if(item.send_plan.money && item.sum_send_rate_save == 0){
-                            row.push(item.send_plan.money.sum_money+(item.send_plan.money.sum_send_rate_name.bath*item.send_plan.money.sum_money/100));
-                        }else if(item.send_plan.money.sum_send_rate_save != 0 && item.send_plan.money.sum_send_rate_name != 0){
-                            row.push(item.send_plan.money.sum_money+(item.send_plan.money.sum_send_rate_name.bath*item.send_plan.money.sum_money/100)+(item.send_plan.money.sum_send_rate_save.bath*item.send_plan.money.sum_money/100));
+                        } else if(item.send_plan.money && item.send_plan.money.sum_send_rate_name){
+                            row.push(item.send_plan.money.sum_money+item.send_plan.money.sum_send_rate_name);
+                        }else if(item.send_plan.money && item.sum_send_rate_save){
+                            row.push(item.send_plan.money.sum_money+item.send_plan.money.sum_send_rate_save);
+                        }else if(item.send_plan.money.sum_send_rate_save && item.send_plan.money.sum_send_rate_name){
+                            row.push(item.send_plan.money.sum_money+item.send_plan.money.sum_send_rate_name+item.send_plan.money.sum_send_rate_save);
                         }else{
                             row.push("");
                         }
-                    }
-                    if (this.selectedHeaders[18]) {
-                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
-                            row.push(item.send_plan.money.sum_send_rate_name.bath);
-                        } else{
-                            row.push("");
-                        }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[19]) {
-                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
-                            row.push(item.send_plan.money.sum_send_rate_save.bath);
+                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
+                            row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else{
                             row.push("");
                         }
+                    }else{
+                        row.push("");
                     }
                     if (this.selectedHeaders[20]) {
+                        if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
+                            row.push(`-${item.send_plan.money.sum_send_rate_save}`);
+                        } else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[21]) {
+                        if (item.send_plan.status_study_column) {
+                            row.push(`-${item.send_plan.status_study_column.bath}%`);
+                        } else{
+                            row.push("");
+                        }
+                    }else{
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else{
                             row.push("");
                         }
-                    }  
+                    }else{
+                        row.push("");
+                    }           
                 }
                 // ... เพิ่มตามลำดับ
                 return row;
