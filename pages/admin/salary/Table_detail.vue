@@ -70,7 +70,7 @@
                         </v-card>
 
                         <div class="d-flex justify-end p-3">
-                            <v-text-field label="ค้นหาแบบเจาะจง" v-model="search_object"></v-text-field>
+                            <v-text-field label="ค้นหาแบบเจาะจง เช่นวิชา ,ชื่อเล่นน้อง ,ระดับชั้น" v-model="search_object"></v-text-field>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
                                 :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
@@ -609,10 +609,9 @@ export default {
                                             this.sum_money_all += data_all[data].money.sum_money;
                                         }else if(this.class_see == datematchData.select_class && this.search_object != ""){                                            
                                             const contains = data_all[data].money.subject.name.includes(this.search_object);
-                                            // const contains1 = studentData.includes(this.search_object);
-                                            // const contains2 = datematchData.includes(this.search_object);
-                                            // const contains3 = data_all.includes(this.search_object);
-                                            if(contains){
+                                            const contains1 = studentData.nickname.includes(this.search_object);
+                                            const contains2 = datematchData.level.includes(this.search_object);
+                                            if(contains || contains1 || contains2){
                                                 item.push({
                                                     name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                     teacherData: teacherData,
@@ -626,8 +625,9 @@ export default {
                                             
                                         }else if(this.class_see == '00000' && this.search_object != ""){
                                             const contains = data_all[data].money.subject.name.includes(this.search_object);
-                                            
-                                            if(contains){
+                                            const contains1 = studentData.nickname.includes(this.search_object);
+                                            const contains2 = datematchData.level.includes(this.search_object);
+                                            if(contains || contains1 || contains2){
                                                 item.push({
                                                     name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                     teacherData: teacherData,
