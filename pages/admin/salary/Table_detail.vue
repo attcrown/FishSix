@@ -14,19 +14,22 @@
                                     <b>{{ sum_money_all }} ฿</b>
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7 mt-5">
-                                    <p style="font-size: 16px; margin-top: -50px;">รวมเงินเดือนครู
+                                    <p style="font-size: 24px; margin-top: -50px;">รวมเงินเดือนครู
                                     </p>
                                 </v-col>
                             </v-row>
                         </v-card>
                     </v-hover>
                 </div>
-                <div class="ms-10" style="margin-top:50px">
+                <div class="ms-10" style="margin-top:-10px">
                     <div style="background-color:#EBE4DE" class="rounded-xl elevation-16">
-                        <v-card flat class="d-flex  rounded-xl px-5 pt-8" style="background-color:rgba(255, 255, 255, 0)">
-                            <v-autocomplete v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
+                        <div class="d-flex px-5 pt-5">
+                            <v-autocomplete class="me-5" v-model="value_tea" :items="value_tea_all" item-text="name" item-value="key"
                                 label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
-
+                            <v-select class="ms-3" v-model="class_see" :items="class_all" item-text="name" item-value="key"
+                                label="ค้นหา Class"></v-select>
+                        </div>
+                        <v-card flat class="d-flex  rounded-xl px-5 pt-0" style="background-color:rgba(255, 255, 255, 0)">                        
                             <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
@@ -66,25 +69,25 @@
 
                             <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
                                 @change="date = null, date_month = null"></v-select>
-
-                            <v-select v-model="class_see" :items="class_all" item-text="name" item-value="key"
-                                label="ค้นหา Class" prepend-icon="mdi-calendar"></v-select>
                         </v-card>
 
-                        <div class="d-flex justify-end p-3">
+                        <div class="d-flex justify-end pt-3 px-3">
                             <v-text-field label="ค้นหาแบบเจาะจง เช่นวิชา ,ชื่อเล่นน้อง ,ระดับชั้น"
                                 v-model="search_object"></v-text-field>
-                            <v-checkbox v-model="check_sheet" label="เตรียมชีสมาเอง" color="success"
+
+                            <v-checkbox v-model="check_sheet" label="เตรียมชีสมาเอง" color="brown lighten-1"
                                 hide-details></v-checkbox>
+
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
                                 :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
                                 @click="search_data_money(), export_menu = true" rounded>
                                 ค้นหา<span class="mdi mdi-magnify text-h6"></span>
                             </v-btn>
+
                             <v-btn elevation="10" color="#322E2B" class="ms-2 mt-3" style="color:white"
                                 :disabled="!export_menu" type="submit" rounded @click="dialog_excel = true">Export<span
                                     class="mdi mdi-microsoft-excel text-h6"></span>
-                            </v-btn>
+                            </v-btn>                            
                         </div>
                     </div>
                 </div>

@@ -98,7 +98,7 @@ export default {
           to: '/admin/content',
         },
         {
-          icon: 'mdi-cash-fast',
+          icon: 'mdi-cash',
           title: 'เงินเดือนครู',
           to: '/admin/salary',
         },
