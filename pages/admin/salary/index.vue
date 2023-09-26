@@ -6,7 +6,7 @@
 </template>
 <script>
 import setting from './setting.vue'
-import Table_detail from './Table_detail.vue'
+import Table_detail from './Table_detail_test.vue'
 import { mapState } from 'vuex';
 export default {
     layout: 'default',
