@@ -104,10 +104,10 @@
                 <v-expansion-panel-content class="rounded-b-xl" v-for="(data_class, index) in teacherData.data_class"
                     :key="index">
 
-                    <v-expansion-panel-header style="font-size:20px;"><b>{{ data_class.name
+                    <v-expansion-panel-header style="font-size:20px;" v-if="data_class.items != undefined" ><b>{{ data_class.name
                     }}</b></v-expansion-panel-header>
 
-                    <v-expansion-panel-content>
+                    <v-expansion-panel-content v-if="data_class.items != undefined">
                         <table style="width: 100%;">
                             <thead style="background-color:#D4C1B2;">
                                 <tr>
@@ -541,8 +541,7 @@ export default {
     },
     methods: {
         mapping(item, class_tea) {
-            console.log(item);
-            console.log(class_tea);
+            this.mapping_data = [];
             for (const id in item) {
                 // console.log('send>>>',item[id].name)
                 for (const key in class_tea) {
@@ -932,20 +931,19 @@ export default {
 
                     // รอให้ทุก Promise เสร็จสมบูรณ์ก่อนที่จะดำเนินการต่อ
                     await Promise.all(
-                        Object.keys(childData).map(async (key) => {
-                            const data_all = childData[key];
-                            for (const data in data_all) {
-                                console.log(data_all);
-                                console.log(new Date(data_all[data].date_learn).getTime(), day_search_start, day_search_end);
+                        Object.keys(childData).map(async (data) => {
+                            const data_all = childData[data];
+                            console.log(data_all);
+                            // for (const data in data_all) {                                
                                 if (
-                                    data_all[data].status_development == "Approved" &&
-                                    new Date(data_all[data].date_learn).getTime() >= day_search_start &&
-                                    new Date(data_all[data].date_learn).getTime() <= day_search_end
+                                    data_all.status_development == "Approved" &&
+                                    new Date(data_all.date_learn).getTime() >= day_search_start &&
+                                    new Date(data_all.date_learn).getTime() <= day_search_end
                                 ) {
-                                    const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all[data].date_learn}`).once("value");
+                                    const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all.date_learn}`).once("value");
                                     const getTeacherPromise = db.ref(`user/${tea}`).once("value");
-                                    const getStudentPromise = db.ref(`user/${data_all[data].keystudent}`).once("value");
-                                    const getDateMatchPromise = db.ref(`date_match/${data_all[data].keystudent}/${data_all[data].date_learn}/${data_all[data].time_learn}`).once("value");
+                                    const getStudentPromise = db.ref(`user/${data_all.keystudent}`).once("value");
+                                    const getDateMatchPromise = db.ref(`date_match/${data_all.keystudent}/${data_all.date_learn}/${data_all.time_learn}`).once("value");
 
                                     const [teacherSnapshot, studentSnapshot, dateMatchSnapshot, dateTeacherSnapshot,] = await Promise.all(
                                         [
@@ -961,7 +959,7 @@ export default {
                                     const dateteacherData = dateTeacherSnapshot.val();
                                     
                                     for (const key in dateteacherData) {
-                                        const name = `${data_all[data].date_learn} ${key}`;
+                                        const name = `${data_all.date_learn} ${key}`;
                                         const nameTea = `${teacherData.teacherId} ${teacherData.nickname} ${teacherData.firstName}`;
                                         const item = dateteacherData[key];
                                         const isNameUnique = !class_tea.some((existingItem) => existingItem.name === nameTea);
@@ -985,30 +983,30 @@ export default {
                                     }
 
                                     if (this.class_see == datematchData.select_class && this.search_object == ""
-                                        && this.check_sheet && data_all[data].link_sheet != undefined) {
+                                        && this.check_sheet && data_all.link_sheet != undefined) {
                                         item.push({
                                             name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                             teacherData: teacherData,
                                             studentData: studentData,
                                             datematchData: datematchData,
-                                            send_plan: data_all[data],
+                                            send_plan: data_all,
                                             IdKey: data,
                                         })
 
-                                        this.sum_money_all += data_all[data].money.sum_money;
+                                        this.sum_money_all += data_all.money.sum_money;
                                     } else if (this.class_see == '00000' && this.search_object == ""
-                                        && this.check_sheet && data_all[data].link_sheet != undefined) {
+                                        && this.check_sheet && data_all.link_sheet != undefined) {
                                         item.push({
                                             name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                             teacherData: teacherData,
                                             studentData: studentData,
                                             datematchData: datematchData,
-                                            send_plan: data_all[data],
+                                            send_plan: data_all,
                                             IdKey: data,
                                             dateteacherData: dateteacherData,
                                         })
 
-                                        this.sum_money_all += data_all[data].money.sum_money;
+                                        this.sum_money_all += data_all.money.sum_money;
 
                                     } else if (this.class_see == datematchData.select_class && this.search_object == ""
                                         && !this.check_sheet) {
@@ -1017,12 +1015,12 @@ export default {
                                             teacherData: teacherData,
                                             studentData: studentData,
                                             datematchData: datematchData,
-                                            send_plan: data_all[data],
+                                            send_plan: data_all,
                                             IdKey: data,
                                             dateteacherData: dateteacherData,
                                         })
 
-                                        this.sum_money_all += data_all[data].money.sum_money;
+                                        this.sum_money_all += data_all.money.sum_money;
                                     } else if (this.class_see == '00000' && this.search_object == ""
                                         && !this.check_sheet) {
                                         item.push({
@@ -1030,91 +1028,91 @@ export default {
                                             teacherData: teacherData,
                                             studentData: studentData,
                                             datematchData: datematchData,
-                                            send_plan: data_all[data],
+                                            send_plan: data_all,
                                             IdKey: data,
                                             dateteacherData: dateteacherData,
                                         })
-                                        this.sum_money_all += data_all[data].money.sum_money;
+                                        this.sum_money_all += data_all.money.sum_money;
 
                                     } else if (this.class_see == datematchData.select_class && this.search_object != ""
-                                        && this.check_sheet && data_all[data].link_sheet != undefined) {
-                                        const contains = data_all[data].money.subject.name.includes(this.search_object);
+                                        && this.check_sheet && data_all.link_sheet != undefined) {
+                                        const contains = data_all.money.subject.name.includes(this.search_object);
                                         const contains1 = studentData.nickname.includes(this.search_object);
                                         const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all[data].money.location.name.includes(this.search_object);
+                                        const contains3 = data_all.money.location.name.includes(this.search_object);
                                         if (contains || contains1 || contains2 || contains3) {
                                             item.push({
                                                 name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                 teacherData: teacherData,
                                                 studentData: studentData,
                                                 datematchData: datematchData,
-                                                send_plan: data_all[data],
+                                                send_plan: data_all,
                                                 IdKey: data,
                                                 dateteacherData: dateteacherData,
                                             })
-                                            this.sum_money_all += data_all[data].money.sum_money;
+                                            this.sum_money_all += data_all.money.sum_money;
                                         }
 
                                     } else if (this.class_see == '00000' && this.search_object != ""
-                                        && this.check_sheet && data_all[data].link_sheet != undefined) {
-                                        const contains = data_all[data].money.subject.name.includes(this.search_object);
+                                        && this.check_sheet && data_all.link_sheet != undefined) {
+                                        const contains = data_all.money.subject.name.includes(this.search_object);
                                         const contains1 = studentData.nickname.includes(this.search_object);
                                         const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all[data].money.location.name.includes(this.search_object);
+                                        const contains3 = data_all.money.location.name.includes(this.search_object);
                                         if (contains || contains1 || contains2 || contains3) {
                                             item.push({
                                                 name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                 teacherData: teacherData,
                                                 studentData: studentData,
                                                 datematchData: datematchData,
-                                                send_plan: data_all[data],
+                                                send_plan: data_all,
                                                 IdKey: data,
                                                 dateteacherData: dateteacherData,
                                             })
-                                            this.sum_money_all += data_all[data].money.sum_money;
+                                            this.sum_money_all += data_all.money.sum_money;
                                         }
 
                                     } else if (this.class_see == datematchData.select_class && this.search_object != ""
                                         && !this.check_sheet) {
-                                        const contains = data_all[data].money.subject.name.includes(this.search_object);
+                                        const contains = data_all.money.subject.name.includes(this.search_object);
                                         const contains1 = studentData.nickname.includes(this.search_object);
                                         const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all[data].money.location.name.includes(this.search_object);
+                                        const contains3 = data_all.money.location.name.includes(this.search_object);
                                         if (contains || contains1 || contains2 || contains3) {
                                             item.push({
                                                 name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                 teacherData: teacherData,
                                                 studentData: studentData,
                                                 datematchData: datematchData,
-                                                send_plan: data_all[data],
+                                                send_plan: data_all,
                                                 IdKey: data,
                                                 dateteacherData: dateteacherData,
                                             })
-                                            this.sum_money_all += data_all[data].money.sum_money;
+                                            this.sum_money_all += data_all.money.sum_money;
                                         }
 
                                     } else if (this.class_see == '00000' && this.search_object != ""
                                         && !this.check_sheet) {
-                                        const contains = data_all[data].money.subject.name.includes(this.search_object);
+                                        const contains = data_all.money.subject.name.includes(this.search_object);
                                         const contains1 = studentData.nickname.includes(this.search_object);
                                         const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all[data].money.location.name.includes(this.search_object);
+                                        const contains3 = data_all.money.location.name.includes(this.search_object);
                                         if (contains || contains1 || contains2 || contains3) {
                                             item.push({
                                                 name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                                 teacherData: teacherData,
                                                 studentData: studentData,
                                                 datematchData: datematchData,
-                                                send_plan: data_all[data],
+                                                send_plan: data_all,
                                                 IdKey: data,
                                                 dateteacherData: dateteacherData,
                                             })
-                                            this.sum_money_all += data_all[data].money.sum_money;
+                                            this.sum_money_all += data_all.money.sum_money;
                                         }
                                     }
 
                                 }
-                            }
+                            // }
                         })
                     );
                     this.data_all = item;
