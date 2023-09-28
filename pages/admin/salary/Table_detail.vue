@@ -75,7 +75,7 @@
                             <v-text-field label="ค้นหาแบบเจาะจง เช่นวิชา ,ชื่อเล่นน้อง ,ระดับชั้น"
                                 v-model="search_object"></v-text-field>
 
-                            <v-checkbox v-model="check_sheet" label="เตรียมชีสมาเอง" color="brown lighten-1"
+                            <v-checkbox v-model="check_sheet" label="เตรียมชีทมาเอง" color="brown lighten-1"
                                 hide-details></v-checkbox>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
@@ -103,62 +103,64 @@
 
                 <v-expansion-panel-content class="rounded-b-xl" v-for="(data_class, index) in teacherData.data_class"
                     :key="index">
-
-                    <v-expansion-panel-header style="font-size:20px;" v-if="data_class.items != undefined" ><b>{{ data_class.name
-                    }}</b></v-expansion-panel-header>
-
-                    <v-expansion-panel-content v-if="data_class.items != undefined">
-                        <table style="width: 100%;">
-                            <thead style="background-color:#D4C1B2;">
-                                <tr>
-                                    <th class="p-2">วันที่</th>
-                                    <th class="p-2">วิชาที่สอน</th>
-                                    <th class="p-2">ลูกค้าที่เรียน</th>
-                                    <th class="p-2">ประเภท class</th>
-                                    <th class="p-2">ระดับชั้น</th>
-                                    <th class="p-2">เวลาเริ่มต้น</th>
-                                    <th class="p-2">เวลาสิ้นสุด</th>
-                                    <th class="p-2">ชั่วโมงสอน</th>
-                                    <th class="p-2">รายได้</th>
-                                    <th class="p-2 text-center">รายละเอียด</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in data_class.items" :key="item.send_plan.key">
-                                    <td class="p-2">{{ item.send_plan.date_learn }}</td>
-                                    <td class="p-2">{{ item.send_plan.money.subject.name }}</td>
-                                    <td class="p-2">{{ item.studentData.studentId }}
-                                        {{ item.studentData.nickname }}
-                                        ({{ item.studentData.firstName }})</td>
-                                    <td class="p-2">{{ search_class_table(item.datematchData.select_class) }}</td>
-                                    <td class="p-2">{{ item.send_plan.level }}</td>
-                                    <td class="p-2">{{ item.datematchData.start }}</td>
-                                    <td class="p-2">{{ item.datematchData.stop }}</td>
-                                    <td class="p-2">{{ item.send_plan.hour }} Hr.</td>
-                                    <td class="p-2">{{ item.send_plan.money.sum_money }}฿</td>
-                                    <td class="p-2 text-center">
-                                        <v-btn text icon elevation="5"
-                                            @click="detail_send(item.send_plan, item.send_plan.hour, item.studentData)">
-                                            <span class="mdi mdi-cash-register text-h5"></span>
-                                        </v-btn>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <hr>
-                        <v-row>
-                            <v-col cols="12" class="d-flex justify-end">
-                                <p style="font-size:20px" class="mt-3"><b>เงินเดือนสุทธิ {{
-                                    calculateTotalIncome(data_class.items) }}
-                                        บาท</b></p>
-                            </v-col>
-                        </v-row>
-                    </v-expansion-panel-content>
+                    
+                    <div v-if="data_class.items != undefined">
+                        <p class="ms-5" style="font-size:18px;">คลาสเรียนวันที่ {{ data_class.name.substring(0,10) }} เวลา {{ data_class.name.substring(11,16) }}น. ถึง {{ data_class.name.substring(17,22) }}น.</p>
+                        <v-expansion-panel-content >
+                            <table style="width: 100%;">
+                                <thead style="background-color:#D4C1B2;">
+                                    <tr>
+                                        <!-- <th class="p-2">วันที่</th> -->
+                                        <th class="p-2">วิชาที่สอน</th>
+                                        <th class="p-2">ลูกค้าที่เรียน</th>
+                                        <th class="p-2">ประเภท class</th>
+                                        <th class="p-2">ระดับชั้น</th>
+                                        <th class="p-2">เวลาเริ่มต้น</th>
+                                        <th class="p-2">เวลาสิ้นสุด</th>
+                                        <th class="p-2">ชั่วโมงสอน</th>
+                                        <th class="p-2">รายได้</th>
+                                        <th class="p-2 text-center">รายละเอียด</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in data_class.items" :key="item.send_plan.key">
+                                        <!-- <td class="p-2" style="font-size:14px;">{{ item.send_plan.date_learn }}</td> -->
+                                        <td class="p-2">{{ item.send_plan.money.subject.name }}</td>
+                                        <td class="p-2">{{ item.studentData.studentId }}
+                                            {{ item.studentData.nickname }}
+                                            ({{ item.studentData.firstName }})</td>
+                                        <td class="p-2">{{ search_class_table(item.datematchData.select_class) }}</td>
+                                        <td class="p-2">{{ item.send_plan.level }}</td>
+                                        <td class="p-2">{{ item.datematchData.start }}</td>
+                                        <td class="p-2">{{ item.datematchData.stop }}</td>
+                                        <td class="p-2">{{ item.send_plan.hour }} Hr.</td>
+                                        <td class="p-2">{{ item.send_plan.money.sum_money }}฿</td>
+                                        <td class="p-2 text-center">
+                                            <v-btn text icon elevation="5"
+                                                @click="detail_send(item.send_plan, item.send_plan.hour, item.studentData)">
+                                                <span class="mdi mdi-cash-register text-h5"></span>
+                                            </v-btn>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <v-row style="margin-bottom: -70px">
+                                <v-col cols="12" class="d-flex justify-end">
+                                    <p style="font-size:18px" class="mt-3"><b>เงินสุทธิ {{
+                                        calculateTotalIncome(data_class.items) }}
+                                            บาท</b></p>
+                                </v-col>
+                            </v-row>
+                            <hr style="margin-top: 50px">
+                        </v-expansion-panel-content>
+                    </div>
+                    
 
                 </v-expansion-panel-content>
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
-                        <p style="font-size:20px" class="mt-3"><b>รวมทั้งหมด {{
+                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-3"><b>รวมทั้งหมด {{
                             calculateTotalIncomeAll(teacherData.data_class) }} บาท</b></p>
                     </v-col>
                 </v-row>

@@ -299,9 +299,31 @@ export default {
         this.search_date_teacher();
         this.search_teacher();
         this.LimitedClass_search();
+        this.check_bin_data();
     },
 
     methods: {
+        check_bin_data(){
+            const db = this.$fireModule.database();
+            db.ref(`date_teacher/`).once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    // console.log(childData[key]);
+                    const data = childData[key]
+                    for(const detail in data){
+                        // console.log(data[detail]);
+                        const time = data[detail];
+                        for(const id in time){
+                            console.log(time[id].Class);
+                            console.log(key,detail,id);
+                            if(time[id].Class == undefined){
+                                db.ref(`date_teacher/${key}/${detail}/${id}`).remove();
+                            }
+                        }
+                    }
+                }
+            })
+        },
         LimitedClass_search() {
             const db = this.$fireModule.database();
             db.ref(`LimitedClass_all/`).once("value", (snapshot) => {
