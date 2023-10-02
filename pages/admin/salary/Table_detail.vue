@@ -321,15 +321,16 @@
                                 :value="detailData.money.send_rate_special.bath + ' บาท'"></v-text-field>
                         </v-col>
                         <v-col cols="7" style="margin-top:-20px"
-                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0">
-                            <v-subheader style="font-size:16px; color:#FFA726;">ราคารวมทั้งหมด</v-subheader>
+                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0 || detailData.money.sum_send_percent != 0">
+                            <v-subheader style="font-size:16px; color:#FFA726;">รายได้รวมทั้งหมด</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px"
-                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0">
+                            v-if="detailData.money.sum_send_rate_name != 0 || detailData.money.sum_send_rate_save != 0 || detailData.money.sum_send_rate_stu != 0 || detailData.money.sum_send_percent != 0">
                             <v-text-field readonly label="ค่าสอน" :value="detailData.money.sum_send_rate_name
                                 + detailData.money.sum_money
                                 + detailData.money.sum_send_rate_save
                                 + detailData.money.sum_send_rate_stu
+                                + detailData.money.sum_send_percent
                                 + ' บาท'"></v-text-field>
                         </v-col>
 
@@ -370,8 +371,19 @@
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
 
+                        <v-col cols="7" style="margin-top:-20px"
+                            v-if="detailData.money.sum_send_percent">
+                            <v-subheader style="font-size:16px; color:red;">หัก 3%</v-subheader>
+                        </v-col>
+                        <v-col cols="5" style="margin-top:-30px"
+                            v-if="detailData.money.sum_send_percent">
+                            <v-text-field readonly label="ค่าสอน"
+                                :value="detailData.money.sum_send_percent + ' บาท'"
+                                prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
+                        </v-col>
+
                         <v-col cols="12" style="margin-top:-30px">
-                            <v-text-field readonly label="ราคาสุทธิ"
+                            <v-text-field readonly label="รายได้สุทธิ"
                                 :value="detailData.money.sum_money + ' บาท'"></v-text-field>
                         </v-col>
                     </v-row>

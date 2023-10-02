@@ -1374,6 +1374,7 @@ export default {
                         let del_send_rate_name = 0;
                         let del_send_rate_save = 0;
                         let del_send_rate_stu = 0;
+                        let del_send_percent = 0;
 
                         sum += parseFloat(subject_data.bath);
 
@@ -1439,6 +1440,10 @@ export default {
                         }
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
+                        del_send_percent = sum*3/100
+                        sum = sum-(sum*3/100) 
+                        //--------หัก 3%--------------------
+
                         console.log(sum);
 
                         db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
@@ -1455,7 +1460,8 @@ export default {
                             sum_money: sum,
                             sum_send_rate_name: del_send_rate_name,
                             sum_send_rate_save: del_send_rate_save,
-                            sum_send_rate_stu: del_send_rate_stu
+                            sum_send_rate_stu: del_send_rate_stu,
+                            sum_send_percent: del_send_percent
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");
                         })
