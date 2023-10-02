@@ -982,10 +982,10 @@ export default {
                         hour: hour,
                     });
                     if (this.mode == 'พร้อมเรียน') {
-                        const inviteData = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/invite/`).once("value");
+                        const inviteData = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`).once("value");
                         // const idclassTea = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/idclass/`).once("value");
                         let people_sum = 1;
-                        console.log(inviteData.val());
+                        console.log('showพร้อมเรียน',data);
                         // console.log(idclassTea.val());
                         // if(idclassTea.exists()){
                         //     await db.ref(`date_match/${data.student}/${this.date[keydate]}/${data.stop}/`).update({
@@ -995,7 +995,7 @@ export default {
                         if (inviteData.exists()) {
                             people_sum = people_sum + inviteData.val();
                         }
-                        await db.ref(`date_teacher/${data.teacher}/${this.date[keydate]}/${data.start}E${data.stop}`).update({
+                        await db.ref(`date_teacher/${data.teacher}/${this.date[keydate]}/${data.time_s}E${data.time_e}`).update({
                             invite: people_sum,
                         });
                     }
