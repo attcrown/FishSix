@@ -49,6 +49,7 @@
 </template>
   
 <script>
+import { mapMutations } from 'vuex';
 export default {
   name: 'DefaultLayout',
   data() {
@@ -102,6 +103,7 @@ export default {
     this.readdata();
   },
   methods: {
+    ...mapMutations(['setFirstName', 'setStatus']),
     check() {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
@@ -113,11 +115,15 @@ export default {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
           this.keyuser = sessionStorage.getItem('lastName');
+          this.setFirstName(sessionStorage.getItem('lastName'));
+          this.setStatus(sessionStorage.getItem('status'));
       
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
           this.keyuser = localStorage.getItem('lastName');
+          this.setFirstName(localStorage.getItem('lastName'));
+          this.setStatus(localStorage.getItem('status'));
         }
       }
     },

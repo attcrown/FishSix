@@ -1,6 +1,6 @@
 <template>
     <div class="mx-15">
-        <table_match></table_match>
+        <table_match class="mb-8"></table_match>
         <table_active></table_active>
     </div>
 </template>

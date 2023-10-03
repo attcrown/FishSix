@@ -25,7 +25,7 @@
                                     single-line hide-details style="max-width: 200px;"></v-text-field>
 
                                 <v-dialog v-model="dialogDelete" max-width="300px" class="text-center">
-                                    <template v-slot:activator="{}">
+                                    <template v-slot:activator="{ }">
                                         <v-btn elevation="10" small dark color="#322E2B" class="mb-2 mt-5 hide-on-mobile"
                                             @click="dialog_detail = true, mode = 'save', clear_item()">
                                             เพิ่มตารางสอน<span class="mdi mdi-plus text-h6"></span>
@@ -272,6 +272,7 @@ export default {
     },
 
     computed: {
+
         formTitle() {
             return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
         },
@@ -303,20 +304,20 @@ export default {
     },
 
     methods: {
-        check_bin_data(){
+        check_bin_data() {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
                 for (const key in childData) {
                     // console.log(childData[key]);
                     const data = childData[key]
-                    for(const detail in data){
+                    for (const detail in data) {
                         // console.log(data[detail]);
                         const time = data[detail];
-                        for(const id in time){
+                        for (const id in time) {
                             console.log(time[id].Class);
-                            console.log(key,detail,id);
-                            if(time[id].Class == undefined){
+                            console.log(key, detail, id);
+                            if (time[id].Class == undefined) {
                                 db.ref(`date_teacher/${key}/${detail}/${id}`).remove();
                             }
                         }
@@ -344,7 +345,7 @@ export default {
                 this.keyuser = localStorage.getItem('lastName') || '';
                 this.status = localStorage.getItem('status') || '';
             }
-            console.log(">>>>>", this.keyuser, this.status);
+
         },
         validateTime_save(start, stop) {
             let time_stop = [];
@@ -595,12 +596,12 @@ export default {
                             subject: this.save_detail.subject,
                             sum_people: selectedClass.bath
                         });
-                        this.dialog_detail = false;             
+                        this.dialog_detail = false;
                     }
                 }
             }
             this.clear_item();
-            this.search_date_teacher(); 
+            this.search_date_teacher();
         },
 
         clear_item() {
@@ -616,7 +617,7 @@ export default {
             this.date1 = [];
             setTimeout(() => {
                 CalendarEventBus.$emit('call-calendar-method');
-            }, 300);            
+            }, 300);
         },
         allowedDates: val => {
             const currentDate = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
@@ -818,25 +819,34 @@ export default {
             })
         },
 
-        closeDelete() {            
+        closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {
                 this.editedItem = Object.assign({})
                 this.editedIndex = -1
-            })            
+            })
         },
         search_teacher() {
             const db = this.$fireModule.database();
-            db.ref("user/").on("value", (snapshot) => {
-                const childData = snapshot.val();
-                let item = [];
-                for (const key in childData) {
-                    if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].teacherId + " ครู" + childData[key].nickname });
+
+            if (this.status.includes('teacher')) {
+                console.log('เฉพดาะครู')
+                db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    this.items.push({ key: this.keyuser, name: childData.teacherId + " ครู" + childData.nickname });
+                })
+            } else {
+                db.ref("user/").on("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    let item = [];
+                    for (const key in childData) {
+                        if (childData[key].status == 'teacher') {
+                            item.push({ key: key, name: childData[key].teacherId + " ครู" + childData[key].nickname });
+                        }
                     }
-                }
-                this.items = item;
-            })
+                    this.items = item;
+                })
+            }
         },
 
     },
