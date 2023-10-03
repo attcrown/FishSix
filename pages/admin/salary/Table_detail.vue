@@ -373,7 +373,7 @@
 
                         <v-col cols="7" style="margin-top:-20px"
                             v-if="detailData.money.sum_send_percent">
-                            <v-subheader style="font-size:16px; color:red;">หัก 3%</v-subheader>
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_percent_service.name }} {{ detailData.money.send_percent_service.bath }}%</v-subheader>
                         </v-col>
                         <v-col cols="5" style="margin-top:-30px"
                             v-if="detailData.money.sum_send_percent">

@@ -1344,9 +1344,10 @@ export default {
                 const getSelect_classPromise = db.ref(`LimitedClass_all/${item_data.select_class}/`).once("value");
                 const getTimeTeaPromise = db.ref(`Time_teacher/${item_data.keyTeacher}/${item_data.date_learn}/${item_data.time_learn_start}`).once("value");
                 const getrate_specialPromise = db.ref(`rate_special_all/`).once("value");
+                const getpercent_servicePromise = db.ref(`percent_service_all/`).once("value");
                 Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, 
                                 getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise,
-                                getTimeTeaPromise ,getrate_specialPromise])
+                                getTimeTeaPromise ,getrate_specialPromise ,getpercent_servicePromise])
                     .then((snapshots) => {
                         const subject_data = snapshots[0].val();
                         const level_data = snapshots[1].val();
@@ -1358,9 +1359,10 @@ export default {
                         const select_class_date = snapshots[7].val();
                         const time_tea_data = snapshots[8].val();
                         const rate_special_data = snapshots[9].val();
+                        const percent_service_data = snapshots[10].val();
                         console.log(subject_data, level_data, typeflip_data, typeprivate_data, 
                                     location_data, optional_data, send_rate_data, select_class_date
-                                    ,time_tea_data ,rate_special_data);
+                                    ,time_tea_data ,rate_special_data ,percent_service_data);
                         for (const key in level_data) {
                             console.log(level_data[key].name);
                             if (level_data[key].name.includes(item_data.level)) {
@@ -1440,9 +1442,9 @@ export default {
                         }
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
-                        del_send_percent = sum*3/100
-                        sum = sum-(sum*3/100) 
-                        //--------หัก 3%--------------------
+                        del_send_percent = sum*parseFloat(percent_service_data.bath)/100
+                        sum = sum-(sum*parseFloat(percent_service_data.bath)/100) 
+                        //--------หักค่าประกัน--------------------
 
                         console.log(sum);
 
@@ -1457,6 +1459,7 @@ export default {
                             send_rate_save: item_data.status_send_method || null,
                             send_rate_name: item_data.status_study_column_tea || null,
                             send_rate_stu: item_data.status_study_column || null,
+                            send_percent_service: percent_service_data || null,
                             sum_money: sum,
                             sum_send_rate_name: del_send_rate_name,
                             sum_send_rate_save: del_send_rate_save,
