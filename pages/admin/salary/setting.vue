@@ -476,6 +476,45 @@
             </v-card>
         </v-dialog>
 
+        <v-dialog v-model="dialog14" max-width="585px">
+            <v-card class="p-3 rounded-xl">
+                <v-card-title class="mb-10">
+                    <span>หัก % ค่าประกัน</span>
+                    <v-spacer></v-spacer>
+                    <v-btn class="ms-16" fab dark small color="#37474F" @click="dialog14 = false">
+                        <v-icon dark class="text-h5">
+                            mdi-close
+                        </v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <!-- <v-text-field label="name" type="text" v-model="percent_service.name" v-if="status == 'admin'"></v-text-field>
+                    <v-text-field label="หัก" type="number" v-model="percent_service.bath" prefix="%" v-if="status == 'admin'"></v-text-field>
+                    <v-btn @click="save_percent_service_add()" v-if="status == 'admin'"
+                        :disabled="!percent_service.name || !percent_service.bath">Add</v-btn>
+                    <hr> -->
+                    <v-row v-for="item in percent_service_all" :key="item.key">
+                        <v-col cols="8">
+                            <v-text-field v-model="item.name"></v-text-field>
+                            <!-- <v-subheader style="font-size: 20px;">{{ item.name }}</v-subheader> -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="ค่าสอน" percent_service="number" v-model="item.bath"
+                                prefix="%"></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn rounded color="#29CC39" class="mb-5" dark
+                        @click="save_percent_service_bath(), dialog14 = false">บันทึก
+                        <span class="mdi mdi-content-save text-h6"></span>
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <!-- <v-dialog v-model="overlay" max-width="400px" overlay class="d-flex justify-end align-start"> -->
         <v-overlay :value="overlay" max-width="400px" class="d-flex justify-end align-start overflow-y-auto">
             <v-card style="background-color: white; color:black;">
@@ -534,6 +573,11 @@
                     <v-btn color="#322E2B" rounded dark @click="dialog11 = !dialog11, LimitedClass_search()"
                         class="mb-3 mt-5">
                         จำนวนคนใน Class
+                    </v-btn><br>
+
+                    <v-btn color="#322E2B" rounded dark @click="dialog14 = !dialog14, percent_service_search()"
+                        class="mb-3 mt-5">
+                        หัก % ค่าประกัน
                     </v-btn>
                 </v-card-text>
             </v-card>
@@ -561,6 +605,7 @@ export default {
             dialog11: false,
             dialog12: false,
             dialog13: false,
+            dialog14: false,
 
             subject_all: [],
             level: [],
@@ -585,6 +630,8 @@ export default {
             rate_special_all: [],
             LimitedClass: [],
             LimitedClass_all: [],
+            percent_service: [],
+            percent_service_all: [],
         }
     },
     computed: {
@@ -977,6 +1024,37 @@ export default {
                 })
             }
             console.log('success save LimitedClass bath');
+        },
+
+        percent_service_search() {
+            const db = this.$fireModule.database();
+            db.ref(`percent_service_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                console.log(childData);
+                item.push({name: childData.name, bath: childData.bath || '0' });
+                this.percent_service_all = item;
+                console.log(this.percent_service_all);
+            })
+        },
+        save_percent_service_add() {
+            const db = this.$fireModule.database();
+            db.ref(`percent_service_all/`).set({
+                name: this.percent_service.name,
+                bath: this.percent_service.bath,
+            })
+            console.log('success save percent_service');
+            this.percent_service_search();
+            this.percent_service = [];
+        },
+        save_percent_service_bath() {
+            const db = this.$fireModule.database();
+            console.log(this.percent_service_all);
+            db.ref(`percent_service_all/`).update({
+                bath: this.percent_service_all[0].bath,
+                name: this.percent_service_all[0].name,
+            })        
+            console.log('success save percent_service bath');
         },
     }
 }
