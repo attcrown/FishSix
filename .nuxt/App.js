@@ -4,17 +4,21 @@ import { decode, parsePath, withoutBase, withoutTrailingSlash, normalizeURL } fr
 import { getMatchedComponentsInstances, getChildrenComponentInstancesUsingFetch, promisify, globalHandleError, urlJoin, sanitizeComponent } from './utils'
 import NuxtError from '..\\layouts\\error.vue'
 import NuxtLoading from './components/nuxt-loading.vue'
+import NuxtBuildIndicator from './components/nuxt-build-indicator'
 
 import '..\\assets\\css\\bootstrap.css'
 
 import '..\\node_modules\\.cache\\nuxt-google-fonts\\css\\nuxt-google-fonts.css'
 
+import '..\\node_modules\\vuetify\\dist\\vuetify.css'
+
 import _6f6c098b from '..\\layouts\\default.vue'
 import _77a66d33 from '..\\layouts\\login.vue'
+import _2e8a6499 from '..\\layouts\\register.vue'
 import _44525b52 from '..\\layouts\\teacherNav.vue'
 import _0a92e0a2 from '..\\layouts\\userNav.vue'
 
-const layouts = { "_default": sanitizeComponent(_6f6c098b),"_login": sanitizeComponent(_77a66d33),"_teacherNav": sanitizeComponent(_44525b52),"_userNav": sanitizeComponent(_0a92e0a2) }
+const layouts = { "_default": sanitizeComponent(_6f6c098b),"_login": sanitizeComponent(_77a66d33),"_register": sanitizeComponent(_2e8a6499),"_teacherNav": sanitizeComponent(_44525b52),"_userNav": sanitizeComponent(_0a92e0a2) }
 
 export default {
   render (h, props) {
@@ -49,7 +53,7 @@ export default {
       }
     }, [
       loadingEl,
-
+      h(NuxtBuildIndicator),
       transitionEl
     ])
   },
@@ -100,10 +104,6 @@ export default {
 
     isFetching () {
       return this.nbFetching > 0
-    },
-
-    isPreview () {
-      return Boolean(this.$options.previewData)
     },
   },
 
@@ -194,6 +194,10 @@ export default {
     },
 
     setLayout (layout) {
+      if(layout && typeof layout !== 'string') {
+        throw new Error('[nuxt] Avoid using non-string value as layout property.')
+      }
+
       if (!layout || !layouts['_' + layout]) {
         layout = 'default'
       }
