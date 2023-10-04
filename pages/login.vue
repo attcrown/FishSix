@@ -1,67 +1,36 @@
 <template>
   <div class="container input-container" style="height: 100%">
-    <v-sheet
-      width="400"
-      class="mx-auto p-5 rounded-5"
-      style="background-color: #f5f6f7a8; border-radius: 15px"
-    >
+    <v-sheet width="400" class="mx-auto p-5 rounded-5" style="background-color: #f5f6f7a8; border-radius: 15px">
       <div class="text-h5 text-center">เข้าสู่ระบบ</div>
       <v-form ref="form" @submit.prevent="submitForm">
         <div class="input-container">
           <span class="mdi mdi-account-key large-icon"></span>
-          <v-text-field
-            v-model="firstName"
-            label=" "
-            :rules="firstNameRules"
-            placeholder="กรุณากรอกชื่อ"
-            required
-          ></v-text-field>
+          <v-text-field v-model="firstName" label=" " :rules="firstNameRules" placeholder="กรุณากรอกชื่อ"
+            required></v-text-field>
         </div>
         <div class="input-container">
           <span class="mdi mdi-lock large-icon"></span>
-          <v-text-field
-            v-model="lastName"
-            type="password"
-            label=" "
-            placeholder="กรุณากรอกรหัสผ่าน"
-            :rules="lastNameRules"
-            required
-          ></v-text-field>
+          <v-text-field v-model="lastName" type="password" label=" " placeholder="กรุณากรอกรหัสผ่าน"
+            :rules="lastNameRules" required></v-text-field>
         </div>
         <div>
-          <v-checkbox
-            v-model="ex4"
-            label="save"
-            color="success"
-            value="success"
-            hide-details
-          ></v-checkbox>
+          <v-checkbox v-model="ex4" label="save" color="success" value="success" hide-details></v-checkbox>
         </div>
         <div class="text-center">
-          <v-btn
-            type="submit"
-            class="mt-3 mb-3"
-            style="
+          <v-btn type="submit" class="mt-3 mb-3" style="
               border-radius: 32px;
               border: 1px solid #000;
               background: #fff;
               color: #111111;
-            "
-            @click="validate()"
-            >เข้าสู่ระบบ</v-btn
-          >
+            " @click="validate()">เข้าสู่ระบบ</v-btn>
         </div>
         <p class="text-center">
-          ลืมรหัสผ่าน ?
-          <nuxt-link
-            style="
+          เปลี่ยนรหัสผ่าน ?
+          <nuxt-link style="
               color: var(--gray-blue-grey-blue-70, #7d8fb3);
               font-size: 14px;
               font-weight: 400;
-            "
-            to="/reset_pass"
-            >ลืมรหัสผ่าน</nuxt-link
-          >
+            " to="/reset_pass">เปลี่ยนรหัสผ่าน</nuxt-link>
         </p>
       </v-form>
     </v-sheet>
@@ -131,21 +100,21 @@ export default {
               if (this.ex4) {
                 localStorage.setItem('firstName', childData.name)
                 localStorage.setItem('lastName', this.encode(this.firstName))
-                localStorage.setItem('status', childData.status)                
-                if(localStorage.getItem('status') == 'opFS' || localStorage.getItem('status') == 'opsupFS'){
+                localStorage.setItem('status', childData.status)
+                if (localStorage.getItem('status') == 'opFS' || localStorage.getItem('status') == 'opsupFS') {
                   this.$router.push(`/admin`)
-                }else{
+                } else {
                   this.$router.push(`/${localStorage.getItem('status')}`)
-                }                
+                }
               } else {
                 sessionStorage.setItem('firstName', childData.name)
                 sessionStorage.setItem('lastName', this.encode(this.firstName))
-                sessionStorage.setItem('status', childData.status)                
-                if(sessionStorage.getItem('status') == 'opFS' || sessionStorage.getItem('status') == 'opsupFS'){
+                sessionStorage.setItem('status', childData.status)
+                if (sessionStorage.getItem('status') == 'opFS' || sessionStorage.getItem('status') == 'opsupFS') {
                   this.$router.push(`/admin`)
-                }else{
+                } else {
                   this.$router.push(`/${sessionStorage.getItem('status')}`)
-                }  
+                }
               }
             } else {
               this.dialog = true

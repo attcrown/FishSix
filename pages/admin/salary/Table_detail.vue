@@ -484,6 +484,7 @@
 <script>
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { mapState } from 'vuex';
 export default {
     data: () => ({
         check_sheet: false,
@@ -529,12 +530,10 @@ export default {
             , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
     }),
-    mounted() {
-        this.search_tea();
-        this.year_gen();
-        this.search_class();
-    },
+    
     computed: {
+        ...mapState(['firstName', 'status']),
+
         groupedTeachers() {
             return this.data_all.reduce((acc, item) => {
                 // console.log(acc ,item);
@@ -553,6 +552,13 @@ export default {
             }, []);
         },
     },
+
+    mounted() {
+        this.search_tea();
+        this.year_gen();
+        this.search_class();
+    },
+
     methods: {
         mapping(item, class_tea) {
             this.mapping_data = [];
@@ -679,19 +685,34 @@ export default {
             }
             this.items_year = item;
         },
-        search_tea() {
+        async search_tea() {
+            // รอให้ข้อมูลเตรียมพร้อม
+            await this.$nextTick();
+
+            console.log('>>>', this.firstName, this.status);
+
             const db = this.$fireModule.database();
-            db.ref(`user/`).once("value", (snapshot) => {
-                let item = [{ key: '00000', name: 'ทั้งหมด' }];
-                const childData = snapshot.val();
-                for (const key in childData) {
-                    if (childData[key].status == 'teacher') {
-                        item.push({ key: key, name: childData[key].teacherId + ' ' + childData[key].nickname + ' ' + childData[key].firstName })
+            if(this.status.includes('teacher')){
+                db.ref(`user/${this.firstName}`).once("value", (snapshot) => {
+                    let item = [];
+                    const childData = snapshot.val();
+                    item.push({ key: this.firstName, name: childData.teacherId + ' ' + childData.nickname + ' ' + childData.firstName })
+                    console.log(item);
+                    this.value_tea_all = item;
+                })
+            }else{
+                db.ref(`user/`).once("value", (snapshot) => {
+                    let item = [{ key: '00000', name: 'ทั้งหมด' }];
+                    const childData = snapshot.val();
+                    for (const key in childData) {
+                        if (childData[key].status == 'teacher') {
+                            item.push({ key: key, name: childData[key].teacherId + ' ' + childData[key].nickname + ' ' + childData[key].firstName })
+                        }
                     }
-                }
-                console.log(item);
-                this.value_tea_all = item;
-            })
+                    console.log(item);
+                    this.value_tea_all = item;
+                })
+            }           
         },
         search_class() {
             const db = this.$fireModule.database();
