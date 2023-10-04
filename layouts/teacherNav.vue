@@ -1,7 +1,6 @@
 <template>
   <v-app class="fonts500">
-    <v-navigation-drawer v-model="drawer"  :width="drawerWidth" :max-width="drawerMaxWidth" 
-    :mini-variant="miniVariant" :clipped-left="clipped"  fixed app color="#B6A7A2">
+    <v-navigation-drawer v-model="drawer"  app color="#B6A7A2" :mini-variant.sync="mini" permanent expand-on-hover>
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
       
       <v-list>
@@ -26,10 +25,11 @@
         </v-list-item>
       </template>
     </v-navigation-drawer>
+
     <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" /> -->
     
-      <v-spacer />
+      <v-spacer/>
       <p class=" dark">
         {{email}}
       </p>  
@@ -57,7 +57,7 @@ export default {
       drawerWidth: 200, // Change this value as desired for the default width
       drawerMaxWidth: 350,
 
-   
+      mini: true,
       clipped: true,
       drawer: false,
       fixed: false,
@@ -81,6 +81,11 @@ export default {
           icon: 'mdi-table-account',
           title: 'ตารางครู',
           to: '/teacher/table',
+        },
+        {
+          icon: 'mdi-cash',
+          title: 'เงินเดือนครู',
+          to: '/teacher/salary',
         },
         {
           icon: 'mdi-account-circle ',
