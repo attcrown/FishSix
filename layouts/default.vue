@@ -132,6 +132,11 @@ export default {
           title: 'ข้อมูลนักเรียน',
           to: '/admin/student',
         },
+        {
+          icon: 'mdi-account-filter',
+          title: 'Awareness',
+          to: '/admin/awareness',
+        },
         
       ],
 
