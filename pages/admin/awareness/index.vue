@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h1 style="font-size:32px"><b>Academic</b></h1>
+        <h1 style="font-size:32px"><b>ยืนยันครู</b></h1>
         <pending></pending>
-        <unapproved></unapproved>
+        <unapproved class="mt-4"></unapproved>
     </div>
 </template>
 <script>

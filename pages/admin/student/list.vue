@@ -203,10 +203,10 @@ export default {
                 { text: 'รหัสนักเรียน', value: 'stu.studentId' },
                 { text: 'ชื่อเล่น', value: 'stu.nickname' },
                 { text: 'ชื่อจริง', value: 'stu.firstName', filterable: true, },
-                { text: 'นามสกุล', value: 'stu.lastName' , sortable: false},
+                { text: 'นามสกุล', value: 'stu.lastName', sortable: false },
                 { text: 'เบอร์โทรศัพท์ผู้ปกครอง', value: 'stu.parentMobile', sortable: false, dataType: 'string' },
                 { text: 'จำนวนชั่วโมง Flip Class ที่เหลือ ', value: 'stu.hourLeft', sortable: false },
-                { text: 'จำนวนชั่วโมง Private Class ที่เหลือ ', value: 'stu.privateHourLeft' , sortable: false},
+                { text: 'จำนวนชั่วโมง Private Class ที่เหลือ ', value: 'stu.privateHourLeft', sortable: false },
                 { text: 'เวลาที่บันทึก', value: 'stu.createdAt' },
                 { text: 'Actions', value: 'actions', sortable: false },
             ],
@@ -400,39 +400,39 @@ export default {
         },
 
         searchStudent() {
-  const db = this.$fireModule.database();
-  const ref = db.ref("user/");
-  const query = ref.orderByChild("status").equalTo("user");
+            const db = this.$fireModule.database();
+            const ref = db.ref("user/");
+            const query = ref.orderByChild("status").equalTo("user");
 
-  query.once("value")
-    .then((snapshot) => {
-      const items = [];
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        const childData = childSnapshot.val();
-        const sumx_date = childData.createdAt
-          ? new Date(childData.createdAt).toLocaleString()
-          : "-";
-        const stu = {
-          studentId: childData.studentId,
-          createdAt: sumx_date,
-          hourLeft: childData.hourLeft || "-",
-          privateHourLeft: childData.privateHourLeft || "-",
-          firstName: childData.firstName,
-          lastName: childData.lastName,
-          nickname: childData.nickname,
-          parentMobile: childData.parentMobile,
-        };
-        items.push({ key, stu });
-      });
+            query.once("value")
+                .then((snapshot) => {
+                    const items = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const key = childSnapshot.key;
+                        const childData = childSnapshot.val();
+                        const sumx_date = childData.createdAt
+                            ? new Date(childData.createdAt).toLocaleString()
+                            : "-";
+                        const stu = {
+                            studentId: childData.studentId,
+                            createdAt: sumx_date,
+                            hourLeft: childData.hourLeft || "-",
+                            privateHourLeft: childData.privateHourLeft || "-",
+                            firstName: childData.firstName,
+                            lastName: childData.lastName,
+                            nickname: childData.nickname,
+                            parentMobile: childData.parentMobile,
+                        };
+                        items.push({ key, stu });
+                    });
 
-      this.items = items;
-      this.isLoading = false;
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-},
+                    this.items = items;
+                    this.isLoading = false;
+                })
+                .catch((error) => {
+                    console.error("Error fetching data:", error);
+                });
+        },
 
 
         editItem(item) {

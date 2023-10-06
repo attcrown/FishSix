@@ -400,7 +400,7 @@ export default {
                             lastName: childData[key].lastName || null,
                             nickname: childData[key].nickname || null,
                             mobile: childData[key].mobile || null,
-
+                        
                             university: childData[key].university || null,
 
                         };
