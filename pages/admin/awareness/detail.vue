@@ -5,7 +5,7 @@
             <v-row>
                 <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลครู</h1>
-                    <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
+                    <v-btn to="/admin/awareness" router exact>ย้อนกลับ</v-btn>
                 </div>
                 <v-col cols="12">
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0" class="px-10">
@@ -350,16 +350,39 @@
 
         </div>
         <div class="d-flex justify-center">
-            <v-btn color=red @click="disapprove" elevation="8">
+            <v-btn v-if="action == 'Pending'" color=red @click="approveDialog = true; isApprove = false;" elevation="8">
                 <b style="color: #F8F9FB;">Disapprove</b>
                 <v-icon right color="#FFF">mdi-close</v-icon>
             </v-btn>
-            <v-btn class="ms-2" color=green @click="approve" elevation="8">
+            <v-btn class="ms-2" color=green @click="approveDialog = true; isApprove = true;" elevation="8">
                 <b style="color: #FFF;">Approve</b>
                 <v-icon right color="#FFF">mdi-check</v-icon>
             </v-btn>
         </div>
         <!-- dialog -->
+        <v-dialog v-model="approveDialog" max-width="500px">
+            <v-card>
+
+                <v-card-title class="text-h5 text-center" :class="(isApprove === true ? 'green' : 'red')"> ยืนยัน
+                </v-card-title>
+                <v-card-text class=" text-center mt-2">
+                    <div v-if="isApprove" class="text-h5">ต้องการ Approve ข้อมูลของคุณ<br> {{ firstName }} {{ lastName }}
+                        หรือไม่?</div>
+                    <div v-else class="text-h5">ต้องการ Disapprove ข้อมูลของคุณ<br> {{ firstName }} {{ lastName }}
+                        หรือไม่?</div>
+                    <v-text-field name="approvalName" label="ชื่อผู้ที่ดำเนินการ" v-model="approvalName" required></v-text-field>
+                </v-card-text>
+
+                <v-card-actions>
+
+                    <v-spacer></v-spacer>
+                    <v-btn color="grey " outlined @click="approveDialog = false">ยกเลิก</v-btn>
+                    <v-btn v-if="isApprove" color="green darken-1 text-white" @click="approve">ตกลง</v-btn>
+                    <v-btn v-else color="red darken-1 text-white" @click="disapprove">ตกลง</v-btn>
+                    <v-spacer></v-spacer>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
             <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
         </v-snackbar>
@@ -377,6 +400,9 @@ export default {
             type_Private: null,
             type_all: [],
             type_private_all: [],
+            approveDialog: false,
+            dialogDetail: '',
+            isApprove: false,
             //status
             status: "teacher",
             teacherId: null,
@@ -401,6 +427,8 @@ export default {
             snackbarColor: '',
 
             //data
+            approvalName:null,
+            action: null,
             profilePic: null,
             profilePicUpload: null,
             firstNameEng: null,
@@ -881,6 +909,11 @@ export default {
         },
 
         async approve() {
+            if(this.approvalName==null)
+            {
+                this.openSnackbar("error", 'กรุณากรอกชื่อผู้ที่ Approve');
+                return;
+            }
             this.isSubmitting = true;
             const db = this.$fireModule.database();
             const snapshot = await db.ref('user').orderByChild('teacherId').limitToLast(1).once('value');
@@ -888,7 +921,7 @@ export default {
             for (const key in lastTeacher) {
                 if (lastTeacher[key].status == 'admin' || !lastTeacher) {
                     this.teacherId = 'FS0001';
-                 
+
                     return;
                 } else {
                     const lastTeacherId = Object.keys(lastTeacher)[0];
@@ -897,11 +930,10 @@ export default {
                     const nextId = `FS${String(numericPart).padStart(4, '0')}`;
                     this.teacherId = nextId;
                     this.name = nextId;
-            
+
                 }
             }
             console.log(this.teacherId)
-            const keyuser = this.encode(this.name);
             this.isSubmitting = true;
             const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
             if (isIDDuplicate) {
@@ -913,8 +945,9 @@ export default {
             const jsDate = timestamp.toDate();
             const isoString = jsDate.toISOString();
             this.createdAt = isoString;
-            await db.ref(`user/${this.encode(this.name)}/`).set({
+            await db.ref(`user/${this.userId}/`).set({
                 status: this.status,
+                approvalName: this.approvalName,
                 teacherId: this.teacherId,
                 name: this.name,
                 createdAt: this.createdAt,
@@ -943,40 +976,10 @@ export default {
                 faculty: this.faculty,
                 major: this.major,
             })
-            if (this.idCardCopy) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.encode(this.name)}/idCardCopy.jpg`);
-                try {
-                    const snapshot = await userRef.put(this.idCardCopy);
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    await db.ref(`user/${keyuser}`).update({
-                        idCardCopy: downloadURL
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
-            if (this.profilePic) {
-                this.isSubmitting = true
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${this.encode(this.name)}/profilePic.jpg`);
-
-                try {
-                    const snapshot = await userRef.put(this.profilePicUpload);
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    await db.ref(`user/${this.encode(this.name)}`).update({
-                        profilePic: downloadURL,
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
 
             for (let subject of this.selectedSubjects) {
 
-                await db.ref(`user/${this.encode(this.name)}/subject_all/${subject.key}`).set({
+                await db.ref(`user/${this.userId}/subject_all/${subject.key}`).set({
                     name: subject.name,
                     level: subject.level,
 
@@ -984,9 +987,35 @@ export default {
             }
             this.isSubmitting = false;
             this.isAlreadySubmit = true;
+            this.removeTeacherRegister();
         },
 
+
+        removeTeacherRegister() {
+            const db = this.$fireModule.database();
+            console.log(this.userId)
+            db.ref(`teacher_register/${this.userId}`).remove().then(() => {
+
+                this.openSnackbar('success', 'ยืนยันข้อมูลเสร็จสิ้น ');
+
+                this.isSubmitting = false;
+                window.location.href = "/admin/awareness/"
+
+            })
+                .catch((error) => {
+
+                    this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ' + error);
+                    this.isSubmitting = false;
+
+                });
+
+        },
         async disapprove() {
+            if(this.approvalName==null)
+            {
+                this.openSnackbar("error", 'กรุณากรอกชื่อผู้ที่ Approve');
+                return;
+            }
             const db = this.$fireModule.database();
             await db.ref(`teacher_register/${this.userId}/`).update({
                 action: 'Disapprove',
@@ -997,6 +1026,7 @@ export default {
                     this.openSnackbar('success', 'ยืนยันข้อมูลเสร็จสิ้น ');
 
                     this.isSubmitting = false;
+                    window.location.href = "/admin/awareness/"
 
                 })
                 .catch((error) => {
@@ -1005,6 +1035,7 @@ export default {
                     this.isSubmitting = false;
 
                 });
+
         },
 
         async readdata() {
@@ -1014,7 +1045,7 @@ export default {
                 const childData = snapshot.val();
                 console.log(snapshot.val())
                 this.profilePic = childData.profilePic || null;
-
+                this.action = childData.action || null;
                 this.firstNameEng = childData.firstNameEng || null;
                 this.lastNameEng = childData.lastNameEng || null;
                 this.firstName = childData.firstName || null;
