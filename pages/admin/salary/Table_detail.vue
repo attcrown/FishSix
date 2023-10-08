@@ -161,7 +161,7 @@
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
                         <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-3"><b>รวมทั้งหมด {{
-                            calculateTotalIncomeAll(teacherData.data_class) }} บาท</b></p>
+                            Math.ceil(calculateTotalIncomeAll(teacherData.data_class)) }} บาท</b></p>
                     </v-col>
                 </v-row>
             </v-expansion-panel>
@@ -605,7 +605,7 @@ export default {
             let check_start = 0;
             for (const id in this.time_full) {
                 if (stop == this.time_full[id]) {
-                    sum.push(this.time_full[id]);
+                    // sum.push(this.time_full[id]);
                     return sum;
                 } else if (start == this.time_full[id] || check_start != 0) {
                     sum.push(this.time_full[id]);

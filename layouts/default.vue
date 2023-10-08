@@ -137,6 +137,11 @@ export default {
           title: 'Awareness',
           to: '/admin/awareness',
         },
+        {
+          icon: 'mdi-cog',
+          title: 'Setting',
+          to: '/admin/setting',
+        },
         
       ],
 

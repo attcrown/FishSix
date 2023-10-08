@@ -895,6 +895,8 @@ import 'firebase/compat/storage';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { CheckedEventBus } from './card_controller.vue';
+import { CheckTeaController } from './checkTeaController.vue';
+
 export default {
     data() {
         return {
@@ -1084,6 +1086,11 @@ export default {
             // ทำอะไรกับค่าที่ถูกส่งกลับมาได้ที่นี่
             console.log('result:', result);
         },
+        handleCheckTeaControl(result) {
+            // ทำอะไรกับค่าที่ถูกส่งกลับมาได้ที่นี่
+            console.log('result:', result);
+            this.loadsave = result;
+        },
         check_send_stu(item) {
             CheckedEventBus.$emit('save_send_user', item,(result) => {
                 item.sendplanAll.send_line = result;
@@ -1091,6 +1098,13 @@ export default {
             });
             console.log('check_send_stu');
         },
+        checkTeaControl(item){
+            CheckTeaController.$emit('checkTeaControl', item,(result) => {
+                this.handleCheckTeaControl(result);
+            });
+            console.log('check_checkTeaControl');
+        },
+
         send_rate_teacher_search() {
             const db = this.$fireModule.database();
             db.ref(`send_rate_teacher_all/`).once("value", (snapshot) => {
@@ -1175,8 +1189,13 @@ export default {
         },
         validate() {
             if (this.$refs.form.validate()) {
-                this.upload();
-            } else { console.log(this.edited, this.column, this.column1); }
+                this.loadsave = true;
+                this.edited = { ...this.edited, fileimg: this.fileToUpload };
+                this.checkTeaControl(this.edited);
+                this.dialog = false;
+            } else { 
+                console.log(this.edited, this.fileToUpload); 
+            }
         },
 
         validate_confirm() {

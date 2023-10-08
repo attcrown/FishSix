@@ -3,12 +3,14 @@
         <h3 style="font-size:32px"><b>เช็คชื่อ/ส่งพัฒนาการ</b></h3>
         <card></card>
         <card_controller></card_controller>
+        <checkTeaController></checkTeaController>
     </div>
 </template>
     
 <script>
 import card from './card.vue';
 import card_controller from './card_controller.vue';
+import checkTeaController from './checkTeaController.vue';
 export default {
     data() {
         return {
@@ -18,7 +20,8 @@ export default {
 
     components: {
         card,
-        card_controller
+        card_controller,
+        checkTeaController
     },
     created() {
 
