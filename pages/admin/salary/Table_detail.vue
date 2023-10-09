@@ -30,9 +30,10 @@
                                 label="ค้นหา Class"></v-select>
                         </div>
                         <v-card flat class="d-flex  rounded-xl px-5 pt-0" style="background-color:rgba(255, 255, 255, 0)">
+
                             <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
+                                    <v-text-field v-model="date" label="เริ่มค้นหา" prepend-icon="mdi-calendar" readonly
                                         v-bind="attrs" v-on="on"></v-text-field>
                                 </template>
                                 <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
@@ -48,7 +49,26 @@
                                 </v-date-picker>
                             </v-dialog>
 
-                            <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                            <v-dialog ref="dialog_end" v-model="modal_day_end" :return-value.sync="date_end" persistent
+                                width="290px">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field v-model="date_end" label="สิ้นสุดค้นหา" prepend-icon="mdi-calendar" readonly
+                                        v-bind="attrs" v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker v-model="date_end" scrollable :max="date_now" :events="arrayEvents"
+                                    event-color="green lighten-1">
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click="modal_day_end = false">
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn text color="primary"
+                                        @click="$refs.dialog_end.save(date_end), date_month = null, date_year = null">
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-dialog>
+
+                            <!-- <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                 :return-value.sync="date_month" transition="scale-transition" offset-y max-width="290px"
                                 min-width="auto">
                                 <template v-slot:activator="{ on, attrs }">
@@ -68,7 +88,7 @@
                             </v-menu>
 
                             <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
-                                @change="date = null, date_month = null"></v-select>
+                                @change="date = null, date_month = null"></v-select> -->
                         </v-card>
 
                         <div class="d-flex justify-end pt-3 px-3">
@@ -103,10 +123,11 @@
 
                 <v-expansion-panel-content class="rounded-b-xl" v-for="(data_class, index) in teacherData.data_class"
                     :key="index">
-                    
+
                     <div v-if="data_class.items != undefined">
-                        <p class="ms-5" style="font-size:18px;">คลาสเรียนวันที่ {{ data_class.name.substring(0,10) }} เวลา {{ data_class.name.substring(11,16) }}น. ถึง {{ data_class.name.substring(17,22) }}น.</p>
-                        <v-expansion-panel-content >
+                        <p class="ms-5" style="font-size:18px;">คลาสเรียนวันที่ {{ data_class.name.substring(0, 10) }} เวลา
+                            {{ data_class.name.substring(11, 16) }}น. ถึง {{ data_class.name.substring(17, 22) }}น.</p>
+                        <v-expansion-panel-content>
                             <table style="width: 100%;">
                                 <thead style="background-color:#D4C1B2;">
                                     <tr>
@@ -144,7 +165,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <v-row style="margin-bottom: -70px">
                                 <v-col cols="12" class="d-flex justify-end">
                                     <p style="font-size:18px" class="mt-3"><b>เงินสุทธิ {{
@@ -155,7 +176,7 @@
                             <hr style="margin-top: 50px">
                         </v-expansion-panel-content>
                     </div>
-                    
+
 
                 </v-expansion-panel-content>
                 <v-row>
@@ -371,14 +392,12 @@
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
 
-                        <v-col cols="7" style="margin-top:-20px"
-                            v-if="detailData.money.sum_send_percent">
-                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_percent_service.name }} {{ detailData.money.send_percent_service.bath }}%</v-subheader>
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.sum_send_percent">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_percent_service.name }}
+                                {{ detailData.money.send_percent_service.bath }}%</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px"
-                            v-if="detailData.money.sum_send_percent">
-                            <v-text-field readonly label="ค่าสอน"
-                                :value="detailData.money.sum_send_percent + ' บาท'"
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.sum_send_percent">
+                            <v-text-field readonly label="ค่าสอน" :value="detailData.money.sum_send_percent + ' บาท'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
 
@@ -501,10 +520,13 @@ export default {
         detailData: null,
         detailData_stu: null,
         dialog: false,
+        dialog_end: false,
         panel: [],
         date_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         date: null,
+        date_end: null,
         modal: false,
+        modal_day_end: false,
         value_tea: null,
         value_tea_all: [],
 
@@ -530,7 +552,7 @@ export default {
             , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
     }),
-    
+
     computed: {
         ...mapState(['firstName', 'status']),
 
@@ -617,39 +639,33 @@ export default {
 
         arrayEvent_search() {
             const db = this.$fireModule.database();
-            if (this.value_tea != '00000') {
-                db.ref(`date_match/`).on("value", (snapshot) => {
+            if (this.value_tea === '00000') {
+                db.ref(`send_plan/`).on("value", (snapshot) => {
                     this.arrayEvents = [];
                     const childData = snapshot.val();
+                    console.log(childData);
                     for (const key in childData) {
-                        const date = childData[key]
-                        for (const day in date) {
-                            const time = date[day];
-                            for (const data_all in time) {
-                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined && time[data_all].teacher == this.value_tea) {
-                                    this.arrayEvents.push(day);
-                                    // console.log(this.arrayEvents);
-                                }
-                            }
+                        const tea = childData[key]
+                        for (const id in tea) {
+                            if(tea[id].money){
+                                this.arrayEvents.push(tea[id].date_learn);
+                                console.log(this.arrayEvents);
+                            }                            
                         }
                     }
 
                 })
             } else {
-                db.ref(`date_match/`).on("value", (snapshot) => {
+                db.ref(`send_plan/${this.value_tea}`).on("value", (snapshot) => {
                     this.arrayEvents = [];
                     const childData = snapshot.val();
+                    console.log(childData);
                     for (const key in childData) {
                         const date = childData[key]
-                        for (const day in date) {
-                            const time = date[day];
-                            for (const data_all in time) {
-                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined) {
-                                    this.arrayEvents.push(day);
-                                    // console.log(this.arrayEvents);
-                                }
-                            }
-                        }
+                        if(date.money){
+                            this.arrayEvents.push(date.date_learn);
+                            console.log(this.arrayEvents);
+                        }  
                     }
 
                 })
@@ -692,7 +708,7 @@ export default {
             console.log('>>>', this.firstName, this.status);
 
             const db = this.$fireModule.database();
-            if(this.status.includes('teacher')){
+            if (this.status.includes('teacher')) {
                 db.ref(`user/${this.firstName}`).once("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
@@ -700,7 +716,7 @@ export default {
                     console.log(item);
                     this.value_tea_all = item;
                 })
-            }else{
+            } else {
                 db.ref(`user/`).once("value", (snapshot) => {
                     let item = [{ key: '00000', name: 'ทั้งหมด' }];
                     const childData = snapshot.val();
@@ -712,7 +728,7 @@ export default {
                     console.log(item);
                     this.value_tea_all = item;
                 })
-            }           
+            }
         },
         search_class() {
             const db = this.$fireModule.database();
@@ -747,19 +763,19 @@ export default {
             }
             if (this.date) {
                 day_search_start = new Date(`${this.date}`).getTime();
-                day_search_end = new Date(`${this.date}`).getTime();
-            } else if (this.date_month) {
-                let month = parseInt(this.date_month.substring(5, 7)) + 1;
-                day_search_start = new Date(this.date_month).getTime();
-                if (month > 12) {
-                    day_search_end = new Date(parseInt(this.date_month.substring(0, 4)) + 1 + "-" + 1).getTime();
-                } else {
-                    day_search_end = new Date(this.date_month.substring(0, 5) + month).getTime();
-                }
-            } else if (this.date_year) {
-                let year = parseInt(this.date_year) + 1;
-                day_search_start = new Date(parseInt(this.date_year) - 1 + '-12').getTime();
-                day_search_end = new Date(year + '-1').getTime();
+                day_search_end = new Date(`${this.date_end}`).getTime();
+                // } else if (this.date_month) {
+                //     let month = parseInt(this.date_month.substring(5, 7)) + 1;
+                //     day_search_start = new Date(this.date_month).getTime();
+                //     if (month > 12) {
+                //         day_search_end = new Date(parseInt(this.date_month.substring(0, 4)) + 1 + "-" + 1).getTime();
+                //     } else {
+                //         day_search_end = new Date(this.date_month.substring(0, 5) + month).getTime();
+                //     }
+                // } else if (this.date_year) {
+                //     let year = parseInt(this.date_year) + 1;
+                //     day_search_start = new Date(parseInt(this.date_year) - 1 + '-12').getTime();
+                // day_search_end = new Date(year + '-1').getTime();
             } else {
                 alert('Error');
             }
@@ -957,7 +973,7 @@ export default {
                     this.data_all = item;
                     this.data_class_all = class_tea;
                     this.mapping(this.data_all, this.data_class_all);
-                });                
+                });
             } else {
                 db.ref(`send_plan/${tea}`).once("value", async (snapshot) => {
                     let item = [];
@@ -970,67 +986,112 @@ export default {
                             const data_all = childData[data];
                             console.log(data_all);
                             // for (const data in data_all) {                                
-                                if (
-                                    data_all.status_development == "Approved" &&
-                                    new Date(data_all.date_learn).getTime() >= day_search_start &&
-                                    new Date(data_all.date_learn).getTime() <= day_search_end
-                                ) {
-                                    const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all.date_learn}`).once("value");
-                                    const getTeacherPromise = db.ref(`user/${tea}`).once("value");
-                                    const getStudentPromise = db.ref(`user/${data_all.keystudent}`).once("value");
-                                    const getDateMatchPromise = db.ref(`date_match/${data_all.keystudent}/${data_all.date_learn}/${data_all.time_learn}`).once("value");
+                            if (
+                                data_all.status_development == "Approved" &&
+                                new Date(data_all.date_learn).getTime() >= day_search_start &&
+                                new Date(data_all.date_learn).getTime() <= day_search_end
+                            ) {
+                                const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all.date_learn}`).once("value");
+                                const getTeacherPromise = db.ref(`user/${tea}`).once("value");
+                                const getStudentPromise = db.ref(`user/${data_all.keystudent}`).once("value");
+                                const getDateMatchPromise = db.ref(`date_match/${data_all.keystudent}/${data_all.date_learn}/${data_all.time_learn}`).once("value");
 
-                                    const [teacherSnapshot, studentSnapshot, dateMatchSnapshot, dateTeacherSnapshot,] = await Promise.all(
-                                        [
-                                            getTeacherPromise,
-                                            getStudentPromise,
-                                            getDateMatchPromise,
-                                            getDateTeacherPromise,
-                                        ]
-                                    );
-                                    const teacherData = teacherSnapshot.val();
-                                    const studentData = studentSnapshot.val();
-                                    const datematchData = dateMatchSnapshot.val();
-                                    const dateteacherData = dateTeacherSnapshot.val();
-                                    
-                                    for (const key in dateteacherData) {
-                                        const name = `${data_all.date_learn} ${key}`;
-                                        const nameTea = `${teacherData.teacherId} ${teacherData.nickname} ${teacherData.firstName}`;
-                                        const item = dateteacherData[key];
-                                        const isNameUnique = !class_tea.some((existingItem) => existingItem.name === nameTea);
-                                        if (isNameUnique) {
-                                            class_tea.push({
-                                                name: nameTea,
-                                                data_class: [{ name, item }],
-                                            });
-                                        } else {
-                                            for (const id in class_tea) {
-                                                if (class_tea[id].name == nameTea) {
-                                                    for (const idclass in class_tea[id].data_class) {
-                                                        const existingClass = class_tea[id].data_class.some((existingClass) => existingClass.name === name);
-                                                        if (!existingClass) {
-                                                            class_tea[id].data_class.push({ name, item });
-                                                        }
+                                const [teacherSnapshot, studentSnapshot, dateMatchSnapshot, dateTeacherSnapshot,] = await Promise.all(
+                                    [
+                                        getTeacherPromise,
+                                        getStudentPromise,
+                                        getDateMatchPromise,
+                                        getDateTeacherPromise,
+                                    ]
+                                );
+                                const teacherData = teacherSnapshot.val();
+                                const studentData = studentSnapshot.val();
+                                const datematchData = dateMatchSnapshot.val();
+                                const dateteacherData = dateTeacherSnapshot.val();
+
+                                for (const key in dateteacherData) {
+                                    const name = `${data_all.date_learn} ${key}`;
+                                    const nameTea = `${teacherData.teacherId} ${teacherData.nickname} ${teacherData.firstName}`;
+                                    const item = dateteacherData[key];
+                                    const isNameUnique = !class_tea.some((existingItem) => existingItem.name === nameTea);
+                                    if (isNameUnique) {
+                                        class_tea.push({
+                                            name: nameTea,
+                                            data_class: [{ name, item }],
+                                        });
+                                    } else {
+                                        for (const id in class_tea) {
+                                            if (class_tea[id].name == nameTea) {
+                                                for (const idclass in class_tea[id].data_class) {
+                                                    const existingClass = class_tea[id].data_class.some((existingClass) => existingClass.name === name);
+                                                    if (!existingClass) {
+                                                        class_tea[id].data_class.push({ name, item });
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                }
 
-                                    if (this.class_see == datematchData.select_class && this.search_object == ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                        })
+                                if (this.class_see == datematchData.select_class && this.search_object == ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                    })
 
-                                        this.sum_money_all += data_all.money.sum_money;
-                                    } else if (this.class_see == '00000' && this.search_object == ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
+                                    this.sum_money_all += data_all.money.sum_money;
+                                } else if (this.class_see == '00000' && this.search_object == ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+
+                                    this.sum_money_all += data_all.money.sum_money;
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object == ""
+                                    && !this.check_sheet) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+
+                                    this.sum_money_all += data_all.money.sum_money;
+                                } else if (this.class_see == '00000' && this.search_object == ""
+                                    && !this.check_sheet) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+                                    this.sum_money_all += data_all.money.sum_money;
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object != ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
                                         item.push({
                                             name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                             teacherData: teacherData,
@@ -1040,113 +1101,68 @@ export default {
                                             IdKey: data,
                                             dateteacherData: dateteacherData,
                                         })
-
                                         this.sum_money_all += data_all.money.sum_money;
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object == ""
-                                        && !this.check_sheet) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                            dateteacherData: dateteacherData,
-                                        })
-
-                                        this.sum_money_all += data_all.money.sum_money;
-                                    } else if (this.class_see == '00000' && this.search_object == ""
-                                        && !this.check_sheet) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                            dateteacherData: dateteacherData,
-                                        })
-                                        this.sum_money_all += data_all.money.sum_money;
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object != ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == '00000' && this.search_object != ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object != ""
-                                        && !this.check_sheet) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == '00000' && this.search_object != ""
-                                        && !this.check_sheet) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
                                     }
 
+                                } else if (this.class_see == '00000' && this.search_object != ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object != ""
+                                    && !this.check_sheet) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
+
+                                } else if (this.class_see == '00000' && this.search_object != ""
+                                    && !this.check_sheet) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
                                 }
+
+                            }
                             // }
                         })
                     );
