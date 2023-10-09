@@ -36,14 +36,14 @@
                                     <v-text-field v-model="date" label="เริ่มค้นหา" prepend-icon="mdi-calendar" readonly
                                         v-bind="attrs" v-on="on"></v-text-field>
                                 </template>
-                                <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
+                                <v-date-picker v-model="date" scrollable :events="arrayEvents"
                                     event-color="green lighten-1">
                                     <v-spacer></v-spacer>
                                     <v-btn text color="primary" @click="modal = false">
                                         Cancel
                                     </v-btn>
                                     <v-btn text color="primary"
-                                        @click="$refs.dialog.save(date), date_month = null, date_year = null">
+                                        @click="$refs.dialog.save(date)">
                                         OK
                                     </v-btn>
                                 </v-date-picker>
@@ -55,14 +55,14 @@
                                     <v-text-field v-model="date_end" label="สิ้นสุดค้นหา" prepend-icon="mdi-calendar" readonly
                                         v-bind="attrs" v-on="on"></v-text-field>
                                 </template>
-                                <v-date-picker v-model="date_end" scrollable :max="date_now" :events="arrayEvents"
+                                <v-date-picker v-model="date_end" scrollable :min="date" :events="arrayEvents"
                                     event-color="green lighten-1">
                                     <v-spacer></v-spacer>
                                     <v-btn text color="primary" @click="modal_day_end = false">
                                         Cancel
                                     </v-btn>
                                     <v-btn text color="primary"
-                                        @click="$refs.dialog_end.save(date_end), date_month = null, date_year = null">
+                                        @click="$refs.dialog_end.save(date_end)">
                                         OK
                                     </v-btn>
                                 </v-date-picker>
@@ -99,7 +99,7 @@
                                 hide-details></v-checkbox>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
-                                :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
+                                :disabled="value_tea == null || date == null || date_end == null"
                                 @click="search_data_money(), export_menu = true" rounded>
                                 ค้นหา<span class="mdi mdi-magnify text-h6"></span>
                             </v-btn>
