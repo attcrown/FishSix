@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="pt-5">
+        <div class="pt-5" >
             <v-row align="center">
                 <!-- <v-col cols="12">
                     <div>
@@ -195,6 +195,7 @@
 import { CalendarEventBus } from './calendar.vue';
 export default {
     data: () => ({
+        
         keyuser: null,
         status: null,
         valid: false,
@@ -304,6 +305,7 @@ export default {
     },
 
     methods: {
+        
         check_bin_data() {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).once("value", (snapshot) => {
