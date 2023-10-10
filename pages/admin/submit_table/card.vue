@@ -896,6 +896,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { CheckedEventBus } from './card_controller.vue';
 import { CheckTeaController } from './checkTeaController.vue';
+import { CheckStuController } from './checkStuController.vue';
 
 export default {
     data() {
@@ -1000,7 +1001,7 @@ export default {
         this.sheet_search();
         this.optional_search();
         this.fullName();
-        this.search_date_teacher();
+        this.search_date_teacher_All();
         this.arrayEvent_search();
     },
 
@@ -1090,6 +1091,16 @@ export default {
             // ทำอะไรกับค่าที่ถูกส่งกลับมาได้ที่นี่
             console.log('result:', result);
             this.loadsave = result;
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        },
+        handleCheckStuControl(result) {
+            console.log('result:', result);
+            this.clear_dialog();
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
         },
         check_send_stu(item) {
             CheckedEventBus.$emit('save_send_user', item,(result) => {
@@ -1103,6 +1114,11 @@ export default {
                 this.handleCheckTeaControl(result);
             });
             console.log('check_checkTeaControl');
+        },
+        checkStuControl(item){
+            CheckStuController.$emit('checkStuControl', item,(result) => {
+                this.handleCheckStuControl(result);
+            });
         },
 
         send_rate_teacher_search() {
@@ -1199,10 +1215,14 @@ export default {
         },
 
         validate_confirm() {
-            if (this.$refs.form_confirm.validate()) {
-                console.log(this.edited);
-                this.dialog_confirm = false;
-                this.save_confirm();
+            if (this.$refs.form_confirm.validate()) {                
+                this.edited = { ...this.edited, fileimg1: this.fileToUpload1 };
+                // this.dialog_confirm = false;
+                if(this.edited.status_development === "Approved"){
+                    this.save_confirm(this.edited);
+                }else{
+                    this.checkStuControl(this.edited);
+                }                
             } else {
                 console.log(this.edited);
             }
@@ -1265,93 +1285,13 @@ export default {
             this.fileToUpload1 = null;
             this.dialog = false;
         },
-
-        upload() {
-            this.loadsave = true;
-            this.dialog = false;
-            let id = new Date().getTime();
-            const storageRef = firebase.storage().ref();
-            const file = this.fileToUpload;
-            const imageRef = storageRef.child(`send_check/${id}.jpg`);
-            imageRef.put(file).then(() => {
-                console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
-                const storage = firebase.storage();
-                const image = storage.ref(`send_check/${id}.jpg`);
-                image.getDownloadURL()
-                    .then((url) => {
-                        this.imageURL = url;
-                        console.log(this.imageURL);
-                        // อัปเดตค่าใน Firebase Realtime Database เมื่อรูปภาพอัปโหลดเสร็จสิ้น
-                        const db = this.$fireModule.database();
-                        db.ref(`date_match/${this.edited.keyStudent}/${this.edited.date}/${this.edited.time_e}/`).update({
-                            sendplan: true,
-                            Idsendplan: id,
-                        }).then(() => {
-                            console.log('save date_match');
-                        })
-
-                        const currentDate = new Date();
-                        //classHistory
-                        const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
-                        db.ref(`studentHistory/${this.edited.keyStudent}/${transactionId}`).set({
-                            Idsendplan: id,
-                            date: this.edited.date,
-                            hour: this.edited.hour,
-                            keySubject: this.edited.keySubject,
-                            teacherName: this.edited.name,
-                            keyTeacher: this.edited.keyTeacher,
-                            level: this.edited.level,
-                            studentId: this.edited.studentId,
-                            subject: this.edited.subject,
-                            teacherId: this.edited.teacherId,
-                            time_e: this.edited.time_e,
-                            time_s: this.edited.time_s,
-                            style: this.edited.style,
-                            createdAt: currentDate,
-                        }).then(() => {
-                            console.log('Update student class history');
-                        })
-
-                        db.ref(`send_plan/${this.edited.keyTeacher}/${id}`).update({
-                            img: this.imageURL,
-                            hour: this.edited.hour,
-                            status_study_column_tea: this.edited.status_study_column_tea,
-                            createAt_OP: new Date(),
-                            keystudent: this.edited.keyStudent,
-                            date_learn: this.edited.date,
-                            time_learn: this.edited.time_e,
-                            time_learn_start: this.edited.time_s,
-                            level: this.edited.level,
-                            keysubject: this.edited.keySubject,
-                        }).then(() => {
-                            console.log('save send_plan');
-                            setTimeout(() => {
-                                if (this.date == null) {
-                                    this.search_date_teacher_All();
-                                } else {
-                                    this.search_date_teacher();
-                                }
-                            }, 300);
-                        })
-                        console.log("ไม่มีการลบ ชม. นักเรียน");
-                        this.loadsave = false;
-                        this.clear_dialog();
-                    }).catch((error) => {
-                        console.log("Url", error);
-                    });
-
-            }).catch((error) => {
-                console.log("รูปหนึ่ง", error);
-            });
-
-        },
-
-        save_confirm() {
+        
+        save_confirm(item) {
             console.log('save_confirm')
             const db = this.$fireModule.database();
-            let item_data = this.edited;
+            let item_data = item;
             console.log(item_data);
-            if (this.edited.status_development == "Approved") {
+            if (item_data.status_development == "Approved") {
                 let level_search = null;
                 const getsubjectPromise = db.ref(`subject_all/${item_data.keySubject}/`).once("value");
                 const getlevelPromise = db.ref(`level_all/`).once("value");
@@ -1486,299 +1426,12 @@ export default {
                             sum_send_percent: del_send_percent
                         }).then(() => {
                             console.log("คำนวนเงินเดือน");
+                            this.checkStuControl(item);
                         })
-
                     })
-            }
-            if (item_data.img_1 == undefined) {
-                console.log(item_data)
-                const storageRef = firebase.storage().ref();
-                const file1 = this.fileToUpload1;
-                const imageRef1 = storageRef.child(`send_check/${item_data.Idsendplan}_1.jpg`);
-                imageRef1
-                    .put(file1)
-                    .then(() => {
-                        console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
-                        const storage = firebase.storage();
-                        const image1 = storage.ref(`send_check/${item_data.Idsendplan}_1.jpg`);
-                        image1.getDownloadURL()
-                            .then((url_1) => {
-                                this.imageURL_1 = url_1;
-                                db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
-                                    img_1: this.imageURL_1
-                                })
-                                console.log(this.imageURL_1);
-                            }).catch((error) => {
-                                console.log("รูปสอง", error);
-                            });
-                    })
-            }
-            db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
-                status_study_column: item_data.status_study_column || null,
-                status_send_method: item_data.status_send_method || null,
-                status_check_sheet: item_data.status_check_sheet || null,
-
-                status_study_column_tea: item_data.status_study_column_tea || null,
-                match_vip: item_data.match_vip || false,
-                learn: item_data.learn || null,
-                understand: item_data.understand || null,
-                development: item_data.development || null,
-                problem: item_data.problem || null,
-                method: item_data.method || null,
-                // to_development: item_data.to_development || null,
-                homework: item_data.homework || null,
-                status_development: item_data.status_development || null,
-                comment: item_data.comment || null,
-                optional: item_data.optional || null,
-                link_url: item_data.link_url || null,
-                link_sheet: item_data.link_sheet || null,
-                createAt_rate_OP: new Date()
-            }).then(() => {
-                console.log('save send_plan', item_data);
-
-            })
-            if (!item_data.del_time || item_data.del_time == undefined) {
-                this.clear_time_student();
-            } else {
-                this.clear_dialog();
-                setTimeout(() => {
-                    if (this.date == null) {
-                        this.search_date_teacher_All();
-                    } else {
-                        this.search_date_teacher();
-                    }
-                }, 300);
-            }
+            }            
         },
 
-        clear_time_student() {
-            console.log('clear_time_student', this.edited);
-            const db = this.$fireModule.database();
-            let keystudent = this.edited;
-            db.ref(`date_match/${keystudent.keyStudent}/${keystudent.date}/${keystudent.time_e}/`).update({
-                del_time: true,
-            }).then(() => {
-                console.log('save date_match');
-            })
-            if (keystudent.style.includes("Flip") && !keystudent.match_test && !keystudent.match_vip) {
-                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                        hour: childData.hour - keystudent.hour,
-                    });
-                })
-                console.log('ลบชมทด Flip');
-            }
-            if (keystudent.style.includes("Private") && !keystudent.match_test && !keystudent.match_vip) {
-                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                        hourprivate: childData.hourprivate - keystudent.hour,
-                    });
-                })
-                console.log('ลบชมทด Private');
-            }
-            if (keystudent.style.includes("Flip") && !keystudent.match_test && keystudent.match_vip) {
-                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                        hour: childData.hour - keystudent.hour,
-                    });
-                })
-                console.log('ลบชมทด Flip VIP');
-            }
-            if (keystudent.style.includes("Private") && !keystudent.match_test && keystudent.match_vip) {
-                db.ref(`hour_match/${keystudent.keyStudent}`).once("value", (snapshot) => {
-                    const childData = snapshot.val();
-                    db.ref(`hour_match/${keystudent.keyStudent}`).update({
-                        hour: childData.hour - keystudent.hour,
-                    });
-                })
-                console.log('ลบชมทด Private VIP');
-            }
-
-            //-------ครูลากระทันหัน---------(ไม่หักชม น้อง)
-            if (keystudent.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW') {
-                console.log('END ', keystudent.status_study_column_tea.name);
-                return;
-            }
-
-
-            if (keystudent.match_test && keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
-                const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
-                Promise.all([getTeacherPromise])
-                    .then(([teacherSnapshot]) => {
-                        const studentData = teacherSnapshot.val();
-                        console.log(studentData);
-                        if (studentData.trialFlipclassHour && studentData.trialPrivateClassHour) {
-                            if (keystudent.style.substring(0, 4) === "Flip") {
-                                db.ref(`user/${keystudent.keyStudent}/`).update({
-                                    trialFlipclassHour: parseInt(studentData.trialFlipclassHour) + keystudent.hour,
-                                })
-                            } else if (keystudent.style.substring(0, 7) === "Private") {
-                                db.ref(`user/${keystudent.keyStudent}/`).update({
-                                    trialPrivateClassHour: parseInt(studentData.trialPrivateClassHour) + keystudent.hour,
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('ลบ ชม. ทดลอง');
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else {
-                            console.log('>>> freeHour privateFreeHour No DATA');
-
-                            if (keystudent.style.substring(0, 4) === "Flip") {
-                                db.ref(`user/${keystudent.keyStudent}/`).update({
-                                    trialFlipclassHour: keystudent.hour,
-                                })
-                            } else if (keystudent.style.substring(0, 7) === "Private") {
-                                db.ref(`user/${keystudent.keyStudent}/`).update({
-                                    trialPrivateClassHour: keystudent.hour,
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('เพิ่ม ชม. ทดลอง');
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        }
-                    })
-
-                //------------------หัก ชม นักเรียน------------------
-            } else if ((keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
-                keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" ||
-                keystudent.status_study_column.key == "-NceLxBOS65TrhT6Dbw_") &&
-                keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
-                const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
-                Promise.all([getTeacherPromise])
-                    .then(([teacherSnapshot]) => {
-                        const studentData = teacherSnapshot.val();
-                        console.log(studentData);
-                        let data_edit = keystudent;
-                        if (studentData.studyHour != undefined) {
-                            if (data_edit.style.includes("Flip") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseInt(studentData.studyHour) + keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
-                                })
-                            } else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseInt(studentData.studyHour) + keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
-                                })
-                            } else{
-                                console.log('error')
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else if (studentData.studyHour == undefined) {
-                            if(data_edit.style.includes("Flip") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
-                                })
-                            }else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour
-                                })
-                            }
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else {
-                            console.log('>>>Hour flipHour No DATA Flip');
-                        }
-
-                        if (studentData.privateStudyHour != undefined && !keystudent.match_vip) {
-                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHourOnline: parseInt(studentData.privateStudyHour) + keystudent.hour,
-                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
-                                })
-                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHour: parseInt(studentData.privateStudyHour) + keystudent.hour,
-                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else if (studentData.privateStudyHour == undefined && !keystudent.match_vip) {
-                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHourOnline: keystudent.hour,
-                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
-                                })
-                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHour: keystudent.hour,
-                                    privateHourLeft: parseInt(studentData.privateHourLeft) - keystudent.hour,
-                                })
-                            }else{
-                                console.log("Error");
-                            }
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else {
-                            console.log('>>>Hour privateHour No DATA Private');
-                        }
-
-                        if (studentData.studyHour != undefined && keystudent.match_vip) {
-                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseInt(studentData.studyHour) + keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
-                                })
-                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseInt(studentData.studyHour) + keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else if (studentData.studyHour == undefined && keystudent.match_vip) {
-                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
-                                })
-                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: keystudent.hour,
-                                    hourLeft: parseInt(studentData.hourLeft) - keystudent.hour,
-                                })
-                            }else{
-                                console.log("Error");
-                            }
-                            this.loadsave = false;
-                            this.clear_dialog();
-                        } else {
-                            console.log('>>>Hour privateHour No DATA Private');
-                        }
-                    })
-            }
-            else {
-                console.log("ไม่มีการลบ ชม.");
-                this.loadsave = false;
-                this.clear_dialog();
-            }
-            setTimeout(() => {
-                if (this.date == null) {
-                    this.search_date_teacher_All();
-                } else {
-                    this.search_date_teacher();
-                }
-            }, 300);
-        },
         sum_hour(start, end) {
             // console.log('ทำsum',start,end);
             let sum = 0;

@@ -4,6 +4,7 @@
         <card></card>
         <card_controller></card_controller>
         <checkTeaController></checkTeaController>
+        <checkStuController></checkStuController>
     </div>
 </template>
     
@@ -11,6 +12,7 @@
 import card from './card.vue';
 import card_controller from './card_controller.vue';
 import checkTeaController from './checkTeaController.vue';
+import checkStuController from './checkStuController.vue';
 export default {
     data() {
         return {
@@ -21,7 +23,8 @@ export default {
     components: {
         card,
         card_controller,
-        checkTeaController
+        checkTeaController,
+        checkStuController
     },
     created() {
 
