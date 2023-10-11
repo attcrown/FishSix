@@ -161,7 +161,7 @@
 
                                         </v-row>
                                         <v-row>
-                                            <v-col col="5">
+                                            <!-- <v-col col="5">
                                                 <div class="des-label">Online</div>
                                                 <div class="time-label my-3">{{
                                                     formattedExpireFlipClassDateOnline }} </div>
@@ -173,7 +173,12 @@
                                                 <div class="des-label">สาขา</div>
                                                 <div class="time-label my-3">{{
                                                     formattedExpireFlipClassDate }} </div>
-                                            </v-col>                                            
+                                            </v-col>   -->
+                                            <v-col>
+                                                <div class="des-label">FlipClass</div>
+                                                <div class="time-label my-3">{{
+                                                    formattedExpireFlipClassDate }} </div>
+                                            </v-col>                                          
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -366,7 +371,7 @@
 
                                         </v-row>
                                         <v-row>
-                                            <v-col col="5">
+                                            <!-- <v-col col="5">
                                                 <div class="des-label">Online</div>
                                                 <div class="time-label my-3">{{
                                                     formattedExpirePrivateClassDateOnline }} </div>
@@ -378,8 +383,12 @@
                                                 <div class="des-label">สาขา</div>
                                                 <div class="time-label my-3">{{
                                                     formattedExpirePrivateClassDate }} </div>
+                                            </v-col> -->
+                                            <v-col>
+                                                <div class="des-label">PrivateClass</div>
+                                                <div class="time-label my-3">{{
+                                                    formattedExpirePrivateClassDate }} </div>
                                             </v-col>
-
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
