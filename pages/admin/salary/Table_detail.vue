@@ -588,9 +588,8 @@ export default {
     methods: {
         formatNumber(number) {
             // ใช้ .toFixed() เพื่อปัดเศษ
-            const formattedNumber = (number).toFixed(2);
+            const formattedNumber = (+number).toFixed(2);
             // ใช้ .toLocaleString() เพื่อใส่ ',' ระหว่างหลัก
-            console.log(number, formattedNumber);
             return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
         mapping(item, class_tea) {
