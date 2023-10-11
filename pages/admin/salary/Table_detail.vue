@@ -459,32 +459,36 @@
 
                             <v-checkbox class="m-0" v-model="selectedHeaders[10]" label="วันที่สอน" :disabled="isExportAll"
                                 value="วันที่สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="สถานที่สอน" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="เวลาเริ่มเรียน" :disabled="isExportAll"
+                                value="เวลาเริ่มเรียน"></v-checkbox>
+                                <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="เวลาเลิกเรียน" :disabled="isExportAll"
+                                value="เวลาเลิกเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="สถานที่สอน" :disabled="isExportAll"
                                 value="สถานที่สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="รายได้ต่อวิชา"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="รายได้ต่อวิชา"
                                 :disabled="isExportAll" value="รายได้ต่อวิชา"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="รายได้ต่อระดับชั้น"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="รายได้ต่อระดับชั้น"
                                 :disabled="isExportAll" value="รายได้ต่อระดับชั้น"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="รายได้ต่อประเภท Class"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="รายได้ต่อประเภท Class"
                                 :disabled="isExportAll" value="รายได้ต่อประเภท Class"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="รายได้เอกสารใช้สอน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="รายได้เอกสารใช้สอน"
                                 :disabled="isExportAll" value="รายได้เอกสารใช้สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="Type & tier"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="Type & tier"
                                 :disabled="isExportAll" value="Type & tier"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="ชั่วโมงที่สอนไป"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="ชั่วโมงที่สอนไป"
                                 :disabled="isExportAll" value="ชั่วโมงที่สอนไป"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="กรณีสอนพร้อมกัน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="กรณีสอนพร้อมกัน"
                                 :disabled="isExportAll" value="กรณีสอนพร้อมกัน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="รายได้ทั้งหมดไม่รวมหัก"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="รายได้ทั้งหมดไม่รวมหัก"
                                 :disabled="isExportAll" value="รายได้ทั้งหมดไม่รวมหัก"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="หักรายได้เช็คชื่อล่าช้า"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="หักรายได้เช็คชื่อล่าช้า"
                                 :disabled="isExportAll" value="หักรายได้เช็คชื่อล่าช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="หักรายได้ส่งพัฒนาการช้า"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="หักรายได้ส่งพัฒนาการช้า"
                                 :disabled="isExportAll" value="หักรายได้ส่งพัฒนาการช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="หักรายกรณีน้องลากระทันหัน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="หักรายกรณีน้องลากระทันหัน"
                                 :disabled="isExportAll" value="หักรายกรณีน้องลากระทันหัน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="รายได้สุทธิ์"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="รายได้สุทธิ์"
                                 :disabled="isExportAll" value="รายได้สุทธิ์"></v-checkbox>
                         </v-row>
                     </v-container>
@@ -1206,6 +1210,8 @@ export default {
                     "เบอร์โทรศัพท์นักเรียน",
 
                     "วันที่สอน",
+                    "เวลาเริ่มเรียน",
+                    "เวลาเลิกเรียน",
                     "สถานที่สอน",
                     "รายได้ต่อวิชา",
                     "รายได้ต่อระดับชั้น",
@@ -1308,41 +1314,55 @@ export default {
                         }
                     }
                     if (this.selectedHeaders[11]) {
+                        if (item.send_plan && item.send_plan.time_learn_start) {
+                            row.push(item.send_plan.time_learn_start);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.send_plan && item.send_plan.time_learn) {
+                            row.push(item.send_plan.time_learn);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[13]) {
                         if (item.send_plan.money && item.send_plan.money.location.name) {
                             row.push(item.send_plan.money.location.name);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[12]) {
+                    if (this.selectedHeaders[14]) {
                         if (item.send_plan && item.send_plan.money.subject.bath) {
                             row.push(item.send_plan.money.subject.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[13]) {
+                    if (this.selectedHeaders[15]) {
                         if (item.send_plan && item.send_plan.money.level.bath) {
                             row.push(item.send_plan.money.level.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[14]) {
+                    if (this.selectedHeaders[16]) {
                         if (item.send_plan && item.send_plan.money.location.bath) {
                             row.push(item.send_plan.money.location.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[15]) {
+                    if (this.selectedHeaders[17]) {
                         if (item.send_plan.status_check_sheet && item.send_plan.status_check_sheet.bath) {
                             row.push(item.send_plan.status_check_sheet.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[16]) {
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan &&
                             item.send_plan.money.location.name.includes('Flip') &&
                             item.send_plan.money.typeflip.bath) {
@@ -1355,21 +1375,21 @@ export default {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[17]) {
+                    if (this.selectedHeaders[19]) {
                         if (item.send_plan.hour) {
                             row.push(item.send_plan.hour);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[18]) {
+                    if (this.selectedHeaders[20]) {
                         if (item.send_plan.money.send_rate_special) {
                             row.push(item.send_plan.money.send_rate_special.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[19]) {
+                    if (this.selectedHeaders[21]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
                         } else if (item.send_plan.money && item.send_plan.money.sum_send_rate_name) {
@@ -1382,28 +1402,28 @@ export default {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[20]) {
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[21]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_save}`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[22]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.send_plan.status_study_column) {
                             row.push(`-${item.send_plan.status_study_column.bath}%`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[23]) {
+                    if (this.selectedHeaders[25]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else {
@@ -1512,6 +1532,24 @@ export default {
                         row.push("");
                     }
                     if (this.selectedHeaders[11]) {
+                        if (item.send_plan && item.send_plan.time_learn_start) {
+                            row.push(item.send_plan.time_learn_start);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.send_plan && item.send_plan.time_learn) {
+                            row.push(item.send_plan.time_learn);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[13]) {
                         if (item.send_plan && item.send_plan.money.location.name) {
                             row.push(item.send_plan.money.location.name);
                         } else {
@@ -1520,7 +1558,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[12]) {
+                    if (this.selectedHeaders[14]) {
                         if (item.send_plan && item.send_plan.money.subject.bath) {
                             row.push(item.send_plan.money.subject.bath);
                         } else {
@@ -1529,7 +1567,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[13]) {
+                    if (this.selectedHeaders[15]) {
                         if (item.send_plan && item.send_plan.money.level.bath) {
                             row.push(item.send_plan.money.level.bath);
                         } else {
@@ -1538,7 +1576,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[14]) {
+                    if (this.selectedHeaders[16]) {
                         if (item.send_plan && item.send_plan.money.location.bath) {
                             row.push(item.send_plan.money.location.bath);
                         } else {
@@ -1547,7 +1585,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[15]) {
+                    if (this.selectedHeaders[17]) {
                         if (item.send_plan.status_check_sheet && item.send_plan.status_check_sheet.bath) {
                             row.push(item.send_plan.status_check_sheet.bath);
                         } else {
@@ -1556,7 +1594,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[16]) {
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan &&
                             item.send_plan.money.location.name.includes('Flip') &&
                             item.send_plan.money.typeflip.bath) {
@@ -1571,7 +1609,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[17]) {
+                    if (this.selectedHeaders[19]) {
                         if (item.send_plan.hour) {
                             row.push(item.send_plan.hour);
                         } else {
@@ -1580,7 +1618,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[18]) {
+                    if (this.selectedHeaders[20]) {
                         if (item.send_plan.money.send_rate_special) {
                             row.push(item.send_plan.money.send_rate_special.bath);
                         } else {
@@ -1589,7 +1627,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[19]) {
+                    if (this.selectedHeaders[21]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
                         } else if (item.send_plan.money && item.send_plan.money.sum_send_rate_name) {
@@ -1604,7 +1642,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[20]) {
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else {
@@ -1613,7 +1651,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[21]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_save}`);
                         } else {
@@ -1622,7 +1660,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[22]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.send_plan.status_study_column) {
                             row.push(`-${item.send_plan.status_study_column.bath}%`);
                         } else {
@@ -1631,7 +1669,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[23]) {
+                    if (this.selectedHeaders[25]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else {
