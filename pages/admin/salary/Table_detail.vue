@@ -10,8 +10,8 @@
                                 <v-col cols="auto" class="mr-auto">
                                     <img :src="require('~/assets/cashcoin.png')" class="pt-10 ps-8">
                                 </v-col>
-                                <v-col cols="auto" class="pt-14 mt-16 me-5" style="font-size:24px;">
-                                    <b>{{ Math.ceil(parseInt(sum_money_all)) }} ฿</b>
+                                <v-col cols="auto" class="pt-10 mt-16 me-5" style="font-size:18px;">
+                                    <b>{{ formatNumber(parseFloat(sum_money_all)) }} ฿</b>
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7 mt-5">
                                     <p style="font-size: 16px; margin-top: -50px;">รวมเงินเดือนครู
@@ -169,7 +169,7 @@
                             <v-row style="margin-bottom: -70px">
                                 <v-col cols="12" class="d-flex justify-end">
                                     <p style="font-size:18px" class="mt-3"><b>เงินสุทธิ {{
-                                        calculateTotalIncome(data_class.items) }}
+                                        (calculateTotalIncome(data_class.items)) }}
                                             บาท</b></p>
                                 </v-col>
                             </v-row>
@@ -182,7 +182,7 @@
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
                         <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-3"><b>รวมทั้งหมด {{
-                            Math.ceil(calculateTotalIncomeAll(teacherData.data_class)) }} บาท</b></p>
+                            formatNumber(calculateTotalIncomeAll(teacherData.data_class)) }} บาท</b></p>
                     </v-col>
                 </v-row>
             </v-expansion-panel>
@@ -586,6 +586,13 @@ export default {
     },
 
     methods: {
+        formatNumber(number) {
+            // ใช้ .toFixed() เพื่อปัดเศษ
+            const formattedNumber = (number).toFixed(2);
+            // ใช้ .toLocaleString() เพื่อใส่ ',' ระหว่างหลัก
+            console.log(number, formattedNumber);
+            return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        },
         mapping(item, class_tea) {
             this.mapping_data = [];
             for (const id in item) {
@@ -603,7 +610,7 @@ export default {
                                 )
                                 console.log('check date', time, item[id].send_plan);
                                 console.log(time.includes(item[id].send_plan.time_learn_start))
-                                if (time.includes(item[id].send_plan.time_learn_start)) {
+                                if (time.includes(item[id].send_plan.time_learn_start) && time.includes(item[id].send_plan.time_learn)) {
                                     if (class_tea[key].data_class[detail].items == undefined) {
                                         class_tea[key].data_class[detail].items = [];
                                     }
@@ -631,7 +638,7 @@ export default {
             let check_start = 0;
             for (const id in this.time_full) {
                 if (stop == this.time_full[id]) {
-                    // sum.push(this.time_full[id]);
+                    sum.push(this.time_full[id]);
                     return sum;
                 } else if (start == this.time_full[id] || check_start != 0) {
                     sum.push(this.time_full[id]);
