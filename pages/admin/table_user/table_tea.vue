@@ -1,10 +1,11 @@
 <template>
-    <div>    
-        <v-btn @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;" color="brown lighten-4">
+    <div>
+        <v-btn @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;"
+            color="brown lighten-4">
             แสดงตารางสอน <v-icon class="mdi mdi-calendar-month text-h8"></v-icon>
-        </v-btn>    
+        </v-btn>
 
-        <div class="mb-3 " :hidden="show_date" > <!--hide-on-mobile-->
+        <div class="mb-3 " :hidden="show_date"> <!--hide-on-mobile-->
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
@@ -86,14 +87,22 @@
             </v-row>
         </div>
         <template>
-            <v-data-table :headers="headers" :items-per-page="-1" :items="desserts" sort-by="date" :search="search"
-                class="elevation-16 rounded-xl">
+            <v-data-table :headers="headers" :items-per-page="-1" :items="filteredDesserts" sort-by="date" :search="search"  
+                class="elevation-16 rounded-xl">  <!-- desserts -->
                 <template v-slot:top>
                     <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
                         <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
-                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search" single-line
+
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="classSearch" label="Search Class" single-line
+                            hide-details style="max-width: 200px;" />
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="subjectSearch" label="Search Subject" single-line
+                            hide-details style="max-width: 200px;" />
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="dateSearch" label="Search Date" single-line
+                            hide-details style="max-width: 200px;" />
+
+                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search All" single-line
                             hide-details style="max-width: 200px;"></v-text-field>
                         <v-dialog v-model="dialog" max-width="600px">
                             <template v-slot:activator="{ on, attrs }">
@@ -234,7 +243,7 @@
                             </v-card>
                         </v-dialog>
                     </v-toolbar>
-                </template>
+                </template>                
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
                     <v-icon small class="mr-2 text-h6" @click="editItem(item)">
@@ -294,6 +303,12 @@ export default {
     data: () => ({
         show_date: true,
         search: '',
+        subjectSearch: '',
+        dateSearch: '',
+        classSearch: '',
+        dialog_date: false,
+        classMatchData: ['hello','boot'],
+
         dialog_load: false,
         textError: '',
         dialogError: false,
@@ -394,6 +409,15 @@ export default {
             this.mode = this.editedIndex === -1 ? 'รอยืนยัน' : 'พร้อมเรียน'
             return this.editedIndex === -1 ? 'จองเวลาเรียนนอกตาราง' : 'จองเวลาเรียนในตาราง'
         },
+        filteredDesserts() {
+        // ใช้ this.subjectSearch และ this.dateSearch เพื่อกรองรายการ desserts
+            return this.desserts.filter(dessert => {
+                const subjectMatch = dessert.subject.toLowerCase().includes(this.subjectSearch.toLowerCase());
+                const dateMatch = dessert.date.toLowerCase().includes(this.dateSearch.toLowerCase());
+                const classMatch = dessert.style.toLowerCase().includes(this.classSearch.toLowerCase());
+                return subjectMatch && dateMatch && classMatch;
+            });
+        },
     },
     watch: {
         dialog(val) {
@@ -410,11 +434,11 @@ export default {
         this.search_student();
         this.search_date_teacher();
     },
-    methods: {
-        switch_calendar(){
-            if(this.show_date){
+    methods: {        
+        switch_calendar() {
+            if (this.show_date) {
                 this.show_date = false;
-            }else{
+            } else {
                 this.show_date = true;
             }
         },
