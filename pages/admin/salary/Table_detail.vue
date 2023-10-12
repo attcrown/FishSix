@@ -595,9 +595,9 @@ export default {
         mapping(item, class_tea) {
             this.mapping_data = [];
             for (const id in item) {
-                // console.log('send>>>',item[id].name)
+                console.log('send>>>',item[id])
                 for (const key in class_tea) {
-                    // console.log('class>>>',class_tea[key].name);
+                    console.log('class>>>',class_tea[key]);
                     if (item[id].name === class_tea[key].name) {
                         console.log('true name');
                         for (const detail in class_tea[key].data_class) {
@@ -609,7 +609,12 @@ export default {
                                 )
                                 console.log('check date', time, item[id].send_plan);
                                 console.log(time.includes(item[id].send_plan.time_learn_start))
-                                if (time.includes(item[id].send_plan.time_learn_start) && time.includes(item[id].send_plan.time_learn)) {
+                                console.log('location',class_tea[key].data_class[detail].item.style_subject)
+                                console.log('location2',item[id].datematchData.style_subject)
+                                if (time.includes(item[id].send_plan.time_learn_start) && 
+                                    time.includes(item[id].send_plan.time_learn) &&
+                                    class_tea[key].data_class[detail].item.style_subject === item[id].datematchData.style_subject
+                                    ) {
                                     if (class_tea[key].data_class[detail].items == undefined) {
                                         class_tea[key].data_class[detail].items = [];
                                     }
