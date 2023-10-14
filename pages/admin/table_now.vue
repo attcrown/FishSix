@@ -467,7 +467,7 @@ export default {
                                 new Date(date).getTime() >= now.getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    if (this.status == 'admin') {
+                                    if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -587,7 +587,7 @@ export default {
                                 new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    if (this.status == 'admin') {
+                                    if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

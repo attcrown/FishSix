@@ -21,8 +21,8 @@
                         </v-card>
                     </v-hover>
                 </div>
-                <div class="ms-10" style="margin-top:-10px">
-                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16">
+                <div class="ms-10" style="margin-top:-10px; min-width:800px">
+                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16" >
                         <div class="d-flex px-5 pt-5">
                             <v-autocomplete class="me-5" v-model="value_tea" :items="value_tea_all" item-text="name"
                                 item-value="key" label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
@@ -168,9 +168,9 @@
 
                             <v-row style="margin-bottom: -70px">
                                 <v-col cols="12" class="d-flex justify-end">
-                                    <p style="font-size:18px" class="mt-3"><b>เงินสุทธิ {{
-                                        (calculateTotalIncome(data_class.items)) }}
-                                            บาท</b></p>
+                                    <p style="font-size:18px; color:rgb(44, 80, 2);" class="mt-3">
+                                        <b>รายได้สุทธิต่อคลาสเรียน {{ (calculateTotalIncome(data_class.items)) }} บาท</b>
+                                    </p>
                                 </v-col>
                             </v-row>
                             <hr style="margin-top: 50px">
@@ -181,9 +181,23 @@
                 </v-expansion-panel-content>
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
-                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-3"><b>รวมทั้งหมด {{
-                            formatNumber(calculateTotalIncomeAll(teacherData.data_class)) }} บาท</b></p>
+                        <p class="mt-0">                            
+                            <b style="font-size:16px; color:rgb(224, 137, 7);">
+                                รวมรายได้ทั้งหมด {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class) + calculateTotalIncomeAll(teacherData.data_class)) }} บาท
+                            </b>
+                            <br>
+                            <b style="font-size:16px; color:rgb(128, 4, 4);">
+                                รวมหักค่าบริการ {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class)) }} บาท
+                            </b>                            
+                        </p>
                     </v-col>
+                    <v-col cols="12" class="d-flex justify-end pe-10" style="margin-top:-20px">                                             
+                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-0">                           
+                            <b> รวมรายได้สุทธิทั้งหมด {{
+                                formatNumber(calculateTotalIncomeAll(teacherData.data_class)) }} บาท
+                            </b>
+                        </p>
+                    </v-col>                    
                 </v-row>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -595,22 +609,22 @@ export default {
         mapping(item, class_tea) {
             this.mapping_data = [];
             for (const id in item) {
-                console.log('send>>>',item[id])
+                // console.log('send>>>',item[id])
                 for (const key in class_tea) {
-                    console.log('class>>>',class_tea[key]);
+                    // console.log('class>>>',class_tea[key]);
                     if (item[id].name === class_tea[key].name) {
-                        console.log('true name');
+                        // console.log('true name');
                         for (const detail in class_tea[key].data_class) {
-                            console.log('data_class', class_tea[key].data_class[detail]);
+                            // console.log('data_class', class_tea[key].data_class[detail]);
                             if (item[id].send_plan.date_learn === class_tea[key].data_class[detail].name.substring(0, 10)) {
                                 let time = this.validateTime(
                                     class_tea[key].data_class[detail].name.substring(11, 16),
                                     class_tea[key].data_class[detail].name.substring(17, 22)
                                 )
-                                console.log('check date', time, item[id].send_plan);
-                                console.log(time.includes(item[id].send_plan.time_learn_start))
-                                console.log('location',class_tea[key].data_class[detail].item.style_subject)
-                                console.log('location2',item[id].datematchData.style_subject)
+                                // console.log('check date', time, item[id].send_plan);
+                                // console.log(time.includes(item[id].send_plan.time_learn_start))
+                                // console.log('location',class_tea[key].data_class[detail].item.style_subject)
+                                // console.log('location2',item[id].datematchData.style_subject)
                                 if (time.includes(item[id].send_plan.time_learn_start) && 
                                     time.includes(item[id].send_plan.time_learn) &&
                                     class_tea[key].data_class[detail].item.style_subject === item[id].datematchData.style_subject
@@ -701,6 +715,19 @@ export default {
                 for (const iditem in items[id].items) {
                     console.log(items[id].items[iditem].send_plan.money.sum_money);
                     totalIncome += items[id].items[iditem].send_plan.money.sum_money;
+                }
+            }
+            return totalIncome;
+        },
+
+        calculateTotalIncomePersenAll(items) {
+            let totalIncome = 0;
+            console.log(items);
+            for (const id in items) {
+
+                for (const iditem in items[id].items) {
+                    console.log(items[id].items[iditem].send_plan.money.sum_send_percent);
+                    totalIncome += items[id].items[iditem].send_plan.money.sum_send_percent;
                 }
             }
             return totalIncome;

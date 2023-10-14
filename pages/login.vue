@@ -170,6 +170,12 @@ export default {
       ) {
         this.$router.push('/teacher')
       }
+      if (
+        localStorage.getItem('status') == 'finance' ||
+        sessionStorage.getItem('status') == 'finance'
+      ) {
+        this.$router.push('/finance')
+      }
     },
 
     encode(a) {
