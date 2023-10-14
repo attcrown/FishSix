@@ -29,7 +29,7 @@
     </v-navigation-drawer>
 
     <v-app-bar app color="white" elevation="0">
-      <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon>
+      <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->
       <v-spacer />
       <p class="m-0">
         {{ title }}
