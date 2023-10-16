@@ -945,7 +945,8 @@ export default {
             const jsDate = timestamp.toDate();
             const isoString = jsDate.toISOString();
             this.createdAt = isoString;
-            await db.ref(`user/${this.userId}/`).set({
+            let userIDEnd = this.encode(this.teacherId);
+            await db.ref(`user/${userIDEnd}/`).set({
                 status: this.status,
                 approvalName: this.approvalName,
                 teacherId: this.teacherId,
@@ -990,6 +991,10 @@ export default {
             this.removeTeacherRegister();
         },
 
+        encode(a) {
+            const encodedData = btoa(a);
+            return encodedData;
+        },
 
         removeTeacherRegister() {
             const db = this.$fireModule.database();
