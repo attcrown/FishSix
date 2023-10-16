@@ -445,8 +445,8 @@ export default {
                         end = new Date(edit);
                     }
                 } else if (this.search_date == 'Month') {
-                    now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8))) + '-01');
-                    edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
+                    now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7))) + '-01');
+                    edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7)) + 1) + '-01';
                     end = new Date(edit);                    
                 } else if (this.search_date == 'All') {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);

@@ -20,7 +20,7 @@
                 <product></product>
             </v-col>
         </v-row> -->
-    </div>
+    </div> 
 </template>
 <script>
 import tablesubject from './table_sub.vue';
