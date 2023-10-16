@@ -46,6 +46,20 @@
                                 <v-col cols="9">
                                     <v-row>
                                         <v-col cols="4" class="py-0 ">
+                                            <v-text-field class="black-label" name="userid" v-model="userid"
+                                                :error-messages="useridErrors" @input="$v.userid.$touch()"
+                                                @blur="$v.userid.$touch()">
+                                                <template v-slot:label>
+                                                    <span>
+                                                        รหัสประจำตัวครู
+                                                    </span>
+                                                    <span style="color:red;">
+                                                        *
+                                                    </span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="py-0 ">
                                             <v-text-field class="black-label" name="nickname" v-model="nickname"
                                                 :error-messages="nicknameErrors" @input="$v.nickname.$touch()"
                                                 @blur="$v.nickname.$touch()">
@@ -412,6 +426,7 @@ export default {
             firstName: null,
             lastName: null,
             nickname: null,
+            userid: null,
             mobile: null,
             email: null,
             gender: null,
@@ -485,6 +500,7 @@ export default {
         firstName: { required },
         lastName: { required },
         nickname: { required },
+        userid:{ required },
         gender: { required },
         email: { required, email },
         mobile: { required, minLength: minLength(9), numeric },
@@ -519,6 +535,13 @@ export default {
             const errors = []
             if (!this.$v.nickname.$dirty) return errors
             !this.$v.nickname.required && errors.push('กรุณาระบุชื่อเล่น')
+            return errors
+        },
+
+        useridErrors() {
+            const errors = []
+            if (!this.$v.userid.$dirty) return errors
+            !this.$v.userid.required && errors.push('กรุณาระบุรหัสประจำตัวครู')
             return errors
         },
 
@@ -717,6 +740,7 @@ export default {
                 firstName: this.firstName,
                 lastName: this.lastName,
                 nickname: this.nickname,
+                userid : this.userid,
                 mobile: this.mobile,
                 email: this.email,
                 gender: this.gender,
