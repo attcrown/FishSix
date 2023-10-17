@@ -356,7 +356,7 @@
 
         </div>
         <div class="d-flex justify-center">
-            <v-btn v-if="action == 'Pending'" color=red @click="approveDialog = true; isApprove = false;" elevation="8">
+            <v-btn v-if="action == 'pending'" color=red @click="approveDialog = true; isApprove = false;" elevation="8">
                 <b style="color: #F8F9FB;">Disapprove</b>
                 <v-icon right color="#FFF">mdi-close</v-icon>
             </v-btn>
@@ -1009,6 +1009,7 @@ export default {
             }
             this.isSubmitting = false;
             this.isAlreadySubmit = true;
+            // this.send_email();
             this.removeTeacherRegister();
         },
 
@@ -1016,6 +1017,30 @@ export default {
             const encodedData = btoa(a);
             return encodedData;
         },
+
+        send_email(){    
+            // const nodemailer = require('nodemailer');
+            // const transporter = nodemailer.createTransport({
+            //     service: 'Gmail', // หรือใช้ค่าอื่น ๆ ตามผู้ให้บริการอีเมลที่คุณใช้
+            //     auth: {
+            //         user: 'vongvarisch.center@gmail.com', // อีเมลของคุณ
+            //         pass: 'gnjc ciqc oeon lwgu' // รหัสผ่านของคุณ
+            //     }
+            // });
+            // const mailOptions = {
+            //     from: 'vongvarisch.center@gmail.com', // อีเมลผู้ส่ง
+            //     to: this.email, // อีเมลผู้รับ
+            //     subject: 'สมัครใช้บริการ FishSix',
+            //     text: `ท่านได้สมัครสำเร็จแล้ว รหัสในการ Login user: ${this.teacherId} password: FishsixTeacher เมื่อได้รับข้อความนี้แล้วกรุณาเปลี่ยนรหัสด้วย`  // ข้อความของอีเมล
+            // };
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //     if (error) {
+            //         console.log(error);
+            //     } else {
+            //         console.log('ส่งอีเมลสำเร็จ: ' + info.response);
+            //     }
+            // });
+         },
 
         removeTeacherRegister() {
             const db = this.$fireModule.database();
