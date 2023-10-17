@@ -2,6 +2,8 @@
     <div>
         <label for="">Stu</label>
         <input type="file" @change="handleFileUpload" />
+        <label for="">StuUpdate</label>
+        <input type="file" @change="handleUpdateFileUpload" />
         <label for="">Tea</label>
         <input type="file" @change="handleFileUploadTea" />
         <div v-if="jsonData.length > 0" style="background-color:aliceblue">
@@ -26,6 +28,31 @@
                 </tbody>
             </table>
         </div>
+
+        <div v-if="jsonDataUpdateStu.length > 0" style="background-color:aliceblue">
+            <table>
+                <thead>
+                    <tr>
+                        <th>StudentID</th>
+                        <th>ชื่อจริง</th>
+                        <th>เวลาคงเหลือ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(teacher, index) in jsonDataUpdateStu" :key="index">
+                        <td>{{ teacher['studentid'] }}</td>
+                        <td>{{ teacher['ชื่อจริงนักเรียน'] }}</td>
+                        <td>{{ teacher['hournow'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-if="jsonDataUpdateStu.length > 0">
+            <v-btn @click="update_student(jsonDataUpdateStu)">
+                Save UPDATE
+            </v-btn>
+        </div>
+
         <div v-if="jsonDataTea.length > 0" style="background-color:aliceblue">
             <table>
                 <thead>
@@ -53,6 +80,7 @@
         <div>
             <v-btn @click="exportToExcel">ExcelStudent</v-btn>
         </div>
+       
         <div>
             <v-btn @click="exportToExcelTea">ExcelTeacher</v-btn>
         </div>
@@ -69,6 +97,7 @@ export default {
         return {
             jsonData: [],
             jsonDataTea: [],
+            jsonDataUpdateStu:[],
             row: [],
             rowTea: [],
         };
@@ -234,6 +263,30 @@ export default {
             reader.readAsArrayBuffer(file);
         },
 
+        handleUpdateFileUpload(event) {
+            const file = event.target.files[0];
+
+            if (!file) {
+                console.error('No file selected');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+
+                this.jsonDataUpdateStu = XLSX.utils.sheet_to_json(worksheet);
+                console.log(this.jsonDataUpdateStu);
+            };
+
+            reader.readAsArrayBuffer(file);
+        },
+
         handleFileUploadTea(event) {
             const file = event.target.files[0];
 
@@ -380,6 +433,33 @@ export default {
         encode(a) {
             const encodedData = btoa(a);
             return encodedData;
+        },
+
+        update_student(item){
+            console.log(item);
+            const db = this.$fireModule.database();
+            for(const key in item){
+                console.log(item[key]);
+                if(item[key].studentid){
+                    db.ref(`user/${ this.encode(item[key].studentid) }/`).update({
+                        hourLeft: item[key].hournow || 0,
+                        privateHourLeft:0,
+                        privateStudyHour:0,
+                        privateStudyHourOnline:0,
+                        privateTotalHour:0,
+                        studyHour:0,
+                        studyHourOnline:0,
+                        totalHour:0,
+                    })
+                }
+                
+            }
+            // db.ref(`user/${ }/`).update({
+            //     university: this.university,
+            //     faculty: this.faculty,
+            //     major: this.major,
+            //     selectedSubjects: this.selectedSubjects,
+            // })
         },
     },
 };
