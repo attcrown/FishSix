@@ -133,6 +133,8 @@ export default {
             //-------ครูลากระทันหัน---------(ไม่หักชม น้อง)
             if (keystudent.status_study_column_tea.key == '-NceH8-XeWUJe5xDQCIW') {
                 console.log('END ', keystudent.status_study_column_tea.name);
+                const result = false;
+                callback(result);
                 return;
             }
 
@@ -293,7 +295,7 @@ export default {
             }
             else {
                 console.log("ไม่มีการลบ ชม.");
-                this.loadsave = fal
+                this.loadsave = false;
             }
             const result = false;
             callback(result);

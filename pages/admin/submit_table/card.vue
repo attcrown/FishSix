@@ -791,13 +791,15 @@
         </v-dialog>
 
 
-        <v-dialog v-model="loadsave" hide-overlay persistent width="300">
-            <v-card color="primary" dark>
-                <v-card-text>
-                    กำลังบันทึก
-                    <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-                </v-card-text>
-            </v-card>
+        <v-dialog v-model="loadsave" hide-overlay persistent width="300">           
+            <v-overlay :value="loadsave">
+                <v-card color="primary" dark>
+                    <v-card-text>
+                        กำลังบันทึก
+                        <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+                    </v-card-text>
+                </v-card>
+            </v-overlay>              
         </v-dialog>
 
         <v-dialog v-model="dialog_excel" max-width="600px">
@@ -1115,7 +1117,7 @@ export default {
             });
             console.log('check_checkTeaControl');
         },
-        checkStuControl(item){
+        checkStuControl(item){            
             CheckStuController.$emit('checkStuControl', item,(result) => {
                 this.handleCheckStuControl(result);
             });
@@ -1222,6 +1224,7 @@ export default {
                     this.save_confirm(this.edited);
                 }else{
                     this.checkStuControl(this.edited);
+                    this.loadsave = true;
                 }                
             } else {
                 console.log(this.edited);
@@ -1288,6 +1291,7 @@ export default {
         
         save_confirm(item) {
             console.log('save_confirm')
+            this.loadsave = true;
             const db = this.$fireModule.database();
             let item_data = item;
             console.log(item_data);

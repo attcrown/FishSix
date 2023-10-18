@@ -187,7 +187,7 @@
                             </b>
                             <br>
                             <b style="font-size:16px; color:rgb(128, 4, 4);">
-                                รวมหักค่าบริการ {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class)) }} บาท
+                                รวมหักค่าภาษี {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class)) }} บาท
                             </b>                            
                         </p>
                     </v-col>
