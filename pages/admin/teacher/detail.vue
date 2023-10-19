@@ -833,7 +833,7 @@ export default {
                         university: this.university,
                         faculty: this.faculty,
                         major: this.major,
-                        selectedSubjects: this.selectedSubjects,
+                     
                     })
                         .then(() => {
 

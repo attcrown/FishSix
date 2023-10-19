@@ -5,7 +5,7 @@
             <v-row>
                 <div style="display: flex; justify-content: space-between;">
                     <h1 class="font-weight-bold">ข้อมูลครู</h1>
-                    <v-btn to="/admin/teacher" router exact>ย้อนกลับ</v-btn>
+                    <v-btn to="/teacher" router exact>ย้อนกลับ</v-btn>
                 </div>
                 <v-col cols="12">
                     <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0" class="px-10">
@@ -23,7 +23,7 @@
                                 </button>
                             </div>
                         </v-card-title>
-                        <v-form ref="detailForm" @submit.prevent="toEditDetail">
+                        <v-form ref="detailForm">
                             <v-row class="mt-0" align="center">
                                 <v-col cols="3" sm="3" class="pl-10">
                                     <div>
@@ -43,8 +43,8 @@
                                 <v-col cols="9">
                                     <v-row>
                                         <v-col cols="3">
-                                            <v-text-field v-model="teacherId" counter label="รหัสครู (ไม่จำเป็นต้องกรอก) " disabled
-                                               >
+                                            <v-text-field v-model="teacherId" counter label="รหัสครู  "
+                                                disabled>
                                                 <template v-slot:append>
                                                     <v-tooltip bottom>
                                                         <template v-slot:activator="{ on }">
@@ -59,25 +59,22 @@
                                         </v-col>
                                         <v-col cols="9"></v-col>
                                         <v-col cols="6" class="py-0 ">
-                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                                 disabled
-                                                label="ชื่อ (ภาษาอังกฤษ)"  v-on:keypress="isLetter($event)">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"   :readonly="!isEditingDetail" 
+                                                 label="ชื่อ (ภาษาอังกฤษ)" v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" disabled
-                                               v-on:keypress="isLetter($event)">
+                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"  :readonly="!isEditingDetail" 
+                                                label="นามสกุล (ภาษาอังกฤษ)"  v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
 
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName" disabled
-                                              
+                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName"  :readonly="!isEditingDetail" 
                                                 ></v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName" disabled
+                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName"  :readonly="!isEditingDetail" 
                                                 ></v-text-field>
                                         </v-col>
                                         <v-col cols="4" class="py-0">
@@ -236,7 +233,7 @@
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลสัญญาจ้าง</div>
-                         
+
                         </v-card-title>
                         <v-card-text>
                             <v-form ref="contractForm">
@@ -271,7 +268,7 @@
                                                 min="1950-01-01" @change="save"></v-date-picker>
                                         </v-menu>
                                     </v-col>
-                                
+
                                     <v-col cols="4">
                                         <v-select v-if="!isEditingContract" class="black-label" v-model="classLocation"
                                             :items="classLocations" item-text="name" item-value="key"
@@ -281,7 +278,7 @@
                                             :items="classLocations" item-text="name" item-value="key"
                                             label="สาขาที่สามารถสอนได้" multiple></v-select>
                                     </v-col>
-                            
+
                                 </v-row>
 
 
@@ -324,9 +321,9 @@
                                         <label>
                                             <span class="text-danger">*</span>
                                             <span style="color: #000;font-size: 16px;">วิชาที่สอนได้</span>
-                                            <span v-if="isEditingEducation" class="text-danger"
+                                            <!-- <span v-if="isEditingEducation" class="text-danger"
                                                 style="font-size: 10px;">กรณีต้องการแก้ส่วนนี้ กรุณาติดต่อผู้ดูแลระบบ
-                                                เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span>
+                                                เพราะอาจมีปัญหากับระบบที่ดำเนินการอยู่ได้</span> -->
                                         </label>
                                         <table class="table table-sm">
                                             <tbody>
@@ -336,7 +333,7 @@
                                                         <v-checkbox class="m-0"
                                                             :input-value="isChecked(subject.name, level, subject.key)"
                                                             @click="updateSelectedSubjects(subject.key, level, subject.name)"
-                                                            :label="level" disabled>
+                                                            :label="level" :disabled="!isEditingEducation">
                                                         </v-checkbox>
                                                     </td>
                                                 </tr>
@@ -373,7 +370,7 @@ export default {
             type_private_all: [],
             //status
             isLoading: true,
-            userId: null,
+
             teacherId: null,
             lastTeacherId: null,
             activePicker: null,
@@ -641,23 +638,25 @@ export default {
         validateEducationEdit() {
             return this.$refs[`educationForm`].validate();
         },
-        async uploadFile(e) {
-            this.profilePic = e.target.files[0];
-            const db = this.$fireModule.database();
-            const storageRef = this.$fireModule.storage().ref();
-            const userRef = storageRef.child(`user/${this.userId}/profilePic.jpg`);
+        uploadFile(e) {
+            const file = e.target.files[0];
 
-            try {
+            if (file) {
 
-                const snapshot = await userRef.put(this.profilePic);
+                const maxSizeBytes = 5 * 1024 * 1024;
+                if (file.size <= maxSizeBytes) {
+                    const reader = new FileReader();
 
-                const downloadURL = await snapshot.ref.getDownloadURL();
+                    reader.onload = (event) => {
+                        this.profilePic = event.target.result;
+                        this.profilePicUpload = event.target.result;
+                    };
 
-                await db.ref(`user/${this.userId}`).update({
-                    profilePic: downloadURL,
-                });
-            } catch (error) {
-                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!' + error);
+                    reader.readAsDataURL(file);
+                } else {
+                    this.openSnackbar("error", 'รูปไม่ควรมีขนาดเกิน 5 MB ');
+                    console.error('File size exceeds the maximum limit (5 MB). Please select a smaller file.');
+                }
             }
         },
         async toEditDetail() {
@@ -666,14 +665,47 @@ export default {
                 if (this.validateDetailEdit()) {
                     const db = this.$fireModule.database();
                     this.isSubmitting = true;
-                    const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
-                    if (isIDDuplicate && this.lastTeacherId != this.teacherId) {
-                        this.openSnackbar("error", 'รหัสของครูซ้ำ รหัสที่ซ้ำคือ ' + this.teacherId);
-                        this.isSubmitting = false;
-                        return;
+
+                    if (this.profilePicUpload) {
+                        this.isSubmitting = true;
+
+                        const base64Image = this.profilePicUpload.split(',')[1];
+                        const binaryImage = atob(base64Image);
+                        const uint8Array = new Uint8Array(binaryImage.length);
+                        for (let i = 0; i < binaryImage.length; i++) {
+                            uint8Array[i] = binaryImage.charCodeAt(i);
+                        }
+
+
+                        const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+
+                        const storageRef = this.$fireModule.storage().ref();
+                        const userRef = storageRef.child(`user/${this.keyuser}/profilePic.jpg`);
+
+                        userRef.put(blob)
+                            .then((snapshot) => {
+
+                                return snapshot.ref.getDownloadURL();
+                            })
+                            .then((downloadURL) => {
+                                db.ref(`user/${this.keyuser}`).update({
+                                    profilePic: downloadURL,
+                                }).then(() => {
+                                    this.openSnackbar('success', 'อัพโหลดรูปเสร็จสิ้น ');
+                                });
+                            })
+                            .catch((error) => {
+                                console.error('Error uploading file:', error);
+                                this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                            });
                     }
-                    await db.ref(`user/${this.userId}/`).update({
-                        
+
+                    await db.ref(`user/${this.keyuser}/`).update({
+
+                        firstNameEng :this.firstNameEng,
+                        lastNameEng:this.lastNameEng,
+                        firstName:this.firstName,
+                        lastName:this.lastName,
                         nickname: this.nickname,
                         mobile: this.mobile,
                         email: this.email,
@@ -685,15 +717,17 @@ export default {
                         .then(() => {
 
                             this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+
                             this.isSubmitting = false;
                             this.isEditingDetail = false;
                         })
-                        .catch((error) => {
+                        .catch(() => {
 
-                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ', error);
                             this.isSubmitting = false;
                             this.isEditingDetail = false;
                         });
+
 
                 }
 
@@ -737,7 +771,7 @@ export default {
                     this.isSubmitting = true;
 
 
-                    await db.ref(`user/${this.userId}/`).update({
+                    await db.ref(`user/${this.keyuser}/`).update({
                         address: this.address,
                         currAddress: this.currAddress,
                         ...(this.isAddressSame ? { currAddress: this.address } : {}),
@@ -766,8 +800,6 @@ export default {
             }
         },
 
-  
-
         async toEditEducation() {
             if (this.isEditingEducation == true) {
                 this.isEditingEducation = false;
@@ -775,10 +807,11 @@ export default {
                     const db = this.$fireModule.database();
                     this.isSubmitting = true;
 
-                    await db.ref(`user/${this.userId}/`).update({
+                    await db.ref(`user/${this.keyuser}/`).update({
                         university: this.university,
                         faculty: this.faculty,
                         major: this.major,
+
 
                     })
                         .then(() => {
@@ -793,6 +826,20 @@ export default {
                             this.isSubmitting = false;
                             this.isEditingEducation = false;
                         });
+
+                    if (this.selectedSubjects.length !== 0) {
+                        for (let subject of this.selectedSubjects) {
+
+                            await db.ref(`user/${this.keyuser}/subject_all/${subject.key}`).set({
+                                name: subject.name,
+                                level: subject.level,
+
+                            });
+                        }
+                    }
+                    else {
+                        await db.ref(`user/${this.keyuser}/subject_all/`).remove();
+                    }
 
                 }
             }
@@ -898,13 +945,13 @@ export default {
 
         async fetchData() {
             const db = this.$fireModule.database();
-            const snapshot = await db.ref(`user/${this.userId}/subject_all`).once("value");
+            const snapshot = await db.ref(`user/${this.keyuser}/subject_all`).once("value");
             const childData = snapshot.val();
             const selectedItems = [];
 
             for (const key in childData) {
-                const snapshotName = await db.ref(`user/${this.userId}/subject_all/${key}`).once("value");
-                const snapshotLevel = await db.ref(`user/${this.userId}/subject_all/${key}/level`).once("value");
+                const snapshotName = await db.ref(`user/${this.keyuser}/subject_all/${key}`).once("value");
+                const snapshotLevel = await db.ref(`user/${this.keyuser}/subject_all/${key}/level`).once("value");
 
                 const childDataName = snapshotName.val();
                 const childDataLevel = snapshotLevel.val();
