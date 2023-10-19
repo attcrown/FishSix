@@ -138,7 +138,7 @@ export default {
                 return;
             }
 
-
+            //------ทดลองเรียน-------------
             if (keystudent.match_test && keystudent.status_study_column_tea.key != '-NceH8-XeWUJe5xDQCIW') {
                 const getTeacherPromise = db.ref(`user/${keystudent.keyStudent}`).once("value");
                 Promise.all([getTeacherPromise])
@@ -158,7 +158,7 @@ export default {
                                 console.log("Error");
                             }
                             console.log('ลบ ชม. ทดลอง');
-                            this.loadsave = false;
+                            
                         } else {
                             console.log('>>> freeHour privateFreeHour No DATA');
 
@@ -173,11 +173,12 @@ export default {
                             } else {
                                 console.log("Error");
                             }
-                            console.log('เพิ่ม ชม. ทดลอง');
-                            this.loadsave = false;
+                            console.log('เพิ่ม ชม. ทดลอง');                            
                         }
-                    })
-
+                        const result = false;
+                        callback(result);
+                        return;
+                    })                    
                 //------------------หัก ชม นักเรียน------------------
             } else if ((keystudent.status_study_column.key == "-NceLGrMN5SDXyyXe6fp" ||
                 keystudent.status_study_column.key == "-NceLJGyxs0COh1TYVdg" ||
@@ -187,115 +188,268 @@ export default {
                 Promise.all([getTeacherPromise])
                     .then(([teacherSnapshot]) => {
                         const studentData = teacherSnapshot.val();
-                        console.log(studentData);
+                        console.log(studentData ,keystudent);
                         let data_edit = keystudent;
-                        if (studentData.studyHour != undefined) {
-                            if (data_edit.style.includes("Flip") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
-                                })
-                            } else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
-                                })
-                            } else{
-                                console.log('error')
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                        } else if (studentData.studyHour == undefined) {
-                            if(data_edit.style.includes("Flip") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
-                                })
-                            }else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
-                                })
-                            }
-                            this.loadsave = false;
-                        } else {
-                            console.log('>>>Hour flipHour No DATA Flip');
-                        }
-
-                        if (studentData.privateStudyHour != undefined && !keystudent.match_vip) {
-                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHourOnline: parseFloat(studentData.privateStudyHour) + parseFloat(keystudent.hour),
-                                    privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
-                                })
-                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHour: parseFloat(studentData.privateStudyHour) + parseFloat(keystudent.hour),
-                                    privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour) ,
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                        } else if (studentData.privateStudyHour == undefined && !keystudent.match_vip) {
-                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHourOnline: parseFloat(keystudent.hour),
-                                    privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
-                                })
-                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    privateStudyHour: parseFloat(keystudent.hour),
-                                    privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
-                                })
+                        //Check Flip Class 
+                        if (data_edit.style.includes("Flip") && !keystudent.match_vip) {
+                            //Chech Location online
+                            if(data_edit.style.includes("Online")){
+                                if(studentData.studyHourOnline != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        studyHourOnline: parseFloat(studentData.studyHourOnline) + parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.studyHourOnline === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        studyHourOnline: parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
                             }else{
-                                console.log("Error");
-                            }
-                            this.loadsave = false;
-                        } else {
-                            console.log('>>>Hour privateHour No DATA Private');
-                        }
-
-                        if (studentData.studyHour != undefined && keystudent.match_vip) {
-                            if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
-                                })
-                            } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
-                                })
-                            } else {
-                                console.log("Error");
-                            }
-                            console.log('ลบ ชม. class จริง', data_edit.style);
-                            this.loadsave = false;
-                        } else if (studentData.studyHour == undefined && keystudent.match_vip) {
-                            if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHourOnline: parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
-                                })
-                            }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
-                                db.ref(`user/${data_edit.keyStudent}/`).update({
-                                    studyHour: parseFloat(keystudent.hour),
-                                    hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
-                                })
+                            //Chech Location สาขา  
+                                if(studentData.studyHour != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        studyHour: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.studyHour === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        studyHour: parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
+                            }                            
+                        }     
+                        
+                        if (data_edit.style.includes("Flip") && keystudent.match_vip) {
+                            //Chech Location online
+                            if(data_edit.style.includes("Online")){
+                                if(studentData.privateStudyHourOnline != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHourOnline: parseFloat(studentData.privateStudyHourOnline) + parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.privateStudyHourOnline === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHourOnline: parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
                             }else{
-                                console.log("Error");
-                            }
-                            this.loadsave = false;
-                        } else {
-                            console.log('>>>Hour privateHour No DATA Private');
-                        }
+                            //Chech Location สาขา  
+                                if(studentData.privateStudyHour != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHour: parseFloat(studentData.privateStudyHour) + parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.privateStudyHour === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHour: parseFloat(keystudent.hour),
+                                        hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
+                            }                            
+                        } 
+
+                        if (data_edit.style.includes("Private")){                                                 
+                            //Chech Location online
+                            if(data_edit.style.includes("Online")){
+                                if(studentData.privateStudyHourOnline != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHourOnline: parseFloat(studentData.privateStudyHourOnline) + parseFloat(keystudent.hour),
+                                        privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.privateStudyHourOnline === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHourOnline: parseFloat(keystudent.hour),
+                                        privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
+                            }else{
+                            //Chech Location สาขา 
+                                if(studentData.privateStudyHour != undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHour: parseFloat(studentData.privateStudyHour) + parseFloat(keystudent.hour),
+                                        privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else if(studentData.privateStudyHour === undefined){
+                                    db.ref(`user/${data_edit.keyStudent}/`).update({
+                                        privateStudyHour: parseFloat(keystudent.hour),
+                                        privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                                    })
+                                    console.log('DO>>>');
+                                }else{
+                                    console.log('error');
+                                }
+                            }                                                        
+                        }      
+                        
+                        
+
+                        // if (studentData.studyHour != undefined) {
+                        //     if (data_edit.style.includes("Flip") && data_edit.style.includes("Online")) {
+                        //         if(studentData.studyHourOnline === undefined){
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 studyHourOnline: parseFloat(keystudent.hour),
+                        //                 hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }else{
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 studyHourOnline: parseFloat(studentData.studyHourOnline) + parseFloat(keystudent.hour),
+                        //                 hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }                                
+                        //     } else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHour: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                        //         })
+                        //         console.log('>>>DO');
+                        //     } else{
+                        //         console.log('error')
+                        //     }                            
+                            
+                        // } else if (studentData.studyHour == undefined) {
+                        //     if(data_edit.style.includes("Flip") && data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHourOnline: parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                        //         })
+                        //         console.log('>>>DO');
+                        //     }else if(data_edit.style.includes("Flip") && !data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHour: parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour)
+                        //         })
+                        //         console.log('>>>DO');
+                        //     }
+                            
+                        // } else {
+                        //     console.log('>>>Hour flipHour No DATA Flip');
+                        // }
+
+                        // if (studentData.privateStudyHour != undefined && !keystudent.match_vip) {                            
+                        //     if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
+                        //         if(studentData.privateStudyHourOnline === undefined){
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 privateStudyHourOnline: parseFloat(keystudent.hour),
+                        //                 privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }else{
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 privateStudyHourOnline: parseFloat(studentData.privateStudyHourOnline) + parseFloat(keystudent.hour),
+                        //                 privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }                                
+                        //     } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             privateStudyHour: parseFloat(studentData.privateStudyHour) + parseFloat(keystudent.hour),
+                        //             privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour) ,
+                        //         })
+                        //         console.log('>>>DO');
+                        //     } else {
+                        //         console.log("Error");
+                        //     }                            
+                        // } else if (studentData.privateStudyHour == undefined && !keystudent.match_vip) {
+                        //     if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
+                        //         if(studentData.privateStudyHourOnline === undefined){
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 privateStudyHourOnline: parseFloat(keystudent.hour),
+                        //                 privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }else{
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 privateStudyHourOnline: parseFloat(studentData.privateStudyHourOnline) + parseFloat(keystudent.hour),
+                        //                 privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }   
+                        //     }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             privateStudyHour: parseFloat(keystudent.hour),
+                        //             privateHourLeft: parseFloat(studentData.privateHourLeft) - parseFloat(keystudent.hour),
+                        //         })
+                        //         console.log('>>>DO');
+                        //     }else{
+                        //         console.log("Error");
+                        //     }
+                        // } else {
+                        //     console.log('>>>Hour privateHour No DATA Private');
+                        // }
+
+                        // if (studentData.studyHour != undefined && keystudent.match_vip) {
+                        //     if (data_edit.style.includes("Private") && data_edit.style.includes("Online")) {
+                        //         if(studentData.studyHourOnline === undefined){
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 studyHourOnline: parseFloat(keystudent.hour),
+                        //                 hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }else{
+                        //             db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //                 studyHourOnline: parseFloat(studentData.studyHourOnline) + parseFloat(keystudent.hour),
+                        //                 hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                        //             })
+                        //             console.log('>>>DO');
+                        //         }                                
+                        //     } else if (data_edit.style.includes("Private") && !data_edit.style.includes("Online")) {
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHour: parseFloat(studentData.studyHour) + parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                        //         })
+                        //         console.log('>>>DO');
+                        //     } else {
+                        //         console.log("Error");
+                        //     }
+                            
+                        // } else if (studentData.studyHour == undefined && keystudent.match_vip) {
+                        //     if(data_edit.style.includes("Private") && data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHourOnline: parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                        //         })
+                        //         console.log('>>>DO');
+                        //     }else if(data_edit.style.includes("Private") && !data_edit.style.includes("Online")){
+                        //         db.ref(`user/${data_edit.keyStudent}/`).update({
+                        //             studyHour: parseFloat(keystudent.hour),
+                        //             hourLeft: parseFloat(studentData.hourLeft) - parseFloat(keystudent.hour),
+                        //         })
+                        //         console.log('>>>DO');
+                        //     }else{
+                        //         console.log("Error");
+                        //     }
+                        // } else {
+                        //     console.log('>>>Hour privateHour No DATA Private');
+                        // }
                     })
-            }
-            else {
+            } else {
                 console.log("ไม่มีการลบ ชม.");
-                this.loadsave = false;
             }
             const result = false;
             callback(result);
