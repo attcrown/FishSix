@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-sm-12">
-                    <form ref="registerForms">
+                    <v-form ref="registerForm">
 
                         <v-card style="border-radius: 32px;background: rgba(216, 202, 191, 0.50);" elevation="0"
                             class="px-10  mt-5">
@@ -47,9 +47,9 @@
                                 <v-col cols="9">
                                     <v-row>
                                         <v-col cols="4" class="py-0 ">
-                                            <v-text-field class="black-label" name="userid" v-model="userid"
-                                                :error-messages="useridErrors" @input="$v.userid.$touch()"
-                                                @blur="$v.userid.$touch()">
+                                            <v-text-field class="black-label" name="teacherId" v-model="teacherId"
+                                                :error-messages="teacherIdErrors" @input="$v.teacherId.$touch()"
+                                                :rules="teacherIdRules" @blur="$v.teacherId.$touch()">
                                                 <template v-slot:label>
                                                     <span>
                                                         รหัสประจำตัวครู
@@ -201,7 +201,7 @@
                                             readonly label="จังหวัด"></v-text-field>
                                     </v-col>
                                     <v-col cols="4" class="py-0">
-                                        <v-text-field class="black-label" name="postal" label="รหัสไปรษณีย์" required
+                                        <v-text-field class="black-label" name="postal" label="รหัสไปรษณีย์" 
                                             readonly :rules="postalRules" v-model="address.postal"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
@@ -284,7 +284,7 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-text-field class="black-label" v-model="startDate" label="วันที่เริ่มงาน"
                                                     name="startDate" prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                    :rules="startDateRules" v-on="on"></v-text-field>
+                                                 v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
                                                 min="1950-01-01" @change="save"></v-date-picker>
@@ -361,7 +361,7 @@
                                 บันทึก
                             </v-btn></div>
 
-                    </form>
+                    </v-form>
                 </div>
 
             </template>
@@ -427,7 +427,7 @@ export default {
             firstName: null,
             lastName: null,
             nickname: null,
-            userid: null,
+            teacherId: null,
             mobile: null,
             email: null,
             gender: null,
@@ -471,7 +471,7 @@ export default {
 
             //rules
             postalRules: [
-                value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
+            value => !value || /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
             startDateRules: [
                 value => !!value || 'กรุณาเลือกวันที่เริ่มทำงาน',
@@ -506,7 +506,7 @@ export default {
         firstName: { required },
         lastName: { required },
         nickname: { required },
-        userid: { required },
+        teacherId: { required },
         gender: { required },
         email: { required, email },
         mobile: { required, minLength: minLength(9), numeric },
@@ -544,13 +544,13 @@ export default {
             return errors
         },
 
-        useridErrors() {
+        teacherIdErrors() {
             const errors = [];
-            if (!this.$v.userid.$dirty) return errors;
-            if (!this.$v.userid.required) {
+            if (!this.$v.teacherId.$dirty) return errors;
+            if (!this.$v.teacherId.required) {
                 errors.push('กรุณาระบุรหัสประจำตัวครู');
             }
-            if (!/^FS\d{4}$/.test(this.$v.userid.$model)) {
+            if (!/^FS\d{4}$/.test(this.$v.teacherId.$model)) {
                 errors.push('รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)');
             }
             return errors;
@@ -737,94 +737,114 @@ export default {
                 this.registerTeacher();
             } else { this.openSnackbar("error", 'ข้อมูลที่กรอกไม่ครบถ้วน '); }
         },
-
+        validate() {
+            return this.$refs[`registerForm`].validate();
+        },
         async registerTeacher() {
-            const db = this.$fireModule.database();
-            this.isSubmitting = true;
-            const uniqueId = uuidv4();
-            const timestamp = Timestamp.fromDate(new Date());
-            const jsDate = timestamp.toDate();
-            const isoString = jsDate.toISOString();
-            this.createdAt = isoString;
-            await db.ref(`teacher_register/${uniqueId}`).set({
-                status: this.status,
-                action: this.action,
-                createdAt: this.createdAt,
-                firstName: this.firstName,
-                lastName: this.lastName,
-                nickname: this.nickname,
-                userid: this.userid,
-                mobile: this.mobile,
-                email: this.email,
-                gender: this.gender,
-                currJob: this.currJob,
-                address: this.address,
-                currAddress: this.currAddress,
-                idCardNumber: this.idCardNumber,
-                idCardCopy: this.idCardCopy,
-                classLocation: this.classLocation,
-                startDate: this.startDate,
-                university: this.university,
-                faculty: this.faculty,
-                major: this.major,
-            })
-            if (this.idCardCopy) {
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${uniqueId}/idCardCopy.jpg`);
-                try {
-                    const snapshot = await userRef.put(this.idCardCopy);
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-
-                    await db.ref(`teacher_register/${uniqueId}`).update({
-                        idCardCopy: downloadURL
-                    });
-                } catch (error) {
-                    this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                }
-            }
-            if (this.profilePic) {
+            if (this.validate()) {
+                const db = this.$fireModule.database();
                 this.isSubmitting = true;
+                const uniqueId = uuidv4();
+                const timestamp = Timestamp.fromDate(new Date());
+                const jsDate = timestamp.toDate();
+                const isoString = jsDate.toISOString();
+                this.createdAt = isoString;
+                const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
+                    if (isIDDuplicate && this.lastTeacherId != this.teacherId) {
+                        this.openSnackbar("error", 'รหัสของครูซ้ำ รหัสที่ซ้ำคือ ' + this.teacherId);
+                        this.isSubmitting = false;
+                        return;
+                    }
+                await db.ref(`teacher_register/${uniqueId}`).set({
+                    status: this.status,
+                    action: this.action,
+                    createdAt: this.createdAt,
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    nickname: this.nickname,
+                    teacherId: this.teacherId,
+                    mobile: this.mobile,
+                    email: this.email,
+                    gender: this.gender,
+                    currJob: this.currJob,
+                    address: this.address,
+                    currAddress: this.currAddress,
+                    idCardNumber: this.idCardNumber,
+                    idCardCopy: this.idCardCopy,
+                    classLocation: this.classLocation,
+                    startDate: this.startDate,
+                    university: this.university,
+                    faculty: this.faculty,
+                    major: this.major,
+                })
+                if (this.idCardCopy) {
+                    const storageRef = this.$fireModule.storage().ref();
+                    const userRef = storageRef.child(`user/${uniqueId}/idCardCopy.jpg`);
+                    try {
+                        const snapshot = await userRef.put(this.idCardCopy);
+                        const downloadURL = await snapshot.ref.getDownloadURL();
 
-                const base64Image = this.profilePic.split(',')[1];
-                const binaryImage = atob(base64Image);
-                const uint8Array = new Uint8Array(binaryImage.length);
-                for (let i = 0; i < binaryImage.length; i++) {
-                    uint8Array[i] = binaryImage.charCodeAt(i);
+                        await db.ref(`teacher_register/${uniqueId}`).update({
+                            idCardCopy: downloadURL
+                        });
+                    } catch (error) {
+                        this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                    }
+                }
+                if (this.profilePic) {
+                    this.isSubmitting = true;
+
+                    const base64Image = this.profilePic.split(',')[1];
+                    const binaryImage = atob(base64Image);
+                    const uint8Array = new Uint8Array(binaryImage.length);
+                    for (let i = 0; i < binaryImage.length; i++) {
+                        uint8Array[i] = binaryImage.charCodeAt(i);
+                    }
+
+
+                    const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+
+                    const storageRef = this.$fireModule.storage().ref();
+                    const userRef = storageRef.child(`user/${uniqueId}/profilePic.jpg`);
+
+                    userRef.put(blob)
+                        .then((snapshot) => {
+                            return snapshot.ref.getDownloadURL();
+                        })
+                        .then((downloadURL) => {
+                            db.ref(`teacher_register/${uniqueId}`).update({
+                                profilePic: downloadURL,
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error uploading file:', error);
+                            this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                        });
                 }
 
+                for (let subject of this.selectedSubjects) {
 
-                const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+                    await db.ref(`teacher_register/${uniqueId}/subject_all/${subject.key}`).set({
+                        name: subject.name,
+                        level: subject.level,
 
-                const storageRef = this.$fireModule.storage().ref();
-                const userRef = storageRef.child(`user/${uniqueId}/profilePic.jpg`);
-
-                userRef.put(blob)
-                    .then((snapshot) => {
-                        return snapshot.ref.getDownloadURL();
                     })
-                    .then((downloadURL) => {
-                        db.ref(`teacher_register/${uniqueId}`).update({
-                            profilePic: downloadURL,
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Error uploading file:', error);
-                        this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
-                    });
+                }
+                this.isSubmitting = false;
+                this.isAlreadySubmit = true;
             }
-
-            for (let subject of this.selectedSubjects) {
-
-                await db.ref(`teacher_register/${uniqueId}/subject_all/${subject.key}`).set({
-                    name: subject.name,
-                    level: subject.level,
-
-                })
-            }
-            this.isSubmitting = false;
-            this.isAlreadySubmit = true;
+else{
+    this.openSnackbar('error', 'ข้อมูลไม่ครบถ้วน ');
+}
         },
 
+
+        async checkDuplicateName(id) {
+            const db = this.$fireModule.database();
+            const snapshot = await db.ref('user').orderByChild('teacherId').equalTo(id).once('value');
+            const existingTeacher = snapshot.val();
+            return !!existingTeacher;
+        },
 
         async readdata() {
             const db = this.$fireModule.database();
