@@ -396,6 +396,7 @@
 </template>
   
 <script>
+import { mapState } from 'vuex';
 import pageLoader from '@/components/loader.vue';
 import { Timestamp } from "firebase/firestore";
 export default {
@@ -572,9 +573,13 @@ export default {
     components: {
         pageLoader
     },
+    computed: {
+        ...mapState(['UserIdDetail']),
+    },
     mounted() {
         const value = this.$route.query.registerId;
         this.userId = value;
+        // this.userId = this.UserIdDetail;
         this.readdata();
         this.fetchData();
         this.readSubject();
@@ -583,11 +588,7 @@ export default {
         this.getTeacherLocation();
         this.typeClass();
         this.typePrivateClass();
-    },
-
-    computed: {
-
-    },
+    },    
     watch: {
         menu(val) {
             val && setTimeout(() => (this.activePicker = 'Month'))
@@ -1048,7 +1049,7 @@ export default {
             db.ref(`teacher_register/${this.userId}`).remove().then(() => {
 
                 this.openSnackbar('success', 'ยืนยันข้อมูลเสร็จสิ้น ');
-
+                this.userId = null;
                 this.isSubmitting = false;
                 window.location.href = "/admin/awareness/"
 
@@ -1090,7 +1091,6 @@ export default {
         },
 
         async readdata() {
-
             const db = this.$fireModule.database();
             await db.ref(`teacher_register/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();

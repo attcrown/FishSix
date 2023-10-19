@@ -6,6 +6,7 @@ const createStore = () => {
       // ตัวแปร state ที่คุณต้องการเก็บข้อมูล
       firstName: null,
       status: null,
+      UserIdDetail: null,
       // อื่น ๆ
     },
     mutations: {
@@ -16,6 +17,9 @@ const createStore = () => {
       setStatus(state, value) {
         state.status = value;
       },
+      setUserIdDetail(state, value){
+        state.UserIdDetail = value;
+      }
       // อื่น ๆ
     },
   });

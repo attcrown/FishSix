@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 export default {
     data: () => ({
         isLoading: true,
@@ -94,6 +95,25 @@ export default {
         this.searchTeacher();
     },
     methods: {
+        ...mapMutations(['setUserIdDetail']),
+        // searchTeacher(){
+        //     const db = this.$fireModule.database();
+        //     db.ref(`teacher_register/`).on("value", (snapshot) => {
+        //         const items = [];
+        //         if(snapshot.exists()){
+        //             const childData = snapshot.val();
+        //             for(const detail in childData){
+        //                 if(childData[detail].action === "pending"){
+        //                     items.push({ key: detail, teacher:childData[detail] });
+        //                 }
+        //             }
+        //             this.items = items;
+        //             console.log(items);
+        //         }else{
+        //             console.error("Error fetching data");
+        //         }
+        //     })
+        // },
         searchTeacher() {
             const db = this.$fireModule.database();
             const ref = db.ref("teacher_register/");
@@ -122,13 +142,16 @@ export default {
 
                     this.items = items;
                     this.isLoading = false;
+                    console.log(items);
                 })
                 .catch((error) => {
                     console.error("Error fetching data:", error);
                 });
         },
         viewItem(item) {
+            // this.setUserIdDetail(item.key);
             this.$router.push({ path: 'awareness/detail', query: { registerId: item.key } });
+            // this.$router.push('awareness/detail');
             //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
         },
 

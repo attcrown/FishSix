@@ -43,7 +43,7 @@
             color: var(--gray-blue-grey-blue-70, #7d8fb3);
             font-size: 14px;
             font-weight: 400;
-          " to="/login">นักเรียน</nuxt-link>
+          " to="/register_stu">นักเรียน</nuxt-link>
         </p>
       </v-form>
     </v-sheet>
