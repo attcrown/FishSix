@@ -42,6 +42,12 @@
 
                                         <v-col cols="9"></v-col>
                                         <v-col cols="6" class="py-0 ">
+                                            <v-text-field class="black-label" name="teacherId" v-model="teacherId"
+                                                :rules="teacherIdRules" :readonly="!isEditingDetail"
+                                                label="รหัสประจำตัวครู" required>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="py-0 ">
                                             <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
                                                 :rules="firstNameEngRules" :readonly="!isEditingDetail"
                                                 label="ชื่อ (ภาษาอังกฤษ)" required v-on:keypress="isLetter($event)">
@@ -350,7 +356,7 @@
 
         </div>
         <div class="d-flex justify-center">
-            <v-btn v-if="action == 'Pending'" color=red @click="approveDialog = true; isApprove = false;" elevation="8">
+            <v-btn v-if="action == 'pending'" color=red @click="approveDialog = true; isApprove = false;" elevation="8">
                 <b style="color: #F8F9FB;">Disapprove</b>
                 <v-icon right color="#FFF">mdi-close</v-icon>
             </v-btn>
@@ -701,6 +707,7 @@ export default {
                         currJob: this.currJob,
                         idCardNumber: this.idCardNumber,
                         idCardCopy: this.idCardCopy,
+                        userid: this.teacherId,
                     })
                         .then(() => {
 
@@ -725,10 +732,22 @@ export default {
 
         async checkDuplicateName(id) {
             const db = this.$fireModule.database();
-            const snapshot = await db.ref('teacher_register').orderByChild('teacherId').equalTo(id).once('value');
+            const snapshot = await db.ref('user').orderByChild('teacherId').equalTo(id).once('value');
             const existingTeacher = snapshot.val();
             return !!existingTeacher;
         },
+        // async checkDuplicateName(id) {
+        //     let teacherid = this.encode(id);
+        //     const db = this.$fireModule.database();
+        //     await db.ref(`user/${teacherid}`).on("value", (snapshot) => {
+        //         if (snapshot.exists()){
+        //             return true;
+        //         }
+        //         else{
+        //             return false;
+        //         }
+        //     })
+        // },
 
         updateCurrAddress() {
             if (this.isAddressSame) {
@@ -916,40 +935,43 @@ export default {
             }
             this.isSubmitting = true;
             const db = this.$fireModule.database();
-            const snapshot = await db.ref('user').orderByChild('teacherId').limitToLast(1).once('value');
-            const lastTeacher = snapshot.val();
-            for (const key in lastTeacher) {
-                if (lastTeacher[key].status == 'admin' || !lastTeacher) {
-                    this.teacherId = 'FS0001';
+            // const snapshot = await db.ref('user').orderByChild('teacherId').limitToLast(1).once('value');
+            // const lastTeacher = snapshot.val();
+            // for (const key in lastTeacher) {
+            //     if (lastTeacher[key].status == 'admin' || !lastTeacher) {
+            //         this.teacherId = 'FS0001';
 
-                    return;
-                } else {
-                    const lastTeacherId = Object.keys(lastTeacher)[0];
-                    const lastTeacherCode = lastTeacher[lastTeacherId].teacherId;
-                    const numericPart = parseInt(lastTeacherCode.slice(2), 10) + 1;
-                    const nextId = `FS${String(numericPart).padStart(4, '0')}`;
-                    this.teacherId = nextId;
-                    this.name = nextId;
+            //         return;
+            //     } else {
+            //         const lastTeacherId = Object.keys(lastTeacher)[0];
+            //         const lastTeacherCode = lastTeacher[lastTeacherId].teacherId;
+            //         const numericPart = parseInt(lastTeacherCode.slice(2), 10) + 1;
+            //         const nextId = `FS${String(numericPart).padStart(4, '0')}`;
+            //         this.teacherId = nextId;
+            //         this.name = nextId;
 
-                }
-            }
-            console.log(this.teacherId)
-            this.isSubmitting = true;
+            //     }
+            // }
+            // console.log(this.teacherId)
+            // this.isSubmitting = true;
             const isIDDuplicate = await this.checkDuplicateName(this.teacherId);
+            console.log('>>>>',isIDDuplicate);
             if (isIDDuplicate) {
                 this.openSnackbar("error", 'รหัสของครูซ้ำ รหัสที่ซ้ำคือ ' + this.teacherId);
                 this.isSubmitting = false;
                 return;
             }
+            
             const timestamp = Timestamp.fromDate(new Date());
             const jsDate = timestamp.toDate();
             const isoString = jsDate.toISOString();
             this.createdAt = isoString;
-            await db.ref(`user/${this.userId}/`).set({
+            let userIDEnd = this.encode(this.teacherId);
+            await db.ref(`user/${userIDEnd}/`).set({
                 status: this.status,
                 approvalName: this.approvalName,
                 teacherId: this.teacherId,
-                name: this.name,
+                name: this.teacherId,
                 createdAt: this.createdAt,
                 password: this.password,
                 profilePic: this.profilePic,
@@ -987,9 +1009,38 @@ export default {
             }
             this.isSubmitting = false;
             this.isAlreadySubmit = true;
+            // this.send_email();
             this.removeTeacherRegister();
         },
 
+        encode(a) {
+            const encodedData = btoa(a);
+            return encodedData;
+        },
+
+        send_email(){    
+            // const nodemailer = require('nodemailer');
+            // const transporter = nodemailer.createTransport({
+            //     service: 'Gmail', // หรือใช้ค่าอื่น ๆ ตามผู้ให้บริการอีเมลที่คุณใช้
+            //     auth: {
+            //         user: 'vongvarisch.center@gmail.com', // อีเมลของคุณ
+            //         pass: 'gnjc ciqc oeon lwgu' // รหัสผ่านของคุณ
+            //     }
+            // });
+            // const mailOptions = {
+            //     from: 'vongvarisch.center@gmail.com', // อีเมลผู้ส่ง
+            //     to: this.email, // อีเมลผู้รับ
+            //     subject: 'สมัครใช้บริการ FishSix',
+            //     text: `ท่านได้สมัครสำเร็จแล้ว รหัสในการ Login user: ${this.teacherId} password: FishsixTeacher เมื่อได้รับข้อความนี้แล้วกรุณาเปลี่ยนรหัสด้วย`  // ข้อความของอีเมล
+            // };
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //     if (error) {
+            //         console.log(error);
+            //     } else {
+            //         console.log('ส่งอีเมลสำเร็จ: ' + info.response);
+            //     }
+            // });
+         },
 
         removeTeacherRegister() {
             const db = this.$fireModule.database();
@@ -1044,6 +1095,7 @@ export default {
             await db.ref(`teacher_register/${this.userId}`).on("value", (snapshot) => {
                 const childData = snapshot.val();
                 console.log(snapshot.val())
+                this.teacherId = childData.userid || null,
                 this.profilePic = childData.profilePic || null;
                 this.action = childData.action || null;
                 this.firstNameEng = childData.firstNameEng || null;

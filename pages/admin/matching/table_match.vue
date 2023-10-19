@@ -1,7 +1,10 @@
 <template>
     <div>
+        <v-btn @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;" color="brown lighten-4">
+            แสดงตารางคำร้อง <v-icon class="mdi mdi-calendar-month text-h8"></v-icon>
+        </v-btn>
         <template>
-            <div>
+            <div :hidden="show_date">
                 <div class="mb-3" style="max-width:100%;"> <!--style="max-width:900px"-->
                     <v-sheet height="64">
                         <v-toolbar flat style="background-color:#AD382F;" class="rounded-t-xl elevation-16">
@@ -317,6 +320,7 @@
 <script>
 export default {
     data: () => ({
+        show_date: true,
         textError: '',
         dialogError: false,
 
@@ -432,6 +436,13 @@ export default {
     },
 
     methods: {
+        switch_calendar(){
+            if(this.show_date){
+                this.show_date = false;
+            }else{
+                this.show_date = true;
+            }
+        },
         LimitedClass_search() {
             const db = this.$fireModule.database();
             db.ref(`LimitedClass_all/`).once("value", (snapshot) => {

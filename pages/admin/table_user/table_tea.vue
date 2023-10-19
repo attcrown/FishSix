@@ -1,6 +1,11 @@
 <template>
     <div>
-        <div class="mb-3 "> <!--hide-on-mobile-->
+        <v-btn @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;"
+            color="brown lighten-4">
+            แสดงตารางสอน <v-icon class="mdi mdi-calendar-month text-h8"></v-icon>
+        </v-btn>
+
+        <div class="mb-3 " :hidden="show_date"> <!--hide-on-mobile-->
             <v-row class="fill-height">
                 <v-col>
                     <v-sheet height="64">
@@ -82,13 +87,23 @@
             </v-row>
         </div>
         <template>
-            <v-data-table :headers="headers" :items-per-page="-1" :items="desserts" sort-by="calories"
-                class="elevation-16 rounded-xl">
+            <v-data-table :headers="headers" :items-per-page="-1" :items="filteredDesserts" sort-by="date" :search="search"  
+                class="elevation-16 rounded-xl">  <!-- desserts -->
                 <template v-slot:top>
                     <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
                         <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
+
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="classSearch" label="Search Class" single-line
+                            hide-details style="max-width: 200px;" />
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="subjectSearch" label="Search Subject" single-line
+                            hide-details style="max-width: 200px;" />
+                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="dateSearch" label="Search Date" single-line
+                            hide-details style="max-width: 200px;" />
+
+                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search All" single-line
+                            hide-details style="max-width: 200px;"></v-text-field>
                         <v-dialog v-model="dialog" max-width="600px">
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="#322E2B" class="mb-2 mt-5">
@@ -208,7 +223,8 @@
 
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn rounded color="#29CC39" class="mb-5" @click="validate_add() ,dialog_load = true" dark>
+                                    <v-btn rounded color="#29CC39" class="mb-5" @click="validate_add(), dialog_load = true"
+                                        dark>
                                         บันทึก<span class="mdi mdi-content-save text-h6"></span>
                                     </v-btn>
                                     <v-spacer></v-spacer>
@@ -227,7 +243,7 @@
                             </v-card>
                         </v-dialog>
                     </v-toolbar>
-                </template>
+                </template>                
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
                     <v-icon small class="mr-2 text-h6" @click="editItem(item)">
@@ -271,12 +287,14 @@
         </v-dialog>
 
         <v-dialog v-model="dialog_load" hide-overlay persistent width="300">
-            <v-card color="primary" dark>
-                <v-card-text>
-                    Please stand by
-                    <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-                </v-card-text>
-            </v-card>
+            <v-overlay :value="dialog_load">
+                <v-card color="primary" dark>                
+                    <v-card-text>
+                        Please stand by
+                        <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+                    </v-card-text>                               
+                </v-card>
+            </v-overlay>            
         </v-dialog>
 
     </div>
@@ -285,6 +303,14 @@
 export default {
     layout: 'login',
     data: () => ({
+        show_date: true,
+        search: '',
+        subjectSearch: '',
+        dateSearch: '',
+        classSearch: '',
+        dialog_date: false,
+        classMatchData: ['hello','boot'],
+
         dialog_load: false,
         textError: '',
         dialogError: false,
@@ -339,7 +365,7 @@ export default {
             },
             // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
             { text: 'ประเภทคลาส', value: 'style', align: 'center' },
-            { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+            { text: 'วิชาที่สอน', value: 'subject', align: 'start' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
             { text: 'เวลาเริ่มต้น', value: 'time_s', align: 'center' },
             { text: 'เวลาสิ้นสุด', value: 'time_e', align: 'center' },
@@ -385,6 +411,15 @@ export default {
             this.mode = this.editedIndex === -1 ? 'รอยืนยัน' : 'พร้อมเรียน'
             return this.editedIndex === -1 ? 'จองเวลาเรียนนอกตาราง' : 'จองเวลาเรียนในตาราง'
         },
+        filteredDesserts() {
+        // ใช้ this.subjectSearch และ this.dateSearch เพื่อกรองรายการ desserts
+            return this.desserts.filter(dessert => {
+                const subjectMatch = dessert.subject.toLowerCase().includes(this.subjectSearch.toLowerCase());
+                const dateMatch = dessert.date.toLowerCase().includes(this.dateSearch.toLowerCase());
+                const classMatch = dessert.style.toLowerCase().includes(this.classSearch.toLowerCase());
+                return subjectMatch && dateMatch && classMatch;
+            });
+        },
     },
     watch: {
         dialog(val) {
@@ -401,7 +436,14 @@ export default {
         this.search_student();
         this.search_date_teacher();
     },
-    methods: {
+    methods: {        
+        switch_calendar() {
+            if (this.show_date) {
+                this.show_date = false;
+            } else {
+                this.show_date = true;
+            }
+        },
         //-----------CALENDAR------------------------------
         viewDay({ date }) {
             this.focus = date
@@ -813,7 +855,7 @@ export default {
             if (this.$refs.form_add.validate()) {
                 console.log('บันทึกผ่าน>>>', this.All_data);
                 this.save(this.All_data);
-            }else{
+            } else {
                 setTimeout(() => (this.dialog_load = false), 300)
             }
         },
@@ -860,7 +902,7 @@ export default {
                     this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
                     setTimeout(() => (this.dialog_load = false), 300)
                     this.dialogError = true;
-                    
+
                     return;
                 }
             }
@@ -868,14 +910,14 @@ export default {
                 this.textError = 'ชั่วโมงเรียน Flip Class ไม่พอ';
                 setTimeout(() => (this.dialog_load = false), 300)
                 this.dialogError = true;
-                
+
                 return;
             }
             else if (parseFloat(data.show_time_private) + parseFloat(data.show_time_private_match) < hour * parseInt(this.date.length) && data.select == "-NcQsHB9vgG53lJKPA-i") {
                 this.textError = 'ชั่วโมงเรียน Private Class ไม่พอ';
                 setTimeout(() => (this.dialog_load = false), 300)
                 this.dialogError = true;
-                
+
                 return;
             }
 
@@ -985,7 +1027,7 @@ export default {
                         const inviteData = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.time_s}E${data.time_e}/invite/`).once("value");
                         // const idclassTea = await db.ref(`date_teacher/${data.teacher}/${data.date}/${data.start}E${data.stop}/idclass/`).once("value");
                         let people_sum = 1;
-                        console.log('showพร้อมเรียน',data);
+                        console.log('showพร้อมเรียน', data);
                         // console.log(idclassTea.val());
                         // if(idclassTea.exists()){
                         //     await db.ref(`date_match/${data.student}/${this.date[keydate]}/${data.stop}/`).update({
@@ -1142,9 +1184,13 @@ export default {
                                         const subjectData = subjectSnapshot.val(); // ใช้ .val() ได้ตามปกติ
                                         const locationData = locationSnapshot.val();
                                         const nametea = teacherData.teacherId + " ครู" + teacherData.nickname;
-                                        const namesub = subjectData.name;
+                                        let namesub = subjectData.name;
                                         if (timedata.subject == '00000') {
+                                            namesub = '';
                                             subject_show = { name: namesub, key: timedata.subject };
+                                            for (const id in teacherData.subject_all) {
+                                                namesub += `${teacherData.subject_all[id].name} || `;
+                                            }
                                         } else {
                                             subject_show = { name: namesub, key: timedata.subject, level: teacherData.subject_all[timedata.subject].level };
                                         }

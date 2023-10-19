@@ -79,7 +79,7 @@ export default {
         select: null,
         status: null,
         items: ['MEN', 'WOMEN'],
-        status_items: ['admin', 'teacher', 'user','opFS','opsupFS'],
+        status_items: ['admin', 'teacher', 'user','opFS','opsupFS','finance'],
         checkbox: false,
     }),
 

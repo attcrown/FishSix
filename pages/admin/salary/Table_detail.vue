@@ -10,8 +10,8 @@
                                 <v-col cols="auto" class="mr-auto">
                                     <img :src="require('~/assets/cashcoin.png')" class="pt-10 ps-8">
                                 </v-col>
-                                <v-col cols="auto" class="pt-14 mt-16 me-5" style="font-size:24px;">
-                                    <b>{{ Math.ceil(parseInt(sum_money_all)) }} ฿</b>
+                                <v-col cols="auto" class="pt-10 mt-16 me-5" style="font-size:18px;">
+                                    <b>{{ formatNumber(parseFloat(sum_money_all)) }} ฿</b>
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7 mt-5">
                                     <p style="font-size: 16px; margin-top: -50px;">รวมเงินเดือนครู
@@ -21,8 +21,8 @@
                         </v-card>
                     </v-hover>
                 </div>
-                <div class="ms-10" style="margin-top:-10px">
-                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16">
+                <div class="ms-10" style="margin-top:-10px; min-width:800px">
+                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16" >
                         <div class="d-flex px-5 pt-5">
                             <v-autocomplete class="me-5" v-model="value_tea" :items="value_tea_all" item-text="name"
                                 item-value="key" label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
@@ -30,25 +30,45 @@
                                 label="ค้นหา Class"></v-select>
                         </div>
                         <v-card flat class="d-flex  rounded-xl px-5 pt-0" style="background-color:rgba(255, 255, 255, 0)">
+
                             <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="date" label="ค้นหาแบบวัน" prepend-icon="mdi-calendar" readonly
+                                    <v-text-field v-model="date" label="เริ่มค้นหา" prepend-icon="mdi-calendar" readonly
                                         v-bind="attrs" v-on="on"></v-text-field>
                                 </template>
-                                <v-date-picker v-model="date" scrollable :max="date_now" :events="arrayEvents"
+                                <v-date-picker v-model="date" scrollable :events="arrayEvents"
                                     event-color="green lighten-1">
                                     <v-spacer></v-spacer>
                                     <v-btn text color="primary" @click="modal = false">
                                         Cancel
                                     </v-btn>
                                     <v-btn text color="primary"
-                                        @click="$refs.dialog.save(date), date_month = null, date_year = null">
+                                        @click="$refs.dialog.save(date)">
                                         OK
                                     </v-btn>
                                 </v-date-picker>
                             </v-dialog>
 
-                            <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                            <v-dialog ref="dialog_end" v-model="modal_day_end" :return-value.sync="date_end" persistent
+                                width="290px">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field v-model="date_end" label="สิ้นสุดค้นหา" prepend-icon="mdi-calendar" readonly
+                                        v-bind="attrs" v-on="on"></v-text-field>
+                                </template>
+                                <v-date-picker v-model="date_end" scrollable :min="date" :events="arrayEvents"
+                                    event-color="green lighten-1">
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click="modal_day_end = false">
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn text color="primary"
+                                        @click="$refs.dialog_end.save(date_end)">
+                                        OK
+                                    </v-btn>
+                                </v-date-picker>
+                            </v-dialog>
+
+                            <!-- <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                 :return-value.sync="date_month" transition="scale-transition" offset-y max-width="290px"
                                 min-width="auto">
                                 <template v-slot:activator="{ on, attrs }">
@@ -68,7 +88,7 @@
                             </v-menu>
 
                             <v-select v-model="date_year" :items="items_year" label="ค้นหาแบบปี" prepend-icon="mdi-calendar"
-                                @change="date = null, date_month = null"></v-select>
+                                @change="date = null, date_month = null"></v-select> -->
                         </v-card>
 
                         <div class="d-flex justify-end pt-3 px-3">
@@ -79,7 +99,7 @@
                                 hide-details></v-checkbox>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
-                                :disabled="value_tea == null || (date_month == null && date == null && date_year == null)"
+                                :disabled="value_tea == null || date == null || date_end == null"
                                 @click="search_data_money(), export_menu = true" rounded>
                                 ค้นหา<span class="mdi mdi-magnify text-h6"></span>
                             </v-btn>
@@ -103,10 +123,11 @@
 
                 <v-expansion-panel-content class="rounded-b-xl" v-for="(data_class, index) in teacherData.data_class"
                     :key="index">
-                    
+
                     <div v-if="data_class.items != undefined">
-                        <p class="ms-5" style="font-size:18px;">คลาสเรียนวันที่ {{ data_class.name.substring(0,10) }} เวลา {{ data_class.name.substring(11,16) }}น. ถึง {{ data_class.name.substring(17,22) }}น.</p>
-                        <v-expansion-panel-content >
+                        <p class="ms-5" style="font-size:18px;">คลาสเรียนวันที่ {{ data_class.name.substring(0, 10) }} เวลา
+                            {{ data_class.name.substring(11, 16) }}น. ถึง {{ data_class.name.substring(17, 22) }}น.</p>
+                        <v-expansion-panel-content>
                             <table style="width: 100%;">
                                 <thead style="background-color:#D4C1B2;">
                                     <tr>
@@ -144,25 +165,39 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <v-row style="margin-bottom: -70px">
                                 <v-col cols="12" class="d-flex justify-end">
-                                    <p style="font-size:18px" class="mt-3"><b>เงินสุทธิ {{
-                                        calculateTotalIncome(data_class.items) }}
-                                            บาท</b></p>
+                                    <p style="font-size:18px; color:rgb(44, 80, 2);" class="mt-3">
+                                        <b>รายได้สุทธิต่อคลาสเรียน {{ (calculateTotalIncome(data_class.items)) }} บาท</b>
+                                    </p>
                                 </v-col>
                             </v-row>
                             <hr style="margin-top: 50px">
                         </v-expansion-panel-content>
                     </div>
-                    
+
 
                 </v-expansion-panel-content>
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
-                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-3"><b>รวมทั้งหมด {{
-                            Math.ceil(calculateTotalIncomeAll(teacherData.data_class)) }} บาท</b></p>
+                        <p class="mt-0">                            
+                            <b style="font-size:16px; color:rgb(224, 137, 7);">
+                                รวมรายได้ทั้งหมด {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class) + calculateTotalIncomeAll(teacherData.data_class)) }} บาท
+                            </b>
+                            <br>
+                            <b style="font-size:16px; color:rgb(128, 4, 4);">
+                                รวมหักค่าภาษี {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class)) }} บาท
+                            </b>                            
+                        </p>
                     </v-col>
+                    <v-col cols="12" class="d-flex justify-end pe-10" style="margin-top:-20px">                                             
+                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-0">                           
+                            <b> รวมรายได้สุทธิทั้งหมด {{
+                                formatNumber(calculateTotalIncomeAll(teacherData.data_class)) }} บาท
+                            </b>
+                        </p>
+                    </v-col>                    
                 </v-row>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -371,14 +406,12 @@
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
 
-                        <v-col cols="7" style="margin-top:-20px"
-                            v-if="detailData.money.sum_send_percent">
-                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_percent_service.name }} {{ detailData.money.send_percent_service.bath }}%</v-subheader>
+                        <v-col cols="7" style="margin-top:-20px" v-if="detailData.money.sum_send_percent">
+                            <v-subheader style="font-size:16px; color:red;">{{ detailData.money.send_percent_service.name }}
+                                {{ detailData.money.send_percent_service.bath }}%</v-subheader>
                         </v-col>
-                        <v-col cols="5" style="margin-top:-30px"
-                            v-if="detailData.money.sum_send_percent">
-                            <v-text-field readonly label="ค่าสอน"
-                                :value="detailData.money.sum_send_percent + ' บาท'"
+                        <v-col cols="5" style="margin-top:-30px" v-if="detailData.money.sum_send_percent">
+                            <v-text-field readonly label="ค่าสอน" :value="detailData.money.sum_send_percent + ' บาท'"
                                 prefix="-"></v-text-field> <!----sum_send_rate_save(detailData.money) + ---->
                         </v-col>
 
@@ -440,32 +473,36 @@
 
                             <v-checkbox class="m-0" v-model="selectedHeaders[10]" label="วันที่สอน" :disabled="isExportAll"
                                 value="วันที่สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="สถานที่สอน" :disabled="isExportAll"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="เวลาเริ่มเรียน" :disabled="isExportAll"
+                                value="เวลาเริ่มเรียน"></v-checkbox>
+                                <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="เวลาเลิกเรียน" :disabled="isExportAll"
+                                value="เวลาเลิกเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="สถานที่สอน" :disabled="isExportAll"
                                 value="สถานที่สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="รายได้ต่อวิชา"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="รายได้ต่อวิชา"
                                 :disabled="isExportAll" value="รายได้ต่อวิชา"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="รายได้ต่อระดับชั้น"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="รายได้ต่อระดับชั้น"
                                 :disabled="isExportAll" value="รายได้ต่อระดับชั้น"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="รายได้ต่อประเภท Class"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="รายได้ต่อประเภท Class"
                                 :disabled="isExportAll" value="รายได้ต่อประเภท Class"></v-checkbox>
 
-                            <v-checkbox class="m-0" v-model="selectedHeaders[15]" label="รายได้เอกสารใช้สอน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="รายได้เอกสารใช้สอน"
                                 :disabled="isExportAll" value="รายได้เอกสารใช้สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[16]" label="Type & tier"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="Type & tier"
                                 :disabled="isExportAll" value="Type & tier"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[17]" label="ชั่วโมงที่สอนไป"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="ชั่วโมงที่สอนไป"
                                 :disabled="isExportAll" value="ชั่วโมงที่สอนไป"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[18]" label="กรณีสอนพร้อมกัน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="กรณีสอนพร้อมกัน"
                                 :disabled="isExportAll" value="กรณีสอนพร้อมกัน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[19]" label="รายได้ทั้งหมดไม่รวมหัก"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="รายได้ทั้งหมดไม่รวมหัก"
                                 :disabled="isExportAll" value="รายได้ทั้งหมดไม่รวมหัก"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[20]" label="หักรายได้เช็คชื่อล่าช้า"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="หักรายได้เช็คชื่อล่าช้า"
                                 :disabled="isExportAll" value="หักรายได้เช็คชื่อล่าช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[21]" label="หักรายได้ส่งพัฒนาการช้า"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="หักรายได้ส่งพัฒนาการช้า"
                                 :disabled="isExportAll" value="หักรายได้ส่งพัฒนาการช้า"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[22]" label="หักรายกรณีน้องลากระทันหัน"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[24]" label="หักรายกรณีน้องลากระทันหัน"
                                 :disabled="isExportAll" value="หักรายกรณีน้องลากระทันหัน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[23]" label="รายได้สุทธิ์"
+                            <v-checkbox class="m-0" v-model="selectedHeaders[25]" label="รายได้สุทธิ์"
                                 :disabled="isExportAll" value="รายได้สุทธิ์"></v-checkbox>
                         </v-row>
                     </v-container>
@@ -501,10 +538,13 @@ export default {
         detailData: null,
         detailData_stu: null,
         dialog: false,
+        dialog_end: false,
         panel: [],
         date_now: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         date: null,
+        date_end: null,
         modal: false,
+        modal_day_end: false,
         value_tea: null,
         value_tea_all: [],
 
@@ -530,7 +570,7 @@ export default {
             , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
             , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
     }),
-    
+
     computed: {
         ...mapState(['firstName', 'status']),
 
@@ -560,24 +600,35 @@ export default {
     },
 
     methods: {
+        formatNumber(number) {
+            // ใช้ .toFixed() เพื่อปัดเศษ
+            const formattedNumber = (+number).toFixed(2);
+            // ใช้ .toLocaleString() เพื่อใส่ ',' ระหว่างหลัก
+            return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        },
         mapping(item, class_tea) {
             this.mapping_data = [];
             for (const id in item) {
-                // console.log('send>>>',item[id].name)
+                // console.log('send>>>',item[id])
                 for (const key in class_tea) {
-                    // console.log('class>>>',class_tea[key].name);
+                    // console.log('class>>>',class_tea[key]);
                     if (item[id].name === class_tea[key].name) {
-                        console.log('true name');
+                        // console.log('true name');
                         for (const detail in class_tea[key].data_class) {
-                            console.log('data_class', class_tea[key].data_class[detail]);
+                            // console.log('data_class', class_tea[key].data_class[detail]);
                             if (item[id].send_plan.date_learn === class_tea[key].data_class[detail].name.substring(0, 10)) {
                                 let time = this.validateTime(
                                     class_tea[key].data_class[detail].name.substring(11, 16),
                                     class_tea[key].data_class[detail].name.substring(17, 22)
                                 )
-                                console.log('check date', time, item[id].send_plan);
-                                console.log(time.includes(item[id].send_plan.time_learn_start))
-                                if (time.includes(item[id].send_plan.time_learn_start)) {
+                                // console.log('check date', time, item[id].send_plan);
+                                // console.log(time.includes(item[id].send_plan.time_learn_start))
+                                // console.log('location',class_tea[key].data_class[detail].item.style_subject)
+                                // console.log('location2',item[id].datematchData.style_subject)
+                                if (time.includes(item[id].send_plan.time_learn_start) && 
+                                    time.includes(item[id].send_plan.time_learn) &&
+                                    class_tea[key].data_class[detail].item.style_subject === item[id].datematchData.style_subject
+                                    ) {
                                     if (class_tea[key].data_class[detail].items == undefined) {
                                         class_tea[key].data_class[detail].items = [];
                                     }
@@ -585,7 +636,6 @@ export default {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -605,7 +655,7 @@ export default {
             let check_start = 0;
             for (const id in this.time_full) {
                 if (stop == this.time_full[id]) {
-                    // sum.push(this.time_full[id]);
+                    sum.push(this.time_full[id]);
                     return sum;
                 } else if (start == this.time_full[id] || check_start != 0) {
                     sum.push(this.time_full[id]);
@@ -617,39 +667,33 @@ export default {
 
         arrayEvent_search() {
             const db = this.$fireModule.database();
-            if (this.value_tea != '00000') {
-                db.ref(`date_match/`).on("value", (snapshot) => {
+            if (this.value_tea === '00000') {
+                db.ref(`send_plan/`).on("value", (snapshot) => {
                     this.arrayEvents = [];
                     const childData = snapshot.val();
+                    console.log(childData);
                     for (const key in childData) {
-                        const date = childData[key]
-                        for (const day in date) {
-                            const time = date[day];
-                            for (const data_all in time) {
-                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined && time[data_all].teacher == this.value_tea) {
-                                    this.arrayEvents.push(day);
-                                    // console.log(this.arrayEvents);
-                                }
-                            }
+                        const tea = childData[key]
+                        for (const id in tea) {
+                            if(tea[id].money){
+                                this.arrayEvents.push(tea[id].date_learn);
+                                console.log(this.arrayEvents);
+                            }                            
                         }
                     }
 
                 })
             } else {
-                db.ref(`date_match/`).on("value", (snapshot) => {
+                db.ref(`send_plan/${this.value_tea}`).on("value", (snapshot) => {
                     this.arrayEvents = [];
                     const childData = snapshot.val();
+                    console.log(childData);
                     for (const key in childData) {
                         const date = childData[key]
-                        for (const day in date) {
-                            const time = date[day];
-                            for (const data_all in time) {
-                                if (time[data_all].status == "พร้อมเรียน" && time[data_all].Idsendplan != undefined) {
-                                    this.arrayEvents.push(day);
-                                    // console.log(this.arrayEvents);
-                                }
-                            }
-                        }
+                        if(date.money){
+                            this.arrayEvents.push(date.date_learn);
+                            console.log(this.arrayEvents);
+                        }  
                     }
 
                 })
@@ -675,6 +719,19 @@ export default {
             }
             return totalIncome;
         },
+
+        calculateTotalIncomePersenAll(items) {
+            let totalIncome = 0;
+            console.log(items);
+            for (const id in items) {
+
+                for (const iditem in items[id].items) {
+                    console.log(items[id].items[iditem].send_plan.money.sum_send_percent);
+                    totalIncome += items[id].items[iditem].send_plan.money.sum_send_percent;
+                }
+            }
+            return totalIncome;
+        },
         year_gen() {
             let year = 2021;
             let new_year = parseInt(new Date().toISOString().substr(0, 4));
@@ -692,7 +749,7 @@ export default {
             console.log('>>>', this.firstName, this.status);
 
             const db = this.$fireModule.database();
-            if(this.status.includes('teacher')){
+            if (this.status.includes('teacher')) {
                 db.ref(`user/${this.firstName}`).once("value", (snapshot) => {
                     let item = [];
                     const childData = snapshot.val();
@@ -700,7 +757,7 @@ export default {
                     console.log(item);
                     this.value_tea_all = item;
                 })
-            }else{
+            } else {
                 db.ref(`user/`).once("value", (snapshot) => {
                     let item = [{ key: '00000', name: 'ทั้งหมด' }];
                     const childData = snapshot.val();
@@ -712,7 +769,7 @@ export default {
                     console.log(item);
                     this.value_tea_all = item;
                 })
-            }           
+            }
         },
         search_class() {
             const db = this.$fireModule.database();
@@ -747,19 +804,19 @@ export default {
             }
             if (this.date) {
                 day_search_start = new Date(`${this.date}`).getTime();
-                day_search_end = new Date(`${this.date}`).getTime();
-            } else if (this.date_month) {
-                let month = parseInt(this.date_month.substring(5, 7)) + 1;
-                day_search_start = new Date(this.date_month).getTime();
-                if (month > 12) {
-                    day_search_end = new Date(parseInt(this.date_month.substring(0, 4)) + 1 + "-" + 1).getTime();
-                } else {
-                    day_search_end = new Date(this.date_month.substring(0, 5) + month).getTime();
-                }
-            } else if (this.date_year) {
-                let year = parseInt(this.date_year) + 1;
-                day_search_start = new Date(parseInt(this.date_year) - 1 + '-12').getTime();
-                day_search_end = new Date(year + '-1').getTime();
+                day_search_end = new Date(`${this.date_end}`).getTime();
+                // } else if (this.date_month) {
+                //     let month = parseInt(this.date_month.substring(5, 7)) + 1;
+                //     day_search_start = new Date(this.date_month).getTime();
+                //     if (month > 12) {
+                //         day_search_end = new Date(parseInt(this.date_month.substring(0, 4)) + 1 + "-" + 1).getTime();
+                //     } else {
+                //         day_search_end = new Date(this.date_month.substring(0, 5) + month).getTime();
+                //     }
+                // } else if (this.date_year) {
+                //     let year = parseInt(this.date_year) + 1;
+                //     day_search_start = new Date(parseInt(this.date_year) - 1 + '-12').getTime();
+                // day_search_end = new Date(year + '-1').getTime();
             } else {
                 alert('Error');
             }
@@ -957,7 +1014,7 @@ export default {
                     this.data_all = item;
                     this.data_class_all = class_tea;
                     this.mapping(this.data_all, this.data_class_all);
-                });                
+                });
             } else {
                 db.ref(`send_plan/${tea}`).once("value", async (snapshot) => {
                     let item = [];
@@ -970,67 +1027,112 @@ export default {
                             const data_all = childData[data];
                             console.log(data_all);
                             // for (const data in data_all) {                                
-                                if (
-                                    data_all.status_development == "Approved" &&
-                                    new Date(data_all.date_learn).getTime() >= day_search_start &&
-                                    new Date(data_all.date_learn).getTime() <= day_search_end
-                                ) {
-                                    const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all.date_learn}`).once("value");
-                                    const getTeacherPromise = db.ref(`user/${tea}`).once("value");
-                                    const getStudentPromise = db.ref(`user/${data_all.keystudent}`).once("value");
-                                    const getDateMatchPromise = db.ref(`date_match/${data_all.keystudent}/${data_all.date_learn}/${data_all.time_learn}`).once("value");
+                            if (
+                                data_all.status_development == "Approved" &&
+                                new Date(data_all.date_learn).getTime() >= day_search_start &&
+                                new Date(data_all.date_learn).getTime() <= day_search_end
+                            ) {
+                                const getDateTeacherPromise = db.ref(`date_teacher/${tea}/${data_all.date_learn}`).once("value");
+                                const getTeacherPromise = db.ref(`user/${tea}`).once("value");
+                                const getStudentPromise = db.ref(`user/${data_all.keystudent}`).once("value");
+                                const getDateMatchPromise = db.ref(`date_match/${data_all.keystudent}/${data_all.date_learn}/${data_all.time_learn}`).once("value");
 
-                                    const [teacherSnapshot, studentSnapshot, dateMatchSnapshot, dateTeacherSnapshot,] = await Promise.all(
-                                        [
-                                            getTeacherPromise,
-                                            getStudentPromise,
-                                            getDateMatchPromise,
-                                            getDateTeacherPromise,
-                                        ]
-                                    );
-                                    const teacherData = teacherSnapshot.val();
-                                    const studentData = studentSnapshot.val();
-                                    const datematchData = dateMatchSnapshot.val();
-                                    const dateteacherData = dateTeacherSnapshot.val();
-                                    
-                                    for (const key in dateteacherData) {
-                                        const name = `${data_all.date_learn} ${key}`;
-                                        const nameTea = `${teacherData.teacherId} ${teacherData.nickname} ${teacherData.firstName}`;
-                                        const item = dateteacherData[key];
-                                        const isNameUnique = !class_tea.some((existingItem) => existingItem.name === nameTea);
-                                        if (isNameUnique) {
-                                            class_tea.push({
-                                                name: nameTea,
-                                                data_class: [{ name, item }],
-                                            });
-                                        } else {
-                                            for (const id in class_tea) {
-                                                if (class_tea[id].name == nameTea) {
-                                                    for (const idclass in class_tea[id].data_class) {
-                                                        const existingClass = class_tea[id].data_class.some((existingClass) => existingClass.name === name);
-                                                        if (!existingClass) {
-                                                            class_tea[id].data_class.push({ name, item });
-                                                        }
+                                const [teacherSnapshot, studentSnapshot, dateMatchSnapshot, dateTeacherSnapshot,] = await Promise.all(
+                                    [
+                                        getTeacherPromise,
+                                        getStudentPromise,
+                                        getDateMatchPromise,
+                                        getDateTeacherPromise,
+                                    ]
+                                );
+                                const teacherData = teacherSnapshot.val();
+                                const studentData = studentSnapshot.val();
+                                const datematchData = dateMatchSnapshot.val();
+                                const dateteacherData = dateTeacherSnapshot.val();
+
+                                for (const key in dateteacherData) {
+                                    const name = `${data_all.date_learn} ${key}`;
+                                    const nameTea = `${teacherData.teacherId} ${teacherData.nickname} ${teacherData.firstName}`;
+                                    const item = dateteacherData[key];
+                                    const isNameUnique = !class_tea.some((existingItem) => existingItem.name === nameTea);
+                                    if (isNameUnique) {
+                                        class_tea.push({
+                                            name: nameTea,
+                                            data_class: [{ name, item }],
+                                        });
+                                    } else {
+                                        for (const id in class_tea) {
+                                            if (class_tea[id].name == nameTea) {
+                                                for (const idclass in class_tea[id].data_class) {
+                                                    const existingClass = class_tea[id].data_class.some((existingClass) => existingClass.name === name);
+                                                    if (!existingClass) {
+                                                        class_tea[id].data_class.push({ name, item });
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                }
 
-                                    if (this.class_see == datematchData.select_class && this.search_object == ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                        })
+                                if (this.class_see == datematchData.select_class && this.search_object == ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                    })
 
-                                        this.sum_money_all += data_all.money.sum_money;
-                                    } else if (this.class_see == '00000' && this.search_object == ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
+                                    this.sum_money_all += data_all.money.sum_money;
+                                } else if (this.class_see == '00000' && this.search_object == ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+
+                                    this.sum_money_all += data_all.money.sum_money;
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object == ""
+                                    && !this.check_sheet) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+
+                                    this.sum_money_all += data_all.money.sum_money;
+                                } else if (this.class_see == '00000' && this.search_object == ""
+                                    && !this.check_sheet) {
+                                    item.push({
+                                        name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                        teacherData: teacherData,
+                                        studentData: studentData,
+                                        datematchData: datematchData,
+                                        send_plan: data_all,
+                                        IdKey: data,
+                                        dateteacherData: dateteacherData,
+                                    })
+                                    this.sum_money_all += data_all.money.sum_money;
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object != ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
                                         item.push({
                                             name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
                                             teacherData: teacherData,
@@ -1040,113 +1142,68 @@ export default {
                                             IdKey: data,
                                             dateteacherData: dateteacherData,
                                         })
-
                                         this.sum_money_all += data_all.money.sum_money;
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object == ""
-                                        && !this.check_sheet) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                            dateteacherData: dateteacherData,
-                                        })
-
-                                        this.sum_money_all += data_all.money.sum_money;
-                                    } else if (this.class_see == '00000' && this.search_object == ""
-                                        && !this.check_sheet) {
-                                        item.push({
-                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                            teacherData: teacherData,
-                                            studentData: studentData,
-                                            datematchData: datematchData,
-                                            send_plan: data_all,
-                                            IdKey: data,
-                                            dateteacherData: dateteacherData,
-                                        })
-                                        this.sum_money_all += data_all.money.sum_money;
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object != ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == '00000' && this.search_object != ""
-                                        && this.check_sheet && data_all.link_sheet != undefined) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == datematchData.select_class && this.search_object != ""
-                                        && !this.check_sheet) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
-
-                                    } else if (this.class_see == '00000' && this.search_object != ""
-                                        && !this.check_sheet) {
-                                        const contains = data_all.money.subject.name.includes(this.search_object);
-                                        const contains1 = studentData.nickname.includes(this.search_object);
-                                        const contains2 = datematchData.level.includes(this.search_object);
-                                        const contains3 = data_all.money.location.name.includes(this.search_object);
-                                        if (contains || contains1 || contains2 || contains3) {
-                                            item.push({
-                                                name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
-                                                teacherData: teacherData,
-                                                studentData: studentData,
-                                                datematchData: datematchData,
-                                                send_plan: data_all,
-                                                IdKey: data,
-                                                dateteacherData: dateteacherData,
-                                            })
-                                            this.sum_money_all += data_all.money.sum_money;
-                                        }
                                     }
 
+                                } else if (this.class_see == '00000' && this.search_object != ""
+                                    && this.check_sheet && data_all.link_sheet != undefined) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
+
+                                } else if (this.class_see == datematchData.select_class && this.search_object != ""
+                                    && !this.check_sheet) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
+
+                                } else if (this.class_see == '00000' && this.search_object != ""
+                                    && !this.check_sheet) {
+                                    const contains = data_all.money.subject.name.includes(this.search_object);
+                                    const contains1 = studentData.nickname.includes(this.search_object);
+                                    const contains2 = datematchData.level.includes(this.search_object);
+                                    const contains3 = data_all.money.location.name.includes(this.search_object);
+                                    if (contains || contains1 || contains2 || contains3) {
+                                        item.push({
+                                            name: teacherData.teacherId + " " + teacherData.nickname + " " + teacherData.firstName,
+                                            teacherData: teacherData,
+                                            studentData: studentData,
+                                            datematchData: datematchData,
+                                            send_plan: data_all,
+                                            IdKey: data,
+                                            dateteacherData: dateteacherData,
+                                        })
+                                        this.sum_money_all += data_all.money.sum_money;
+                                    }
                                 }
+
+                            }
                             // }
                         })
                     );
@@ -1190,6 +1247,8 @@ export default {
                     "เบอร์โทรศัพท์นักเรียน",
 
                     "วันที่สอน",
+                    "เวลาเริ่มเรียน",
+                    "เวลาเลิกเรียน",
                     "สถานที่สอน",
                     "รายได้ต่อวิชา",
                     "รายได้ต่อระดับชั้น",
@@ -1292,41 +1351,55 @@ export default {
                         }
                     }
                     if (this.selectedHeaders[11]) {
+                        if (item.send_plan && item.send_plan.time_learn_start) {
+                            row.push(item.send_plan.time_learn_start);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.send_plan && item.send_plan.time_learn) {
+                            row.push(item.send_plan.time_learn);
+                        } else {
+                            row.push("");
+                        }
+                    }
+                    if (this.selectedHeaders[13]) {
                         if (item.send_plan.money && item.send_plan.money.location.name) {
                             row.push(item.send_plan.money.location.name);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[12]) {
+                    if (this.selectedHeaders[14]) {
                         if (item.send_plan && item.send_plan.money.subject.bath) {
                             row.push(item.send_plan.money.subject.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[13]) {
+                    if (this.selectedHeaders[15]) {
                         if (item.send_plan && item.send_plan.money.level.bath) {
                             row.push(item.send_plan.money.level.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[14]) {
+                    if (this.selectedHeaders[16]) {
                         if (item.send_plan && item.send_plan.money.location.bath) {
                             row.push(item.send_plan.money.location.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[15]) {
+                    if (this.selectedHeaders[17]) {
                         if (item.send_plan.status_check_sheet && item.send_plan.status_check_sheet.bath) {
                             row.push(item.send_plan.status_check_sheet.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[16]) {
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan &&
                             item.send_plan.money.location.name.includes('Flip') &&
                             item.send_plan.money.typeflip.bath) {
@@ -1339,21 +1412,21 @@ export default {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[17]) {
+                    if (this.selectedHeaders[19]) {
                         if (item.send_plan.hour) {
                             row.push(item.send_plan.hour);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[18]) {
+                    if (this.selectedHeaders[20]) {
                         if (item.send_plan.money.send_rate_special) {
                             row.push(item.send_plan.money.send_rate_special.bath);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[19]) {
+                    if (this.selectedHeaders[21]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
                         } else if (item.send_plan.money && item.send_plan.money.sum_send_rate_name) {
@@ -1366,28 +1439,28 @@ export default {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[20]) {
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[21]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_save}`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[22]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.send_plan.status_study_column) {
                             row.push(`-${item.send_plan.status_study_column.bath}%`);
                         } else {
                             row.push("");
                         }
                     }
-                    if (this.selectedHeaders[23]) {
+                    if (this.selectedHeaders[25]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else {
@@ -1496,6 +1569,24 @@ export default {
                         row.push("");
                     }
                     if (this.selectedHeaders[11]) {
+                        if (item.send_plan && item.send_plan.time_learn_start) {
+                            row.push(item.send_plan.time_learn_start);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[12]) {
+                        if (item.send_plan && item.send_plan.time_learn) {
+                            row.push(item.send_plan.time_learn);
+                        } else {
+                            row.push("");
+                        }
+                    } else {
+                        row.push("");
+                    }
+                    if (this.selectedHeaders[13]) {
                         if (item.send_plan && item.send_plan.money.location.name) {
                             row.push(item.send_plan.money.location.name);
                         } else {
@@ -1504,7 +1595,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[12]) {
+                    if (this.selectedHeaders[14]) {
                         if (item.send_plan && item.send_plan.money.subject.bath) {
                             row.push(item.send_plan.money.subject.bath);
                         } else {
@@ -1513,7 +1604,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[13]) {
+                    if (this.selectedHeaders[15]) {
                         if (item.send_plan && item.send_plan.money.level.bath) {
                             row.push(item.send_plan.money.level.bath);
                         } else {
@@ -1522,7 +1613,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[14]) {
+                    if (this.selectedHeaders[16]) {
                         if (item.send_plan && item.send_plan.money.location.bath) {
                             row.push(item.send_plan.money.location.bath);
                         } else {
@@ -1531,7 +1622,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[15]) {
+                    if (this.selectedHeaders[17]) {
                         if (item.send_plan.status_check_sheet && item.send_plan.status_check_sheet.bath) {
                             row.push(item.send_plan.status_check_sheet.bath);
                         } else {
@@ -1540,7 +1631,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[16]) {
+                    if (this.selectedHeaders[18]) {
                         if (item.send_plan &&
                             item.send_plan.money.location.name.includes('Flip') &&
                             item.send_plan.money.typeflip.bath) {
@@ -1555,7 +1646,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[17]) {
+                    if (this.selectedHeaders[19]) {
                         if (item.send_plan.hour) {
                             row.push(item.send_plan.hour);
                         } else {
@@ -1564,7 +1655,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[18]) {
+                    if (this.selectedHeaders[20]) {
                         if (item.send_plan.money.send_rate_special) {
                             row.push(item.send_plan.money.send_rate_special.bath);
                         } else {
@@ -1573,7 +1664,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[19]) {
+                    if (this.selectedHeaders[21]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name == 0 && item.send_plan.money.sum_send_rate_save == 0) {
                             row.push(item.send_plan.money.sum_money);
                         } else if (item.send_plan.money && item.send_plan.money.sum_send_rate_name) {
@@ -1588,7 +1679,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[20]) {
+                    if (this.selectedHeaders[22]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_name != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_name}`);
                         } else {
@@ -1597,7 +1688,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[21]) {
+                    if (this.selectedHeaders[23]) {
                         if (item.send_plan.money && item.send_plan.money.sum_send_rate_save != 0) {
                             row.push(`-${item.send_plan.money.sum_send_rate_save}`);
                         } else {
@@ -1606,7 +1697,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[22]) {
+                    if (this.selectedHeaders[24]) {
                         if (item.send_plan.status_study_column) {
                             row.push(`-${item.send_plan.status_study_column.bath}%`);
                         } else {
@@ -1615,7 +1706,7 @@ export default {
                     } else {
                         row.push("");
                     }
-                    if (this.selectedHeaders[23]) {
+                    if (this.selectedHeaders[25]) {
                         if (item.send_plan.money && item.send_plan.money.sum_money) {
                             row.push(item.send_plan.money.sum_money);
                         } else {

@@ -445,8 +445,8 @@ export default {
                         end = new Date(edit);
                     }
                 } else if (this.search_date == 'Month') {
-                    now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8))) + '-01');
-                    edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(6, 8)) + 1) + '-01';
+                    now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7))) + '-01');
+                    edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7)) + 1) + '-01';
                     end = new Date(edit);                    
                 } else if (this.search_date == 'All') {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
@@ -467,7 +467,7 @@ export default {
                                 new Date(date).getTime() >= now.getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    if (this.status == 'admin') {
+                                    if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -587,7 +587,7 @@ export default {
                                 new Date(date).getTime() <= new Date(this.date).getTime()) {
                                 for (const time in datedata) {
                                     const timedata = datedata[time];
-                                    if (this.status == 'admin') {
+                                    if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");

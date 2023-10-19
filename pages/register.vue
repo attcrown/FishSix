@@ -39,12 +39,27 @@
                                         </v-avatar>
 
                                         <label class="upload-label mt-3" for="upload-file"> เพิ่มรูปโปรไฟล์
-                                            <input type="file" id="upload-file"  accept="image/*" hidden @change="uploadFile" />
+                                            <input type="file" id="upload-file" accept="image/*" hidden
+                                                @change="uploadFile" />
                                         </label>
                                     </div>
                                 </v-col>
                                 <v-col cols="9">
                                     <v-row>
+                                        <v-col cols="4" class="py-0 ">
+                                            <v-text-field class="black-label" name="userid" v-model="userid"
+                                                :error-messages="useridErrors" @input="$v.userid.$touch()"
+                                                @blur="$v.userid.$touch()">
+                                                <template v-slot:label>
+                                                    <span>
+                                                        รหัสประจำตัวครู
+                                                    </span>
+                                                    <span style="color:red;">
+                                                        *
+                                                    </span>
+                                                </template>
+                                            </v-text-field>
+                                        </v-col>
                                         <v-col cols="4" class="py-0 ">
                                             <v-text-field class="black-label" name="nickname" v-model="nickname"
                                                 :error-messages="nicknameErrors" @input="$v.nickname.$touch()"
@@ -412,6 +427,7 @@ export default {
             firstName: null,
             lastName: null,
             nickname: null,
+            userid: null,
             mobile: null,
             email: null,
             gender: null,
@@ -477,6 +493,11 @@ export default {
 
 
             subjects: [],
+            teacherIdRules: [
+                value => !!value || 'กรุณากรอก รหัสครู',
+                value => /^FS\d{4}$/.test(value) || 'รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)'
+
+            ],
 
         }
     },
@@ -485,6 +506,7 @@ export default {
         firstName: { required },
         lastName: { required },
         nickname: { required },
+        userid: { required },
         gender: { required },
         email: { required, email },
         mobile: { required, minLength: minLength(9), numeric },
@@ -522,11 +544,25 @@ export default {
             return errors
         },
 
+        useridErrors() {
+            const errors = [];
+            if (!this.$v.userid.$dirty) return errors;
+            if (!this.$v.userid.required) {
+                errors.push('กรุณาระบุรหัสประจำตัวครู');
+            }
+            if (!/^FS\d{4}$/.test(this.$v.userid.$model)) {
+                errors.push('รูปแบบ รหัสครู ไม่ถูกต้อง (ต้องเป็น FS ตามด้วยตัวเลข 4 หลัก)');
+            }
+            return errors;
+        },
+
+
 
         genderErrors() {
             const errors = []
             if (!this.$v.gender.$dirty) return errors
             !this.$v.gender.required && errors.push('กรุณาระบุเพศของผู้สอน')
+
             return errors
         },
 
@@ -659,7 +695,7 @@ export default {
             const file = e.target.files[0];
 
             if (file) {
-         
+
                 const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
                 if (file.size <= maxSizeBytes) {
                     const reader = new FileReader();
@@ -670,7 +706,7 @@ export default {
 
                     reader.readAsDataURL(file);
                 } else {
-                    this.openSnackbar("error", 'รูปไม่ควรมีขนาดเกิน 5 MB '); 
+                    this.openSnackbar("error", 'รูปไม่ควรมีขนาดเกิน 5 MB ');
                     console.error('File size exceeds the maximum limit (5 MB). Please select a smaller file.');
                 }
             }
@@ -717,6 +753,7 @@ export default {
                 firstName: this.firstName,
                 lastName: this.lastName,
                 nickname: this.nickname,
+                userid: this.userid,
                 mobile: this.mobile,
                 email: this.email,
                 gender: this.gender,
