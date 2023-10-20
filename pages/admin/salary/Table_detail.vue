@@ -99,8 +99,8 @@
                                 hide-details></v-checkbox>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
-                                :disabled="value_tea == null || date == null || date_end == null"
-                                @click="search_data_money(), export_menu = true" rounded>
+                                :disabled="value_tea == null || date == null || date_end == null  || searchMoney === false"
+                                @click="search_data_money(), export_menu = true ,searchMoney = false" rounded>
                                 ค้นหา<span class="mdi mdi-magnify text-h6"></span>
                             </v-btn>
 
@@ -524,6 +524,7 @@ import { saveAs } from 'file-saver';
 import { mapState } from 'vuex';
 export default {
     data: () => ({
+        searchMoney: true,
         check_sheet: false,
         search_object: "",
         export_menu: false,
@@ -1014,6 +1015,7 @@ export default {
                     this.data_all = item;
                     this.data_class_all = class_tea;
                     this.mapping(this.data_all, this.data_class_all);
+                    this.searchMoney = true;
                 });
             } else {
                 db.ref(`send_plan/${tea}`).once("value", async (snapshot) => {
