@@ -1212,6 +1212,7 @@ export default {
                     this.data_all = item;
                     this.data_class_all = class_tea;
                     this.mapping(this.data_all, this.data_class_all);
+                    this.searchMoney = true;
                 });
             }
 

@@ -21,8 +21,8 @@
                         </v-btn>
                     </v-date-picker>
                 </v-menu>
-                <v-btn elevation="10" color="#322E2B" class="mt-3 ms-5" style="color:white" :disabled="!formIsValid"
-                    type="submit" @click="search_date_teacher_All()" rounded>ค้นหาทั้งหมด<span
+                <v-btn elevation="10" color="#322E2B" class="mt-3 ms-5" style="color:white" :disabled="search_data_btn === false"
+                     @click="search_data_btn = false ,search_date_teacher_All() " rounded>ค้นหาทั้งหมด<span
                         class="mdi mdi-magnify text-h6"></span></v-btn>
 
                 <v-spacer></v-spacer>
@@ -903,6 +903,7 @@ import { CheckStuController } from './checkStuController.vue';
 export default {
     data() {
         return {
+            search_data_btn: false,
             optional_all: [],
             sheet_all: [],
             keyuser: null,
@@ -1798,8 +1799,7 @@ export default {
             })
         },
 
-        search_date_teacher_All() {
-            console.log('search_date_teacher_all');
+        search_date_teacher_All() {            
             console.log(
                 this.panel,
                 this.panel1,
@@ -1983,6 +1983,7 @@ export default {
                                                     });
                                                 }
                                             }
+                                            
                                         })
                                 } else if (this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') {
                                     console.log('Doing');
@@ -2132,6 +2133,7 @@ export default {
                                                 }
                                             }
                                         })
+                                    
                                 }
                             }
                         }
@@ -2140,8 +2142,9 @@ export default {
                 this.dessertsNotcheck = item3;
                 this.dessertsNotData = item2;
                 this.dessertsNotapprove = item1;
-                this.dessertsApprove = item;
-                console.log(this.dessertsApprove);
+                this.dessertsApprove = item;            
+                this.search_data_btn = true;    
+                console.log(this.dessertsApprove ,this.search_data_btn);
             })
         },
 
