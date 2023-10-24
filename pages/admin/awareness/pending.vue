@@ -64,6 +64,7 @@ export default {
 
         headers: [
             { text: 'เวลาที่บันทึก', value: 'teacher.createdAt', filterable: true, },
+            { text: 'รหัสประจำตัวครู', value: 'teacher.userid', filterable: true, },
 
             { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
             { text: 'นามสกุล', value: 'teacher.lastName' },
@@ -132,6 +133,7 @@ export default {
                             lastName: childData.lastName || null,
                             nickname: childData.nickname || null,
                             mobile: childData.mobile || null,
+                            userid: childData.userid || null,
                             createdAt: sumx_date,
                             university: childData.university || null,
 

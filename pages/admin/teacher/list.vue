@@ -193,8 +193,8 @@ export default {
                 { text: 'ชื่อเล่น', value: 'teacher.nickname', filterable: true, },
                 { text: 'ชื่อจริง', value: 'teacher.firstName', filterable: true, },
                 { text: 'นามสกุล', value: 'teacher.lastName' },
-                { text: 'สถานศึกษา', value: 'teacher.university' },
-                { text: 'เบอร์โทรศัพท์', value: 'teacher.mobile' },
+                { text: 'Flip Class', value: 'teacher.FlipClass' },
+                { text: 'Private Class', value: 'teacher.PrivateClass' },
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
             ],
             items: [],
@@ -384,7 +384,7 @@ export default {
             }
         },
 
-        search_teacher() {
+        async search_teacher() {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
                 let item = [];
@@ -392,19 +392,31 @@ export default {
                 for (const key in childData) {
 
                     if (childData[key].status == 'teacher') {
+                        const gettype_allPromise = db.ref(`type_all/${childData[key].typeflip}`).once("value");
+                        const gettype_private_allPromise = db.ref(`type_private_all/${childData[key].typeprivate}`).once("value");
+                        Promise.all([gettype_allPromise, gettype_private_allPromise])
+                        .then((snapshots) => {
+                            const type_allSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                            const type_private_allSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+                            
+                            const type_allData = type_allSnapshot.val(); // เปลี่ยนตรงนี้
+                            const type_private_allData = type_private_allSnapshot.val(); // เปลี่ยนตรงนี้
 
-                        const teacher = {
+                            const teacher = {
+                                teacherId: childData[key].teacherId || null,
+                                firstName: childData[key].firstName || null,
+                                lastName: childData[key].lastName || null,
+                                nickname: childData[key].nickname || null,
+                                mobile: childData[key].mobile || null,
+                                FlipClass: type_allData.name || null,
+                                PrivateClass: type_private_allData.name || null,
 
-                            teacherId: childData[key].teacherId || null,
-                            firstName: childData[key].firstName || null,
-                            lastName: childData[key].lastName || null,
-                            nickname: childData[key].nickname || null,
-                            mobile: childData[key].mobile || null,
+                                university: childData[key].university || null,
+
+                                };
+                                item.push({ key: key, teacher });
+                        })
                         
-                            university: childData[key].university || null,
-
-                        };
-                        item.push({ key: key, teacher });
 
                     }
                 }
@@ -413,6 +425,7 @@ export default {
             })
 
         },
+        
         viewItem(item) {
             this.$router.push({ path: 'teacher/detail', query: { teacherId: item.key } });
             //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
