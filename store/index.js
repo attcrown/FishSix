@@ -11,13 +11,13 @@ const createStore = () => {
     },
     mutations: {
       // mutations สำหรับการเปลี่ยนแปลงค่าใน state (ถ้าจำเป็น)
-      setFirstName(state, value) {
+      async setFirstName(state, value) {
         state.firstName = value;
       },
-      setStatus(state, value) {
+      async setStatus(state, value) {
         state.status = value;
       },
-      setUserIdDetail(state, value){
+      async setUserIdDetail(state, value){
         state.UserIdDetail = value;
       }
       // อื่น ๆ

@@ -202,11 +202,11 @@
                                                         label="เลิกเรียน" :rules="[v => !!v || 'กรุณาเลือก']"
                                                         required></v-autocomplete>
                                                 </v-col>
-                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px">
+                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px" v-if="status != 'user'">
                                                     <v-checkbox v-model="All_data.match_test"
                                                         label="ทดลองเรียน"></v-checkbox>
                                                 </v-col>
-                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px">
+                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px" v-if="status != 'user'">
                                                     <v-checkbox v-model="All_data.match_vip" label="กรณีพิเศษ(Private)"
                                                         @click="select_class(All_data.style_subject)"></v-checkbox>
                                                 </v-col>
@@ -300,6 +300,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
     layout: 'login',
     data: () => ({
@@ -407,6 +408,7 @@ export default {
         //-----------CALENDAR------------------------------
     },
     computed: {
+        ...mapState(['firstName', 'status']),
         formTitle() {
             this.mode = this.editedIndex === -1 ? 'รอยืนยัน' : 'พร้อมเรียน'
             return this.editedIndex === -1 ? 'จองเวลาเรียนนอกตาราง' : 'จองเวลาเรียนในตาราง'
@@ -586,19 +588,31 @@ export default {
                 })
 
         },
-        search_student() {
+        async search_student() {
+            await this.$nextTick();
+            console.log(this.firstName ,this.status);
             const db = this.$fireModule.database();
-            db.ref("user/").on("value", (snapshot) => {
-                const childData = snapshot.val();
-                let item = [];
-                for (const key in childData) {
-                    if (childData[key].status == 'user') {
-                        item.push({ key: key, name: childData[key].studentId + " น้อง" + childData[key].nickname });
+            if(this.status.includes("user")){
+                db.ref(`user/${this.firstName}`).on("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    let item = [];
+                    item.push({ key: this.firstName, name: childData.studentId + " น้อง" + childData.nickname });               
+                    this.student_select = item;
+                })
+            }else{                
+                db.ref("user/").on("value", (snapshot) => {
+                    const childData = snapshot.val();
+                    let item = [];
+                    for (const key in childData) {
+                        if (childData[key].status == 'user') {
+                            item.push({ key: key, name: childData[key].studentId + " น้อง" + childData[key].nickname });
+                        }
                     }
-                }
-                this.student_select = item;
-            })
+                    this.student_select = item;
+                })
+            }            
         },
+
         search_teacher() {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
