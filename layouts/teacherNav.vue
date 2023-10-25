@@ -1,6 +1,7 @@
 <template>
   <v-app class="fonts500">
-    <v-navigation-drawer v-model="drawer"  app color="#B6A7A2" :mini-variant.sync="mini" permanent expand-on-hover>
+    <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
+      :clipped-left="clipped" fixed app color="#B6A7A2">
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
       
       <v-list>
@@ -26,8 +27,8 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0" >
-      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" /> -->
+    <v-app-bar :clipped="clipped" fixed app color="white" elevation="10" >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
     
       <v-spacer/>
       <p class=" dark">
@@ -54,8 +55,8 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
-      drawerWidth: 200, // Change this value as desired for the default width
-      drawerMaxWidth: 350,
+      drawerWidth: 250, // Change this value as desired for the default width
+      drawerMaxWidth: 250,
 
       mini: true,
       clipped: true,

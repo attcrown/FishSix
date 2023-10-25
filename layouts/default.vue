@@ -1,8 +1,9 @@
 <template>
   <v-app class="fonts500">
-    <v-navigation-drawer v-model="drawer" app color="#B6A7A2" :mini-variant.sync="mini" permanent expand-on-hover>
+    <v-navigation-drawer v-model="drawer" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
+      :clipped-left="clipped" fixed app color="#B6A7A2">
       <div class="text-center">
-        <img :src="require('@/assets/fishsixLogo.png')" style="width: 100%;">
+        <img :src="require('@/assets/fishsixLogo.png')" style="width: 20%;">
       </div>
 
       <v-list>
@@ -28,8 +29,8 @@
       </template>
     </v-navigation-drawer>
 
-    <v-app-bar app color="white" elevation="0">
-      <!-- <v-app-bar-nav-icon @click="mini = !mini" class="dark"></v-app-bar-nav-icon> -->
+    <v-app-bar app color="white" elevation="10">
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
       <v-spacer />
       <p class="m-0">
         {{ title }}
@@ -142,14 +143,14 @@ export default {
         //   title: 'Setting',
         //   to: '/admin/setting',
         // },
-        
+
       ],
 
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: "",
-      status: "",
+      status: "",      
     }
   },
   mounted() {
@@ -161,12 +162,12 @@ export default {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
       }
-      else if (sessionStorage.getItem('status') != 'admin' && 
-              sessionStorage.getItem('status') != 'opFS'&& 
-              sessionStorage.getItem('status') != 'opsupFS'&&
-              localStorage.getItem('status') != 'admin' &&
-              localStorage.getItem('status') != 'opFS' &&
-              localStorage.getItem('status') != 'opsupFS') {
+      else if (sessionStorage.getItem('status') != 'admin' &&
+        sessionStorage.getItem('status') != 'opFS' &&
+        sessionStorage.getItem('status') != 'opsupFS' &&
+        localStorage.getItem('status') != 'admin' &&
+        localStorage.getItem('status') != 'opFS' &&
+        localStorage.getItem('status') != 'opsupFS') {
         this.getout();
       } else {
         if (localStorage.getItem('firstName') == null) {

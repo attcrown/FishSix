@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Table_detail></Table_detail>        
+        <Table_detail class="mt-5"></Table_detail>        
     </div>
 </template>
 <script>

@@ -1,5 +1,6 @@
 <template>
   <v-app class="fonts500">
+    <!-- <v-system-bar color="deep-purple darken-3"></v-system-bar> -->
     <v-navigation-drawer v-model="drawer" :width="drawerWidth" :max-width="drawerMaxWidth" :mini-variant="miniVariant"
       :clipped-left="clipped" fixed app color="#B6A7A2">
       <div class="text-center"><img :src="require('@/assets/fishsixLogo.png')" style="width: 75%;"></div>
@@ -26,7 +27,7 @@
         </v-list-item>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped="clipped" fixed app color="white" elevation="0">
+    <v-app-bar :clipped="clipped" fixed app elevation="10">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
 
       <v-spacer />
@@ -37,7 +38,7 @@
       
       <v-avatar  class="ms-1">
         <img v-if="profilePic"  :src="profilePic" alt="รูปโปรไฟล์">
-        <v-icon   v-if="!profilePic"  color="black">
+        <v-icon  class="text-h3" v-if="!profilePic"  color="black">
         mdi-account-circle 
       </v-icon>
       </v-avatar>
@@ -70,6 +71,7 @@
 </template>
   
 <script>
+import { mapMutations } from 'vuex';
 export default {
   name: 'DefaultLayout',
   data() {
@@ -89,6 +91,11 @@ export default {
           to: '/user',
         },
         {
+          icon: 'mdi-alpha-b-box',
+          title: 'จองตารางเรียน',
+          to: '/user/student',
+        },
+        {
           icon: 'mdi-account-circle ',
           title: 'ข้อมูลนักเรียน',
           to: '/user/profile',
@@ -97,7 +104,7 @@ export default {
           icon: 'mdi-folder ',
           title: 'คลังเนื้อหา',
           to: '/user/content',
-        },
+        },        
 
       ],
       miniVariant: false,
@@ -115,6 +122,7 @@ export default {
     this.readdata();
   },
   methods: {
+    ...mapMutations(['setFirstName', 'setStatus']),
     check() {
       if (localStorage.getItem('firstName') == null && sessionStorage.getItem('firstName') == null) {
         this.getout();
@@ -126,10 +134,14 @@ export default {
           this.title = sessionStorage.getItem('firstName');
           this.status = sessionStorage.getItem('status');
           this.keyuser = sessionStorage.getItem('lastName');
+          this.setFirstName(sessionStorage.getItem('lastName'));
+          this.setStatus(sessionStorage.getItem('status'));
         } else {
           this.title = localStorage.getItem('firstName');
           this.status = localStorage.getItem('status');
           this.keyuser = localStorage.getItem('lastName') || '';
+          this.setFirstName(localStorage.getItem('lastName'));
+          this.setStatus(localStorage.getItem('status'));
         }
       }
     },
