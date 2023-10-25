@@ -1,30 +1,21 @@
 <template>
     <div class="mx-0">
-        <table_tea v-if="!isMobile"></table_tea>
+        <table_tea></table_tea>
+        <!-- <status_student></status_student> -->
     </div>
 </template>
 <script>
+// import status_student from './status_student.vue';
 import table_tea from './table_tea.vue';
-
 export default {
     data() {
         return {
-            isMobile: false, // กำหนดให้เป็น false เริ่มต้น
+
         }
     },
     components: {
+        // status_student,
         table_tea,
-    },
-    computed: {
-        // ตรวจสอบว่าอยู่ในโหมดมือถือหรือไม่
-        isMobileMode() {
-            return window.innerWidth <= 768; // คุณสามารถปรับค่า 768 เป็นขนาดหน้าจอที่คุณต้องการ
-        }
-    },
-    created() {
-        this.isMobile = this.isMobileMode;
-    },
+    }
 }
 </script>
-
-  
