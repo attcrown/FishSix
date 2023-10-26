@@ -64,6 +64,7 @@ export default {
                 development: item_data.development || null,
                 problem: item_data.problem || null,
                 method: item_data.method || null,
+                select_class: item_data.select_class || null,
                 // to_development: item_data.to_development || null,
                 homework: item_data.homework || null,
                 status_development: item_data.status_development || null,

@@ -6,24 +6,27 @@
         <input type="file" @change="handleUpdateFileUpload" />
         <label for="">Tea</label>
         <input type="file" @change="handleFileUploadTea" />
+
+        <v-btn @click="DelId()">DelStudent</v-btn>
         <div v-if="jsonData.length > 0" style="background-color:aliceblue">
             <table>
                 <thead>
                     <tr>
-                        <th>ชื่อจริงครู</th>
-                        <th>นามสกุลครู</th>
-                        <th>ชื่อเล่นครู</th>
+                        <th>ชื่อจริงนักเรียน</th>
+                        <th>นามสกุลนักเรียน</th>
+                        <th>ชื่อเล่นนักเรียน</th>
                         <th>เบอร์ติดต่อ</th>
                         <th>เวลาคงเหลือ</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(teacher, index) in jsonData" :key="index">
-                        <td>{{ teacher['firstName'] }}</td>
-                        <td>{{ teacher['lastName'] }}</td>
-                        <td>{{ teacher['nickName'] }}</td>
-                        <td>{{ teacher['Phone'] }}</td>
-                        <td>{{ teacher['Time'] }}</td>
+                    <tr v-for="(student, index) in jsonData" :key="index">
+                        <td>{{index+1}}</td>
+                        <td>{{ student['firstName'] }}</td>
+                        <td>{{ student['lastName'] }}</td>
+                        <td>{{ student['nickName'] }}</td>
+                        <td>{{ student['Phone'] }}</td>
+                        <td>{{ student['Time'] }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -39,10 +42,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(teacher, index) in jsonDataUpdateStu" :key="index">
-                        <td>{{ teacher['studentid'] }}</td>
-                        <td>{{ teacher['ชื่อจริงนักเรียน'] }}</td>
-                        <td>{{ teacher['hournow'] }}</td>
+                    <tr v-for="(student, index) in jsonDataUpdateStu" :key="index">
+                        <td>{{ student['studentid'] }}</td>
+                        <td>{{ student['ชื่อจริงนักเรียน'] }}</td>
+                        <td>{{ student['hournow'] }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -257,6 +260,7 @@ export default {
                 const worksheet = workbook.Sheets[sheetName];
 
                 this.jsonData = XLSX.utils.sheet_to_json(worksheet);
+                console.log(this.jsonData)
                 this.search_id(this.jsonData);
             };
 
@@ -317,8 +321,8 @@ export default {
             let userId = "00000000000";
             const db = this.$fireModule.database();
             db.ref("user/").once("value", (snapshot) => {
-                if (snapshot.extends) {
-                    const childData = snapshot.val();
+                const childData = snapshot.val();
+                if (snapshot.extends) {                    
                     for (const key in childData) {
                         if (childData[key].studentId != undefined) {
                             if (parseInt(childData[key].studentId.substring(3, 11)) > parseInt(userId.substring(3, 11))) {
@@ -329,9 +333,10 @@ export default {
                     userId = userId.substring(0, 3) + [parseInt(userId.substring(3, 11)) + 1];
                     console.log(userId);
                 } else {
-                    userId = 'FSS23090001'
+                    userId = 'FSS23100001'
                 }
             }).then(() => {
+                console.log(Data, userId)
                 this.saveToData(Data, userId);
             })
         },
@@ -349,7 +354,7 @@ export default {
                         lastName: Data[item].lastName || null,
                         nickname: Data[item].nickName || null,
                         studentId: userId,
-                        password: 'Fishsixstudent',
+                        password: 'FishsixStudent',
                         status: "user",
                         hourLeft: Data[item].Time || "0",
                         studyHour: "0",
@@ -358,7 +363,7 @@ export default {
                     });
                     this.row.push({
                         username: userId,
-                        password: 'Fishsixstudent',
+                        password: 'FishsixStudent',
                         name: Data[item].firstName || null,
                         lastName: Data[item].lastName || null,
                         nickName: Data[item].nickName || null,
@@ -371,7 +376,18 @@ export default {
             }
         },
 
-
+        DelId(){
+            const db = this.$fireModule.database();
+            db.ref("user/").once("value", (snapshot) => {
+                const childData = snapshot.val();
+                for(const key in childData){
+                    if(key.includes("RlNTMjMxMDA")){
+                        console.log(key)
+                        db.ref(`user/${key}/`).remove();
+                    }
+                } 
+            })
+        },
         // search_idTea(Data) {
         //     console.log(Data);
         //     let userId = "00000000000";

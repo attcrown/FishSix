@@ -318,26 +318,26 @@
                         </v-col>
 
                         <v-col cols="7"
-                            v-if="detailData.money.location.name.substring(0, 4) == 'Flip' && !detailData.match_vip"
+                            v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeflip.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5"
-                            v-if="detailData.money.location.name.substring(0, 4) == 'Flip' && !detailData.match_vip"
+                            v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeflip.bath + ' บาท'"></v-text-field>
                         </v-col>
 
                         <v-col cols="7"
-                            v-if="detailData.money.location.name.substring(0, 4) != 'Flip' || detailData.match_vip"
+                            v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeprivate.name
                             }}</v-subheader>
                         </v-col>
                         <v-col cols="5"
-                            v-if="detailData.money.location.name.substring(0, 4) != 'Flip' || detailData.match_vip"
+                            v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeprivate.bath + ' บาท'"></v-text-field>

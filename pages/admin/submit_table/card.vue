@@ -712,6 +712,12 @@
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
                                         required></v-select>
                                 </v-col>
+                                <v-col cols="12" md="6"
+                                    v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                    <v-select v-model="edited.select_class" :items="selectClass_all" item-value="key"
+                                        item-text="name" :rules="[v => !!v || 'กรุณาเลือก Class']" label="ประเภทการสอน"
+                                        required></v-select>
+                                </v-col>
 
                                 <v-col cols="12" sm="12" style="margin-top:-30px" v-if="this.status == 'teacher'">
                                     <hr style="border: 1px solid #000; background-color: #000;">
@@ -905,6 +911,7 @@ export default {
         return {
             search_data_btn: false,
             optional_all: [],
+            selectClass_all: [],
             sheet_all: [],
             keyuser: null,
             status: null,
@@ -1003,6 +1010,7 @@ export default {
         this.send_rate_teacher_search();
         this.sheet_search();
         this.optional_search();
+        this.selectClass_all_search();
         this.fullName();
         this.search_date_teacher_All();
         this.arrayEvent_search();
@@ -1182,6 +1190,18 @@ export default {
                 }
                 this.optional_all = item;
                 console.log(this.optional_all);
+            })
+        },
+        selectClass_all_search() {
+            const db = this.$fireModule.database();
+            db.ref(`LimitedClass_all/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for (const key in childData) {
+                    item.push({ key: key, name: childData[key].name, bath: childData[key].bath });
+                }
+                this.selectClass_all = item;
+                console.log(this.selectClass_all);
             })
         },
         sheet_search() {
