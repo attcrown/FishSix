@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mt-5">
         <pageLoader v-if="isLoading"></pageLoader>
         <div v-if="!isLoading" class="col p-0 d-flex justify-content-center">
             <v-row>
@@ -2074,13 +2074,13 @@ hr.solid {
 </style>
 <!-- mobile -->
 
-<style>
+<style scoped>
 /* desktop */
 @media (min-width:768px) {
     .parent-div {
         display: flex;
         justify-content: space-between;
-
+     
     }
 
     .profile {
@@ -2106,6 +2106,7 @@ hr.solid {
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+    
     }
 
     .avatarPic {
@@ -2116,9 +2117,9 @@ hr.solid {
     .child-div {
         display: flex;
         justify-content: flex-end;
-        /* Align items to the right within .child-div */
+     
         align-items: center;
-        /* Center items vertically within .child-div */
+     
     }
 
 

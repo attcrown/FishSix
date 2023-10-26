@@ -61,15 +61,18 @@
                 <h1 class="font-weight-bold">คลังเนื้อหา</h1>
                 <v-btn @click="back" router exact>ย้อนกลับ</v-btn>
             </div>
-            <v-card class="elevation-0 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
+
+            <v-card class="elevation-0 rounded-t-xl px-5 pt-3" style="background-color:#B6A7A2">
                 <v-container fluid>
 
-                    <div class="d-flex justify-space-between mt-2">
+
+                    <div class="parent-div">
                         <h5><b>บทที่ {{ selectChapterId }}</b></h5>
-                        <div> <v-btn color="black" class="text-white" @click="prevItem()">บทเรียนก่อนหน้า </v-btn>
+
+                        <div class="child-div">
+                            <v-btn color="black" class="text-white me-3" @click="prevItem()">บทเรียนก่อนหน้า </v-btn>
                             <v-btn color="black" class="text-white" @click="nextItem()">บทเรียนถัดไป </v-btn>
                         </div>
-
                     </div>
                 </v-container>
 
@@ -111,35 +114,37 @@
                         </div>
                     </v-card>
                     <div class="tab mt-3">
-                        <button class="tablinks active" @click="openTab('รายละเอียดเนื้อหา')" active>รายละเอียดเนื้อหา</button>
-                        <button class="tablinks" @click="openTab('เรื่องที่เรียน')" >เรื่องที่เรียน</button>
+                        <button class="tablinks active" @click="openTab('รายละเอียดเนื้อหา')"
+                            active>รายละเอียดเนื้อหา</button>
+                        <button class="tablinks" @click="openTab('เรื่องที่เรียน')">เรื่องที่เรียน</button>
 
                     </div>
                     <div id="รายละเอียดเนื้อหา" class="tabcontent mt-5" style="display: block;">
                         <v-card class="elevation-0  px-5 rounded-xl "
                             style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
-                            <v-card-text>{{ selectContent.chapterDetail }} </v-card-text>
+                            <v-card-text style="font-size: 16px;font-weight: 300;">{{ selectContent.chapterDetail }}
+                            </v-card-text>
                         </v-card>
                     </div>
 
-                    <div id="เรื่องที่เรียน" class="tabcontent mt-5" >
+                    <div id="เรื่องที่เรียน" class="tabcontent mt-5">
                         <v-card class="elevation-0  px-5 rounded-xl "
                             style="background-color:#FFF; min-height: 90px; display: flex; align-items: center;">
                             <v-card-text>
                                 <div class="label">
                                     <label>ชื่อเรื่องที่เรียน</label>
-                                    <h3>{{ selectChapter }}</h3>
+                                    <div class="chapter-section">{{ selectChapter }}</div>
                                 </div>
                                 <div class="label">
                                     <label>เกี่ยวกับเรื่องที่เรียน</label>
-                                    <h3>{{ selectContent.chapterDetail }}</h3>
+                                    <div class="chapter-section">{{ selectContent.chapterDetail }}</div>
                                 </div>
-                                <hr>
+                                <hr style="opacity: 1;">
 
-                                <label>Video</label>
+                                <label>สื่อการสอน</label>
                                 <div v-for="contentMaterial in contentMaterials" v-if="contentMaterial.link !== undefined">
                                     <div class="d-flex justify-space-between mt-2">
-                                        <h5>{{ contentMaterial.name }}</h5>
+                                        <div class="chapter-section">{{ contentMaterial.name }}</div>
 
                                         <v-btn color="black" class="text-white"
                                             @click="getLink(contentMaterial.link)">เล่นวีดิโอ <span
@@ -147,18 +152,20 @@
                                     </div>
 
                                 </div>
-                                <label>เอกสารประกอบการเรียน (PDF)</label>
-                                <div v-for="contentMaterial in contentMaterials"
-                                    v-if="contentMaterial.pdfFileUrl !== undefined">
-                                    <div class="d-flex justify-space-between mt-2">
-                                        <h5>{{ contentMaterial.name }}</h5>
-
+                                <label class="mt-2">เอกสารประกอบการเรียน (PDF)</label>
+                                <div v-for="contentMaterial in contentMaterials">
+                                    <div v-if="contentMaterial.pdfFileUrl !== undefined"
+                                        class="d-flex justify-space-between mt-2">
+                                        <div class="chapter-section">{{ contentMaterial.name }}</div>
                                         <v-btn color="black" class="text-white"
-                                            @click="downloadFile(contentMaterial.pdfFileUrl)">ดาวน์โหลดเอกสาร <span
-                                                class="mdi mdi-file text-h6"></span></v-btn>
+                                            @click="downloadFile(contentMaterial.pdfFileUrl)">
+                                            ดาวน์โหลดเอกสาร <span class="mdi mdi-file text-h6"></span>
+                                        </v-btn>
                                     </div>
-
+                                    
                                 </div>
+
+
                             </v-card-text>
 
                             <!-- <h3> {{ contentMaterials }}</h3> -->
@@ -318,10 +325,6 @@ export default {
             this.snackbarColor = status;
         },
 
-        addContentDialog() {
-            this.dialog_detail = true;
-        },
-
         viewItem(item) {
 
             this.viewMode = 'detail';
@@ -400,25 +403,6 @@ export default {
 
                 this.contentMaterials = items;
             })
-        },
-        openEditDialog(item) {
-            this.viewmaterial = true;
-            this.selectMaterial = item;
-            console.log(item)
-        },
-        addMaterialDialog() {
-            this.material_dialog = true;
-        },
-
-
-
-
-
-
-        openEditDialog(item) {
-            this.viewmaterial = true;
-            this.selectMaterial = item;
-            console.log(item)
         },
 
 
@@ -501,7 +485,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .userSpan {
     background-color: rgb(243 244 246);
     color: #000000;
@@ -532,7 +516,7 @@ export default {
     text-transform: none;
 }
 
-hr.solid {
+hr {
     border-top: 3px solid black;
     border-width: 3px;
     opacity: 1;
@@ -571,5 +555,97 @@ hr.solid {
 /* Style the tab content */
 .tabcontent {
     display: none;
+}
+
+.v-btn {
+    border-radius: 10px;
+    padding: 6px 12px;
+
+}
+
+.v-btn.v-size--default {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0px;
+}
+
+.v-icon {
+    width: 22px;
+    height: 15px;
+}
+</style>
+
+<style scoped>
+/* desktop */
+@media (min-width:768px) {
+
+    .parent-div {
+        display: flex;
+        justify-content: space-between;
+
+    }
+
+    .chapter-section {
+        font-size: 24px;
+        color: #322E2B;
+        font-weight: 500;
+    }
+}
+
+/* mobile */
+@media (max-width:767px) {
+
+    /* markup */
+    span {
+        letter-spacing: 0px;
+    }
+
+    b {
+        font-size: 20px;
+
+        font-weight: 500;
+    }
+
+    .chapter-section {
+        font-size: 16px;
+        color: #322E2B;
+        font-weight: 500;
+    }
+
+    .child-div {
+        display: flex;
+        justify-content: flex-end;
+
+        align-items: center;
+
+    }
+
+    /* css */
+    .parent-div {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+
+    }
+
+    /* vuetify */
+    .v-btn {
+        border-radius: 10px;
+        padding: 6px 12px;
+
+    }
+
+    .v-btn.v-size--default {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+    }
+
+    .v-icon {
+        width: 22px;
+        height: 15px;
+    }
+
+
 }
 </style>
