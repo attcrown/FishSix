@@ -1,8 +1,14 @@
 <template>
-    <div>
+    <div class="mt-5">
 
-        <div style="max-width: 500px;">
+   
+        <div class="col p-0 d-flex justify-space-between">
             <h1 class="font-weight-bold">คลังเนื้อหา</h1>
+
+
+                <v-btn to="/user/" router exact class="back-button">ย้อนกลับ
+                    <v-icon color="black" class="ms-1">mdi-arrow-left</v-icon></v-btn>
+                   
         </div>
         <v-card class="elevation-16 rounded-t-xl px-5 pt-3" style="background-color:#EBE4DE">
             <v-container fluid>
@@ -81,7 +87,7 @@ export default {
                 },
                 { text: 'Level', value: 'level' },
                 { text: 'จำนวนบท', value: 'chapterCount' },
-           
+
                 { text: 'ดูข้อมูล', value: 'actions', sortable: false, align: 'center' },
             ],
 
@@ -118,10 +124,8 @@ export default {
 
         viewItem(item) {
             this.$router.push({ path: 'content/detail', query: { contentId: item.key } });
-            //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
+            
         },
-
-
 
         initialize() {
             const db = this.$fireModule.database();
@@ -188,7 +192,6 @@ export default {
             })
 
         },
-
 
 
         search_level_select() {
@@ -305,5 +308,62 @@ hr.solid {
     width: 32px;
     height: 32px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<style scoped>
+/* desktop */
+@media (min-width:768px) {
+
+    .parent-div {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        justify-content: space-between;
+
+    }
+}
+
+/* mobile */
+@media (max-width:767px) {
+
+    /* markup */
+    span {
+        letter-spacing: 0px;
+    }
+
+    b {
+        font-size: 12px;
+
+        font-weight: 800;
+    }
+
+
+
+    /* css */
+
+
+
+
+
+    /* vuetify */
+    .v-btn {
+        border-radius: 10px;
+        padding: 6px 12px;
+
+    }
+
+    .v-btn.v-size--default {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+    }
+
+    .v-icon {
+        width: 22px;
+        height: 15px;
+    }
+
+
 }
 </style>
