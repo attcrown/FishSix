@@ -31,7 +31,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="dark" />
 
       <v-spacer />
-      <p class=" dark" style="">
+      <p class="pt-3 dark" style="">
         {{ email }}
       </p>
 
@@ -151,7 +151,7 @@ export default {
       await db.ref(`user/${this.keyuser}`).on("value", (snapshot) => {
         const childData = snapshot.val();
         this.profilePic = childData.profilePic || null;
-        this.email = childData.email || null;
+        this.email = childData.firstName || null;
       })
     },
 
