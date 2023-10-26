@@ -150,7 +150,7 @@
                                         <td class="p-2">{{ item.studentData.studentId }}
                                             {{ item.studentData.nickname }}
                                             ({{ item.studentData.firstName }})</td>
-                                        <td class="p-2">{{ search_class_table(item.datematchData.select_class) }}</td>
+                                        <td class="p-2">{{ search_class_table(item.send_plan.select_class) }}</td>
                                         <td class="p-2">{{ item.send_plan.level }}</td>
                                         <td class="p-2">{{ item.datematchData.start }}</td>
                                         <td class="p-2">{{ item.datematchData.stop }}</td>
@@ -787,6 +787,7 @@ export default {
         },
         search_class_table(id) {
             for (const key in this.class_all) {
+                console.log('>>>',id ,this.class_all);
                 if (this.class_all[key].key == id) {
                     return this.class_all[key].name;
                 }

@@ -153,7 +153,7 @@
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">รหัสนักเรียน</th>
                                 <th class="p-2">ชื่อนักเรียน</th>
-                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">สถานที่สอน</th>
                                 <th class="p-2">วิชาที่สอน</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>
@@ -206,7 +206,7 @@
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">รหัสนักเรียน</th>
                                 <th class="p-2">ชื่อนักเรียน</th>
-                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">สถานที่สอน</th>
                                 <th class="p-2">วิชาที่สอน</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>
@@ -259,7 +259,7 @@
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">รหัสนักเรียน</th>
                                 <th class="p-2">ชื่อนักเรียน</th>
-                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">สถานที่สอน</th>
                                 <th class="p-2">วิชาที่สอน</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>
@@ -312,7 +312,7 @@
                                 <th class="p-2">วันที่</th>
                                 <th class="p-2">รหัสนักเรียน</th>
                                 <th class="p-2">ชื่อนักเรียน</th>
-                                <th class="p-2">ประเภทคลาส</th>
+                                <th class="p-2">สถานที่สอน</th>
                                 <th class="p-2">วิชาที่สอน</th>
                                 <th class="p-2">เวลาเริ่มต้น</th>
                                 <th class="p-2">เวลาสิ้นสุด</th>

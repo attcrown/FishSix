@@ -342,7 +342,7 @@ export default {
                 value: 'name_student',
             },
             // { text: 'ประเภทคลาส', value: 'class', align: 'center' },
-            { text: 'รูปแบบการเรียน', value: 'name_style', align: 'center' },
+            { text: 'สถานที่เรียน', value: 'name_style', align: 'center' },
             { text: 'วิชาที่สอน', value: 'name_subject', align: 'center' },
             { text: 'ระดับชั้น', value: 'level', align: 'center' },
             { text: 'วันที่สอน', value: 'date', align: 'center' },
