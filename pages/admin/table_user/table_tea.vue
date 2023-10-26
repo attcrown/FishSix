@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;"
+        <v-btn :hidden="!showder" @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;"
             color="brown lighten-4">
             แสดงตารางสอน <v-icon class="mdi mdi-calendar-month text-h8"></v-icon>
         </v-btn>
@@ -86,27 +86,50 @@
                 </v-col>
             </v-row>
         </div>
+        <div v-if="!showder" class="mt-5">            
+            <v-text-field append-icon="mdi-magnify" v-model="search" label="ค้นหา " outlined />
+        </div>
         <template>
             <v-data-table :headers="headers" :items-per-page="-1" :items="filteredDesserts" sort-by="date" :search="search"  
                 class="elevation-16 rounded-xl">  <!-- desserts -->
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.sum_people="{ item }">
+                    <v-chip color="amber lighten-3" class="rounded-xl">
+                        {{ item.sum_people }}
+                    </v-chip>
+                </template>
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.actions="{ item }">
+                    <v-btn class="rounded-xl" color="green darken-2" @click="editItem(item)" elevation="24">
+                        <v-icon small class="text-h5" color="white" >
+                            mdi-plus
+                        </v-icon>
+                    </v-btn>
+                    
+                    <!-- <v-icon small @click="deleteItem(item)">
+                        mdi-delete
+                    </v-icon> -->
+                </template>
+
                 <template v-slot:top>
                     <v-toolbar flat color="#F8F9FB" class="rounded-t-xl">
-                        <v-toolbar-title><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
+                        <v-toolbar-title v-if="!showder" style="font-size:16px"><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
+                        <v-toolbar-title v-if="showder"><b>ตารางจองเวลาเรียน</b></v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
 
-                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="classSearch" label="Search Class" single-line
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="classSearch" label="Search Class" single-line
                             hide-details style="max-width: 200px;" />
-                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="subjectSearch" label="Search Subject" single-line
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="subjectSearch" label="Search Subject" single-line
                             hide-details style="max-width: 200px;" />
-                        <v-text-field class="me-10" append-icon="mdi-magnify" v-model="dateSearch" label="Search Date" single-line
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="dateSearch" label="Search Date" single-line
                             hide-details style="max-width: 200px;" />
 
-                        <v-text-field class="me-10" v-model="search" append-icon="mdi-magnify" label="Search All" single-line
+                        <v-text-field v-if="showder" class="me-10" v-model="search" append-icon="mdi-magnify" label="Search All" single-line
                             hide-details style="max-width: 200px;"></v-text-field>
                         <v-dialog v-model="dialog" max-width="600px">
                             <template v-slot:activator="{ on, attrs }">
-                                <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="#322E2B" class="mb-2 mt-5">
+                                <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="green darken-2" class="mb-2 mt-5">
                                     จองคิวนอกตาราง<span class="mdi mdi-plus text-h6"></span>
                                 </v-btn>
                             </template>
@@ -244,15 +267,7 @@
                         </v-dialog>
                     </v-toolbar>
                 </template>                
-                <!-- eslint-disable-next-line vue/valid-v-slot -->
-                <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2 text-h6" @click="editItem(item)">
-                        mdi-plus
-                    </v-icon>
-                    <!-- <v-icon small @click="deleteItem(item)">
-                        mdi-delete
-                    </v-icon> -->
-                </template>
+                
                 <template v-slot:no-data>
                     <v-btn color="primary" @click="initialize">
                         Reset
@@ -304,6 +319,7 @@ import { mapState } from 'vuex';
 export default {
     layout: 'login',
     data: () => ({
+        showder: true,
         show_date: true,
         search: '',
         subjectSearch: '',
@@ -433,12 +449,20 @@ export default {
     },
 
     created() {
+        this.isMobile();
         this.LimitedClass_search();
         this.search_subject_select();
         this.search_student();
-        this.search_date_teacher();
+        this.search_date_teacher();        
     },
-    methods: {        
+    methods: { 
+        isMobile(){
+            if(typeof window !== 'undefined' && window.innerWidth <= 768){
+                this.showder = false;
+                // this.$router.push({ path: 'student_m/'});
+            }   
+            console.log(this.showder);         
+        },       
         switch_calendar() {
             if (this.show_date) {
                 this.show_date = false;

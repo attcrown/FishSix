@@ -11,6 +11,7 @@ export default {
     data() {
         return {
              // กำหนดให้เป็น false เริ่มต้น
+             showder: false,
         };
     },
     components: {
@@ -22,7 +23,8 @@ export default {
     methods: {
         isMobile(){
             if(typeof window !== 'undefined' && window.innerWidth <= 768){
-                this.$router.push({ path: 'student_m/'});
+                this.showder = true;
+                // this.$router.push({ path: 'student_m/'});
             }            
         }
     },
