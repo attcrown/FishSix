@@ -35,18 +35,69 @@
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <!-- Search Field -->
-                            <v-text-field v-model="search_table_student" append-icon="mdi-magnify" label="Search"
+                            <v-text-field v-if="!showder" v-model="search_table_student" append-icon="mdi-magnify" label="Search"
                                 class="mt-10" single-line hide-details dense style="max-width: 200px;">
                             </v-text-field>
 
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
-                                rounded @click="dialog_excel = true" v-if="status == 'admin' || status == 'opFS' || status == 'opsupFS'">
+                                rounded @click="dialog_excel = true"
+                                v-if="status == 'admin' || status == 'opFS' || status == 'opsupFS'">
                                 Export
                                 <span class="mdi mdi-microsoft-excel text-h6"></span>
                             </v-btn>
                         </v-toolbar>
+
+                        <!-- mobile -->
+                        <v-container v-if="showder" style="background-color: #EBE4DE;">
+                            <v-row justify="center" class="mt-3">
+                                <v-col cols="auto">
+                                    <v-card height="150" width="325" class="rounded-5" style="background-color: #AD382F;">
+                                        <v-row class="fill-height pt-3" align="center">
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                                <img :src="require('~/assets/сolleagues discussing team project.png')"
+                                                    class="" height="90" style="margin-top:-10px; margin-start:10px; margin-end:50px;">
+                                                {{ dash_all }}                                                                                      
+                                            </div>
+                                            <div>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียนทั้งหมด</p>
+                                            </div>
+                                        </v-row>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="auto">
+                                    <v-card height="150" width="150" class="rounded-5" style="background-color: #322E2B;">
+                                        <v-row class="fill-height pt-3" align="center">
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                                <img :src="require('~/assets/young woman at work with laptop writing.png')"
+                                                    height="60" style="margin-top:-10px; margin-start:10px">
+                                                {{ dash_active }}                                                                                      
+                                            </div>
+                                            <div>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียน<br>ที่พร้อมเรียน</p>
+                                            </div>
+                                        </v-row>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="auto">
+                                    <v-card height="150" width="150" class="rounded-5" style="background-color: #B6A7A2;">
+                                        <v-row class="fill-height pt-3" align="center">
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                                <img :src="require('~/assets/young woman at work with laptop writing.png')"
+                                                    height="60" style="margin-top:-10px; margin-start:10px">
+                                                {{ dash_notactive }}                                                                                      
+                                            </div>
+                                            <div>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียน<br>ที่รอยืนยัน</p>
+                                            </div>
+                                        </v-row>
+                                    </v-card>
+                                </v-col>                                
+                            </v-row>
+                        </v-container>                       
+
+
                         <!-- Hover Cards -->
-                        <v-card-group class="d-flex pt-8 pb-8 fonts500" style="background-color: #EBE4DE;">
+                        <v-card-group v-if="!showder" class="d-flex pt-8 pb-8 fonts500" style="background-color: #EBE4DE;">
                             <v-hover v-slot="{ hover }">
                                 <v-card :elevation="hover ? 16 : 2" :class="{ 'on-hover': hover }" class="rounded-5 ms-8"
                                     style="background: #AD382F;" height="159px" width="300px">
@@ -111,11 +162,12 @@
                     </template>
                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                     <template v-slot:item.actions="{ item }">
-                        
-                            <v-icon class="text-h5" @click="detail_match(item)" color="#B6A7A2" style="text-decoration: underline;">
-                                mdi-eye
-                            </v-icon>
-                      
+
+                        <v-icon class="text-h5" @click="detail_match(item)" color="#B6A7A2"
+                            style="text-decoration: underline;">
+                            mdi-eye
+                        </v-icon>
+
                     </template>
                 </v-data-table>
             </v-col>
@@ -130,22 +182,22 @@
                                 Open Dialog
                             </v-btn>
                         </template> -->
-                        <v-card class="p-4 rounded-xl">
+                        <v-card class="rounded-xl">
                             <v-card-title class="d-flex justify-space-between">
                                 <span style="font-size: 16px" v-if="detail_user.status === 'พร้อมเรียน'">
-                                    <b>รายละเอียดการจองเรียน</b>
+                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
                                     <v-chip class="ma-2" color="#29CC39" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
                                 </span>
                                 <span style="font-size: 16px" v-if="detail_user.status === 'รอยืนยัน'">
-                                    <b>รายละเอียดการจองเรียน</b>
+                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
                                     <v-chip class="ma-2" color="#FFCB33" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
                                 </span>
                                 <span style="font-size: 16px" v-if="detail_user.status === 'ยกเลิกการจอง'">
-                                    <b>รายละเอียดการจองเรียน</b>
+                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
                                     <v-chip class="ma-2" color="#F44336" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
@@ -309,6 +361,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 export default {
     data: () => ({
+        showder: false,
         keyuser: null,
         status: null,
 
@@ -372,13 +425,19 @@ export default {
     },
     mounted() {
         this.fullName();
-        this.search_date_student(); 
+        this.search_date_student();
     },
-    created() {  
+    created() {
+        this.isMobile();
         this.arrayEvent_search();
     },
 
     methods: {
+        isMobile() {
+            if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+                this.showder = true;
+            }
+        },
         fullName() {
             if (localStorage.getItem('firstName') == null) {
                 this.keyuser = sessionStorage.getItem('lastName') || '';
@@ -432,7 +491,7 @@ export default {
                 let end = null;
                 let edit = '';
                 if (this.search_date == 'Day') {
-                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);                    
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
                 } else if (this.search_date == 'Week') {
                     if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
                         edit = formattedDate.substring(0, 8) + 30;
@@ -447,13 +506,13 @@ export default {
                 } else if (this.search_date == 'Month') {
                     now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7))) + '-01');
                     edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7)) + 1) + '-01';
-                    end = new Date(edit);                    
+                    end = new Date(edit);
                 } else if (this.search_date == 'All') {
                     edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
                     end = new Date(edit);
                     now = new Date('2022-01-01');
                 } else {
-                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()+1}`);
+                    end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
                 }
 
                 for (const key in childData) {
@@ -462,7 +521,7 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
-                            console.log(now , new Date(date) ,end);
+                            console.log(now, new Date(date), end);
                             if (end.getTime() >= new Date(date).getTime() &&
                                 new Date(date).getTime() >= now.getTime()) {
                                 for (const time in datedata) {
@@ -577,7 +636,7 @@ export default {
                                             .catch((error) => {
                                                 alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
                                             });
-                                    }else if(this.status === "user" && this.keyuser === key){
+                                    } else if (this.status === "user" && this.keyuser === key) {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -745,7 +804,7 @@ export default {
                                             .catch((error) => {
                                                 alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
                                             });
-                                    }else if(this.status === "user" && this.keyuser === key){
+                                    } else if (this.status === "user" && this.keyuser === key) {
                                         const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                         const getStudentPromise = db.ref(`user/${key}`).once("value");
                                         const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
