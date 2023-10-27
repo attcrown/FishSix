@@ -185,19 +185,19 @@
                         <v-card class="rounded-xl">
                             <v-card-title class="d-flex justify-space-between">
                                 <span style="font-size: 16px" v-if="detail_user.status === 'พร้อมเรียน'">
-                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
+                                    <b>รายละเอียดการจองเรียน</b><br v-if="showder">
                                     <v-chip class="ma-2" color="#29CC39" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
                                 </span>
                                 <span style="font-size: 16px" v-if="detail_user.status === 'รอยืนยัน'">
-                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
+                                    <b>รายละเอียดการจองเรียน</b><br v-if="showder">
                                     <v-chip class="ma-2" color="#FFCB33" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
                                 </span>
                                 <span style="font-size: 16px" v-if="detail_user.status === 'ยกเลิกการจอง'">
-                                    <b v-if="!showder">รายละเอียดการจองเรียน</b>
+                                    <b>รายละเอียดการจองเรียน</b><br v-if="showder">
                                     <v-chip class="ma-2" color="#F44336" text-color="white">
                                         {{ detail_user.status }}
                                     </v-chip>
