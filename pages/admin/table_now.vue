@@ -577,8 +577,62 @@ export default {
                                             .catch((error) => {
                                                 alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
                                             });
+                                    }else if(this.status === "user" && this.keyuser === key){
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                                    teacherId: teacherData.teacherId,
+                                                    studentId: studentData.studentId,
+                                                    teachernickname: teacherData.nickname,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                            });
                                     }
-
                                 }
                             }
                         } else {
@@ -659,6 +713,61 @@ export default {
                                                     nickname_stu: studentData.nickname,
                                                     name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
                                                     name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
+                                                    subject: timedata.subject,
+                                                    name_subject: subjectData.name,
+                                                    date: date,
+                                                    time_s: timedata.start,
+                                                    time_e: timedata.stop,
+                                                    style: timedata.style_subject,
+                                                    name_style: locationData.name,
+                                                    status: timedata.status,
+                                                    key_student: key,
+                                                    key_teacher: timedata.teacher,
+                                                    phone_student: studentData.studentMobile,
+                                                    phone_teacher: teacherData.mobile,
+                                                    // class: timedata.class,
+                                                    level: timedata.level,
+                                                    because: timedata.because,
+                                                });
+                                                this.dash_all += 1;
+                                                if (timedata.status === 'พร้อมเรียน') {
+                                                    this.dash_active += 1;
+                                                } else if (timedata.status === 'รอยืนยัน') {
+                                                    this.dash_notactive += 1;
+                                                } else {
+                                                    console.log('Error', timedata.status);
+                                                }
+                                                // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
+                                                if (item.length === Object.keys(datedata).length) {
+                                                    this.desserts_student = item;
+                                                }
+                                            })
+                                            .catch((error) => {
+                                                alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                            });
+                                    }else if(this.status === "user" && this.keyuser === key){
+                                        const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                        const getStudentPromise = db.ref(`user/${key}`).once("value");
+                                        const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
+                                        const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                        Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
+                                            .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
+                                                const teacherData = teacherSnapshot.val();
+                                                const studentData = studentSnapshot.val();
+                                                const subjectData = subjectSnapshot.val();
+                                                const locationData = locationSnapshot.val();
+                                                item.push({
+                                                    nametea_first: teacherData.firstName,
+                                                    nametea_last: teacherData.lastName,
+                                                    nickname_tea: teacherData.nickname,
+                                                    namestu_first: studentData.firstName,
+                                                    namestu_last: studentData.lastName,
+                                                    nickname_stu: studentData.nickname,
+                                                    name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                                    name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                                    teacherId: teacherData.teacherId,
+                                                    studentId: studentData.studentId,
+                                                    teachernickname: teacherData.nickname,
                                                     subject: timedata.subject,
                                                     name_subject: subjectData.name,
                                                     date: date,
