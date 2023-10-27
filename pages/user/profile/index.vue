@@ -444,27 +444,27 @@
                                         <v-col cols="8" class="py-0"></v-col>
                                         <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0 ">
                                             <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
-                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" required disabled
+                                                :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)"   :readonly="!isEditingDetail"
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0 ">
                                             <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
-                                                label="นามสกุล (ภาษาอังกฤษ)" required :rules="lastnameEngRules" disabled
+                                                label="นามสกุล (ภาษาอังกฤษ)"  :rules="lastnameEngRules"  :readonly="!isEditingDetail"
                                                 v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0 ">
-                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName" disabled
-                                                :rules="firstNameRules" :readonly="!isEditingDetail"
+                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName" :readonly="!isEditingDetail"
+                                                :rules="firstNameRules" 
                                                 required></v-text-field>
                                         </v-col>
                                         <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0 ">
-                                            <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName" disabled
+                                            <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName" 
                                                 :readonly="!isEditingDetail" :rules="lastnameRules" required></v-text-field>
                                         </v-col>
                                         <v-col cols="6" lg="6" md="6" sm="6" xs="6" class="py-0 ">
-                                            <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname" disabled
+                                            <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname" 
                                                 :readonly="!isEditingDetail" :rules="nicknameRules" required></v-text-field>
                                         </v-col>
 
@@ -488,7 +488,7 @@
                                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0 ">
                                         <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile"
                                             :rules="mobileRules" :readonly="!isEditingDetail" :counter="isEditingDetail"
-                                            required></v-text-field>
+                                            ></v-text-field>
                                     </v-col>
                                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0 ">
                                         <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
@@ -1016,12 +1016,12 @@ export default {
 
             //rules
             firstNameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+               
+                v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             lastnameEngRules: [
-                v => !!v || 'Name is required',
-                v => (v && v.length <= 100) || 'Name must be less than 100 characters',
+          
+                v =>  !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             firstNameRules: [
                 v => !!v || 'Name is required',
@@ -1045,8 +1045,8 @@ export default {
             ],
 
             mobileRules: [
-                value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
-                value => /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
+       
+                value => !value || /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
             ],
 
             emailRules: [
@@ -1514,6 +1514,11 @@ export default {
 
                     await db.ref(`user/${this.keyuser}/`).update({
 
+                        firstNameEng: this.firstNameEng,
+                        lastNameEng: this.lastNameEng,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        nickname: this.nickname,
                         studentMobile: this.studentMobile,
                         email: this.email,
                         gender: this.gender,
