@@ -67,7 +67,7 @@
                         </div>
                         <v-row justify="center">
                             <v-col cols="auto">
-                                <v-card width="330" class="rounded-xxl" style="background-color:#EBE4DE">
+                                <v-card width="350" class="rounded-xxl" style="background-color:#EBE4DE">
                                     <center>
                                         <div>
                                             <v-avatar size="200" class="mt-3">
@@ -80,7 +80,7 @@
                                     <div class="text-center">
                                         <p style="font-size:20px"><b>ณิชาพัฒน์ วรวัฒน์ชัยกุล</b></p>
                                         <p style="margin-top:-18px">อาชีพปัจจุบัน : นักศึกษา</p>
-                    
+
                                         <v-rating :value="4" color="warning" dense half-increments readonly size="14"
                                             length="4" style="margin-top:-10px"></v-rating>
 
@@ -101,9 +101,9 @@
                                 </v-card>
                             </v-col>
                             <v-col cols="auto">
-                                <v-card width="330" class="rounded-xxl" style="background-color:#EBE4DE">
+                                <v-card width="350" class="rounded-xxl" style="background-color:#EBE4DE">
                                     <center>
-                                        <div class="ms-3 pt-3 pb-1 text-start" >
+                                        <div class="ms-3 pt-3 pb-1 text-start">
                                             <p><b>วิชาที่สอน</b></p>
                                             <p style="font-size:16px; margin-top:-10px" v-for="n in 18" :key="n">
                                                 {{ n }}. คณิตศาสตร์ ม.ต้น
@@ -142,15 +142,19 @@
                                                 <h4>สไตล์การสอน</h4>
                                                 <p>ใจดี</p>
                                             </v-card>
-
-
+                                            <div class="text-center mt-3">
+                                                <v-btn color="primary" @click="e1 = 2" rounded>
+                                                    Next
+                                                </v-btn>
+                                            </div>                                            
                                         </v-stepper-content>
 
                                         <v-stepper-content step="2">
                                             <div>
-                                                <v-data-table :headers="headers" sort-by="date" :items="desserts" :page.sync="page"
-                                                    :items-per-page="itemsPerPage" hide-default-footer class="elevation-1"
-                                                    @page-count="pageCount = $event" style="background-color:#EBE4DE">
+                                                <v-data-table :headers="headers" sort-by="date" :items="desserts"
+                                                    :page.sync="page" :items-per-page="itemsPerPage" hide-default-footer
+                                                    class="elevation-1" @page-count="pageCount = $event"
+                                                    style="background-color:#EBE4DE">
                                                     <!-- eslint-disable-next-line vue/valid-v-slot -->
                                                     <template v-slot:item.detail="{ item }">
                                                         <v-icon small class="mr-2 text-h6" @click="show_detail(item)">
@@ -166,11 +170,17 @@
                                                         @input="itemsPerPage = parseInt($event, 10)"></v-text-field> -->
                                                 </div>
                                             </div>
+                                            <div class="text-center mt-3">
+                                                <v-btn color="primary" @click="e1 = 1" rounded>
+                                                    Back
+                                                </v-btn>
+                                            </div> 
                                         </v-stepper-content>
 
                                     </v-stepper-items>
                                 </v-stepper>
                             </v-col>
+                            <div style="margin:100px"></div>
 
                         </v-row>
                     </v-responsive>
@@ -178,10 +188,10 @@
             </v-bottom-sheet>
         </div>
 
-        <v-dialog v-model="dialog" persistent max-width="290">            
+        <v-dialog v-model="dialog" persistent max-width="290">
             <v-card>
                 <v-card-title>
-                    <h5>รีวิว</h5> 
+                    <h5>รีวิว</h5>
                 </v-card-title>
                 <v-card-text>
                     ครูสอนดีมากเลย งุงิๆ
@@ -234,7 +244,7 @@ export default {
             ],
             desserts: [
                 {
-                    date : '10-10-2023',
+                    date: '10-10-2023',
                     calories: 159,
                     fat: 6.0,
                     carbs: 24,
@@ -242,7 +252,7 @@ export default {
                     iron: 1,
                 },
                 {
-                    date : '09-10-2023',
+                    date: '09-10-2023',
                     calories: 237,
                     fat: 9.0,
                     carbs: 37,
@@ -250,7 +260,7 @@ export default {
                     iron: 1,
                 },
                 {
-                    date : '08-10-2023',
+                    date: '08-10-2023',
                     calories: 262,
                     fat: 16.0,
                     carbs: 23,
@@ -258,7 +268,7 @@ export default {
                     iron: 7,
                 },
                 {
-                    date : '07-10-2023',
+                    date: '07-10-2023',
                     calories: 305,
                     fat: 3.7,
                     carbs: 67,
@@ -266,7 +276,7 @@ export default {
                     iron: 8,
                 },
                 {
-                    date : '07-10-2023',
+                    date: '07-10-2023',
                     calories: 356,
                     fat: 16.0,
                     carbs: 49,
@@ -274,7 +284,7 @@ export default {
                     iron: 16,
                 },
                 {
-                    date : '05-10-2023',
+                    date: '05-10-2023',
                     calories: 375,
                     fat: 0.0,
                     carbs: 94,
@@ -282,7 +292,7 @@ export default {
                     iron: 0,
                 },
                 {
-                    date : '04-10-2023',
+                    date: '04-10-2023',
                     calories: 392,
                     fat: 0.2,
                     carbs: 98,
@@ -290,7 +300,7 @@ export default {
                     iron: 2,
                 },
                 {
-                    date : '04-10-2023',
+                    date: '04-10-2023',
                     calories: 408,
                     fat: 3.2,
                     carbs: 87,
@@ -298,7 +308,7 @@ export default {
                     iron: 45,
                 },
                 {
-                    date : '10-10-2023',
+                    date: '10-10-2023',
                     calories: 452,
                     fat: 25.0,
                     carbs: 51,
@@ -306,7 +316,7 @@ export default {
                     iron: 22,
                 },
                 {
-                    date : '10-10-2023',
+                    date: '10-10-2023',
                     calories: 518,
                     fat: 26.0,
                     carbs: 65,
@@ -319,7 +329,7 @@ export default {
     watch: {
     },
     computed: {
-        
+
     },
     components: {
         loaderVue
@@ -334,11 +344,11 @@ export default {
 }
 </script>
 <style>
-    .image-container {
-        background-image: url("~/assets/loginBG.png");
-        background-size: cover;
-        background-position: center;
-        width: 100%;
-        height: 100vh;
-    }
+.image-container {
+    background-image: url("~/assets/loginBG.png");
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100vh;
+}
 </style>
