@@ -51,7 +51,7 @@
                         <v-container v-if="showder" style="background-color: #EBE4DE;">
                             <v-row justify="center" class="mt-3">
                                 <v-col cols="auto">
-                                    <v-card height="150" width="325" class="rounded-5" style="background-color: #AD382F;">
+                                    <v-card height="150" width="300" class="rounded-5" style="background-color: #AD382F;" elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
                                             <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
                                                 <img :src="require('~/assets/сolleagues discussing team project.png')"
@@ -65,7 +65,7 @@
                                     </v-card>
                                 </v-col>
                                 <v-col cols="auto">
-                                    <v-card height="150" width="150" class="rounded-5" style="background-color: #322E2B;">
+                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #322E2B;" elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
                                             <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
                                                 <img :src="require('~/assets/young woman at work with laptop writing.png')"
@@ -79,7 +79,7 @@
                                     </v-card>
                                 </v-col>
                                 <v-col cols="auto">
-                                    <v-card height="150" width="150" class="rounded-5" style="background-color: #B6A7A2;">
+                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #B6A7A2;" elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
                                             <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
                                                 <img :src="require('~/assets/young woman at work with laptop writing.png')"

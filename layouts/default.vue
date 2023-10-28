@@ -138,6 +138,11 @@ export default {
           title: 'Awareness',
           to: '/admin/awareness',
         },
+        {
+          icon: 'mdi-card-account-details-outline',
+          title: 'โปรไฟล์ครู',
+          to: '/admin/ProfileTea',
+        },
         // {
         //   icon: 'mdi-cog',
         //   title: 'Setting',
