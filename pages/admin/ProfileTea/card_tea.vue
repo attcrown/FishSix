@@ -4,9 +4,11 @@
         <div>
             <v-card flat class="elevation-16 rounded-xl p-4" style="background-color:#EBE4DE">
                 <div class="d-flex align-center">
-                    <v-autocomplete style="max-width: 300px;" :items="nameTea" label="ค้นหาชื่อครู"></v-autocomplete>
+                    <v-autocomplete v-if="data_search_tea" style="max-width: 300px;" :items="data_search_tea"
+                        item-text="name" item-value="key" v-model="input_search_tea" label="ค้นหาชื่อครู"></v-autocomplete>
                     <v-spacer></v-spacer>
-                    <v-btn elevation="10" color="#322E2B" style="color:white" rounded>ค้นหาข้อมูล<span
+                    <v-btn elevation="10" color="#322E2B" style="color:white" :disabled="isload_search" rounded
+                        @click="isload_search = true, filteredDesserts()">ค้นหาข้อมูล<span
                             class="mdi mdi-magnify text-h6"></span></v-btn>
                 </div>
             </v-card>
@@ -14,38 +16,58 @@
 
         <div>
             <v-container>
-                <v-row justify="center">
-                    <v-col v-for="n in 25" :key="n" cols="auto">
+                <v-row justify="center" v-if="data_tea_copy">
+                    <v-col v-for="(items, index) in data_tea_copy" :key="index" cols="auto">
 
                         <v-card class="mx-auto my-3" max-width="310">
-                            <v-img height="250" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+                            <v-img v-if="items.profilePic" height="250" :src="items.profilePic"></v-img>
+                            <v-img v-if="!items.profilePic" height="250" class="text-center">
+                                <v-icon style=" font-size: 270px;" color="grey">
+                                    mdi-account-circle
+                                </v-icon>
+                            </v-img>
 
-                            <v-card-title>ณิชาพัฒน์ วรวัฒน์ชัยกุล</v-card-title>
+                            <v-card-title>{{ items.firstName }} {{ items.lastName }}</v-card-title>
 
                             <v-card-text>
                                 <v-row align="center" class="mx-0">
-                                    <v-rating :value="4" color="amber" dense half-increments readonly size="14"
-                                        length="4"></v-rating>
+                                    <v-rating :value="checkType(items)" color="amber" dense half-increments readonly
+                                        size="14" length="4"></v-rating>
 
                                     <div class="grey--text">
-                                        Type & Tier 4 (413)
+                                        Type & Tier {{ checkType(items) }}
                                     </div>
                                 </v-row>
 
                                 <div class="my-1 mt-5">
                                     วิชาที่สอน
+                                    <v-tooltip bottom>
+                                        <template v-slot:activator="{ on }">
+                                            <v-icon v-on="on">
+                                                mdi-help-circle-outline
+                                            </v-icon>
+                                        </template>
+                                        <p></p>
+                                        <p v-if="!items.subject_all"> ไม่ระบุ </p>
+                                        <p style="font-size:16px; margin-top:-10px"
+                                            v-for="(subject, index_sub) in items.subject_all" :key="index_sub">
+                                            {{ check_subject(index_sub) || 'ไม่มีข้อมูล' }}
+                                        </p>
+                                    </v-tooltip>
                                 </div>
 
-                                <div>
+                                <!-- <div>
                                     คณิตศาสตร์ ม.ต้น , คณิตศาสตร์ ม.ปลาย , วิทยาศาสตร์ ม.ต้น
-                                </div>
+                                </div> -->
+
+
                             </v-card-text>
 
                             <v-divider class="mx-4"></v-divider>
 
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="green lighten-1" text @click="sheet = !sheet">
+                                <v-btn color="green lighten-1" text @click="sheet = !sheet, details(items, index)">
                                     Detail
                                 </v-btn>
                             </v-card-actions>
@@ -53,6 +75,9 @@
 
                     </v-col>
                 </v-row>
+                <!-- <v-row justify="center" class="my-4">
+                    <v-pagination v-model="page" :length="totalPages"></v-pagination>
+                </v-row> -->
             </v-container>
         </div>
 
@@ -71,50 +96,51 @@
                                     <center>
                                         <div>
                                             <v-avatar size="200" class="mt-3">
-                                                <v-img src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
+                                                <v-img v-if="detail_item.profilePic" height="250"
+                                                    :src="detail_item.profilePic"></v-img>
+                                                <v-img v-if="!detail_item.profilePic" height="250" class="text-center">
+                                                    <v-icon style=" font-size: 270px;" color="grey">
+                                                        mdi-account-circle
+                                                    </v-icon>
+                                                </v-img>
                                             </v-avatar>
                                         </div>
                                     </center>
 
                                     <v-divider class="mx-2" color="black"></v-divider>
                                     <div class="text-center">
-                                        <p style="font-size:20px"><b>ณิชาพัฒน์ วรวัฒน์ชัยกุล</b></p>
-                                        <p style="margin-top:-18px">อาชีพปัจจุบัน : นักศึกษา</p>
+                                        <p style="font-size:20px"><b>{{ detail_item.firstName }} {{ detail_item.lastName
+                                        }}</b></p>
+                                        <p style="margin-top:-18px">อาชีพปัจจุบัน : {{ detail_item.currJob || 'ไม่ระบุ'
+                                        }}
+                                        </p>
 
-                                        <v-rating :value="4" color="warning" dense half-increments readonly size="14"
-                                            length="4" style="margin-top:-10px"></v-rating>
+                                        <v-rating :value="checkType(detail_item)" color="warning" dense half-increments
+                                            readonly size="14" length="4" style="margin-top:-10px"></v-rating>
 
                                         <div class="grey--text">
-                                            Type & Tier 4
+                                            Type & Tier {{ checkType(detail_item) }}
                                         </div>
                                     </div>
                                     <v-divider class="mx-2" color="black"></v-divider>
                                     <div class="ms-3 pb-1 text-start">
                                         <p>ชื่อเล่น</p>
-                                        <p style="font-size:20px; margin-top:-15px"><b>เพลิน</b></p>
+                                        <p style="font-size:20px; margin-top:-15px"><b>{{ detail_item.nickname ||
+                                            'ไม่ระบุ' }}</b></p>
                                         <p>เพศ</p>
-                                        <p style="font-size:20px; margin-top:-15px"><b>หญิง</b></p>
+                                        <p style="font-size:20px; margin-top:-15px"><b>{{ detail_item.gender ||
+                                            'ไม่ระบุ' }}</b></p>
                                         <p>E-mail</p>
-                                        <p style="font-size:20px; margin-top:-15px"><b>Test@gmail.com</b></p>
+                                        <p style="font-size:20px; margin-top:-15px"><b>{{ detail_item.email ||
+                                            'ไม่ระบุ' }}</b></p>
                                     </div>
                                     <!-- <v-divider class="mx-2" color="black"></v-divider>                                     -->
                                 </v-card>
                             </v-col>
-                            <v-col cols="auto">
-                                <v-card width="350" class="rounded-xxl" style="background-color:#EBE4DE">
-                                    <center>
-                                        <div class="ms-3 pt-3 pb-1 text-start">
-                                            <p><b>วิชาที่สอน</b></p>
-                                            <p style="font-size:16px; margin-top:-10px" v-for="n in 18" :key="n">
-                                                {{ n }}. คณิตศาสตร์ ม.ต้น
-                                            </p>
-                                        </div>
-                                    </center>
-                                </v-card>
-                            </v-col>
 
                             <v-col cols="auto">
-                                <v-stepper v-model="e1" non-linear class="rounded-xxl" style="background-color:#EBE4DE">
+                                <v-stepper width="800" height="603" v-model="e1" non-linear class="rounded-xxl"
+                                    style="background-color:#EBE4DE">
                                     <v-stepper-header>
                                         <v-stepper-step editable step="1">
                                             รายละเอียด
@@ -146,7 +172,7 @@
                                                 <v-btn color="primary" @click="e1 = 2" rounded>
                                                     Next
                                                 </v-btn>
-                                            </div>                                            
+                                            </div>
                                         </v-stepper-content>
 
                                         <v-stepper-content step="2">
@@ -166,23 +192,51 @@
                                                 <div class="text-center pt-2">
                                                     <v-pagination v-model="page" :length="pageCount"></v-pagination>
                                                     <!-- <v-text-field :value="itemsPerPage" label="Items per page" type="number"
-                                                        min="-1" max="15"
-                                                        @input="itemsPerPage = parseInt($event, 10)"></v-text-field> -->
+                                                            min="-1" max="15"
+                                                            @input="itemsPerPage = parseInt($event, 10)"></v-text-field> -->
                                                 </div>
                                             </div>
                                             <div class="text-center mt-3">
                                                 <v-btn color="primary" @click="e1 = 1" rounded>
                                                     Back
                                                 </v-btn>
-                                            </div> 
+                                            </div>
                                         </v-stepper-content>
 
                                     </v-stepper-items>
                                 </v-stepper>
+                            </v-col>                     
+                        
+                            <v-col cols="auto">
+                                <v-card width="350" class="rounded-xxl" style="background-color:#EBE4DE">
+                                    <center>
+                                        <div class="ms-3 pt-3 pb-1 text-start">
+                                            <p><b>วิชาที่สอน</b></p>
+                                            <p style="font-size:16px; margin-top:-10px" v-if="!detail_item.subject_all">
+                                                ไม่ระบุ
+                                            </p>
+                                            <p style="font-size:16px; margin-top:-10px"
+                                                v-for="(subject, index_sub) in detail_item.subject_all" :key="index_sub">
+                                                {{ check_subject(index_sub) || 'ไม่มีข้อมูล' }}
+                                            </p>
+                                        </div>
+                                    </center>
+                                </v-card>
                             </v-col>
-                            <div style="margin:100px"></div>
-
-                        </v-row>
+                            <v-col cols="auto">
+                                <v-card width="800" class="rounded-xxl" style="background-color:#EBE4DE">
+                                    <center>
+                                        <div class="ms-3 pt-3 pb-1 text-start">
+                                            <p><b>สถานที่สอน</b></p>
+                                            <p style="font-size:16px; margin-top:-10px" v-for="n in 4" :key="n">
+                                                {{ n }}. Flip Class Online
+                                            </p>
+                                        </div>
+                                    </center>
+                                </v-card>
+                            </v-col>
+                            <div style="margin:100px; background-color:rgb(165, 164, 164)" class="text-center">FISHSIX</div>
+                        </v-row>                       
                     </v-responsive>
                 </v-sheet>
             </v-bottom-sheet>
@@ -218,9 +272,23 @@ export default {
     },
     data() {
         return {
+            type_tier: [],
+            type_tier_private: [],
+            subject_all: [],
+            location: [],
+
+            detail_item: [],
+            page: 1, // หน้าปัจจุบัน
+            pageSize: 10, // จำนวน card ต่อหน้า
+            totalPages: 10,
+            isload_search: false,
+            input_search_tea: '00000',
+            data_tea: null,
+            data_tea_copy: null,
+            data_search_tea: [],
             dialogData: '',
             dialog: false,
-            isLoading: false,
+            isLoading: true,
             property: 'value',
             nameTea: ['att', 'attt', 'atttt'],
             sheet: false,
@@ -245,100 +313,123 @@ export default {
             desserts: [
                 {
                     date: '10-10-2023',
-                    calories: 159,
-                    fat: 6.0,
+                    calories: 'คณิต',
+                    fat: 'กรต',
                     carbs: 24,
                     protein: 4.0,
                     iron: 1,
                 },
-                {
-                    date: '09-10-2023',
-                    calories: 237,
-                    fat: 9.0,
-                    carbs: 37,
-                    protein: 4.3,
-                    iron: 1,
-                },
-                {
-                    date: '08-10-2023',
-                    calories: 262,
-                    fat: 16.0,
-                    carbs: 23,
-                    protein: 6.0,
-                    iron: 7,
-                },
-                {
-                    date: '07-10-2023',
-                    calories: 305,
-                    fat: 3.7,
-                    carbs: 67,
-                    protein: 4.3,
-                    iron: 8,
-                },
-                {
-                    date: '07-10-2023',
-                    calories: 356,
-                    fat: 16.0,
-                    carbs: 49,
-                    protein: 3.9,
-                    iron: 16,
-                },
-                {
-                    date: '05-10-2023',
-                    calories: 375,
-                    fat: 0.0,
-                    carbs: 94,
-                    protein: 0.0,
-                    iron: 0,
-                },
-                {
-                    date: '04-10-2023',
-                    calories: 392,
-                    fat: 0.2,
-                    carbs: 98,
-                    protein: 0,
-                    iron: 2,
-                },
-                {
-                    date: '04-10-2023',
-                    calories: 408,
-                    fat: 3.2,
-                    carbs: 87,
-                    protein: 6.5,
-                    iron: 45,
-                },
-                {
-                    date: '10-10-2023',
-                    calories: 452,
-                    fat: 25.0,
-                    carbs: 51,
-                    protein: 4.9,
-                    iron: 22,
-                },
-                {
-                    date: '10-10-2023',
-                    calories: 518,
-                    fat: 26.0,
-                    carbs: 65,
-                    protein: 7,
-                    iron: 6,
-                },
             ],
         };
-    },
-    watch: {
     },
     computed: {
 
     },
+    watch: {
+    },
+    created() {
+        this.search_tea();
+        this.search_type_tier();
+        this.search_subject();
+    },
+
     components: {
         loaderVue
     },
     methods: {
+        filteredDesserts() {
+            if (this.input_search_tea == null || this.input_search_tea == '') {
+                this.data_tea_copy = [];
+                this.isload_search = false;
+                return;
+            }
+            if (this.input_search_tea == '00000') {
+                this.data_tea_copy = this.data_tea;
+                this.isload_search = false;
+                return;
+            }
+            for (const key in this.data_tea) {
+                if (key === this.input_search_tea) {
+                    this.data_tea_copy = { [key]: this.data_tea[key] };
+                    this.isload_search = false;
+                    return;
+                }
+            }
+        },
         show_detail(item) {
             this.dialog = true;
             this.dialogData = item;
             console.log(item);
+        },
+        search_tea() {
+            const db = this.$fireModule.database();
+            const ref = db.ref("user");
+            this.data_search_tea.push({ name: `ทั้งหมด`, key: '00000' });
+            ref.orderByChild("status").equalTo("teacher").once("value")
+                .then((snapshot) => {
+                    const teacherData = snapshot.val();
+                    this.data_tea = teacherData;
+                    this.data_tea_copy = teacherData;
+                    for (const key in teacherData) {
+                        this.data_search_tea.push({ name: `${teacherData[key].firstName} ${teacherData[key].lastName}`, key: key })
+                    }
+                    this.isload_search = false;
+                    this.isLoading = false;
+                    console.log(teacherData, this.data_search_tea);
+                })
+                .catch((error) => {
+                    console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
+                });
+        },
+        search_type_tier() {
+            const db = this.$fireModule.database();
+            db.ref(`type_all/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log(childData);
+                this.type_tier = childData;
+            })
+            db.ref(`type_private_all/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log(childData);
+                this.type_tier_private = childData;
+            })
+        },
+        checkType(item) {
+            if (item.typeflip == '-Ng-E0mbVKRdMl0daNTz') {
+                return 0;
+            }
+            if (item.typeflip == '-NcBK4aqB8zezly79vPm') {
+                return 1;
+            }
+            if (item.typeflip == '-NcBKBrSL24b9fQ7FOfm') {
+                return 2;
+            }
+            if (item.typeflip == '-NcBKCvVZBQVWqF5rkWS') {
+                return 3;
+            }
+            if (item.typeflip == '-NcBKDdjepkxfmUnzqyY') {
+                return 4;
+            }
+        },
+        search_subject() {
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log(childData);
+                this.subject_all = childData;
+            })
+        },
+        check_subject(item) {
+            for (const key in this.subject_all) {
+                if (item == key) {
+                    return this.subject_all[key].name;
+                }
+            }
+        },
+        details(item, key) {
+            let idkey = { id: key };
+            this.detail_item = { ...item, ...idkey };
+            console.log(this.detail_item);
         }
     },
 }
