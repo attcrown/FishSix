@@ -1001,10 +1001,8 @@ export default {
                 typeflip: this.type_Flip,
                 typeprivate: this.type_Private
             })
-
             for (let subject of this.selectedSubjects) {
-
-                await db.ref(`user/${this.userId}/subject_all/${subject.key}`).set({
+                await db.ref(`user/${this.userIDEnd}/subject_all/${subject.key}`).set({
                     name: subject.name,
                     level: subject.level,
 
