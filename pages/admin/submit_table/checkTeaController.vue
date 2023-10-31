@@ -46,7 +46,7 @@ export default {
                         const currentDate = new Date();
                         //classHistory
                         const transactionId = `CH${currentDate.getFullYear()}${(currentDate.getMonth() + 1).toString().padStart(2, '0')}${currentDate.getDate().toString().padStart(2, '0')}${currentDate.getHours().toString().padStart(2, '0')}${currentDate.getMinutes().toString().padStart(2, '0')}${currentDate.getSeconds().toString().padStart(2, '0')}`;
-                        db.ref(`studentHistory/${item.keyStudent}/${transactionId}`).set({
+                        db.ref(`studentHistory/${item.keyStudent}/${id}`).set({
                             Idsendplan: id,
                             date: item.date,
                             hour: item.hour,

@@ -6,6 +6,8 @@
                 <div class="d-flex align-center">
                     <v-autocomplete v-if="data_search_tea" style="max-width: 300px;" :items="data_search_tea"
                         item-text="name" item-value="key" v-model="input_search_tea" label="ค้นหาชื่อครู"></v-autocomplete>
+                    <v-autocomplete v-if="subject_all" class="ms-5" style="max-width: 300px;" :items="data_search_sub"
+                        item-text="name" item-value="key" v-model="input_search_sub" label="ค้นหาวิชา"></v-autocomplete>
                     <v-spacer></v-spacer>
                     <v-btn elevation="10" color="#322E2B" style="color:white" :disabled="isload_search" rounded
                         @click="isload_search = true, filteredDesserts()">ค้นหาข้อมูล<span
@@ -86,6 +88,12 @@
                 <v-sheet class="text-start image-container" height="100%">
                     <v-responsive class="overflow-y-auto" max-height="800">
                         <div class="text-end">
+                            <v-btn v-if="edits" class="mt-3 me-3 mb-6" color="success" @click="save_detail(detail_item)">
+                                save
+                            </v-btn>
+                            <v-btn v-if="!edits" class="mt-3 me-3 mb-6" color="warning" @click="edit_detail(detail_item)">
+                                Edit
+                            </v-btn>
                             <v-btn class="mt-3 me-3 mb-6" color="red" @click="sheet = !sheet, e1 = 1">
                                 close
                             </v-btn>
@@ -158,16 +166,24 @@
                                         <v-stepper-items>
                                             <v-stepper-content step="1">
                                                 <v-card class="pb-5" style="background-color:#EBE4DE">
-                                                    <h4>การศึกษา</h4>
-                                                    <p>TestDsssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</p>
+                                                    <h4>ระดับชั้นศึกษา</h4>
+                                                    <p v-if="!edits">{{ detail_item.level || 'ไม่ระบุ' }}</p>
+                                                    <v-textarea background-color="white" label="ระบุระดับชั้นศึกษา" rows="1"
+                                                        v-if="edits" v-model="detail_item.level"></v-textarea>
+                                                    <h4>จบการศึกษาจาก</h4>
+                                                    <p v-if="!edits">{{ detail_item.university || 'ไม่ระบุ' }}</p>
+                                                    <v-textarea background-color="white" label="ระบุจบการศึกษาจาก" rows="1"
+                                                        v-if="edits" v-model="detail_item.university"></v-textarea>
                                                     <h4>ประสบการสอน</h4>
-                                                    <p>สอนมาแล้ว 3ปี</p>
+                                                    <p v-if="!edits">{{ detail_item.experience || 'ไม่ระบุ' }}</p>
+                                                    <v-textarea :counter="250" background-color="white"
+                                                        label="ระบุประสบการณ์สอน" rows="1" v-if="edits"
+                                                        v-model="detail_item.experience"></v-textarea>
                                                     <h4>สไตล์การสอน</h4>
-                                                    <p>ใจดี</p>
-                                                    <h4>สไตล์การสอน</h4>
-                                                    <p>ใจดี</p>
-                                                    <h4>สไตล์การสอน</h4>
-                                                    <p>ใจดี</p>
+                                                    <p v-if="!edits">{{ detail_item.style_tech || 'ไม่ระบุ' }}</p>
+                                                    <v-textarea :counter="250" background-color="white"
+                                                        label="ระบุสไตล์การสอน" rows="1" v-if="edits"
+                                                        v-model="detail_item.style_tech"></v-textarea>
                                                 </v-card>
                                                 <div class="text-center mt-3">
                                                     <v-btn color="primary" @click="e1 = 2" rounded>
@@ -233,8 +249,14 @@
                                         <center>
                                             <div class="ms-3 pt-3 pb-1 text-start">
                                                 <p><b>สถานที่สอน</b></p>
-                                                <p style="font-size:16px; margin-top:-10px" v-for="n in 4" :key="n">
-                                                    {{ n }}. Flip Class Online
+                                                <p style="font-size:16px; margin-top:-10px"
+                                                    v-if="!detail_item.classLocation">
+                                                    ไม่ระบุ
+                                                </p>
+                                                <p style="font-size:16px; margin-top:-10px"
+                                                    v-for="(location, index_loca) in detail_item.classLocation"
+                                                    :key="index_loca">
+                                                    {{ check_location(location) || 'ไม่มีข้อมูล' }}
                                                 </p>
                                             </div>
                                         </center>
@@ -243,7 +265,7 @@
                             </v-row>
                         </div>
                         <div style="margin:100px; background-color:rgb(165, 164, 164)" class="text-center">FISHSIX</div>
-                        
+
                     </v-responsive>
                 </v-sheet>
             </v-bottom-sheet>
@@ -279,10 +301,12 @@ export default {
     },
     data() {
         return {
+            edits: false,
+            save: false,
             type_tier: [],
             type_tier_private: [],
             subject_all: [],
-            location: [],
+            location_all: [],
 
             detail_item: [],
             page: 1, // หน้าปัจจุบัน
@@ -290,15 +314,17 @@ export default {
             totalPages: 10,
             isload_search: false,
             input_search_tea: '00000',
+            input_search_sub: '00000',
             data_tea: null,
             data_tea_copy: null,
             data_search_tea: [],
+            data_search_sub: [],
             dialogData: '',
             dialog: false,
             isLoading: true,
             property: 'value',
             nameTea: ['att', 'attt', 'atttt'],
-            sheet: true,
+            sheet: false,
 
             selection: 1,
 
@@ -338,6 +364,7 @@ export default {
         this.search_tea();
         this.search_type_tier();
         this.search_subject();
+        this.search_location();
     },
 
     components: {
@@ -345,22 +372,42 @@ export default {
     },
     methods: {
         filteredDesserts() {
-            if (this.input_search_tea == null || this.input_search_tea == '') {
+            if (this.input_search_tea == null || this.input_search_tea == '' || this.input_search_sub == null || this.input_search_sub == '') {
                 this.data_tea_copy = [];
                 this.isload_search = false;
                 return;
             }
-            if (this.input_search_tea == '00000') {
+            if (this.input_search_tea == '00000' && this.input_search_sub == '00000') {
                 this.data_tea_copy = this.data_tea;
                 this.isload_search = false;
                 return;
             }
-            for (const key in this.data_tea) {
-                if (key === this.input_search_tea) {
-                    this.data_tea_copy = { [key]: this.data_tea[key] };
-                    this.isload_search = false;
-                    return;
+            if (this.input_search_tea != '00000' && this.input_search_sub == '00000') {
+                for (const key in this.data_tea) {
+                    if (key === this.input_search_tea) {
+                        this.data_tea_copy = { [key]: this.data_tea[key] };
+                        this.isload_search = false;
+                        return;
+                    }
                 }
+            }
+            if (this.input_search_tea == '00000' && this.input_search_sub != '00000') {                
+                this.data_tea_copy = [];
+                for (const key in this.data_tea) {
+                    const teacher = this.data_tea[key]
+                    for (const sub in teacher.subject_all) {                        
+                        if (sub === this.input_search_sub) {                            
+                            let newer = { [key]: this.data_tea[key] };
+                            this.data_tea_copy = { ...this.data_tea_copy, ...newer };
+                        }
+                    }
+                }
+                this.isload_search = false;
+            }
+            else {
+                this.data_tea_copy = [];
+                this.isload_search = false;
+                return;
             }
         },
         show_detail(item) {
@@ -388,6 +435,26 @@ export default {
                     console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
                 });
         },
+        // async search_tea() {
+        //     const db = this.$fireModule.database();
+        //     const snapshot = await db.ref(`user/`).once("value");
+        //     const dataget = {};
+        //     const childData = snapshot.val();
+        //     for (const id in childData) {
+        //         if (childData[id].status === 'teacher') {
+        //             dataget[id] = { ...childData[id] };
+        //         }                
+        //     } 
+        //     this.data_tea = dataget;
+        //     this.data_tea_copy = dataget;
+
+        //     for (const key in dataget) {
+        //         this.data_search_tea.push({ name: `${dataget[key].firstName} ${dataget[key].lastName}`, key: key });
+        //     }
+        //     this.isload_search = false;
+        //     this.isLoading = false;
+        // },
+
         search_type_tier() {
             const db = this.$fireModule.database();
             db.ref(`type_all/`).on("value", (snapshot) => {
@@ -424,6 +491,9 @@ export default {
                 const childData = snapshot.val();
                 console.log(childData);
                 this.subject_all = childData;
+                for (const key in childData) {
+                    this.data_search_sub.push({ name: `${childData[key].name}`, key: key })
+                }
             })
         },
         check_subject(item) {
@@ -433,10 +503,56 @@ export default {
                 }
             }
         },
+        search_location() {
+            const db = this.$fireModule.database();
+            db.ref(`location/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                console.log(childData);
+                this.location_all = childData;
+            })
+        },
+        check_location(item) {
+            for (const key in this.location_all) {
+                if (item == key) {
+                    return this.location_all[key].name;
+                }
+            }
+        },
         details(item, key) {
             let idkey = { id: key };
             this.detail_item = { ...item, ...idkey };
             console.log(this.detail_item);
+        },
+
+        edit_detail(item) {
+            this.edits = true;
+            console.log('edit', item);
+            // let new_add = {
+            //     level: item.level || null,
+            //     university: item.university || null,
+            //     experience: item.experience || null,
+            //     style_tech: item.style_tech || null
+            // };
+            // this.detail_item[item.id] = { ...this.detail_item[item.id], ...new_add };
+        },
+        save_detail(item) {
+            this.edits = false;
+            const db = this.$fireModule.database();
+            db.ref(`user/${item.id}`).update({
+                level: item.level || null,
+                university: item.university || null,
+                experience: item.experience || null,
+                style_tech: item.style_tech || null
+            }).then(() => {
+                let new_add = {
+                    level: item.level || null,
+                    university: item.university || null,
+                    experience: item.experience || null,
+                    style_tech: item.style_tech || null
+                };
+                // this.data_tea[item.id] = { ...this.data_tea[item.id], ...new_add };
+                // this.data_tea_copy[item.id] = { ...this.data_tea_copy[item.id], ...new_add };
+            })
         }
     },
 }

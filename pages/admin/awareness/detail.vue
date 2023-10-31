@@ -998,6 +998,8 @@ export default {
                 university: this.university,
                 faculty: this.faculty,
                 major: this.major,
+                typeflip: this.type_Flip,
+                typeprivate: this.type_Private
             })
 
             for (let subject of this.selectedSubjects) {

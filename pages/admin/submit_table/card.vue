@@ -1432,7 +1432,7 @@ export default {
 
                         console.log(sum);
 
-                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
+                        db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).set({
                             subject: subject_data || null,
                             level: level_search || null,
                             typeflip: typeflip_data || null,

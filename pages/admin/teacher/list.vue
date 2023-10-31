@@ -390,7 +390,6 @@ export default {
                 let item = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
-
                     if (childData[key].status == 'teacher') {
                         const gettype_allPromise = db.ref(`type_all/${childData[key].typeflip}`).once("value");
                         const gettype_private_allPromise = db.ref(`type_private_all/${childData[key].typeprivate}`).once("value");
@@ -401,8 +400,21 @@ export default {
                             
                             const type_allData = type_allSnapshot.val(); // เปลี่ยนตรงนี้
                             const type_private_allData = type_private_allSnapshot.val(); // เปลี่ยนตรงนี้
+                            if(type_allData == null || type_private_allData == null){
+                                const teacher = {
+                                teacherId: childData[key].teacherId || null,
+                                firstName: childData[key].firstName || null,
+                                lastName: childData[key].lastName || null,
+                                nickname: childData[key].nickname || null,
+                                mobile: childData[key].mobile || null,
+                                FlipClass: null,
+                                PrivateClass: null,
+                                university: childData[key].university || null,
 
-                            const teacher = {
+                                };
+                                item.push({ key: key, teacher });
+                            }else{
+                                const teacher = {
                                 teacherId: childData[key].teacherId || null,
                                 firstName: childData[key].firstName || null,
                                 lastName: childData[key].lastName || null,
@@ -415,6 +427,7 @@ export default {
 
                                 };
                                 item.push({ key: key, teacher });
+                            }                            
                         })
                         
 
@@ -422,6 +435,7 @@ export default {
                 }
                 this.items = item;
                 this.isLoading = false;
+                console.log('DDDDD',this.items);
             })
 
         },
