@@ -204,6 +204,14 @@
                                                                 mdi-account-details-outline
                                                             </v-icon>
                                                         </template>
+                                                        <!-- eslint-disable-next-line vue/valid-v-slot -->
+                                                        <template v-slot:item.subject="{ item }">
+                                                            {{ check_subject(item.subject) }}
+                                                        </template>
+                                                        <!-- eslint-disable-next-line vue/valid-v-slot -->
+                                                        <template v-slot:item.keystudent="{ item }">
+                                                            {{ check_keystudent(item.keystudent) }}
+                                                        </template>
 
                                                     </v-data-table>
                                                     <div class="text-center pt-2">
@@ -277,7 +285,6 @@
                     <h5>รีวิว</h5>
                 </v-card-title>
                 <v-card-text>
-                    ครูสอนดีมากเลย งุงิๆ
                     <p>{{ dialogData }}</p>
                 </v-card-text>
                 <v-card-actions>
@@ -319,6 +326,7 @@ export default {
             data_tea_copy: null,
             data_search_tea: [],
             data_search_sub: [],
+            data_search_stu: [],
             dialogData: '',
             dialog: false,
             isLoading: true,
@@ -339,8 +347,8 @@ export default {
                     align: 'start',
                     value: 'date',
                 },
-                { text: 'วิชาที่สอน', value: 'calories', align: 'center' },
-                { text: 'นักเรียน', value: 'fat', align: 'center' },
+                { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+                { text: 'นักเรียน', value: 'keystudent', align: 'center' },
                 { text: 'รายละเอียด', value: 'detail', align: 'center', sortable: false, },
             ],
             desserts: [
@@ -352,6 +360,9 @@ export default {
                     protein: 4.0,
                     iron: 1,
                 },
+            ],
+            table_detail_tea: [
+
             ],
         };
     },
@@ -391,12 +402,12 @@ export default {
                     }
                 }
             }
-            if (this.input_search_tea == '00000' && this.input_search_sub != '00000') {                
+            if (this.input_search_tea == '00000' && this.input_search_sub != '00000') {
                 this.data_tea_copy = [];
                 for (const key in this.data_tea) {
                     const teacher = this.data_tea[key]
-                    for (const sub in teacher.subject_all) {                        
-                        if (sub === this.input_search_sub) {                            
+                    for (const sub in teacher.subject_all) {
+                        if (sub === this.input_search_sub) {
                             let newer = { [key]: this.data_tea[key] };
                             this.data_tea_copy = { ...this.data_tea_copy, ...newer };
                         }
@@ -412,7 +423,7 @@ export default {
         },
         show_detail(item) {
             this.dialog = true;
-            this.dialogData = item;
+            this.dialogData = item.review;
             console.log(item);
         },
         search_tea() {
@@ -434,26 +445,19 @@ export default {
                 .catch((error) => {
                     console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
                 });
-        },
-        // async search_tea() {
-        //     const db = this.$fireModule.database();
-        //     const snapshot = await db.ref(`user/`).once("value");
-        //     const dataget = {};
-        //     const childData = snapshot.val();
-        //     for (const id in childData) {
-        //         if (childData[id].status === 'teacher') {
-        //             dataget[id] = { ...childData[id] };
-        //         }                
-        //     } 
-        //     this.data_tea = dataget;
-        //     this.data_tea_copy = dataget;
 
-        //     for (const key in dataget) {
-        //         this.data_search_tea.push({ name: `${dataget[key].firstName} ${dataget[key].lastName}`, key: key });
-        //     }
-        //     this.isload_search = false;
-        //     this.isLoading = false;
-        // },
+            ref.orderByChild("status").equalTo("user").once("value")
+                .then((snapshot) => {
+                    const studentData = snapshot.val();
+                    for (const key in studentData) {
+                        this.data_search_stu.push({ name: `${studentData[key].nickname}`, key: key })
+                    }
+                    console.log(this.data_search_stu);
+                })
+                .catch((error) => {
+                    console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
+                });
+        },
 
         search_type_tier() {
             const db = this.$fireModule.database();
@@ -522,6 +526,7 @@ export default {
             let idkey = { id: key };
             this.detail_item = { ...item, ...idkey };
             console.log(this.detail_item);
+            this.table_detail(this.detail_item);
         },
 
         edit_detail(item) {
@@ -553,7 +558,37 @@ export default {
                 // this.data_tea[item.id] = { ...this.data_tea[item.id], ...new_add };
                 // this.data_tea_copy[item.id] = { ...this.data_tea_copy[item.id], ...new_add };
             })
+        },
+        table_detail(item) {
+            console.log('>>>>', item);
+            this.desserts = [];
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                const childData = snapshot.val();
+                for (const keystu in childData) {
+                    const student = childData[keystu];
+                    for (const day in student) {
+                        const time = student[day];
+                        for (const checkTea in time) {
+                            if (time[checkTea].teacher === item.id) {
+                                let newer = { keystudent: keystu };
+                                time[checkTea] = { ...time[checkTea], ...newer };
+                                this.desserts.push(time[checkTea]);                                
+                            }
+                        }
+                    }
+                }
+
+            })
+        },
+        check_keystudent(idkey) {
+            for(const key in this.data_search_stu){
+                if(this.data_search_stu[key].key === idkey){
+                    return this.data_search_stu[key].name;
+                }
+            }            
         }
+
     },
 }
 </script>
