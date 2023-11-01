@@ -532,13 +532,6 @@ export default {
         edit_detail(item) {
             this.edits = true;
             console.log('edit', item);
-            // let new_add = {
-            //     level: item.level || null,
-            //     university: item.university || null,
-            //     experience: item.experience || null,
-            //     style_tech: item.style_tech || null
-            // };
-            // this.detail_item[item.id] = { ...this.detail_item[item.id], ...new_add };
         },
         save_detail(item) {
             this.edits = false;
@@ -555,8 +548,6 @@ export default {
                     experience: item.experience || null,
                     style_tech: item.style_tech || null
                 };
-                // this.data_tea[item.id] = { ...this.data_tea[item.id], ...new_add };
-                // this.data_tea_copy[item.id] = { ...this.data_tea_copy[item.id], ...new_add };
             })
         },
         table_detail(item) {
@@ -587,7 +578,7 @@ export default {
                     return this.data_search_stu[key].name;
                 }
             }            
-        }
+        },
 
     },
 }
