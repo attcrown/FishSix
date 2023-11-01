@@ -1493,6 +1493,13 @@ export default {
                 }
             })
         },
+        changDay(num){
+            console.log(String(num).length);
+            let ze = "0"
+            if(String(num).length === 1){
+                return ze.concat(String(num));
+            }
+        },
         search_date_teacher() {
             console.log('search_date_teacher');
             const db = this.$fireModule.database();
@@ -1847,7 +1854,8 @@ export default {
                 }else{
                     month = new Date().getMonth() + 1
                 }
-                let now = `${new Date().getFullYear()}-${month}-${new Date().getDate()}`;
+                let now = `${new Date().getFullYear()}-${month}-${this.changDay(new Date().getDate())}`;
+                console.log(now)
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
