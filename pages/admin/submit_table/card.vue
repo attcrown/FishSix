@@ -59,7 +59,7 @@
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
                                     <p style="font-size: 16px; margin-top: -50px; color:white">
-                                        ยังไม่เช็คชื่อนักเรียน</p>
+                                        ยังไม่เช็คชื่อครูเข้าสอน</p>
                                 </v-col>
                             </v-row>
                         </v-card>
@@ -85,7 +85,7 @@
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
                                     <p style="font-size: 16px; margin-top: -50px; color:white">
-                                        ยังไม่ส่งพัฒนาการนักเรียน</p>
+                                        ยังไม่เช็คชื่อและส่งพัฒนาการนักเรียน</p>
                                 </v-col>
                             </v-row>
                         </v-card>

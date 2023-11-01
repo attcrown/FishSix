@@ -88,13 +88,7 @@
                 <v-sheet class="text-start image-container" height="100%">
                     <v-responsive class="overflow-y-auto" max-height="800">
                         <div class="text-end">
-                            <v-btn v-if="edits" class="mt-3 me-3 mb-6" color="success" @click="save_detail(detail_item)">
-                                save
-                            </v-btn>
-                            <v-btn v-if="!edits" class="mt-3 me-3 mb-6" color="warning" @click="edit_detail(detail_item)">
-                                Edit
-                            </v-btn>
-                            <v-btn class="mt-3 me-3 mb-6" color="red" @click="sheet = !sheet, e1 = 1">
+                            <v-btn class="mt-3 me-3 mb-6" color="red" @click="sheet = !sheet, e1 = 1 ,clear_img()">
                                 close
                             </v-btn>
                         </div>
@@ -166,7 +160,17 @@
                                         <v-stepper-items>
                                             <v-stepper-content step="1">
                                                 <v-card class="pb-5" style="background-color:#EBE4DE">
-                                                    <h4>ระดับชั้นศึกษา</h4>
+                                                    <div class="d-flex justify-space-between">
+                                                        <h4>ระดับชั้นศึกษา</h4>
+                                                        <v-btn v-if="edits" color="success"
+                                                            @click="save_detail(detail_item)">
+                                                            save
+                                                        </v-btn>
+                                                        <v-btn v-if="!edits" color="warning"
+                                                            @click="edit_detail(detail_item)">
+                                                            Edit
+                                                        </v-btn>
+                                                    </div>
                                                     <p v-if="!edits">{{ detail_item.level || 'ไม่ระบุ' }}</p>
                                                     <v-textarea background-color="white" label="ระบุระดับชั้นศึกษา" rows="1"
                                                         v-if="edits" v-model="detail_item.level"></v-textarea>
@@ -272,6 +276,49 @@
                                 </v-col>
                             </v-row>
                         </div>
+                        <div class="mt-1">
+                            <v-row justify="center">
+                                <v-col cols="auto">
+                                    <v-card style="width:350px; background-color:#EBE4DE"
+                                        class="d-flex justify-center align-center rounded-xxl p-3">
+                                        <p class="mt-3">อัพเดทโปรไฟล์ครูแบบรูปภาพ</p>
+                                        <v-btn :disabled="!upload_profile" class="ms-3" color="green"
+                                            @click="overlay = !overlay ,
+                                                sheet = !sheet ,
+                                                save_img_profile()">save</v-btn>
+                                        <v-btn :disabled="!detail_item.profile_img" class="ms-3" color="red"
+                                            @click="overlay = !overlay ,
+                                                sheet = !sheet ,
+                                                del_img_profile()">delete</v-btn>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="auto">
+                                    <v-card style="width:800px; background-color:#EBE4DE;" class="rounded-xxl p-3">
+                                        <v-file-input show-size label="อัพโหลดโปรไฟล์ที่เป็นรูปภาพ" outlined
+                                            truncate-length="50" v-model="upload_profile" style="margin-bottom:-30px" dense
+                                            @change="show_profile()"></v-file-input>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </div>
+                        <div v-if="build_img">
+                            <v-row justify="center">
+                                <v-col cols="auto">
+                                    <v-card style="width:1150px;">
+                                        <v-img :src="build_img"></v-img>            
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </div>
+                        <div v-if="!build_img && detail_item.profile_img">
+                            <v-row justify="center">
+                                <v-col cols="auto">
+                                    <v-card style="width:1150px;">                                        
+                                        <v-img :src="detail_item.profile_img"></v-img>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </div>
                         <div style="margin:100px; background-color:rgb(165, 164, 164)" class="text-center">FISHSIX</div>
 
                     </v-responsive>
@@ -296,9 +343,14 @@
             </v-card>
         </v-dialog>
 
+        <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+
     </div>
 </template>
 <script>
+import firebase from 'firebase/compat/app';
 import loaderVue from '~/components/loader.vue';
 export default {
     inject: {
@@ -308,6 +360,9 @@ export default {
     },
     data() {
         return {
+            overlay: false,
+            build_img: null,
+            upload_profile: null,
             edits: false,
             save: false,
             type_tier: [],
@@ -370,6 +425,12 @@ export default {
 
     },
     watch: {
+        overlay(val) {
+            val && setTimeout(() => {
+                this.overlay = false;
+                this.sheet = true;
+            }, 3000)
+        },
     },
     created() {
         this.search_tea();
@@ -564,7 +625,7 @@ export default {
                             if (time[checkTea].teacher === item.id) {
                                 let newer = { keystudent: keystu };
                                 time[checkTea] = { ...time[checkTea], ...newer };
-                                this.desserts.push(time[checkTea]);                                
+                                this.desserts.push(time[checkTea]);
                             }
                         }
                     }
@@ -573,13 +634,97 @@ export default {
             })
         },
         check_keystudent(idkey) {
-            for(const key in this.data_search_stu){
-                if(this.data_search_stu[key].key === idkey){
+            for (const key in this.data_search_stu) {
+                if (this.data_search_stu[key].key === idkey) {
                     return this.data_search_stu[key].name;
                 }
-            }            
+            }
         },
+        show_profile() {
+            if (!this.upload_profile) {
+                this.build_img = null;
+                return;
+            }
+            console.log(this.upload_profile);
+            // เริ่มต้นโดยรับข้อมูลจาก v-model "upload_profile"
+            const file = this.upload_profile;
+            const imageTypes = ['image/jpeg', 'image/png', 'image/gif']; // ประเภทของไฟล์รูปภาพ
+            const pdfTypes = ['application/pdf']; // ประเภทของไฟล์ PDF                
 
+            // ตรวจสอบประเภทของไฟล์
+            if (imageTypes.includes(file.type)) {
+                // ถ้าเป็นไฟล์รูปภาพ
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    // อ่านข้อมูลรูปภาพและแสดงใน <v-img>
+                    this.build_img = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            } else if (pdfTypes.includes(file.type)) {
+                this.upload_profile = null;
+                // ถ้าเป็นไฟล์ PDF
+                // ทำสิ่งที่คุณต้องการกับไฟล์ PDF เช่นแสดงหน้า PDF หรือประมวลผลข้อมูล PDF
+                // คุณอาจต้องใช้งานบรรณาธิการ PDF ใน JavaScript หรือไลบรารีที่สามรถอ่าน PDF เช่น pdf.js
+            }
+        },
+        save_img_profile(){
+            const storageRef = firebase.storage().ref();
+            const file = this.upload_profile; // เลือกไฟล์รูปภาพจาก input หรืออื่นๆ
+            const imageRef = storageRef.child(`Profile_teacher/${this.detail_item.id}.jpg`); // กำหนดชื่อและพาธของรูปภาพที่จะอัปโหลด
+            imageRef.put(file).then(() => {
+                const storage = firebase.storage();
+                const image = storage.ref(`Profile_teacher/${this.detail_item.id}.jpg`);
+                image.getDownloadURL()
+                    .then((url) => {
+                        console.log(url);
+                        const db = this.$fireModule.database();
+                        db.ref(`user/${this.detail_item.id}/`).update({
+                            profile_img: url
+                        }).then(() => {
+                            console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว URL');
+                            let newer = { profile_img : url};
+                            this.detail_item = { ...this.detail_item , ...newer };
+                            this.data_tea[this.detail_item.id].profile_img = url;
+                            this.data_tea_copy[this.detail_item.id].profile_img = url;
+                            this.build_img = null;
+                            this.upload_profile = null;
+                        })
+                    })
+                console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว');
+            }).catch((error) => {
+                console.error('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ:', error);
+            });
+        },
+        clear_img(){
+            this.build_img = null;
+            this.upload_profile = null;
+        },
+        del_img_profile(){
+            const storageRef = firebase.storage().ref();
+            const imageRef = storageRef.child(`Profile_teacher/${this.detail_item.id}.jpg`);
+            imageRef
+                .delete()
+                .then(() => {
+                    console.log('รูปภาพถูกลบเรียบร้อยแล้ว');
+                })
+                .catch((error) => {
+                    console.error('เกิดข้อผิดพลาดในการลบรูปภาพ:', error);
+                });
+
+            const db = this.$fireModule.database();
+            db.ref(`user/${this.detail_item.id}/profile_img`).remove()
+            .then(() => {
+                console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว URL');
+                let newer = { profile_img : null};
+                this.detail_item = { ...this.detail_item , ...newer };
+                this.data_tea[this.detail_item.id].profile_img = null;
+                this.data_tea_copy[this.detail_item.id].profile_img = null;
+                this.build_img = null;
+                this.upload_profile = null;
+            })
+        },
     },
 }
 </script>
