@@ -43,8 +43,7 @@
                                 <v-col cols="9">
                                     <v-row>
                                         <v-col cols="3">
-                                            <v-text-field v-model="teacherId" counter label="รหัสครู  "
-                                                disabled>
+                                            <v-text-field v-model="teacherId" counter label="รหัสครู  " disabled>
                                                 <template v-slot:append>
                                                     <v-tooltip bottom>
                                                         <template v-slot:activator="{ on }">
@@ -59,23 +58,25 @@
                                         </v-col>
                                         <v-col cols="9"></v-col>
                                         <v-col cols="6" class="py-0 ">
-                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"   :readonly="!isEditingDetail" 
-                                                 label="ชื่อ (ภาษาอังกฤษ)" v-on:keypress="isLetter($event)">
+                                            <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                                                :readonly="!isEditingDetail" label="ชื่อ (ภาษาอังกฤษ)"
+                                                v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"  :readonly="!isEditingDetail" 
-                                                label="นามสกุล (ภาษาอังกฤษ)"  v-on:keypress="isLetter($event)">
+                                            <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                                                :readonly="!isEditingDetail" label="นามสกุล (ภาษาอังกฤษ)"
+                                                v-on:keypress="isLetter($event)">
                                             </v-text-field>
                                         </v-col>
 
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName"  :readonly="!isEditingDetail" 
-                                                ></v-text-field>
+                                            <v-text-field label="ชื่อ" name="firstName" v-model="firstName"
+                                                :readonly="!isEditingDetail"></v-text-field>
                                         </v-col>
                                         <v-col cols="6" class="py-0">
-                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName"  :readonly="!isEditingDetail" 
-                                                ></v-text-field>
+                                            <v-text-field label="นามสกุล" name="lastName" v-model="lastName"
+                                                :readonly="!isEditingDetail"></v-text-field>
                                         </v-col>
                                         <v-col cols="4" class="py-0">
                                             <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname"
@@ -119,11 +120,11 @@
                                             :readonly="!isEditingDetail"></v-text-field>
                                     </v-col>
                                     <v-col cols="4">
-                                        <label>สำเนาบัตรประชาชน</label><br>
-                                        <!-- <v-file-input label="อัพโหลดสำเนาบัตรประชาชน" v-model="idCardCopy" disabled
-                                        accept=".pdf,image/*"></v-file-input> -->
-                                        <a v-if="idCardCopy" href="" @click="downloadFile()"> View</a>
-                                        <a v-if="!idCardCopy"> ไม่มี</a>
+                                        <label v-if="idCardCopy && !isEditingDetail">สำเนาบัตรประชาชน</label><br v-if="idCardCopy && !isEditingDetail">
+                                        <v-file-input v-if="!idCardCopy || isEditingDetail" label="อัพโหลดสำเนาบัตรประชาชน"
+                                            v-model="idCardCopyUpload" accept=".pdf,image/*"></v-file-input>
+                                        <a v-if="idCardCopy && !isEditingDetail" href="" @click="downloadFile()"> View</a>
+
                                     </v-col>
 
                                 </v-row>
@@ -233,40 +234,49 @@
                         class="px-10 mt-5">
                         <v-card-title class="font-weight-bold header d-flex justify-space-between align-center ">
                             <div class="">ข้อมูลสัญญาจ้าง</div>
+                            <div>
+                                <button v-if="!isEditingContract" class="editButton " @click="toEditContract()">
+                                    <span style="color: #C3CAD9;font-size: 14px;">แก้ไขข้อมูล</span>
+                                    <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
+                                </button>
+                                <button v-if="isEditingContract" class="saveButton " @click="toEditContract()">
+                                    <span style="color: #F8F9FB;font-size: 14px;">บันทึก</span>
 
+                                </button>
+                            </div>
                         </v-card-title>
                         <v-card-text>
                             <v-form ref="contractForm">
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="contract" label="สัญญาจ้าง"
-                                            :readonly="!isEditingContract" v-model="contract"></v-text-field>
-                                        <v-select v-if="isEditingContract" class="black-label" v-model="contract"
-                                            :items="contracts" label="สัญญาจ้าง" multiple></v-select>
+                                        <v-text-field name="contract" label="สัญญาจ้าง" disabled
+                                            v-model="contract"></v-text-field>
+                                        <!-- <v-select v-if="isEditingContract" class="black-label" v-model="contract"
+                                            :items="contracts" label="สัญญาจ้าง" multiple></v-select> -->
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="workType" label="ประเภทการทำงาน"
-                                            :readonly="!isEditingContract" v-model="workType"></v-text-field>
-                                        <v-select v-if="isEditingContract" v-model="workType" :items="workTypes"
-                                            label="ประเภทการทำงาน" required></v-select>
+                                        <v-text-field name="workType" label="ประเภทการทำงาน" disabled
+                                            v-model="workType"></v-text-field>
+                                        <!-- <v-select v-if="isEditingContract" v-model="workType" :items="workTypes"
+                                            label="ประเภทการทำงาน" ></v-select> -->
                                     </v-col>
                                     <v-col cols="4">
 
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-text-field v-if="!isEditingContract" name="startDate" label="วันที่เริ่มงาน"
-                                            :readonly="!isEditingContract" v-model="startDate"></v-text-field>
-                                        <v-menu v-if="isEditingContract" ref="menu" v-model="menu"
+                                        <v-text-field name="startDate" label="วันที่เริ่มงาน" disabled
+                                            v-model="startDate"></v-text-field>
+                                        <!-- <v-menu v-if="isEditingContract" ref="menu" v-model="menu" 
                                             :close-on-content-click="false" transition="scale-transition" offset-y
                                             min-width="auto">
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-text-field v-model="startDate" label="วันที่เริ่มงาน" name="startDate"
                                                     prepend-icon="mdi-calendar" readonly v-bind="attrs"
-                                                    :rules="startDateRules" required v-on="on"></v-text-field>
+                                                    v-on="on"></v-text-field>
                                             </template>
                                             <v-date-picker v-model="startDate" :active-picker.sync="activePicker"
                                                 min="1950-01-01" @change="save"></v-date-picker>
-                                        </v-menu>
+                                        </v-menu> -->
                                     </v-col>
 
                                     <v-col cols="4">
@@ -414,6 +424,7 @@ export default {
             },
             idCardNumber: null,
             idCardCopy: null,
+            idCardCopyUpload: null,
             contract: null,
             workType: null,
             classType: null,
@@ -494,14 +505,13 @@ export default {
                 v => (v && v.length <= 100) || 'Name must be less than 100 characters',
             ],
             postalRules: [
-                value => !!value || 'กรุณากรอกรหัสไปรษณีย์',
-                value => /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
-            ],
-            idCardRules: [
-                value => !!value || 'กรุณากรอกหมายเลขบัตรประชาชน',
-                value => /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
+                value => !value || /^[\d]{5}$/.test(value) || 'รูปแบบรหัสไปรษณีย์ไม่ถูกต้อง'
             ],
 
+            idCardRules: [
+
+                value => !value || /^\d{13}$/.test(value) || 'รูปแบบหมายเลขบัตรประชาชนไม่ถูกต้อง'
+            ],
             mobileRules: [
                 value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
                 value => /^\d{9,10}$/.test(value) || 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง'
@@ -699,13 +709,26 @@ export default {
                                 this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
                             });
                     }
+                    if (this.idCardCopyUpload) {
+                        const storageRef = this.$fireModule.storage().ref();
+                        const userRef = storageRef.child(`user/${this.keyuser}/idCardCopy.jpg`);
+                        try {
+                            const snapshot = await userRef.put(this.idCardCopyUpload);
+                            const downloadURL = await snapshot.ref.getDownloadURL();
 
+                            await db.ref(`user/${this.keyuser}`).update({
+                                idCardCopy: downloadURL
+                            });
+                        } catch (error) {
+                            this.openSnackbar("error", 'เกิดข้อผิดพลาดในการอัพโหลดรูป!');
+                        }
+                    }
                     await db.ref(`user/${this.keyuser}/`).update({
 
-                        firstNameEng :this.firstNameEng,
-                        lastNameEng:this.lastNameEng,
-                        firstName:this.firstName,
-                        lastName:this.lastName,
+                        firstNameEng: this.firstNameEng,
+                        lastNameEng: this.lastNameEng,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
                         nickname: this.nickname,
                         mobile: this.mobile,
                         email: this.email,
@@ -800,6 +823,42 @@ export default {
             }
         },
 
+        async toEditContract() {
+            if (this.isEditingContract == true) {
+                this.isEditingContract = false;
+
+                console.log(this.$refs[`contractForm`])
+                console.log(this.$refs[`contractForm`].validate())
+                if (this.validateContractEdit()) {
+                    const db = this.$fireModule.database();
+                    this.isSubmitting = true;
+
+
+                    await db.ref(`user/${this.keyuser}/`).update({
+
+                        classLocation: this.classLocation,
+
+                    })
+                        .then(() => {
+
+                            this.openSnackbar('success', 'แก้ไขข้อมูลเสร็จสิ้น ');
+                            this.getTeacherLocation();
+                            this.isSubmitting = false;
+                            this.isEditingContract = false;
+                        })
+                        .catch((error) => {
+
+                            this.openSnackbar('error', 'เกิดข้อผิดพลาดในการบันทึก ');
+                            this.isSubmitting = false;
+                            this.isEditingContract = false;
+                        });
+
+                }
+            }
+            else {
+                this.isEditingContract = true;
+            }
+        },
         async toEditEducation() {
             if (this.isEditingEducation == true) {
                 this.isEditingEducation = false;
