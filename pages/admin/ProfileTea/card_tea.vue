@@ -1,7 +1,7 @@
 <template>
     <div>
         <loaderVue v-if="isLoading"></loaderVue>
-        <div>
+        <div v-if="status === 'admin'">
             <v-card flat class="elevation-16 rounded-xl p-4" style="background-color:#EBE4DE">
                 <div class="d-flex align-center">
                     <v-autocomplete v-if="data_search_tea" style="max-width: 300px;" :items="data_search_tea"
@@ -350,6 +350,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import firebase from 'firebase/compat/app';
 import loaderVue from '~/components/loader.vue';
 export default {
@@ -422,6 +423,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(['firstName', 'status']),
 
     },
     watch: {
@@ -487,13 +489,24 @@ export default {
             this.dialogData = item.review;
             console.log(item);
         },
-        search_tea() {
+        async search_tea() {
+            await this.$nextTick();
+            console.log('>>>', this.firstName, this.status);            
+
             const db = this.$fireModule.database();
             const ref = db.ref("user");
             this.data_search_tea.push({ name: `ทั้งหมด`, key: '00000' });
             ref.orderByChild("status").equalTo("teacher").once("value")
                 .then((snapshot) => {
-                    const teacherData = snapshot.val();
+                    let teacherData = snapshot.val();                    
+                    if(this.status === "teacher"){
+                        db.ref(`user/${this.firstName}`).on("value", (snapshot) => {
+                            const childData = snapshot.val();
+                            console.log({[this.firstName]:childData});
+                            teacherData = {[this.firstName]:childData};
+                        })
+                    } 
+
                     this.data_tea = teacherData;
                     this.data_tea_copy = teacherData;
                     for (const key in teacherData) {
@@ -506,6 +519,8 @@ export default {
                 .catch((error) => {
                     console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
                 });
+             
+               
 
             ref.orderByChild("status").equalTo("user").once("value")
                 .then((snapshot) => {
