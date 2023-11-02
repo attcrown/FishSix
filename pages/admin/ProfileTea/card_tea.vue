@@ -1,7 +1,7 @@
 <template>
     <div>
         <loaderVue v-if="isLoading"></loaderVue>
-        <div v-if="status === 'admin'">
+        <div v-if="status !== 'teacher'">
             <v-card flat class="elevation-16 rounded-xl p-4" style="background-color:#EBE4DE">
                 <div class="d-flex align-center">
                     <v-autocomplete v-if="data_search_tea" style="max-width: 300px;" :items="data_search_tea"
@@ -162,11 +162,11 @@
                                                 <v-card class="pb-5" style="background-color:#EBE4DE">
                                                     <div class="d-flex justify-space-between">
                                                         <h4>ระดับชั้นศึกษา</h4>
-                                                        <v-btn v-if="edits" color="success"
+                                                        <v-btn v-if="edits && status != 'user'" color="success"
                                                             @click="save_detail(detail_item)">
                                                             save
                                                         </v-btn>
-                                                        <v-btn v-if="!edits" color="warning"
+                                                        <v-btn v-if="!edits && status != 'user'" color="warning"
                                                             @click="edit_detail(detail_item)">
                                                             Edit
                                                         </v-btn>
@@ -276,7 +276,7 @@
                                 </v-col>
                             </v-row>
                         </div>
-                        <div class="mt-1">
+                        <div class="mt-1" v-if="status != 'user'">
                             <v-row justify="center">
                                 <v-col cols="auto">
                                     <v-card style="width:350px; background-color:#EBE4DE"

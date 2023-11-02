@@ -104,7 +104,12 @@ export default {
           icon: 'mdi-folder ',
           title: 'คลังเนื้อหา',
           to: '/user/content',
-        },        
+        }, 
+        {
+          icon: 'mdi-card-account-details-outline',
+          title: 'โปรไฟล์ครู',
+          to: '/user/profileTea',
+        },       
 
       ],
       miniVariant: false,
