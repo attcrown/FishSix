@@ -1,17 +1,23 @@
 <template>
-  <div class="container-fluid">
+  <div class="mt-5">
     <pageLoader v-if="isLoading"></pageLoader>
-    <div v-if="!isLoading" class="col mx-3 d-flex justify-content-center">
+    <div v-if="!isLoading" class="">
       <v-row>
-        <div style="display: flex; justify-content: space-between">
+       <div class="parent-div" style=" display:flex;   justify-content: space-between;">
           <h1 class="font-weight-bold">ข้อมูลครู</h1>
-          <v-btn to="/teacher" router exact>ย้อนกลับ</v-btn>
-        </div>
+
+        
+                                         <v-btn to="/teacher/" router exact class="back-button">ย้อนกลับ
+                            <v-icon color="black" class="ms-1">mdi-arrow-left</v-icon></v-btn>
+                
+        
+       </div> 
+      
         <v-col cols="12">
           <v-card
             style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
             elevation="0"
-            class="px-10"
+            class="px-2"
           >
             <v-card-title
               class="font-weight-bold header d-flex justify-space-between align-center"
@@ -40,7 +46,7 @@
             </v-card-title>
             <v-form ref="detailForm">
               <v-row class="mt-0" align="center">
-                <v-col cols="3" sm="3" class="pl-10">
+                <v-col cols="12" lg="2" md="2" sm="12" xs="12" class="pl-10">
                   <div>
                     <v-avatar
                       style="
@@ -74,10 +80,10 @@
                     </label>
                   </div>
                 </v-col>
-                <v-col cols="9">
-                  <v-row>
-                    <v-col cols="3">
-                      <v-text-field
+          <v-col lg="10" md="10" sm="12" xs="12">
+                  <v-row class="px-8">
+                    <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+                            <v-text-field
                         v-model="teacherId"
                         counter
                         label="รหัสครู  "
@@ -146,7 +152,7 @@
                         required
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="5" class="py-0"> </v-col>
+        
                     <v-col cols="4" class="py-0">
                       <v-text-field
                         v-if="!isEditingDetail"
@@ -170,7 +176,9 @@
                   </div>
                 </v-col>
                 <v-row class="px-4">
-                  <v-col cols="4" class="py-0">
+                  
+                    <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       label="อาชีพปัจจุบัน"
                       name="currJob"
@@ -178,7 +186,9 @@
                       :readonly="!isEditingDetail"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" class="py-0">
+                  
+                    <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       label="เบอร์"
                       name="mobile"
@@ -189,7 +199,9 @@
                       required
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" class="py-0">
+                  
+                    <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       label="อีเมลล์"
                       name="email"
@@ -198,7 +210,9 @@
                       :readonly="!isEditingDetail"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4">
+                  
+                    <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       label="เลขบัตรประชาชน"
                       name="idCardNumber"
@@ -208,7 +222,9 @@
                       :readonly="!isEditingDetail"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4">
+                  
+                    <v-col class="mt-2 py-0" cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <label v-if="idCardCopy && !isEditingDetail"
                       >สำเนาบัตรประชาชน</label
                     ><br v-if="idCardCopy && !isEditingDetail" />
@@ -230,10 +246,10 @@
               </v-row>
             </v-form>
           </v-card>
-          <v-card
+           <v-card
             style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
             elevation="0"
-            class="px-10 mt-7"
+            class="px-2 mt-5"
           >
             <v-card-title
               class="font-weight-bold header d-flex justify-space-between align-center"
@@ -263,7 +279,7 @@
               <v-form ref="addressForm">
                 <v-row>
                   <p>&#x2022; ที่อยู่ตามบัตรประชาชน</p>
-                  <v-col cols="4">
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                     <v-text-field
                       name="houseNo"
                       label="บ้านเลขที่"
@@ -271,7 +287,7 @@
                       v-model="address.houseNo"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4">
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                     <v-text-field
                       v-if="!isEditingAddress"
                       name="tambon"
@@ -293,7 +309,7 @@
                       label="ตำบล"
                     ></v-autocomplete>
                   </v-col>
-                  <v-col cols="4">
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                     <v-text-field
                       name="amphoe"
                       label="อำเภอ/เขต"
@@ -301,7 +317,7 @@
                       v-model="address.amphoe"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6">
+                  <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
                     <v-text-field
                       name="province"
                       label="จังหวัด"
@@ -309,7 +325,7 @@
                       v-model="address.province"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6">
+                  <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
                     <v-text-field
                       name="postal"
                       label="รหัสไปรษณีย์"
@@ -333,7 +349,7 @@
                       ></v-checkbox>
                     </p>
 
-                    <v-col cols="4">
+                    <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                       <v-text-field
                         name="curr_houseNo"
                         label="บ้านเลขที่"
@@ -342,7 +358,7 @@
                         v-model="currAddress.houseNo"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                       <v-text-field
                         v-if="!isEditingAddress || isAddressSame"
                         name="curr_tambon"
@@ -366,7 +382,7 @@
                         label="ตำบล"
                       ></v-autocomplete>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                       <v-text-field
                         name="curr_amphoe"
                         label="อำเภอ/เขต"
@@ -375,7 +391,7 @@
                         v-model="currAddress.amphoe"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                       <v-text-field
                         name="curr_province"
                         label="จังหวัด"
@@ -384,7 +400,7 @@
                         v-model="currAddress.province"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
                       <v-text-field
                         name="curr_postal"
                         label="รหัสไปรษณีย์"
@@ -400,15 +416,16 @@
             </v-card-text>
           </v-card>
 
+
           <v-card
             style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
             elevation="0"
-            class="px-10 mt-5"
+            class="px-2 mt-5"
           >
             <v-card-title
               class="font-weight-bold header d-flex justify-space-between align-center"
             >
-              <div class="">ข้อมูลสัญญาจ้าง</div>
+              <div class="pl-2">ข้อมูลสัญญาจ้าง</div>
               <div>
                 <button
                   v-if="!isEditingContract"
@@ -432,7 +449,7 @@
             <v-card-text>
               <v-form ref="contractForm">
                 <v-row>
-                  <v-col cols="4">
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12">
                     <v-text-field
                       name="contract"
                       label="สัญญาจ้าง"
@@ -442,7 +459,9 @@
                     <!-- <v-select v-if="isEditingContract" class="black-label" v-model="contract"
                                             :items="contracts" label="สัญญาจ้าง" multiple></v-select> -->
                   </v-col>
-                  <v-col cols="4">
+                  
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       name="workType"
                       label="ประเภทการทำงาน"
@@ -453,7 +472,9 @@
                                             label="ประเภทการทำงาน" ></v-select> -->
                   </v-col>
                   <v-col cols="4"> </v-col>
-                  <v-col cols="4">
+                  
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       name="startDate"
                       label="วันที่เริ่มงาน"
@@ -473,7 +494,8 @@
                                         </v-menu> -->
                   </v-col>
 
-                  <v-col cols="4">
+                  <v-col cols="12" lg="4" md="4" sm="12" xs="12">
+                    
                     <v-select
                       v-if="!isEditingContract"
                       class="black-label"
@@ -504,7 +526,7 @@
           <v-card
             style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
             elevation="0"
-            class="px-10 mt-5"
+            class="px-2 mt-5"
           >
             <v-card-title
               class="font-weight-bold header d-flex justify-space-between align-center"
@@ -533,7 +555,7 @@
             <v-card-text>
               <v-form ref="educationForm">
                 <v-row>
-                  <v-col cols="4">
+                  <v-col  cols="12" lg="4" md="4" sm="12" xs="12">
                     <v-text-field
                       name="university"
                       label="มหาวิทยาลัย"
@@ -541,7 +563,9 @@
                       v-model="university"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4">
+                  
+                  <v-col  cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       name="faculty"
                       label="คณะ"
@@ -549,7 +573,9 @@
                       v-model="faculty"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4">
+                 
+                  <v-col  cols="12" lg="4" md="4" sm="12" xs="12">
+
                     <v-text-field
                       name="major"
                       label="สาขา"
@@ -616,6 +642,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import pageLoader from '@/components/loader.vue'
 export default {
   layout: 'teacherNav',
@@ -647,6 +674,8 @@ export default {
       profilePic: null,
       profilePicUpload: null,
       firstNameEng: null,
+      userId:null,
+      localId:null,
       lastNameEng: null,
       firstName: null,
       lastName: null,
@@ -769,16 +798,21 @@ export default {
       ],
     }
   },
-  computed: {},
+  computed: {
+      
+    },
+ 
   mounted() {
-    this.fullName()
+ this.fullName();
+
     this.readdata()
-    this.readdata()
+    
     this.fetchData()
     this.readSubject()
     this.getlocation()
     this.initialize()
     this.getTeacherLocation()
+
   },
   components: {
     pageLoader,
@@ -921,7 +955,7 @@ export default {
 
             const storageRef = this.$fireModule.storage().ref()
             const userRef = storageRef.child(
-              `user/${this.keyuser}/profilePic.jpg`
+              `user/${this.userId}/profilePic.jpg`
             )
 
             userRef
@@ -930,7 +964,7 @@ export default {
                 return snapshot.ref.getDownloadURL()
               })
               .then((downloadURL) => {
-                db.ref(`user/${this.keyuser}`)
+                db.ref(`user/${this.userId}`)
                   .update({
                     profilePic: downloadURL,
                   })
@@ -946,13 +980,13 @@ export default {
           if (this.idCardCopyUpload) {
             const storageRef = this.$fireModule.storage().ref()
             const userRef = storageRef.child(
-              `user/${this.keyuser}/idCardCopy.jpg`
+              `user/${this.userId}/idCardCopy.jpg`
             )
             try {
               const snapshot = await userRef.put(this.idCardCopyUpload)
               const downloadURL = await snapshot.ref.getDownloadURL()
 
-              await db.ref(`user/${this.keyuser}`).update({
+              await db.ref(`user/${this.userId}`).update({
                 idCardCopy: downloadURL,
               })
             } catch (error) {
@@ -960,7 +994,7 @@ export default {
             }
           }
           await db
-            .ref(`user/${this.keyuser}/`)
+            .ref(`user/${this.userId}/`)
             .update({
               firstNameEng: this.firstNameEng,
               lastNameEng: this.lastNameEng,
@@ -1030,7 +1064,7 @@ export default {
           this.isSubmitting = true
 
           await db
-            .ref(`user/${this.keyuser}/`)
+            .ref(`user/${this.userId}/`)
             .update({
               address: this.address,
               currAddress: this.currAddress,
@@ -1063,7 +1097,7 @@ export default {
           this.isSubmitting = true
 
           await db
-            .ref(`user/${this.keyuser}/`)
+            .ref(`user/${this.userId}/`)
             .update({
               classLocation: this.classLocation,
             })
@@ -1091,7 +1125,7 @@ export default {
           this.isSubmitting = true
 
           await db
-            .ref(`user/${this.keyuser}/`)
+            .ref(`user/${this.userId}/`)
             .update({
               university: this.university,
               faculty: this.faculty,
@@ -1111,14 +1145,14 @@ export default {
           if (this.selectedSubjects.length !== 0) {
             for (let subject of this.selectedSubjects) {
               await db
-                .ref(`user/${this.keyuser}/subject_all/${subject.key}`)
+                .ref(`user/${this.userId}/subject_all/${subject.key}`)
                 .set({
                   name: subject.name,
                   level: subject.level,
                 })
             }
           } else {
-            await db.ref(`user/${this.keyuser}/subject_all/`).remove()
+            await db.ref(`user/${this.userId}/subject_all/`).remove()
           }
         }
       } else {
@@ -1162,8 +1196,9 @@ export default {
     },
 
     async readdata() {
-      const db = this.$fireModule.database()
-      await db.ref(`user/${this.keyuser}`).on('value', (snapshot) => {
+       
+        const db = this.$fireModule.database()
+      await db.ref(`user/${this.userId}`).on('value', (snapshot) => {
         const childData = snapshot.val()
         this.profilePic = childData.profilePic || null
         this.lastTeacherId = childData.teacherId || null
@@ -1217,17 +1252,17 @@ export default {
     async fetchData() {
       const db = this.$fireModule.database()
       const snapshot = await db
-        .ref(`user/${this.keyuser}/subject_all`)
+        .ref(`user/${this.userId}/subject_all`)
         .once('value')
       const childData = snapshot.val()
       const selectedItems = []
 
       for (const key in childData) {
         const snapshotName = await db
-          .ref(`user/${this.keyuser}/subject_all/${key}`)
+          .ref(`user/${this.userId}/subject_all/${key}`)
           .once('value')
         const snapshotLevel = await db
-          .ref(`user/${this.keyuser}/subject_all/${key}/level`)
+          .ref(`user/${this.userId}/subject_all/${key}/level`)
           .once('value')
 
         const childDataName = snapshotName.val()
@@ -1501,17 +1536,19 @@ export default {
     },
     // Listen for changes in the user's authentication state
     fullName() {
-      if (localStorage.getItem('firstName') == null) {
-        this.status = sessionStorage.getItem('status') || ''
-        this.firstName = sessionStorage.getItem('firstName') || ''
-        this.keyuser = sessionStorage.getItem('lastName') || ''
-      } else {
-        this.status = sessionStorage.getItem('status') || ''
-
-        this.firstName = localStorage.getItem('firstName') || ''
-        this.keyuser = localStorage.getItem('lastName') || ''
-      }
-    },
+        if (localStorage.getItem('firstName') == null) {
+      
+        this.status = sessionStorage.getItem('status') || '';
+            this.firstName = sessionStorage.getItem('firstName') || '';
+                this.userId = sessionStorage.getItem('lastName') || '';
+            } else {
+        this.status = sessionStorage.getItem('status') || '';
+      
+                this.firstName = localStorage.getItem('firstName') || '';
+                this.userId = localStorage.getItem('lastName') || '';
+            }
+      
+            },
   },
 }
 </script>
@@ -1583,3 +1620,127 @@ hr.solid {
   font-weight: 500;
 }
 </style>
+
+<style scoped>
+/* desktop */
+@media (min-width:768px) {
+    .parent-div {
+        display: flex;
+        justify-content: space-between;
+     
+    }
+
+    .profile {
+        padding-left: 40px;
+    }
+}
+
+/* mobile */
+@media (max-width:767px) {
+.table.table-sm tr {
+      display: block;
+    }
+    .table.table-sm td {
+      display: flex;
+      flex-direction: column;
+    }
+    /* markup */
+    span {
+        letter-spacing: 0px;
+    }
+
+    b {
+        font-size: 12px;
+
+        font-weight: 800;
+    }
+
+    .parent-div {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    
+    }
+
+    .avatarPic {
+        width: 164px;
+        height: 164px;
+    }
+
+    .child-div {
+        display: flex;
+        justify-content: flex-end;
+     
+        align-items: center;
+     
+    }
+
+
+    /* css */
+    .history-button {
+        max-width: 125px;
+    }
+
+    .back-button {
+        margin-left: 12px;
+        border: 2px solid #EFEFEF;
+
+        background: #E8E8E8;
+    }
+
+    .time-label {
+        color: #FFF;
+        font-size: 16px;
+        font-weight: 500;
+
+    }
+
+    .des-label {
+
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+
+    }
+
+    .small-button {
+        font-size: 12px;
+        padding: 1px 2px;
+        border-radius: 10px;
+        border: 1px solid var(--green, #29CC39);
+        background: var(--green, #29CC39);
+    }
+
+    .profile {
+        padding-left: 0px;
+    }
+
+    .upload-label {
+        width: 100px;
+
+    }
+
+
+
+    /* vuetify */
+    .v-btn {
+        border-radius: 10px;
+        padding: 6px 12px;
+
+    }
+
+    .v-btn.v-size--default {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0px;
+    }
+
+    .v-icon {
+        width: 22px;
+        height: 15px;
+    }
+
+    .hrDialog {
+        display: none;
+    }}
