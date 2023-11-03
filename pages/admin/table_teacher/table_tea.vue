@@ -366,7 +366,7 @@ export default {
                 for (const key in this.time_full) {
                     if (stop == this.time_full[key]) {
                         sum = 0;
-                        time_sum.push(this.time_full[key]);
+                        // time_sum.push(this.time_full[key]);
                         break;
                     }
                     else if (start == this.time_full[key] || (sum != 0)) {
