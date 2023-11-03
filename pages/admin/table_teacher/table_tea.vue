@@ -366,7 +366,7 @@ export default {
                 for (const key in this.time_full) {
                     if (stop == this.time_full[key]) {
                         sum = 0;
-                        // time_sum.push(this.time_full[key]);
+                        time_sum.push(this.time_full[key]);
                         break;
                     }
                     else if (start == this.time_full[key] || (sum != 0)) {
@@ -488,8 +488,10 @@ export default {
                                     console.log('รวมเวลา', time_sum, sum_people_new_tea);
                                 }
                             } else if (true) {
-                                console.log('BAD', Work_data_tea[key], key);
-                                time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+                                console.log('BAD', Work_data_tea[key], key,time_sum);
+                                time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);   
+                                time_data_tea.shift();
+                                time_data_tea.pop();                                                             
                                 anyInA = time_data_tea.some(time => time_sum.includes(time));
                                 console.log(anyInA, time_data_tea, key, 'FAIL');
                                 if (anyInA) {
@@ -562,6 +564,8 @@ export default {
                             } else if (true) {
                                 console.log('BAD', Work_data_tea[key], key);
                                 time_data_tea = this.validateTime_save(Work_data_tea[key].start, Work_data_tea[key].stop);
+                                time_data_tea.shift();
+                                time_data_tea.pop();    
                                 anyInA = time_data_tea.some(time => time_sum.includes(time));
                                 console.log(anyInA, time_data_tea, key, 'FAIL');
                                 if (anyInA) {
