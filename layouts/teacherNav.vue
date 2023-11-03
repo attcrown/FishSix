@@ -96,7 +96,7 @@ export default {
         {
           icon: 'mdi-card-account-details-outline',
           title: 'โปรไฟล์ครู',
-          to: '/user/profileTea',
+          to: '/teacher/profileTea',
         },  
       ],
       miniVariant: false,
