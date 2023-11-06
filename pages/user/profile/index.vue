@@ -7,44 +7,28 @@
           <h1 class="font-weight-bold">ข้อมูลนักเรียน</h1>
 
           <div class="child-div">
-            <v-btn
-              class="text-white history-button"
-              @click="openClassHistoryDialog()"
-              color="black"
-              >ประวัติการเรียน
+            <v-btn class="text-white history-button" @click="openClassHistoryDialog()" color="black">ประวัติการเรียน
               <v-icon color="white" class="ms-1">mdi-eye</v-icon>
             </v-btn>
 
-            <v-btn to="/user/" router exact class="back-button"
-              >ย้อนกลับ
-              <v-icon color="black" class="ms-1">mdi-arrow-left</v-icon></v-btn
-            >
+            <v-btn to="/user/" router exact class="back-button">ย้อนกลับ
+              <v-icon color="black" class="ms-1">mdi-arrow-left</v-icon></v-btn>
           </div>
         </div>
 
         <v-col cols="12">
-          <v-card
-            style="
+          <v-card style="
               border-radius: 20px;
               background: #ffffff;
               border: 1px solid #000;
-            "
-            elevation="0"
-            class="mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+            " elevation="0" class="mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div>ข้อมูล Flip class</div>
             </v-card-title>
             <v-row justify="space-between" class="px-5">
               <style></style>
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #26415b"
-                  elevation="0"
-                  class="px-2 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #26415b" elevation="0" class="px-2 my-2">
                   <v-card-text class="p-4">
                     <v-row>
                       <div class="des-label">ชั่วโมงทดลองเรียน</div>
@@ -71,11 +55,7 @@
               </v-col>
 
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #26415b"
-                  elevation="0"
-                  class="px-2 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #26415b" elevation="0" class="px-2 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
@@ -115,11 +95,7 @@
                             </v-col> -->
 
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #ad382f"
-                  elevation="0"
-                  class="px-2 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #ad382f" elevation="0" class="px-2 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
@@ -149,11 +125,7 @@
                 </v-card>
               </v-col>
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #ad382f"
-                  elevation="0"
-                  class="px-2 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #ad382f" elevation="0" class="px-2 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">วันเรียนที่เหลือ</div>
@@ -185,27 +157,17 @@
             </v-row>
           </v-card>
 
-          <v-card
-            style="
+          <v-card style="
               border-radius: 20px;
               background: #ffffff;
               border: 1px solid #000;
-            "
-            elevation="0"
-            class="mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+            " elevation="0" class="mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div>ข้อมูล Private class</div>
             </v-card-title>
             <v-row justify="space-between" class="px-5">
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #26415b"
-                  elevation="0"
-                  class="px-3 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #26415b" elevation="0" class="px-3 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">ชั่วโมงทดลองเรียน</div>
@@ -232,11 +194,7 @@
               </v-col>
 
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #26415b"
-                  elevation="0"
-                  class="px-3 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #26415b" elevation="0" class="px-3 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">ชั่วโมงที่เรียนไปแล้ว</div>
@@ -276,11 +234,7 @@
                             </v-col> -->
 
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #ad382f"
-                  elevation="0"
-                  class="px-3 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #ad382f" elevation="0" class="px-3 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">ชั่วโมงเรียนที่เหลือ</div>
@@ -310,11 +264,7 @@
                 </v-card>
               </v-col>
               <v-col cols="12" lg="3" md="6" sm="12" xs="12">
-                <v-card
-                  style="border-radius: 20px; background: #ad382f"
-                  elevation="0"
-                  class="px-3 my-2"
-                >
+                <v-card style="border-radius: 20px; background: #ad382f" elevation="0" class="px-3 my-2">
                   <v-card-text class="p-4">
                     <v-row class="p-0">
                       <div class="des-label">วันเรียนที่เหลือ</div>
@@ -346,54 +296,28 @@
             </v-row>
           </v-card>
 
-          <v-card
-            style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
-            elevation="0"
-            class="px-2 mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+          <v-card style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)" elevation="0" class="px-2 mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div class="">ข้อมูลเกี่ยวกับคอร์ส</div>
             </v-card-title>
             <v-card-text>
               <v-row>
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    readonly
-                    value="Flip class"
-                    label="ประเภทคลาส"
-                  ></v-text-field>
+                  <v-text-field class="black-label" readonly value="Flip class" label="ประเภทคลาส"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    name="freeHour"
-                    v-model="freeHour"
-                    disabled
-                    label="ชั่วโมงที่แถม"
-                  >
+                  <v-text-field class="black-label" name="freeHour" v-model="freeHour" disabled label="ชั่วโมงที่แถม">
                   </v-text-field>
                 </v-col>
                 <v-col class="py-0" cols="4"> </v-col>
                 <v-col cols="12" lg="4" md="4" sm="6" xs="6" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    v-model="purchaseFlipClassDate"
-                    prepend-icon="mdi-calendar"
-                    disabled
-                    label="วันที่ซื้อคอร์ส"
-                  ></v-text-field>
+                  <v-text-field class="black-label" v-model="purchaseFlipClassDate" prepend-icon="mdi-calendar" disabled
+                    label="วันที่ซื้อคอร์ส"></v-text-field>
                 </v-col>
                 <v-col cols="12" lg="4" md="4" sm="6" xs="6" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    v-model="expireFlipClassDate"
-                    disabled
-                    label="วันที่คอร์สหมดอายุ"
-                  ></v-text-field>
+                  <v-text-field class="black-label" v-model="expireFlipClassDate" disabled
+                    label="วันที่คอร์สหมดอายุ"></v-text-field>
                 </v-col>
 
                 <div class="text-center px-4 py-0">
@@ -401,41 +325,22 @@
                 </div>
 
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    readonly
-                    value="Private class"
-                    label="ประเภทคลาส"
-                  ></v-text-field
-                ></v-col>
+                  <v-text-field class="black-label" readonly value="Private class"
+                    label="ประเภทคลาส"></v-text-field></v-col>
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    name="freeHour"
-                    v-model="privateFreeHour"
-                    disabled
-                    label="ชั่วโมงที่แถม"
-                  >
+                  <v-text-field class="black-label" name="freeHour" v-model="privateFreeHour" disabled
+                    label="ชั่วโมงที่แถม">
                   </v-text-field>
                 </v-col>
                 <v-col class="py-0" cols="4"> </v-col>
 
                 <v-col cols="12" lg="4" md="4" sm="6" xs="6" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    v-model="purchasePrivateClassDate"
-                    disabled
-                    prepend-icon="mdi-calendar"
-                    label="วันที่ซื้อคอร์ส"
-                  ></v-text-field>
+                  <v-text-field class="black-label" v-model="purchasePrivateClassDate" disabled
+                    prepend-icon="mdi-calendar" label="วันที่ซื้อคอร์ส"></v-text-field>
                 </v-col>
                 <v-col cols="12" lg="4" md="4" sm="6" xs="6" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    v-model="expirePrivateClassDate"
-                    disabled
-                    label="วันที่คอร์สหมดอายุ"
-                  ></v-text-field>
+                  <v-text-field class="black-label" v-model="expirePrivateClassDate" disabled
+                    label="วันที่คอร์สหมดอายุ"></v-text-field>
                 </v-col>
 
                 <div class="text-center px-4 py-0">
@@ -443,62 +348,29 @@
                 </div>
 
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    v-model="wantedTeacher"
-                    v-if="!isEditingCourse"
-                    :readonly="!isEditingCourse"
-                    label="ต้องการเรียนกับครู"
-                    item-text="teacher.firstName"
-                  ></v-text-field>
-                  <v-autocomplete
-                    class="black-label"
-                    v-model="wantedTeacher"
-                    :items="teachers"
-                    v-if="isEditingCourse"
-                    label="ต้องการเรียนกับครู"
-                    item-text="teacher.nickname"
-                  ></v-autocomplete>
+                  <v-text-field class="black-label" v-model="wantedTeacher" v-if="!isEditingCourse"
+                    :readonly="!isEditingCourse" label="ต้องการเรียนกับครู" item-text="teacher.firstName"></v-text-field>
+                  <v-autocomplete class="black-label" v-model="wantedTeacher" :items="teachers" v-if="isEditingCourse"
+                    label="ต้องการเรียนกับครู" item-text="teacher.nickname"></v-autocomplete>
                 </v-col>
                 <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                  <v-text-field
-                    class="black-label"
-                    name="annotation"
-                    v-model="annotation"
-                    :readonly="!isEditingCourse"
-                    label="หมายเหตุ"
-                  >
+                  <v-text-field class="black-label" name="annotation" v-model="annotation" :readonly="!isEditingCourse"
+                    label="หมายเหตุ">
                   </v-text-field>
                 </v-col>
               </v-row>
             </v-card-text>
           </v-card>
 
-          <v-card
-            style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
-            elevation="0"
-            class="px-2 mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+          <v-card style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)" elevation="0" class="px-2 mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div class="pl-2">ข้อมูลทั่วไป</div>
               <div>
-                <button
-                  v-if="!isEditingDetail"
-                  class="editButton"
-                  @click="toEditDetail()"
-                >
-                  <span style="color: #c3cad9; font-size: 14px"
-                    >แก้ไขข้อมูล</span
-                  >
+                <button v-if="!isEditingDetail" class="editButton" @click="toEditDetail()">
+                  <span style="color: #c3cad9; font-size: 14px">แก้ไขข้อมูล</span>
                   <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
                 </button>
-                <button
-                  v-if="isEditingDetail"
-                  class="saveButton"
-                  @click="toEditDetail()"
-                >
+                <button v-if="isEditingDetail" class="saveButton" @click="toEditDetail()">
                   <span style="color: #f8f9fb; font-size: 14px">บันทึก</span>
                 </button>
               </div>
@@ -507,43 +379,25 @@
               <v-row class="mt-0" align="center">
                 <v-col cols="12" lg="2" md="2" sm="12" xs="12" class="profile">
                   <div>
-                    <v-avatar
-                      class="avatarPic"
-                      style="
+                    <v-avatar class="avatarPic" style="
                         max-width: 350px;
                         width: 100%;
                         height: 100%;
                         max-height: 350px;
-                      "
-                    >
-                      <img
-                        v-if="profilePic"
-                        :src="profilePic"
-                        alt="รูปโปรไฟล์"
-                      />
+                      ">
+                      <img v-if="profilePic" :src="profilePic" alt="รูปโปรไฟล์" />
                       <v-icon style="font-size: 100px" v-if="!profilePic" dark>
                         mdi-account-circle
                       </v-icon>
                     </v-avatar>
-                    <div
-                      style="
+                    <div style="
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                      "
-                    >
-                      <label
-                        v-if="isEditingDetail"
-                        class="upload-label mt-3"
-                        for="upload-file"
-                      >
+                      ">
+                      <label v-if="isEditingDetail" class="upload-label mt-3" for="upload-file">
                         แก้ไขโปรไฟล์
-                        <input
-                          type="file"
-                          id="upload-file"
-                          hidden
-                          @change="uploadFile"
-                        />
+                        <input type="file" id="upload-file" hidden @change="uploadFile" />
                       </label>
                     </div>
                   </div>
@@ -551,86 +405,44 @@
                 <v-col lg="10" md="10" sm="12" xs="12">
                   <v-row class="px-8">
                     <v-col class="py-0" cols="12" lg="4" md="4" sm="12" xs="12">
-                      <div
-                        style="
+                      <div style="
                           color: var(--brown-brown-2, #27262b);
                           font-size: 20px;
                           font-weight: 500;
-                        "
-                      >
+                        ">
                         รหัสนักเรียน : {{ studentId }}
                       </div>
                     </v-col>
                     <v-col cols="8" class="py-0"></v-col>
                     <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        class="black-label"
-                        name="firstNameEng"
-                        v-model="firstNameEng"
-                        :rules="firstNameEngRules"
-                        label="ชื่อ (ภาษาอังกฤษ)"
-                        :readonly="!isEditingDetail"
-                        v-on:keypress="isLetter($event)"
-                      >
+                      <v-text-field class="black-label" name="firstNameEng" v-model="firstNameEng"
+                        :rules="firstNameEngRules" label="ชื่อ (ภาษาอังกฤษ)" :readonly="!isEditingDetail"
+                        v-on:keypress="isLetter($event)">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        class="black-label"
-                        name="lastNameEng"
-                        v-model="lastNameEng"
-                        label="นามสกุล (ภาษาอังกฤษ)"
-                        :rules="lastnameEngRules"
-                        :readonly="!isEditingDetail"
-                        v-on:keypress="isLetter($event)"
-                      >
+                      <v-text-field class="black-label" name="lastNameEng" v-model="lastNameEng"
+                        label="นามสกุล (ภาษาอังกฤษ)" :rules="lastnameEngRules" :readonly="!isEditingDetail"
+                        v-on:keypress="isLetter($event)">
                       </v-text-field>
                     </v-col>
                     <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        label="ชื่อ"
-                        name="firstName"
-                        v-model="firstName"
-                        :readonly="!isEditingDetail"
-                        :rules="firstNameRules"
-                        required
-                      ></v-text-field>
+                      <v-text-field label="ชื่อ" name="firstName" v-model="firstName" :readonly="!isEditingDetail"
+                        :rules="firstNameRules" required></v-text-field>
                     </v-col>
                     <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        label="ชื่อนามสกุล"
-                        name="lastName"
-                        v-model="lastName"
-                        :readonly="!isEditingDetail"
-                        :rules="lastnameRules"
-                        required
-                      ></v-text-field>
+                      <v-text-field label="ชื่อนามสกุล" name="lastName" v-model="lastName" :readonly="!isEditingDetail"
+                        :rules="lastnameRules" required></v-text-field>
                     </v-col>
                     <v-col cols="6" lg="6" md="6" sm="6" xs="6" class="py-0">
-                      <v-text-field
-                        label="ชื่อเล่น"
-                        name="nickname"
-                        v-model="nickname"
-                        :readonly="!isEditingDetail"
-                        :rules="nicknameRules"
-                        required
-                      ></v-text-field>
+                      <v-text-field label="ชื่อเล่น" name="nickname" v-model="nickname" :readonly="!isEditingDetail"
+                        :rules="nicknameRules" required></v-text-field>
                     </v-col>
 
                     <v-col cols="6" lg="6" md="6" sm="6" xs="6" class="py-0">
-                      <v-text-field
-                        v-if="!isEditingDetail"
-                        label="เพศ"
-                        name="gender"
-                        v-model="gender"
-                        :readonly="!isEditingDetail"
-                      ></v-text-field>
-                      <v-select
-                        v-if="isEditingDetail"
-                        v-model="gender"
-                        :items="genders"
-                        label="เพศ"
-                      ></v-select>
+                      <v-text-field v-if="!isEditingDetail" label="เพศ" name="gender" v-model="gender"
+                        :readonly="!isEditingDetail"></v-text-field>
+                      <v-select v-if="isEditingDetail" v-model="gender" :items="genders" label="เพศ"></v-select>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -641,64 +453,31 @@
                 </v-col>
                 <v-row class="px-10">
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      label="เบอร์"
-                      name="studentMobile"
-                      v-model="studentMobile"
-                      :rules="mobileRules"
-                      :readonly="!isEditingDetail"
-                      :counter="isEditingDetail"
-                    ></v-text-field>
+                    <v-text-field label="เบอร์" name="studentMobile" v-model="studentMobile" :rules="mobileRules"
+                      :readonly="!isEditingDetail" :counter="isEditingDetail"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      label="อีเมลล์"
-                      name="email"
-                      v-model="email"
-                      :rules="emailRules"
-                      :readonly="!isEditingDetail"
-                    ></v-text-field>
+                    <v-text-field label="อีเมลล์" name="email" v-model="email" :rules="emailRules"
+                      :readonly="!isEditingDetail"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      label="เลขบัตรประชาชน"
-                      name="idCardNumber"
-                      v-model="idCardNumber"
-                      :rules="idCardRules"
-                      :counter="isEditingDetail"
-                      :readonly="!isEditingDetail"
-                    ></v-text-field>
+                    <v-text-field label="เลขบัตรประชาชน" name="idCardNumber" v-model="idCardNumber" :rules="idCardRules"
+                      :counter="isEditingDetail" :readonly="!isEditingDetail"></v-text-field>
                   </v-col>
                 </v-row>
               </v-row>
             </v-form>
           </v-card>
 
-          <v-card
-            style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
-            elevation="0"
-            class="px-2 mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+          <v-card style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)" elevation="0" class="px-2 mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div class="">ข้อมูลที่อยู่</div>
               <div>
-                <button
-                  v-if="!isEditingAddress"
-                  class="editButton"
-                  @click="toEditAddress()"
-                >
-                  <span style="color: #c3cad9; font-size: 14px"
-                    >แก้ไขข้อมูล</span
-                  >
+                <button v-if="!isEditingAddress" class="editButton" @click="toEditAddress()">
+                  <span style="color: #c3cad9; font-size: 14px">แก้ไขข้อมูล</span>
                   <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
                 </button>
-                <button
-                  v-if="isEditingAddress"
-                  class="saveButton"
-                  @click="toEditAddress()"
-                >
+                <button v-if="isEditingAddress" class="saveButton" @click="toEditAddress()">
                   <span style="color: #f8f9fb; font-size: 14px">บันทึก</span>
                 </button>
               </div>
@@ -708,59 +487,28 @@
                 <v-row>
                   <p>&#x2022; ที่อยู่ตามบัตรประชาชน</p>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="houseNo"
-                      label="บ้านเลขที่"
-                      :readonly="!isEditingAddress"
-                      v-model="address.houseNo"
-                    ></v-text-field>
+                    <v-text-field name="houseNo" label="บ้านเลขที่" :readonly="!isEditingAddress"
+                      v-model="address.houseNo"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      v-if="!isEditingAddress"
-                      name="tambon"
-                      label="ตำบล/แขวง"
-                      :readonly="!isEditingAddress"
-                      v-model="address.tambon"
-                    ></v-text-field>
+                    <v-text-field v-if="!isEditingAddress" name="tambon" label="ตำบล/แขวง" :readonly="!isEditingAddress"
+                      v-model="address.tambon"></v-text-field>
 
-                    <v-autocomplete
-                      v-if="isEditingAddress"
-                      class="black-label"
-                      v-model="selectedTambon"
-                      :items="tambons"
-                      :item-value="tambonValue"
-                      item-text="name_th"
-                      :search-input.sync="searchTambon"
-                      no-data-text="กรุณากรอกชื่อตำบล"
-                      @update:search-input="fetchTambons"
-                      label="ตำบล"
-                    ></v-autocomplete>
+                    <v-autocomplete v-if="isEditingAddress" class="black-label" v-model="selectedTambon" :items="tambons"
+                      :item-value="tambonValue" item-text="name_th" :search-input.sync="searchTambon"
+                      no-data-text="กรุณากรอกชื่อตำบล" @update:search-input="fetchTambons" label="ตำบล"></v-autocomplete>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="amphoe"
-                      label="อำเภอ/เขต"
-                      :readonly="!isEditingAddress"
-                      v-model="address.amphoe"
-                    ></v-text-field>
+                    <v-text-field name="amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
+                      v-model="address.amphoe"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="province"
-                      label="จังหวัด"
-                      :readonly="!isEditingAddress"
-                      v-model="address.province"
-                    ></v-text-field>
+                    <v-text-field name="province" label="จังหวัด" :readonly="!isEditingAddress"
+                      v-model="address.province"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="6" md="6" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="postal"
-                      label="รหัสไปรษณีย์"
-                      :rules="postalRules"
-                      :readonly="!isEditingAddress"
-                      v-model="address.postal"
-                    ></v-text-field>
+                    <v-text-field name="postal" label="รหัสไปรษณีย์" :rules="postalRules" :readonly="!isEditingAddress"
+                      v-model="address.postal"></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <div class="text-center">
@@ -770,73 +518,35 @@
                   <v-row class="px-4">
                     <p class="py-0">
                       &#x2022; ที่อยู่ปัจจุบัน
-                      <v-checkbox
-                        label="ที่อยู่ตามบัตรประชาชน "
-                        :disabled="!isEditingAddress"
-                        @click="updateCurrAddress()"
-                      ></v-checkbox>
+                      <v-checkbox label="ที่อยู่ตามบัตรประชาชน " :disabled="!isEditingAddress"
+                        @click="updateCurrAddress()"></v-checkbox>
                     </p>
 
                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        name="curr_houseNo"
-                        label="บ้านเลขที่"
-                        :readonly="!isEditingAddress"
-                        :disabled="isAddressSame"
-                        v-model="currAddress.houseNo"
-                      ></v-text-field>
+                      <v-text-field name="curr_houseNo" label="บ้านเลขที่" :readonly="!isEditingAddress"
+                        :disabled="isAddressSame" v-model="currAddress.houseNo"></v-text-field>
                     </v-col>
                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        v-if="!isEditingAddress || isAddressSame"
-                        name="curr_tambon"
-                        label="ตำบล/แขวง"
-                        readonly
-                        :disabled="isAddressSame"
-                        v-model="currAddress.tambon"
-                      ></v-text-field>
+                      <v-text-field v-if="!isEditingAddress || isAddressSame" name="curr_tambon" label="ตำบล/แขวง"
+                        readonly :disabled="isAddressSame" v-model="currAddress.tambon"></v-text-field>
 
-                      <v-autocomplete
-                        v-if="isEditingAddress && !isAddressSame"
-                        class="black-label"
-                        :disabled="isAddressSame"
-                        v-model="selectedCurrTambon"
-                        :items="currTambons"
-                        :item-value="currTambonValue"
-                        item-text="name_th"
-                        :search-input.sync="searchCurrTambon"
-                        no-data-text="กรุณากรอกชื่อตำบล"
-                        @update:search-input="fetchCurrTambons"
-                        label="ตำบล"
-                      ></v-autocomplete>
+                      <v-autocomplete v-if="isEditingAddress && !isAddressSame" class="black-label"
+                        :disabled="isAddressSame" v-model="selectedCurrTambon" :items="currTambons"
+                        :item-value="currTambonValue" item-text="name_th" :search-input.sync="searchCurrTambon"
+                        no-data-text="กรุณากรอกชื่อตำบล" @update:search-input="fetchCurrTambons"
+                        label="ตำบล"></v-autocomplete>
                     </v-col>
                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        name="curr_amphoe"
-                        label="อำเภอ/เขต"
-                        :readonly="!isEditingAddress"
-                        :disabled="isAddressSame"
-                        v-model="currAddress.amphoe"
-                      ></v-text-field>
+                      <v-text-field name="curr_amphoe" label="อำเภอ/เขต" :readonly="!isEditingAddress"
+                        :disabled="isAddressSame" v-model="currAddress.amphoe"></v-text-field>
                     </v-col>
                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        name="curr_province"
-                        label="จังหวัด"
-                        :readonly="!isEditingAddress"
-                        :disabled="isAddressSame"
-                        v-model="currAddress.province"
-                      ></v-text-field>
+                      <v-text-field name="curr_province" label="จังหวัด" :readonly="!isEditingAddress"
+                        :disabled="isAddressSame" v-model="currAddress.province"></v-text-field>
                     </v-col>
                     <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                      <v-text-field
-                        name="curr_postal"
-                        label="รหัสไปรษณีย์"
-                        :rules="postalRules"
-                        :disabled="isAddressSame"
-                        :readonly="!isEditingAddress"
-                        v-model="currAddress.postal"
-                      ></v-text-field>
+                      <v-text-field name="curr_postal" label="รหัสไปรษณีย์" :rules="postalRules" :disabled="isAddressSame"
+                        :readonly="!isEditingAddress" v-model="currAddress.postal"></v-text-field>
                     </v-col>
                   </v-row>
                 </v-row>
@@ -844,14 +554,8 @@
             </v-card-text>
           </v-card>
 
-          <v-card
-            style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
-            elevation="0"
-            class="px-2 mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+          <v-card style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)" elevation="0" class="px-2 mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div class="">ข้อมูลข้อมูลผู้ปกครอง</div>
               <!-- <div>
                                 <button v-if="!isEditingParentDetail" class="editButton " @click="toEditParentDetails()">
@@ -868,82 +572,39 @@
               <v-form ref="parentDetailForm">
                 <v-row>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      class="black-label"
-                      name="parentFirstName"
-                      v-model="parentFirstName"
-                      disabled
-                      :readonly="!isEditingParentDetail"
-                      label="ชื่อผู้ปกครอง"
-                      required
-                    >
+                    <v-text-field class="black-label" name="parentFirstName" v-model="parentFirstName" disabled
+                      :readonly="!isEditingParentDetail" label="ชื่อผู้ปกครอง" required>
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      class="black-label"
-                      name="parentMobile"
-                      v-model="parentMobile"
-                      disabled
-                      :readonly="!isEditingParentDetail"
-                      label="เบอร์โทรศัพท์ผู้ปกครอง"
-                      required
-                    >
+                    <v-text-field class="black-label" name="parentMobile" v-model="parentMobile" disabled
+                      :readonly="!isEditingParentDetail" label="เบอร์โทรศัพท์ผู้ปกครอง" required>
                     </v-text-field>
                   </v-col>
                   <v-col class="py-0" cols="4"> </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      class="black-label"
-                      name="parentJob"
-                      v-model="parentJob"
-                      disabled
-                      :readonly="!isEditingParentDetail"
-                      label="อาชีพ"
-                    >
+                    <v-text-field class="black-label" name="parentJob" v-model="parentJob" disabled
+                      :readonly="!isEditingParentDetail" label="อาชีพ">
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-textarea
-                      class="black-label"
-                      name="expectation"
-                      v-model="expectation"
-                      disabled
-                      :readonly="!isEditingParentDetail"
-                      label="ความคาดหวัง"
-                      rows="2"
-                    >
+                    <v-textarea class="black-label" name="expectation" v-model="expectation" disabled
+                      :readonly="!isEditingParentDetail" label="ความคาดหวัง" rows="2">
                     </v-textarea>
                   </v-col>
                 </v-row>
               </v-form>
             </v-card-text>
           </v-card>
-          <v-card
-            style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)"
-            elevation="0"
-            class="px-2 mt-5"
-          >
-            <v-card-title
-              class="font-weight-bold header d-flex justify-space-between align-center"
-            >
+          <v-card style="border-radius: 32px; background: rgba(216, 202, 191, 0.5)" elevation="0" class="px-2 mt-5">
+            <v-card-title class="font-weight-bold header d-flex justify-space-between align-center">
               <div class="">ข้อมูลการศึกษา</div>
               <div>
-                <button
-                  v-if="!isEditingEducation"
-                  class="editButton"
-                  @click="toEditEducation()"
-                >
-                  <span style="color: #c3cad9; font-size: 14px"
-                    >แก้ไขข้อมูล</span
-                  >
+                <button v-if="!isEditingEducation" class="editButton" @click="toEditEducation()">
+                  <span style="color: #c3cad9; font-size: 14px">แก้ไขข้อมูล</span>
                   <v-icon right color="#C3CAD9">mdi-pencil</v-icon>
                 </button>
-                <button
-                  v-if="isEditingEducation"
-                  class="saveButton"
-                  @click="toEditEducation()"
-                >
+                <button v-if="isEditingEducation" class="saveButton" @click="toEditEducation()">
                   <span style="color: #f8f9fb; font-size: 14px">บันทึก</span>
                 </button>
               </div>
@@ -952,30 +613,14 @@
               <v-form ref="educationForm">
                 <v-row>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="school"
-                      label="โรงเรียน"
-                      :readonly="!isEditingEducation"
-                      v-model="school"
-                    ></v-text-field>
+                    <v-text-field name="school" label="โรงเรียน" :readonly="!isEditingEducation"
+                      v-model="school"></v-text-field>
                   </v-col>
                   <v-col cols="12" lg="4" md="4" sm="12" xs="12" class="py-0">
-                    <v-text-field
-                      name="education"
-                      label="ระดับชั้น"
-                      :readonly="!isEditingEducation"
-                      v-if="!isEditingEducation"
-                      v-model="education"
-                    ></v-text-field>
-                    <v-select
-                      class="black-label"
-                      label="ระดับชั้น"
-                      name="education"
-                      v-model="education"
-                      v-if="isEditingEducation"
-                      :items="educationLevels"
-                      item-text="educationName"
-                    ></v-select>
+                    <v-text-field name="education" label="ระดับชั้น" :readonly="!isEditingEducation"
+                      v-if="!isEditingEducation" v-model="education"></v-text-field>
+                    <v-select class="black-label" label="ระดับชั้น" name="education" v-model="education"
+                      v-if="isEditingEducation" :items="educationLevels" item-text="educationName"></v-select>
                   </v-col>
                 </v-row>
               </v-form>
@@ -993,45 +638,38 @@
             <b>ประวัติการเรียน</b>
           </span>
           <v-spacer></v-spacer>
-          <v-btn
-            fab
-            dark
-            small
-            color="#37474F"
-            @click="closeClassHistoryDialog"
-          >
+          <v-btn fab dark small color="#37474F" @click="closeClassHistoryDialog">
             <v-icon dark class="text-h5"> mdi-close </v-icon>
           </v-btn>
         </v-card-title>
-        <hr
-          class="hrDialog"
-          style="border: 2px solid #000; background-color: #000"
-        />
+        <hr class="hrDialog" style="border: 2px solid #000; background-color: #000" />
         <v-card-text>
           <v-container>
-            <v-data-table
-              :headers="historyHeaders"
-              :items="classHistories"
-              :items-per-page="-1"
-            >
+            <v-data-table :headers="historyHeaders" :items="classHistories" :items-per-page="-1">
               <template v-slot:footer> </template>
               <template v-slot:item.actions="{ item }">
-                <div
-                  style="
+                <div style="
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     height: 100%;
-                  "
-                >
-                  <v-icon
-                    style="text-decoration: underline"
-                    large
-                    color="#B6A7A2"
-                    class="text-h5"
-                    @click="viewProgress(item)"
-                  >
+                  ">
+                  <v-icon style="text-decoration: underline" large color="#B6A7A2" class="text-h5"
+                    @click="viewProgress(item)">
                     mdi-eye
+                  </v-icon>
+                </div>
+              </template>
+              <template v-slot:item.review="{ item }">
+                <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                  ">
+                  <v-icon style="text-decoration: underline" large color="#B6A7A2" class="text-h5"
+                    @click="viewReview(item)">
+                    mdi-message-draw
                   </v-icon>
                 </div>
               </template>
@@ -1044,18 +682,10 @@
     <v-dialog v-model="progress_dialog" max-width="700px">
       <v-card class="rounded-xl">
         <v-card-title>
-          <b class="ms-5" style="font-size: 16px"
-            >เชคชื่อวันที่ {{ progress.date }} <br />
-            {{ progress.time_s }}-{{ progress.time_e }}</b
-          >
+          <b class="ms-5" style="font-size: 16px">เชคชื่อวันที่ {{ progress.date }} <br />
+            {{ progress.time_s }}-{{ progress.time_e }}</b>
           <v-spacer></v-spacer>
-          <v-btn
-            fab
-            dark
-            small
-            color="#37474F"
-            @click="progress_dialog = false"
-          >
+          <v-btn fab dark small color="#37474F" @click="progress_dialog = false">
             <v-icon dark class="text-h5"> mdi-close </v-icon>
           </v-btn>
         </v-card-title>
@@ -1067,56 +697,27 @@
                 <p style="font-size: 16px">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
               </v-col>
               <v-col cols="12" sm="6" md="6" style="margin-top: -30px">
-                <v-text-field
-                  label="ชื่อนักเรียน"
-                  v-model="firstName"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="ชื่อนักเรียน" v-model="firstName" readonly></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6" style="margin-top: -30px">
-                <v-text-field
-                  label="วิชาที่เรียน"
-                  v-model="progress.subject"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="วิชาที่เรียน" v-model="progress.subject" readonly></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6" style="margin-top: -30px">
-                <v-text-field
-                  label="ชื่อครู"
-                  v-model="progress.teacherName"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="ชื่อครู" v-model="progress.teacherName" readonly></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6" style="margin-top: -30px">
-                <v-text-field
-                  label="จุดประสงค์ในการเรียน"
-                  v-model="progress.because"
-                  readonly
-                ></v-text-field>
+                <v-text-field label="จุดประสงค์ในการเรียน" v-model="progress.because" readonly></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="วันนี้น้องเรียนเรื่อง"
-                  v-model="selectedPlan.learn"
-                  disabled
-                ></v-text-field>
+                <v-text-field label="วันนี้น้องเรียนเรื่อง" v-model="selectedPlan.learn" disabled></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-select
-                  v-model="selectedPlan.understand"
-                  disabled
-                  label="น้องมีความเข้าใจในเนื้อหา"
-                ></v-select>
+                <v-select v-model="selectedPlan.understand" disabled label="น้องมีความเข้าใจในเนื้อหา"></v-select>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-textarea
-                  label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น"
-                  rows="1"
-                  counter
-                  disabled
-                  v-model="selectedPlan.development"
-                >
+                <v-textarea label="สำหรับวันนี้น้องมีพัฒนาการที่เพิ่มขึ้น" rows="1" counter disabled
+                  v-model="selectedPlan.development">
                   <template v-slot:append-outer>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
@@ -1128,57 +729,32 @@
                 </v-textarea>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="ปัญหาที่เกิดกับน้องในการเรียน"
-                  disabled
-                  v-model="selectedPlan.problem"
-                ></v-text-field>
+                <v-text-field label="ปัญหาที่เกิดกับน้องในการเรียน" disabled
+                  v-model="selectedPlan.problem"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="จึงใช้วิธี"
-                  v-model="selectedPlan.method"
-                  disabled
-                >
+                <v-text-field label="จึงใช้วิธี" v-model="selectedPlan.method" disabled>
                 </v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
-                <v-text-field
-                  label="เพื่อพัฒนาน้อง"
-                  v-model="selectedPlan.to_development"
-                  disabled
-                ></v-text-field>
+                <v-text-field label="เพื่อพัฒนาน้อง" v-model="selectedPlan.to_development" disabled></v-text-field>
               </v-col>
               <v-col cols="12" sm="12">
-                <v-text-field
-                  label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้"
-                  v-model="selectedPlan.homework"
-                  disabled
-                ></v-text-field>
+                <v-text-field label="การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้" v-model="selectedPlan.homework"
+                  disabled></v-text-field>
               </v-col>
               <v-col cols="12" sm="12">
-                <v-text-field
-                  label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน"
-                  v-model="selectedPlan.link_url"
-                  disabled
-                ></v-text-field>
+                <v-text-field label="Link เกี่ยวกับเอกสารการเรียน หรือคลิปสอนนักเรียน" v-model="selectedPlan.link_url"
+                  disabled></v-text-field>
               </v-col>
               <v-col cols="12" sm="12">
                 <v-radio-group v-model="selectedPlan.check_sheet" disabled>
-                  <v-radio
-                    v-for="(items, index) in sheet_all"
-                    :key="index"
-                    :label="items.name"
-                    disabled
-                    :value="items.key"
-                  ></v-radio>
+                  <v-radio v-for="(items, index) in sheet_all" :key="index" :label="items.name" disabled
+                    :value="items.key"></v-radio>
                 </v-radio-group>
-                <v-text-field
-                  label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
-                  v-if="selectedPlan.check_sheet == '-NcBOFy1oXhSI-dVzWkp'"
-                  disabled
-                  v-model="selectedPlan.link_sheet"
-                ></v-text-field>
+                <v-text-field label="Link เอกสารการเรียน (Upload ลง Goolge Drive)"
+                  v-if="selectedPlan.check_sheet == '-NcBOFy1oXhSI-dVzWkp'" disabled
+                  v-model="selectedPlan.link_sheet"></v-text-field>
               </v-col>
             </v-row>
             <v-row v-else> ยังไม่มีพัฒนาการในขณะนี้ </v-row>
@@ -1188,12 +764,7 @@
     </v-dialog>
 
     <!-- snackbar -->
-    <v-snackbar
-      class="font-weight-medium"
-      :color="snackbarColor"
-      v-model="showSnackbar"
-      :timeout="1000"
-    >
+    <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
       <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
     </v-snackbar>
   </div>
@@ -1314,6 +885,7 @@ export default {
         { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
         { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
         { text: 'ดูพัฒนาการ', value: 'actions', sortable: false },
+        { text: 'รีวิว', value: 'review', sortable: false },
       ],
       selectedPlan: {
         status_development: null,
@@ -2273,6 +1845,9 @@ export default {
         this.keyuser = localStorage.getItem('lastName') || ''
       }
     },
+    viewReview(item){
+      console.log(item);
+    }
   },
 }
 </script>
@@ -2406,6 +1981,7 @@ hr.solid {
 
 /* mobile */
 @media (max-width: 767px) {
+
   /* markup */
   span {
     letter-spacing: 0px;

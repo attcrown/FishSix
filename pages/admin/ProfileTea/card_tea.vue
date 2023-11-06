@@ -209,8 +209,8 @@
                                                             </v-icon>
                                                         </template>
                                                         <!-- eslint-disable-next-line vue/valid-v-slot -->
-                                                        <template v-slot:item.subject="{ item }">
-                                                            {{ check_subject(item.subject) }}
+                                                        <template v-slot:item.keysubject="{ item }">
+                                                            {{ check_subject(item.keysubject) }}
                                                         </template>
                                                         <!-- eslint-disable-next-line vue/valid-v-slot -->
                                                         <template v-slot:item.keystudent="{ item }">
@@ -401,9 +401,9 @@ export default {
                 {
                     text: 'วันที่สอน',
                     align: 'start',
-                    value: 'date',
+                    value: 'date_learn',
                 },
-                { text: 'วิชาที่สอน', value: 'subject', align: 'center' },
+                { text: 'วิชาที่สอน', value: 'keysubject', align: 'center' },
                 { text: 'นักเรียน', value: 'keystudent', align: 'center' },
                 { text: 'รายละเอียด', value: 'detail', align: 'center', sortable: false, },
             ],
@@ -628,24 +628,17 @@ export default {
         },
         table_detail(item) {
             console.log('>>>>', item);
-            this.desserts = [];
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).on("value", (snapshot) => {
+            db.ref(`send_plan/${item.id}`).on("value", (snapshot) => {
+                this.desserts = [];
                 const childData = snapshot.val();
-                for (const keystu in childData) {
-                    const student = childData[keystu];
-                    for (const day in student) {
-                        const time = student[day];
-                        for (const checkTea in time) {
-                            if (time[checkTea].teacher === item.id) {
-                                let newer = { keystudent: keystu };
-                                time[checkTea] = { ...time[checkTea], ...newer };
-                                this.desserts.push(time[checkTea]);
-                            }
-                        }
-                    }
+                for (const keysend in childData) {  
+                    let cdkey = childData[keysend];              
+                    let newer = { keysend: keysend };
+                    cdkey = { ...cdkey, ...newer };
+                    console.log(cdkey);
+                    this.desserts.push(cdkey);
                 }
-
             })
         },
         check_keystudent(idkey) {
