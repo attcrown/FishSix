@@ -178,7 +178,7 @@
                                                 <div class="des-label">FlipClass</div>
                                                 <div class="time-label my-3">{{
                                                     formattedExpireFlipClassDate }} </div>
-                                            </v-col>                                          
+                                            </v-col>
                                         </v-row>
                                     </v-card-text>
                                 </v-card>
@@ -450,7 +450,7 @@
                                             <v-col cols="3" class="p-0 mt-2">
 
                                             </v-col>
-                                           
+
 
                                         </v-row>
                                     </v-card-text>
@@ -1009,6 +1009,15 @@
                                     </v-icon>
                                 </div>
                             </template>
+                             <!-- eslint-disable-next-line vue/valid-v-slot -->
+                            <template v-slot:item.review="{ item }">
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                    <v-icon style="text-decoration: underline" large color="#B6A7A2" class="text-h5"
+                                        @click="reviewData = [], viewReview(item), dialogReview = true">
+                                        mdi-message-draw
+                                    </v-icon>
+                                </div>
+                            </template>
 
                         </v-data-table>
                     </v-container>
@@ -1188,6 +1197,40 @@
         <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
             <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
         </v-snackbar>
+
+        <v-row justify="center">
+            <v-dialog v-model="dialogReview" persistent max-width="300">
+                <v-card class="rounded-xl">
+                    <v-card-title>
+                        <h5>ประเมินครู</h5>
+                    </v-card-title>
+                    <v-card-text>
+                        <div class="text-center">
+                            <v-rating v-model="reviewData.rating" color="yellow darken-3" background-color="grey darken-1"
+                                empty-icon="$ratingFull" half-increments hover large></v-rating>
+                            <v-form ref="formReview" v-model="valid" lazy-validation>
+                                <v-text-field v-model="reviewData.Rans1" :counter="100" :rules="reviewRules"
+                                    label="สิ่งที่ดีอยู่แล้ว" required></v-text-field>
+                                <v-text-field v-model="reviewData.Rans2" :counter="100" :rules="reviewRules"
+                                    label="สิ่งที่พัฒนาต่อได้" required></v-text-field>
+                                <v-text-field v-model="reviewData.Rans3" :counter="100" :rules="reviewRules"
+                                    label="สิ่งที่อยากให้พัฒนา" required></v-text-field>
+                            </v-form>
+                        </div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialogReview = false">
+                            Close
+                        </v-btn>
+                        <v-btn color="green darken-1" text @click="validateReview" :disabled="!valid">
+                            Save
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-row>
+
     </div>
 </template>
   
@@ -1198,6 +1241,10 @@ export default {
 
     data() {
         return {
+            valid: true,
+            reviewData: [],
+            dialogReview: false,
+
             //status
             activePicker: null,
             date: null,
@@ -1236,7 +1283,7 @@ export default {
                 { text: 'เวลาที่เริ่มเรียน', value: 'classHistory.time_s' },
                 { text: 'เวลาที่สิ้นสุด', value: 'classHistory.time_e' },
                 { text: 'ดูพัฒนาการ', value: 'actions', sortable: false },
-
+                { text: 'รีวิว', value: 'review', sortable: false },
             ],
             //temporary
 
@@ -1300,8 +1347,8 @@ export default {
             studyHourOnlineDisplay: null,
             hourLeftDisplay: null,
             isAddressSame: false,
-            selectedFlipClassType:null,
-            selectedPrivateClassType:null,
+            selectedFlipClassType: null,
+            selectedPrivateClassType: null,
             totalHourInput: null,
             privateTotalHourInput: null,
             studyHourInput: null,
@@ -1413,6 +1460,10 @@ export default {
             ],
 
             //rules
+            reviewRules: [
+                v => !!v || 'review is required',
+                v => (v && v.length <= 100) || 'สูงสุด 100 ตัวอักษร',
+            ],
             firstNameEngRules: [
 
                 v => !v || (v && v.length <= 100) || 'Name must be less than 100 characters',
@@ -1674,7 +1725,35 @@ export default {
     },
 
     methods: {
-
+        viewReview(item) {
+            const db = this.$fireModule.database();
+            db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.key}`).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                const childData = snapshot.val(); 
+                let keyteacher =  {keyteacher:item.classHistory.keyTeacher};
+                let keysendPlan = {keysendPlan:item.key};        
+                this.reviewData = {...childData , ...keyteacher , ...keysendPlan};
+                console.log(this.reviewData);
+                }
+            })
+        },
+        validateReview() {
+            this.$refs.formReview.validate()
+            if (this.$refs.formReview.validate()) {
+                console.log('save', this.reviewData);
+                const db = this.$fireModule.database();
+                db.ref(`send_plan/${this.reviewData.keyteacher}/${this.reviewData.keysendPlan}`).update({
+                    Rans1: this.reviewData.Rans1,
+                    Rans2: this.reviewData.Rans2,
+                    Rans3: this.reviewData.Rans3,
+                    rating: this.reviewData.rating,
+                })
+                    .then(() => {
+                        this.openSnackbar('success', 'บันทึกสำเร็จ')
+                    })
+                this.dialogReview = false;
+            }
+        },
         saveDate(date) {
             this.$refs.flipDate.save(date);
 
