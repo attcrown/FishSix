@@ -668,7 +668,7 @@
                     height: 100%;
                   ">
                   <v-icon style="text-decoration: underline" large color="#B6A7A2" class="text-h5"
-                    @click="viewReview(item)">
+                    @click="viewReview(item), dialogReview = true">
                     mdi-message-draw
                   </v-icon>
                 </div>
@@ -767,6 +767,32 @@
     <v-snackbar class="font-weight-medium" :color="snackbarColor" v-model="showSnackbar" :timeout="1000">
       <v-icon class="mr-2">mdi-alert-circle</v-icon>{{ snackbarMessage }}
     </v-snackbar>
+
+    <v-row justify="center">
+      <v-dialog v-model="dialogReview" persistent max-width="500">
+        <v-card class="rounded-xl">
+          <v-card-title>
+            <h5>ประเมินครู</h5>
+          </v-card-title>
+          <v-card-text>
+            <div class="text-center">
+              <v-rating v-model="rating" color="yellow darken-3" background-color="grey darken-1" empty-icon="$ratingFull"
+                half-increments hover large></v-rating>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialogReview = false">
+              Close
+            </v-btn>
+            <v-btn color="green darken-1" text @click="dialogReview = false">
+              Save
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
   </div>
 </template>
 
@@ -776,6 +802,8 @@ export default {
   layout: 'userNav',
   data() {
     return {
+      rating: 0,
+
       //status
       activePicker: null,
       date: null,
@@ -986,6 +1014,7 @@ export default {
           /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
           'รูปแบบอีเมลไม่ถูกต้อง',
       ],
+      dialogReview: false,
     }
   },
   computed: {
@@ -1845,7 +1874,7 @@ export default {
         this.keyuser = localStorage.getItem('lastName') || ''
       }
     },
-    viewReview(item){
+    viewReview(item) {
       console.log(item);
     }
   },
