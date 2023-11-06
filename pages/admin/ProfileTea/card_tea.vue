@@ -88,7 +88,7 @@
                 <v-sheet class="text-start image-container" height="100%">
                     <v-responsive class="overflow-y-auto" max-height="800">
                         <div class="text-end">
-                            <v-btn class="mt-3 me-3 mb-6" color="red" @click="sheet = !sheet, e1 = 1 ,clear_img()">
+                            <v-btn class="mt-3 me-3 mb-6" color="red" @click="sheet = !sheet, e1 = 1, clear_img()">
                                 close
                             </v-btn>
                         </div>
@@ -282,14 +282,12 @@
                                     <v-card style="width:350px; background-color:#EBE4DE"
                                         class="d-flex justify-center align-center rounded-xxl p-3">
                                         <p class="mt-3">อัพเดทโปรไฟล์ครูแบบรูปภาพ</p>
-                                        <v-btn :disabled="!upload_profile" class="ms-3" color="green"
-                                            @click="overlay = !overlay ,
-                                                sheet = !sheet ,
-                                                save_img_profile()">save</v-btn>
-                                        <v-btn :disabled="!detail_item.profile_img" class="ms-3" color="red"
-                                            @click="overlay = !overlay ,
-                                                sheet = !sheet ,
-                                                del_img_profile()">delete</v-btn>
+                                        <v-btn :disabled="!upload_profile" class="ms-3" color="green" @click="overlay = !overlay,
+                                            sheet = !sheet,
+                                            save_img_profile()">save</v-btn>
+                                        <v-btn :disabled="!detail_item.profile_img" class="ms-3" color="red" @click="overlay = !overlay,
+                                            sheet = !sheet,
+                                            del_img_profile()">delete</v-btn>
                                     </v-card>
                                 </v-col>
                                 <v-col cols="auto">
@@ -305,7 +303,7 @@
                             <v-row justify="center">
                                 <v-col cols="auto">
                                     <v-card style="width:1150px;">
-                                        <v-img :src="build_img"></v-img>            
+                                        <v-img :src="build_img"></v-img>
                                     </v-card>
                                 </v-col>
                             </v-row>
@@ -313,7 +311,7 @@
                         <div v-if="!build_img && detail_item.profile_img">
                             <v-row justify="center">
                                 <v-col cols="auto">
-                                    <v-card style="width:1150px;">                                        
+                                    <v-card style="width:1150px;">
                                         <v-img :src="detail_item.profile_img"></v-img>
                                     </v-card>
                                 </v-col>
@@ -332,7 +330,16 @@
                     <h5>รีวิว</h5>
                 </v-card-title>
                 <v-card-text>
-                    <p>{{ dialogData }}</p>
+                    <div class="text-center">
+                        <v-rating v-model="dialogData.rating" color="yellow darken-3" background-color="grey darken-1"
+                            empty-icon="$ratingFull" half-increments hover large readonly></v-rating>
+                        <v-text-field v-model="dialogData.Rans1"
+                            label="สิ่งที่ดีอยู่แล้ว" readonly></v-text-field>
+                        <v-text-field v-model="dialogData.Rans2"
+                            label="สิ่งที่พัฒนาต่อได้" readonly></v-text-field>
+                        <v-text-field v-model="dialogData.Rans3"
+                            label="สิ่งที่อยากให้พัฒนา" readonly></v-text-field>
+                    </div>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -347,7 +354,7 @@
             <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
 
-        
+
 
     </div>
 </template>
@@ -385,7 +392,7 @@ export default {
             data_search_tea: [],
             data_search_sub: [],
             data_search_stu: [],
-            dialogData: '',
+            dialogData: [],
             dialog: false,
             isLoading: true,
             property: 'value',
@@ -488,26 +495,26 @@ export default {
         },
         show_detail(item) {
             this.dialog = true;
-            this.dialogData = item.review;
+            this.dialogData = item;
             console.log(item);
         },
         async search_tea() {
             await this.$nextTick();
-            console.log('>>>', this.firstName, this.status);            
+            console.log('>>>', this.firstName, this.status);
 
             const db = this.$fireModule.database();
             const ref = db.ref("user");
             this.data_search_tea.push({ name: `ทั้งหมด`, key: '00000' });
             ref.orderByChild("status").equalTo("teacher").once("value")
                 .then((snapshot) => {
-                    let teacherData = snapshot.val();                    
-                    if(this.status === "teacher"){
+                    let teacherData = snapshot.val();
+                    if (this.status === "teacher") {
                         db.ref(`user/${this.firstName}`).on("value", (snapshot) => {
                             const childData = snapshot.val();
-                            console.log({[this.firstName]:childData});
-                            teacherData = {[this.firstName]:childData};
+                            console.log({ [this.firstName]: childData });
+                            teacherData = { [this.firstName]: childData };
                         })
-                    } 
+                    }
 
                     this.data_tea = teacherData;
                     this.data_tea_copy = teacherData;
@@ -521,8 +528,8 @@ export default {
                 .catch((error) => {
                     console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
                 });
-             
-               
+
+
 
             ref.orderByChild("status").equalTo("user").once("value")
                 .then((snapshot) => {
@@ -634,8 +641,8 @@ export default {
             db.ref(`send_plan/${item.id}`).on("value", (snapshot) => {
                 this.desserts = [];
                 const childData = snapshot.val();
-                for (const keysend in childData) {  
-                    let cdkey = childData[keysend];              
+                for (const keysend in childData) {
+                    let cdkey = childData[keysend];
                     let newer = { keysend: keysend };
                     cdkey = { ...cdkey, ...newer };
                     console.log(cdkey);
@@ -679,7 +686,7 @@ export default {
                 // คุณอาจต้องใช้งานบรรณาธิการ PDF ใน JavaScript หรือไลบรารีที่สามรถอ่าน PDF เช่น pdf.js
             }
         },
-        save_img_profile(){
+        save_img_profile() {
             const storageRef = firebase.storage().ref();
             const file = this.upload_profile; // เลือกไฟล์รูปภาพจาก input หรืออื่นๆ
             const imageRef = storageRef.child(`Profile_teacher/${this.detail_item.id}.jpg`); // กำหนดชื่อและพาธของรูปภาพที่จะอัปโหลด
@@ -694,8 +701,8 @@ export default {
                             profile_img: url
                         }).then(() => {
                             console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว URL');
-                            let newer = { profile_img : url};
-                            this.detail_item = { ...this.detail_item , ...newer };
+                            let newer = { profile_img: url };
+                            this.detail_item = { ...this.detail_item, ...newer };
                             this.data_tea[this.detail_item.id].profile_img = url;
                             this.data_tea_copy[this.detail_item.id].profile_img = url;
                             this.build_img = null;
@@ -707,11 +714,11 @@ export default {
                 console.error('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ:', error);
             });
         },
-        clear_img(){
+        clear_img() {
             this.build_img = null;
             this.upload_profile = null;
         },
-        del_img_profile(){
+        del_img_profile() {
             const storageRef = firebase.storage().ref();
             const imageRef = storageRef.child(`Profile_teacher/${this.detail_item.id}.jpg`);
             imageRef
@@ -725,15 +732,15 @@ export default {
 
             const db = this.$fireModule.database();
             db.ref(`user/${this.detail_item.id}/profile_img`).remove()
-            .then(() => {
-                console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว URL');
-                let newer = { profile_img : null};
-                this.detail_item = { ...this.detail_item , ...newer };
-                this.data_tea[this.detail_item.id].profile_img = null;
-                this.data_tea_copy[this.detail_item.id].profile_img = null;
-                this.build_img = null;
-                this.upload_profile = null;
-            })
+                .then(() => {
+                    console.log('รูปภาพถูกอัปโหลดเรียบร้อยแล้ว URL');
+                    let newer = { profile_img: null };
+                    this.detail_item = { ...this.detail_item, ...newer };
+                    this.data_tea[this.detail_item.id].profile_img = null;
+                    this.data_tea_copy[this.detail_item.id].profile_img = null;
+                    this.build_img = null;
+                    this.upload_profile = null;
+                })
         },
     },
 }
