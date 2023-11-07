@@ -1196,9 +1196,12 @@ export default {
     },
 
     async readdata() {
-       
+       if(this.userId === null || this.userId === undefined){
+          window.location.reload();
+          return;
+       }
         const db = this.$fireModule.database()
-      await db.ref(`user/${this.userId}`).on('value', (snapshot) => {
+        await db.ref(`user/${this.userId}`).on('value', (snapshot) => {
         const childData = snapshot.val()
         this.profilePic = childData.profilePic || null
         this.lastTeacherId = childData.teacherId || null

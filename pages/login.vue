@@ -65,6 +65,24 @@
         </v-card>
       </v-dialog>
     </div>
+    <div class="text-center">
+      <v-dialog v-model="dialogDel" width="500">
+        <v-card>
+          <v-card-title class="text-h5 red lighten-2">
+            <span class="mdi mdi-message-alert"></span> Failed
+          </v-card-title>
+          <v-card-text>
+            <br />
+            <h5>บัญชีนี้ถูกระงับแล้วกรุณาติดต่อ Fishsix เพื่อทำการขอเข้าใช้งานในระบบ ขออภัยในความไม่สะดวก</h5>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="red" text @click="dialogDel = false"> Close </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
@@ -73,6 +91,7 @@ import { exit } from 'process'
 export default {
   layout: 'login',
   data: () => ({
+    dialogDel: false,
     dialog: false,
     ex4: false,
     firstName: '',
@@ -110,6 +129,10 @@ export default {
               childData.name == this.firstName &&
               childData.password == this.lastName
             ) {
+              if( childData.status === 'unteacher'){
+                this.dialogDel = true;
+                return;
+              }
               if (this.ex4) {
                 localStorage.setItem('firstName', childData.name)
                 localStorage.setItem('lastName', this.encode(this.firstName))
@@ -175,6 +198,12 @@ export default {
         sessionStorage.getItem('status') == 'finance'
       ) {
         this.$router.push('/finance')
+      }
+      if (
+        localStorage.getItem('status') == 'unteacher' ||
+        sessionStorage.getItem('status') == 'unteacher'
+      ) {
+        console.log('user error');
       }
     },
 

@@ -32,7 +32,7 @@
                             <v-card-title>{{ items.firstName }} {{ items.lastName }}</v-card-title>
 
                             <v-card-text>
-                                <v-row align="center" class="mx-0">
+                                <v-row align="center" class="mx-0" v-if="status != 'user'">
                                     <v-rating :value="checkType(items)" color="amber" dense half-increments readonly
                                         size="14" length="4"></v-rating>
 
@@ -119,9 +119,9 @@
                                             </p>
 
                                             <v-rating :value="checkType(detail_item)" color="warning" dense half-increments
-                                                readonly size="14" length="4" style="margin-top:-10px"></v-rating>
+                                                readonly size="14" length="4" style="margin-top:-10px" v-if="status != 'user'"></v-rating>
 
-                                            <div class="grey--text">
+                                            <div class="grey--text" v-if="status != 'user'">
                                                 Type & Tier {{ checkType(detail_item) }}
                                             </div>
                                         </div>
@@ -133,8 +133,8 @@
                                             <p>เพศ</p>
                                             <p style="font-size:20px; margin-top:-15px"><b>{{ detail_item.gender ||
                                                 'ไม่ระบุ' }}</b></p>
-                                            <p>E-mail</p>
-                                            <p style="font-size:20px; margin-top:-15px"><b>{{ detail_item.email ||
+                                            <p v-if="status != 'user'">E-mail</p>
+                                            <p v-if="status != 'user'" style="font-size:20px; margin-top:-15px"><b>{{ detail_item.email ||
                                                 'ไม่ระบุ' }}</b></p>
                                         </div>
                                         <!-- <v-divider class="mx-2" color="black"></v-divider>                                     -->

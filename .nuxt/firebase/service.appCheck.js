@@ -4,7 +4,7 @@ export default async function (session) {
     return
   }
 
-    await import(/* webpackChunkName: 'firebase-app-check' */'firebase/compat/app-check')
+    await import('firebase/compat/app-check')
 
   const appCheckService = session.appCheck()
 
