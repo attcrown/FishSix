@@ -13,7 +13,7 @@
                     </div>
                 </v-col> -->
                 <v-col cols="12">
-                    <v-data-table :items-per-page="-1" :headers="headers" :items="desserts" :search="search_table"
+                    <v-data-table :items-per-page="10" :headers="headers" :items="desserts" :search="search_table"
                         sort-by="date" class="elevation-16 rounded-xl">
                         <!--:search="search"-->
                         <template v-slot:top>

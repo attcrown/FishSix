@@ -21,7 +21,8 @@
                         hide-details></v-text-field>
                 </v-card-title>
                 <template>
-                    <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="10"> <!-- :items-per-page="-1" -->
+                    <v-data-table :headers="headers" :items="items" :search="search" :items-per-page="10">
+                        <!-- :items-per-page="-1" -->
                         <template v-slot:top>
                             <v-dialog v-model="dialogDetail" max-width="500px">
                                 <v-card>
@@ -63,8 +64,7 @@
 
                                         <v-spacer></v-spacer>
                                         <v-btn color="grey " outlined @click="closeDelete">ยกเลิก</v-btn>
-                                        <v-btn color="red darken-1 text-white" disabled
-                                            @click="deleteItemConfirm">ตกลง</v-btn>
+                                        <v-btn color="red darken-1 text-white" @click="deleteItemConfirm">ตกลง</v-btn>
                                         <v-spacer></v-spacer>
                                     </v-card-actions>
                                 </v-card>
@@ -84,10 +84,9 @@
                                 style="text-decoration: underline;" v-if="status != 'opFS'">
                                 mdi-delete
                             </v-icon>
-
                         </template>
-
                     </v-data-table>
+
                     <v-dialog v-model="dialog" max-width="600px">
 
                         <v-card class="p-4 rounded-xl">
@@ -160,6 +159,41 @@
                         </v-card>
                     </v-dialog>
                 </template>
+
+                <h5 class="font-weight-bold" style="color: rgb(221, 132, 132);">รายชื่อครูที่ถูกนำออก</h5>
+                <v-card-title>
+                    <v-text-field v-model="searchundo" append-icon="mdi-magnify" label="ค้นหา" single-line
+                        hide-details></v-text-field>
+                </v-card-title>
+                <template>
+                    <v-data-table :headers="headers" :items="itemsundo" :search="searchundo" :items-per-page="10">
+                        <!-- eslint-disable-next-line vue/valid-v-slot -->
+                        <template v-slot:item.actions="{ item }">
+                            <v-icon color="#B6A7A2" class="text-h5" style="text-decoration: underline;"
+                                @click="returnTea(item)">
+                                mdi-backup-restore
+                            </v-icon>
+                        </template>
+                    </v-data-table>
+
+                    <v-dialog v-model="dialog_return" max-width="500px" v-if="detailreturn.teacher">
+                        <v-card>
+                            <v-card-title class="text-h5 red text-center"> กู้บัญชี
+                            </v-card-title>
+                            <v-card-text class=" text-center mt-2">
+                                <div class="text-h5">ต้องการกู้ข้อมูลของคุณ<br> {{ detailreturn.teacher.firstName }} {{ detailreturn.teacher.lastName }}
+                                    หรือไม่?</div>
+                                <!-- <small>*การลบข้อมูลจะลบข้อมูลครูคนนั้นทั้งหมด รวมถึงรหัสผ่านด้วย</small> -->
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="grey " outlined @click="detailreturn = [] ,dialog_return = false">ยกเลิก</v-btn>
+                                <v-btn color="red darken-1 text-white" @click="dialog_return = false , saveReturn()">ตกลง</v-btn>
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </template>
             </div>
         </v-row>
     </div>
@@ -177,10 +211,13 @@ export default {
             isLoading: true,
             isExport: false,
             search: '',
+            searchundo: '',
             deleteConfirm: [],
             detailDelete: '',
+            detailreturn: [],
             dialog: false,
             dialogDelete: false,
+            dialog_return: false,
             editDetail: '',
             dialogDetail: false,
             isExportLocation: false,
@@ -198,6 +235,8 @@ export default {
                 { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
             ],
             items: [],
+            itemsundo: [],
+            
         }
     },
     computed: {
@@ -388,58 +427,97 @@ export default {
             const db = this.$fireModule.database();
             db.ref("user/").on("value", (snapshot) => {
                 let item = [];
+                let itemundo = [];
                 const childData = snapshot.val();
                 for (const key in childData) {
                     if (childData[key].status == 'teacher') {
                         const gettype_allPromise = db.ref(`type_all/${childData[key].typeflip}`).once("value");
                         const gettype_private_allPromise = db.ref(`type_private_all/${childData[key].typeprivate}`).once("value");
                         Promise.all([gettype_allPromise, gettype_private_allPromise])
-                        .then((snapshots) => {
-                            const type_allSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
-                            const type_private_allSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
-                            
-                            const type_allData = type_allSnapshot.val(); // เปลี่ยนตรงนี้
-                            const type_private_allData = type_private_allSnapshot.val(); // เปลี่ยนตรงนี้
-                            if(type_allData == null || type_private_allData == null){
-                                const teacher = {
-                                teacherId: childData[key].teacherId || null,
-                                firstName: childData[key].firstName || null,
-                                lastName: childData[key].lastName || null,
-                                nickname: childData[key].nickname || null,
-                                mobile: childData[key].mobile || null,
-                                FlipClass: null,
-                                PrivateClass: null,
-                                university: childData[key].university || null,
+                            .then((snapshots) => {
+                                const type_allSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                const type_private_allSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
 
-                                };
-                                item.push({ key: key, teacher });
-                            }else{
-                                const teacher = {
-                                teacherId: childData[key].teacherId || null,
-                                firstName: childData[key].firstName || null,
-                                lastName: childData[key].lastName || null,
-                                nickname: childData[key].nickname || null,
-                                mobile: childData[key].mobile || null,
-                                FlipClass: type_allData.name || null,
-                                PrivateClass: type_private_allData.name || null,
+                                const type_allData = type_allSnapshot.val(); // เปลี่ยนตรงนี้
+                                const type_private_allData = type_private_allSnapshot.val(); // เปลี่ยนตรงนี้
+                                if (type_allData == null || type_private_allData == null) {
+                                    const teacher = {
+                                        teacherId: childData[key].teacherId || null,
+                                        firstName: childData[key].firstName || null,
+                                        lastName: childData[key].lastName || null,
+                                        nickname: childData[key].nickname || null,
+                                        mobile: childData[key].mobile || null,
+                                        FlipClass: null,
+                                        PrivateClass: null,
+                                        university: childData[key].university || null,
 
-                                university: childData[key].university || null,
+                                    };
+                                    item.push({ key: key, teacher });
+                                } else {
+                                    const teacher = {
+                                        teacherId: childData[key].teacherId || null,
+                                        firstName: childData[key].firstName || null,
+                                        lastName: childData[key].lastName || null,
+                                        nickname: childData[key].nickname || null,
+                                        mobile: childData[key].mobile || null,
+                                        FlipClass: type_allData.name || null,
+                                        PrivateClass: type_private_allData.name || null,
 
-                                };
-                                item.push({ key: key, teacher });
-                            }                            
-                        })
-                        
+                                        university: childData[key].university || null,
 
+                                    };
+                                    item.push({ key: key, teacher });
+                                }
+                            })
+                    } else if (childData[key].status == 'unteacher') {
+                        const gettype_allPromise = db.ref(`type_all/${childData[key].typeflip}`).once("value");
+                        const gettype_private_allPromise = db.ref(`type_private_all/${childData[key].typeprivate}`).once("value");
+                        Promise.all([gettype_allPromise, gettype_private_allPromise])
+                            .then((snapshots) => {
+                                const type_allSnapshot = snapshots[0]; // เปลี่ยนตรงนี้
+                                const type_private_allSnapshot = snapshots[1]; // เปลี่ยนตรงนี้
+
+                                const type_allData = type_allSnapshot.val(); // เปลี่ยนตรงนี้
+                                const type_private_allData = type_private_allSnapshot.val(); // เปลี่ยนตรงนี้
+                                if (type_allData == null || type_private_allData == null) {
+                                    const teacher = {
+                                        teacherId: childData[key].teacherId || null,
+                                        firstName: childData[key].firstName || null,
+                                        lastName: childData[key].lastName || null,
+                                        nickname: childData[key].nickname || null,
+                                        mobile: childData[key].mobile || null,
+                                        FlipClass: null,
+                                        PrivateClass: null,
+                                        university: childData[key].university || null,
+
+                                    };
+                                    itemundo.push({ key: key, teacher });
+                                } else {
+                                    const teacher = {
+                                        teacherId: childData[key].teacherId || null,
+                                        firstName: childData[key].firstName || null,
+                                        lastName: childData[key].lastName || null,
+                                        nickname: childData[key].nickname || null,
+                                        mobile: childData[key].mobile || null,
+                                        FlipClass: type_allData.name || null,
+                                        PrivateClass: type_private_allData.name || null,
+
+                                        university: childData[key].university || null,
+
+                                    };
+                                    itemundo.push({ key: key, teacher });
+                                }
+                            })
                     }
                 }
                 this.items = item;
+                this.itemsundo = itemundo;
                 this.isLoading = false;
-                console.log('DDDDD',this.items);
+                console.log('DDDDDUNDO', this.itemsundo);
             })
 
         },
-        
+
         viewItem(item) {
             this.$router.push({ path: 'teacher/detail', query: { teacherId: item.key } });
             //this.$router.push({ name: 'admin-teacher-detail', params: { itemId: item } });
@@ -455,23 +533,35 @@ export default {
         deleteItemConfirm() {
             //onsole.log(this.deleteConfirm);
             const db = this.$fireModule.database();
-            db.ref(`user/${this.deleteConfirm.key}`).remove();
+            db.ref(`user/${this.deleteConfirm.key}`).update({
+                status: "unteacher"
+            });
+            // db.ref(`Time_teacher/${this.deleteConfirm.key}`).remove();
             db.ref(`date_teacher/${this.deleteConfirm.key}`).remove();
             this.deleteConfirm = [];
             this.closeDelete()
-
         },
 
         close() {
             this.dialog_detail = false;
-
         },
 
         closeDelete() {
             this.dialogDelete = false;
-
-
         },
+
+        returnTea(item) {            
+            this.detailreturn = item;
+            this.dialog_return = true;
+        },
+
+        saveReturn(){
+            const db = this.$fireModule.database();
+            db.ref(`user/${this.detailreturn.key}`).update({
+                status: "teacher"
+            });
+            this.detailreturn = [];
+        }
     },
 }
 </script>
