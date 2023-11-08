@@ -122,7 +122,7 @@
                                     <v-col cols="12" sm="12">
                                         <v-select :items="style_subject" item-text="name" item-value="key"
                                             :rules="[v => !!v || 'กรุณาเลือกประเภทคลาส']" label="ประเภทคลาส"
-                                            v-model="save_detail.style" :readonly="mode == 'edit'" required></v-select>
+                                            v-model="save_detail.style" :readonly="mode == 'edit'" multiple required></v-select>
                                     </v-col>
                                     <v-col cols="12" sm="12">
                                         <v-select :items="subject" item-text="name" item-value="key" label="วิชาเปิดสอน"
@@ -267,6 +267,7 @@ export default {
         },
         LimitedClass_all: [],
         erroe_match: '',
+        location_all: [],
     }),
     components: {
 
@@ -298,6 +299,7 @@ export default {
 
     mounted() {
         this.fullName();
+        this.search_location();
         this.search_date_teacher();
         this.search_teacher();
         this.LimitedClass_search();
@@ -305,7 +307,19 @@ export default {
     },
 
     methods: {
-        
+        search_location(){
+            const db = this.$fireModule.database();
+            db.ref(`location/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for(const key in childData){
+                    let obj = {[key] : {key:key , name:childData[key].name , location:childData[key].location}}
+                    item = {...item , ...obj};
+                }
+                this.location_all = item;
+            })            
+        },
+
         check_bin_data() {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).once("value", (snapshot) => {
@@ -316,9 +330,7 @@ export default {
                     for (const detail in data) {
                         // console.log(data[detail]);
                         const time = data[detail];
-                        for (const id in time) {
-                            console.log(time[id].Class);
-                            console.log(key, detail, id);
+                        for (const id in time) {                           
                             if (time[id].Class == undefined) {
                                 db.ref(`date_teacher/${key}/${detail}/${id}`).remove();
                             }
@@ -336,7 +348,6 @@ export default {
                     item.push({ key: key, name: childData[key].name, bath: childData[key].bath || '0' });
                 }
                 this.LimitedClass_all = item;
-                console.log(this.LimitedClass_all);
             })
         },
         fullName() {
@@ -439,6 +450,30 @@ export default {
             return result;
         },
 
+        checknameLocation(item){
+            let namelocation = '';
+            if (Array.isArray(item)) {                
+                for(const key in item){
+                    for(const keyloca in this.location_all){
+                        if(keyloca === item[key]){
+                            namelocation += this.location_all[keyloca].name;
+                            if(item.length != (parseInt(key) +1)){
+                                namelocation += ` ,`;
+                            }
+                        }
+                    }
+                }
+                return namelocation;
+            }else{
+                for(const key in this.location_all){
+                    if(key === item){
+                        return this.location_all[key].name;
+                    }
+                }
+                return namelocation;
+            } 
+        },
+
         async save_detail_data() {
             console.log('บันทึก', this.save_detail.style, this.save_detail.subject
                 , this.picker_start, this.picker_stop, this.value, this.date1);
@@ -452,15 +487,18 @@ export default {
                 this.dialog_save_error = true;
                 return;
             }
+            
             const db = this.$fireModule.database();
             let time_sum = this.validateTime_save(this.picker_start, this.picker_stop);
-            const selectedObject = this.style_subject.find(item => item.key === this.save_detail.style);
-            const selectedClass = this.LimitedClass_all.find(item => item.name.includes(selectedObject.name.split(' ')[0]));
+            // const selectedObject = this.style_subject.find(item => item.key === this.save_detail.style);
+            // const selectedClass = this.LimitedClass_all.find(item => item.name.includes(selectedObject.name.split(' ')[0]));
+            const selectedClass = this.LimitedClass_all.find(item => item.name.includes('Flip'));
             let time_data_tea = [];
             let anyInA = false;
             let sum_people_new_tea = 0;
             let uniqueTimeSum = null;
-            console.log(time_sum, selectedObject, selectedClass)
+            console.log(time_sum,selectedClass);            
+
             for (const date in this.date1) {
                 console.log(this.date1[date])
                 if (selectedClass.key == '-NcQsFxCcoNS-uwmKUqE') {
@@ -701,7 +739,7 @@ export default {
                                                     date: date,
                                                     time_s: timedata.start,
                                                     time_e: timedata.stop,
-                                                    style: locationData.name,
+                                                    style: this.checknameLocation(timedata.style_subject),
                                                     keystyle: timedata.style_subject,
                                                     Class: timedata.Class,
                                                     subject: namesub,
@@ -738,7 +776,7 @@ export default {
                                                     date: date,
                                                     time_s: timedata.start,
                                                     time_e: timedata.stop,
-                                                    style: locationData.name,
+                                                    style: this.checknameLocation(timedata.style_subject),
                                                     keystyle: timedata.style_subject,
                                                     Class: timedata.Class,
                                                     subject: namesub,

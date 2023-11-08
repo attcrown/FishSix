@@ -90,7 +90,7 @@
             <v-text-field append-icon="mdi-magnify" v-model="search" label="ค้นหา " outlined />
         </div>
         <template>
-            <v-data-table :headers="headers" :items-per-page="-1" :items="filteredDesserts" sort-by="date" :search="search"  
+            <v-data-table :headers="headers" :items-per-page="15" :items="filteredDesserts" sort-by="date" :search="search"  
                 class="elevation-16 rounded-xl">  <!-- desserts -->
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.sum_people="{ item }">
@@ -196,9 +196,8 @@
                                                 <v-col cols="12" sm="12">
                                                     <v-autocomplete v-model="All_data.style_subject"
                                                         :items="location_select" item-value="key" item-text="name"
-                                                        label="สถานที่สอน" :rules="[v => !!v || 'กรุณาเลือก']" required
-                                                        :readonly="mode == 'พร้อมเรียน'"
-                                                        @input="select_class(All_data.style_subject)"></v-autocomplete>
+                                                        label="สถานที่สอน" :rules="[v => !!v || 'กรุณาเลือก']" 
+                                                        @input="select_class(All_data.style_subject)" required></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" md="6" v-if="All_data.show_time_flip">
                                                     <p>ชั่วโมง FlipClass เหลือ {{ All_data.show_time_flip }}Hr.</p>
@@ -417,11 +416,14 @@ export default {
         events: [],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
         //-----------CALENDAR------------------------------
+
+        location_all: [],
     }),
     mounted() {
         //-----------CALENDAR------------------------------
-        this.$refs.calendar.checkChange()
+        this.$refs.calendar.checkChange();
         //-----------CALENDAR------------------------------
+        
     },
     computed: {
         ...mapState(['firstName', 'status']),
@@ -449,6 +451,7 @@ export default {
     },
 
     created() {
+        this.search_location_all();
         this.isMobile();
         this.LimitedClass_search();
         this.search_subject_select();
@@ -456,6 +459,41 @@ export default {
         this.search_date_teacher();        
     },
     methods: { 
+        checknameLocation(item){
+            let namelocation = '';
+            if (Array.isArray(item)) {                
+                for(const key in item){
+                    for(const keyloca in this.location_all){
+                        if(keyloca === item[key]){
+                            namelocation += this.location_all[keyloca].name;
+                            if(item.length != (parseInt(key) +1)){
+                                namelocation += ` ,`;
+                            }
+                        }
+                    }
+                }
+                return namelocation;
+            }else{
+                for(const key in this.location_all){
+                    if(key === item){
+                        return this.location_all[key].name;
+                    }
+                }
+                return namelocation;
+            } 
+        },
+        search_location_all(){
+            const db = this.$fireModule.database();
+            db.ref(`location/`).once("value", (snapshot) => {
+                let item = [];
+                const childData = snapshot.val();
+                for(const key in childData){
+                    let obj = {[key] : {key:key , name:childData[key].name , location:childData[key].location}}
+                    item = {...item , ...obj};
+                }
+                this.location_all = item;
+            })            
+        },
         isMobile(){
             if(typeof window !== 'undefined' && window.innerWidth <= 768){
                 this.showder = false;
@@ -594,11 +632,15 @@ export default {
                         db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
                             const childData = snapshot.val();
                             if (studentData.hourLeft && childData.name.includes('Flip')) {
-                                this.location_select.push({ name: childData.name, key: location.classLocation[key] });
+                                if (this.mode == 'รอยืนยัน'){
+                                    this.location_select.push({ name: childData.name, key: location.classLocation[key] });
+                                }                                
                                 this.All_data.show_time_flip = studentData.hourLeft;
                             }
                             if (studentData.privateHourLeft && childData.name.includes('Private')) {
-                                this.location_select.push({ name: childData.name, key: location.classLocation[key] });
+                                if (this.mode == 'รอยืนยัน'){
+                                    this.location_select.push({ name: childData.name, key: location.classLocation[key] });
+                                }                                
                                 this.All_data.show_time_private = studentData.privateHourLeft;
                             }
                         })
@@ -745,11 +787,13 @@ export default {
 
 
         editItem(item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.All_data = Object.assign({}, item)
+            this.editedIndex = this.desserts.indexOf(item);
+            this.All_data = Object.assign({}, item);
+            console.log(this.All_data);
             this.dialog = true;
             this.check_time_select(item);
-            this.location_select.push({ name: this.All_data.full_location.name, key: this.All_data.full_location.key });
+            this.location_select =  this.select_locatio_all_map(this.All_data.style_subject);
+            // this.location_select.push({ name: this.All_data.full_location.name, key: this.All_data.full_location.key });
             this.teacher_select.push({ name: this.All_data.full_teacher.name, key: this.All_data.full_teacher.key })
             this.date = [this.All_data.date];
             console.log(this.All_data);
@@ -758,6 +802,26 @@ export default {
             } else {
                 this.subject_select = [{ name: this.All_data.full_subject.name, key: this.All_data.full_subject.key, level: this.All_data.full_subject.level }];
             }
+        },
+
+        select_locatio_all_map(item){
+            let namelocation = [];
+            if (Array.isArray(item)) {                
+                for(const key in item){
+                    for(const keyloca in this.location_all){
+                        if(keyloca === item[key]){
+                            namelocation.push(this.location_all[keyloca]);
+                        }
+                    }
+                }
+                return namelocation;
+            }else{
+                for(const key in this.location_all){
+                    if(key === item){
+                        return this.location_all[key];
+                    }
+                }
+            } 
         },
 
         check_time_select(item) {
@@ -1133,7 +1197,7 @@ export default {
                 this.close();
                 setTimeout(() => {
                     window.location.reload();
-                }, 300);
+                }, 5000);
             }
         },
 
@@ -1239,7 +1303,7 @@ export default {
                                                 date: date,
                                                 time_s: timedata.start,
                                                 time_e: timedata.stop,
-                                                style: locationData.name,
+                                                style: this.checknameLocation(timedata.style_subject),
                                                 style_subject: timedata.style_subject,
                                                 Class: timedata.Class,
                                                 select: timedata.Class.key,
@@ -1251,7 +1315,7 @@ export default {
                                                 teacher: key,
                                                 teacher_subject: teacherData.subject_all,
                                                 full_subject: subject_show,
-                                                full_location: { name: locationData.name, key: timedata.style_subject },
+                                                // full_location: { name: locationData.name, key: timedata.style_subject },
                                                 full_teacher: { name: nametea, key: key },
                                             });
                                             this.events.push(
