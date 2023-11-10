@@ -1498,6 +1498,8 @@ export default {
             let ze = "0"
             if(String(num).length === 1){
                 return ze.concat(String(num));
+            }else{
+                return num;
             }
         },
         search_date_teacher() {
@@ -1859,7 +1861,7 @@ export default {
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        console.log(date,new Date(date).getTime() , now,new Date(now).getTime());
+                        console.log(date,new Date(date).getTime() , now , new Date(now).getTime());
                         if (new Date(date).getTime() <= new Date(now).getTime()) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
