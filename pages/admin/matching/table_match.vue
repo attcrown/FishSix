@@ -89,7 +89,7 @@
             </div>
         </template>
         <template>
-            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" :items-per-page="-1"
+            <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="date" :items-per-page="10"
                 class="elevation-16 rounded-xl mt-10">
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.status="{ item }">

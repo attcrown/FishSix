@@ -1486,7 +1486,13 @@ export default {
                         for (const time in datedata) {
                             const timedata = datedata[time];
                             if (timedata.status === "พร้อมเรียน") {
-                                this.arrayEvents.push(date);
+                                if(this.status === "teacher" && timedata.teacher === this.firstName){
+                                    this.arrayEvents.push(date);
+                                }
+                                if(this.status != "teacher"){
+                                    this.arrayEvents.push(date);
+                                }
+                                
                             }
                         }
                     }
