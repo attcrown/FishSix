@@ -106,7 +106,7 @@
                                             <img :src="require('~/assets/сolleagues discussing team project.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
+                                        <v-col cols="auto" class="me-5" style="font-size:50px; color:white;">
                                             {{ dash_all }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
@@ -124,7 +124,7 @@
                                             <img :src="require('~/assets/young woman at work with laptop writing.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px;color:white;">
+                                        <v-col cols="auto" class="me-5" style="font-size:50px;color:white;">
                                             {{ dash_active }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">
@@ -142,7 +142,7 @@
                                             <img :src="require('~/assets/сolleagues discussing team project.png')"
                                                 class="pt-5 ps-5">
                                         </v-col>
-                                        <v-col cols="auto" class="me-5" style="font-size:96px; color:white;">
+                                        <v-col cols="auto" class="me-5" style="font-size:50px; color:white;">
                                             {{ dash_notactive }}
                                         </v-col>
                                         <v-col cols="auto" class="ml-auto me-7">

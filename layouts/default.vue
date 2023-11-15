@@ -143,11 +143,11 @@ export default {
           title: 'โปรไฟล์ครู',
           to: '/admin/ProfileTea',
         },
-        // {
-        //   icon: 'mdi-cog',
-        //   title: 'Setting',
-        //   to: '/admin/setting',
-        // },
+        {
+          icon: 'mdi-swap-horizontal',
+          title: 'แลกเปลี่ยนชั่วโมง',
+          to: '/admin/movehour',
+        },
 
       ],
 

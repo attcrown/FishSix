@@ -1,11 +1,14 @@
 <template>
     <div>
-        <div class="d-flex justify-end mt-5">
+        <div>
             <v-dialog v-model="dialog" max-width="1000">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-                        Setting
-                    </v-btn>
+                    <div class="d-flex justify-space-between align-center mt-5">
+                        <p class="pt-3" style="font-size:32px"><b>แลกเปลี่ยนชั่วโมง</b></p>
+                        <v-btn color="black" dark v-bind="attrs" v-on="on" class="rounded-xl">
+                            Setting <v-icon class="ms-3">mdi-cog</v-icon>
+                        </v-btn>
+                    </div>                    
                 </template>
 
                 <v-card class="rounded-xxl">

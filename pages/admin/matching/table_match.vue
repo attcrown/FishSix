@@ -315,11 +315,15 @@
                 </template>
             </v-data-table>
         </template>
+        <loaderVue v-if="isLoading"></loaderVue>
     </div>
 </template>
 <script>
+import loaderVue from '~/components/loader.vue';
 export default {
     data: () => ({
+        isLoading: false,
+
         show_date: true,
         textError: '',
         dialogError: false,
@@ -417,6 +421,9 @@ export default {
                 this.editedItem.time_e
             );
         },
+    },
+    components: {
+        loaderVue
     },
 
     watch: {
@@ -592,6 +599,7 @@ export default {
                                             }
                                         );
                                         index++;
+                                        this.isLoading = false;
                                     })
                                     .catch((error) => {
                                         alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);
@@ -665,6 +673,7 @@ export default {
                                             }
                                         );
                                         index++;
+                                        this.isLoading = false;
                                     })
                                     .catch((error) => {
                                         alert("Match เกิดข้อผิดพลาดในการดึงข้อมูล", error);

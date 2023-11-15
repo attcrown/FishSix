@@ -49,11 +49,11 @@
                                     <img :src="require('~/assets/youngpeoplestudents.png')" class="pt-5 ps-5"
                                         v-if="!checkname" style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgb(255, 255, 255);"
                                     v-if="checkname">
                                     {{ dash_notactive }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.329);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgba(255, 255, 255, 0.329);"
                                     v-if="!checkname">
                                     {{ dash_notactive }}
                                 </v-col>
@@ -75,16 +75,16 @@
                                     <img :src="require('~/assets/young smiling woman working at laptop.png')"
                                         class="pt-5 ps-5" v-if="!checkname1" style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgb(255, 255, 255);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgb(255, 255, 255);"
                                     v-if="checkname1">
                                     {{ dash_active }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.315);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgba(255, 255, 255, 0.315);"
                                     v-if="!checkname1">
                                     {{ dash_active }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">
+                                    <p style="font-size: 16px; margin-top: -32px; color:white">
                                         ยังไม่เช็คชื่อและส่งพัฒนาการนักเรียน</p>
                                 </v-col>
                             </v-row>
@@ -100,15 +100,15 @@
                                     <img :src="require('~/assets/stackbooks.png')" class="pt-8 ps-5" v-if="!checkname2"
                                         style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname2">
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:white;" v-if="checkname2">
                                     {{ dash_noall }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.295);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgba(255, 255, 255, 0.295);"
                                     v-if="!checkname2">
                                     {{ dash_noall }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">ไม่ผ่านการตรวจ
+                                    <p style="font-size: 16px; margin-top: -22px; color:white">ไม่ผ่านการตรวจ
                                     </p>
                                 </v-col>
                             </v-row>
@@ -124,15 +124,15 @@
                                     <img :src="require('~/assets/books.png')" class="pt-8 ps-5" v-if="!checkname3"
                                         style="opacity: 0.2;">
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:white;" v-if="checkname3">
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:white;" v-if="checkname3">
                                     {{ dash_all }}
                                 </v-col>
-                                <v-col cols="auto" class="me-5" style="font-size:96px; color:rgba(255, 255, 255, 0.281);"
+                                <v-col cols="auto" class="me-5" style="font-size:60px; color:rgba(255, 255, 255, 0.281);"
                                     v-if="!checkname3">
                                     {{ dash_all }}
                                 </v-col>
                                 <v-col cols="auto" class="ml-auto me-7">
-                                    <p style="font-size: 16px; margin-top: -50px; color:white">ผ่านการตรวจแล้ว
+                                    <p style="font-size: 16px; margin-top: -25px; color:white">ผ่านการตรวจแล้ว
                                     </p>
                                 </v-col>
                             </v-row>
