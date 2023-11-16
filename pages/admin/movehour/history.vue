@@ -1,9 +1,9 @@
 <template>
     <div>
         <v-card class="mt-5 rounded-xxl">
-            <v-data-table style="background-color: #27262B;" dark v-if="show_his" :headers="dessertHeaders"
-                :items="desserts" :single-expand="singleExpand" :expanded.sync="expanded" item-key="createAt"
-                sort-by="createAt" sort-desc show-expand class="elevation-10 rounded-xxl">
+            <v-data-table v-if="show_his" :headers="dessertHeaders" :items="desserts" :single-expand="singleExpand"
+                :expanded.sync="expanded" item-key="createAt" sort-by="createAt" sort-desc show-expand
+                class="elevation-10 rounded-xxl">
                 <template v-slot:top>
                     <v-toolbar flat class="rounded-t-xxl" color="#EBE4DE">
                         <v-toolbar-title style="color: rgb(0, 0, 0);"><b>ประวัติแลกเปลี่ยนชั่วโมง</b></v-toolbar-title>
@@ -14,57 +14,44 @@
 
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.createAt="{ item }">
-                    เวลาที่บันทึก : {{ readDate(item.createAt) }}
+                    {{ readDate(item.createAt) }}
                 </template>
-                <template v-slot:expanded-item="{ headers, item }">
-                    <td :colspan="headers.length" class="m-0 p-0">
-                        <table class="table" style="border: 0px solid black;">
-                            <thead style="background-color:#D4C1B2;">
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col" style="color: black;" class="text-center">
-                                        Filp Class
-                                    </th>
-                                    <th scope="col" style="color: black;" class="text-center">
-                                        Private class {{ headers.length }}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="background-color:#D4C1B2; color:black;" class="text-center">
-                                        จำนวนชั่วโมงที่มีอยู่</td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center"> {{
-                                        min_change(item.OldHourLeft) }} </td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center"> {{
-                                        min_change(item.OldPrivateHourLeft) }} </td>
-                                </tr>
-                                <tr>
-                                    <td style="background-color:#D4C1B2; color:black;" class="text-center pt-4">
-                                        จำนวนชั่วโมงที่ใช้แลกเปลี่ยน</td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center">
-                                        <v-chip :color="getColorForSummary(summaryFC(item))">
-                                            {{ summaryFC(item) }}
-                                        </v-chip>
-                                    </td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center">
-                                        <v-chip :color="getColorForSummary(summaryPV(item))">
-                                            {{ summaryPV(item) }}
-                                        </v-chip>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="background-color:#D4C1B2; color:black;" class="text-center">
-                                        จำนวนชั่วโมงล่าสุด</td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center"> {{
-                                        min_change(item.NewHourLeft) }} </td>
-                                    <td style="background-color:#ffffff; color:black;" class="text-center"> {{
-                                        min_change(item.NewPrivateHourLeft) }} </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
 
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.OldHourLeft="{ item }">
+                    {{ min_change(item.OldHourLeft) }}
+                </template>
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.OldPrivateHourLeft="{ item }">
+                    {{ min_change(item.OldPrivateHourLeft) }}
+                </template>
+
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.exchange_flipclass="{ item }">
+                    <v-chip :color="getColorForSummary(summaryFC(item))" text-color="white">
+                        {{ summaryFC(item) }}
+                    </v-chip>
+                </template>
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.exchange_privateclass="{ item }">
+                    <v-chip :color="getColorForSummary(summaryPV(item))" text-color="white">
+                        {{ summaryPV(item) }}
+                    </v-chip>
+                </template>
+
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.NewHourLeft="{ item }">
+                    {{ min_change(item.NewHourLeft) }}
+                </template>
+                <!-- eslint-disable-next-line vue/valid-v-slot -->
+                <template v-slot:item.NewPrivateHourLeft="{ item }">
+                    {{ min_change(item.NewPrivateHourLeft) }}
+                </template>
+
+                <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length">
+                        {{ item.Rate_hour.name }} Filp Class {{ item.Rate_hour.flipclass }} ชั่วโมง = Private {{ item.Rate_hour.privateclass }} ชั่วโมง
+                    </td>
                 </template>
 
             </v-data-table>
@@ -74,6 +61,11 @@
 </template>
 
 <style>
+.v-data-table-header th {
+    background-color: #D4C1B2;
+    /* เปลี่ยนเป็นสีที่คุณต้องการ */
+}
+
 .fonts500 {
     font-family: 'Prompt', sans-serif;
     /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
@@ -94,21 +86,21 @@ export default {
     data() {
         return {
             expanded: [],
-            singleExpand: false,
+            singleExpand: true,
             dessertHeaders: [
                 {
-                    text: 'ลำดับวันที่',
-                    // align: 'start',
-                    // sortable: true,
+                    text: 'เวลาที่บันทึก',
+                    align: 'start',
+                    sortable: true,
                     value: 'createAt',
                 },
 
-                // { text: 'Old FlipClass', value: 'OldHourLeft' },
-                // { text: 'Old PrivateClass', value: 'OldPrivateHourLeft' },
-                // { text: 'Exchange FlipClass', value: 'exchange_flipclass' },
-                // { text: 'Exchange PrivateClass', value: 'exchange_privateclass' },
-                // { text: 'New FlipClass', value: 'NewHourLeft' },
-                // { text: 'New PrivateClass', value: 'NewPrivateHourLeft' },
+                { text: 'จำนวนชั่วโมง Filp Class เก่า', align: 'center', value: 'OldHourLeft' },
+                { text: 'จำนวนชั่วโมง Private class เก่า', align: 'center', value: 'OldPrivateHourLeft' },
+                { text: 'จำนวนชั่วโมง Filp Class ที่ใช้แลกเปลี่ยน', align: 'center', value: 'exchange_flipclass' },
+                { text: 'จำนวนชั่วโมง Private class ที่ใช้แลกเปลี่ยน', align: 'center', value: 'exchange_privateclass' },
+                { text: 'จำนวนชั่วโมง Filpclass ล่าสุด', align: 'center', value: 'NewHourLeft' },
+                { text: 'จำนวนชั่วโมง Private class ล่าสุด', align: 'center', value: 'NewPrivateHourLeft' },
                 { text: '', value: 'data-table-expand' },
             ],
             desserts: [],
@@ -176,7 +168,7 @@ export default {
             const integerPart0 = parseFloat(numberString.split('.')[0]);
             const integerPart = parseFloat(numberString.split('.')[1]);
             let sum = 0;
-            if(integerPart){
+            if (integerPart) {
                 sum = integerPart * 60 / 100;
             }
             return `${integerPart0}.${sum}`;
