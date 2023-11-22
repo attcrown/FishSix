@@ -5,7 +5,7 @@
                 <template v-slot:activator="{ on, attrs }">
                     <div class="d-flex justify-space-between align-center mt-5">
                         <p class="pt-3" style="font-size:32px"><b>แลกเปลี่ยนชั่วโมง</b></p>
-                        <v-btn color="black" dark v-bind="attrs" v-on="on" class="rounded-xl">
+                        <v-btn v-if="status != 'user'" color="black" dark v-bind="attrs" v-on="on" class="rounded-xl">
                             Setting <v-icon class="ms-3">mdi-cog</v-icon>
                         </v-btn>
                     </div>                    
@@ -53,7 +53,7 @@
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                                 <template v-slot:item.action="{ item }">
                                     <v-btn v-if="!modetable" @click="checkitem(item)">edit</v-btn>
-                                    <v-btn v-if="modetable" @click="checkitem(item)">save</v-btn>
+                                    <v-btn v-if="modetable" @click="checkitem(item)" :disabled="!item.flipclass || !item.privateclass">save</v-btn>
                                 </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                                 <!-- <template v-slot:item.status="{ item }">                                
@@ -85,7 +85,8 @@
                                     </div>
                                     <div v-if="modetable">
                                         <v-text-field v-model="item.flipclass" label="ชั่วโมง FC"
-                                            type="number"></v-text-field>
+                                            type="number" :rules="[v => !!v || 'กรุณาใส่จำนวนเต็ม',
+                                                v => !/\./.test(v) || 'กรุณาใส่จำนวนเต็ม']"></v-text-field>
                                     </div>
                                 </template>
                                 <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -95,7 +96,8 @@
                                     </div>
                                     <div v-if="modetable">
                                         <v-text-field v-model="item.privateclass" label="ชั่วโมง PV"
-                                            type="number"></v-text-field>
+                                            type="number" :rules="[v => !!v || 'กรุณาใส่จำนวนเต็ม' ,
+                                                v => !/\./.test(v) || 'กรุณาใส่จำนวนเต็ม']"></v-text-field>
                                     </div>
                                 </template>
                             </v-data-table>
@@ -107,6 +109,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 import { Timestamp } from "firebase/firestore";
 export default {
     data() {
@@ -133,6 +136,9 @@ export default {
 
             modetable: false,
         };
+    },
+    computed: {
+        ...mapState(['firstName', 'status']),
     },
     mounted() {
         this.searchData();
@@ -185,7 +191,8 @@ export default {
                 console.log('Save Success');
             })
         },
-        searchData() {
+        async searchData() {
+            await this.$nextTick();
             const db = this.$fireModule.database();
             db.ref(`setting_moveHour/`).on("value", (snapshot) => {
                 let item = [];

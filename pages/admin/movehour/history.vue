@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="mt-5 rounded-xxl">
+        <v-card class="mt-8 rounded-xxl">
             <v-data-table v-if="show_his" :headers="dessertHeaders" :items="desserts" :single-expand="singleExpand"
                 :expanded.sync="expanded" item-key="createAt" sort-by="createAt" sort-desc show-expand
                 class="elevation-10 rounded-xxl">

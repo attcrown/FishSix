@@ -109,7 +109,12 @@ export default {
           icon: 'mdi-card-account-details-outline',
           title: 'โปรไฟล์ครู',
           to: '/user/profileTea',
-        },       
+        }, 
+        {
+          icon: 'mdi-swap-horizontal',
+          title: 'แลกเปลี่ยนชั่วโมง',
+          to: '/user/movehour',
+        },      
 
       ],
       miniVariant: false,

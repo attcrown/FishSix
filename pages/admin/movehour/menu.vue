@@ -121,21 +121,37 @@ export default {
     },
     methods: {
         async search_stu() {
-            const db = this.$fireModule.database();
-            const ref = db.ref("user");
-            ref.orderByChild("status").equalTo("user").once("value")
-                .then((snapshot) => {
+            await this.$nextTick();
+            console.log('>>>', this.firstName, this.status);
+            let x = "";
+            if(this.status === "user"){
+                x = `user/${this.firstName}`;
+                const db = this.$fireModule.database();
+                db.ref(`${x}`).on("value", (snapshot) => {
                     let userData = snapshot.val();
-                    for (const key in userData) {
-                        let id = { idkey: key };
-                        userData[key] = { ...userData[key], ...id };
-                    }
-                    this.data_stu_copy = userData;
-                    console.log(this.data_stu_copy);
+                    let id = { idkey: this.firstName };
+                    userData = { ...userData, ...id };
+                    let obje = {[this.firstName]:userData};
+                    this.data_stu_copy = obje;
+                    console.log(obje);
                 })
-                .catch((error) => {
-                    console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
-                });
+            }else{
+                const db = this.$fireModule.database();
+                const ref = db.ref(`user`);
+                ref.orderByChild("status").equalTo("user").once("value")
+                    .then((snapshot) => {
+                        let userData = snapshot.val();
+                        for (const key in userData) {
+                            let id = { idkey: key };
+                            userData[key] = { ...userData[key], ...id };
+                        }
+                        this.data_stu_copy = userData;
+                        console.log(this.data_stu_copy);
+                    })
+                    .catch((error) => {
+                        console.error("เกิดข้อผิดพลาดในการค้นหาข้อมูล: ", error);
+                    });
+            }
         },
         setting_rate() {
             const db = this.$fireModule.database();
