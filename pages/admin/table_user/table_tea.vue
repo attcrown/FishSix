@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-btn :hidden="!showder" @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold" style="font-size: 20px;"
-            color="brown lighten-4">
+        <v-btn :hidden="!showder" @click="switch_calendar()" class="mb-5 rounded-xl font-weight-bold"
+            style="font-size: 20px;" color="brown lighten-4">
             แสดงตารางสอน <v-icon class="mdi mdi-calendar-month text-h8"></v-icon>
         </v-btn>
 
@@ -86,12 +86,12 @@
                 </v-col>
             </v-row>
         </div>
-        <div v-if="!showder" class="mt-5">            
+        <div v-if="!showder" class="mt-5">
             <v-text-field append-icon="mdi-magnify" v-model="search" label="ค้นหา " outlined />
         </div>
         <template>
-            <v-data-table :headers="headers" :items-per-page="15" :items="filteredDesserts" sort-by="date" :search="search"  
-                class="elevation-16 rounded-xl">  <!-- desserts -->
+            <v-data-table :headers="headers" :items-per-page="15" :items="filteredDesserts" sort-by="date" :search="search"
+                class="elevation-16 rounded-xl"> <!-- desserts -->
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.sum_people="{ item }">
                     <v-chip color="amber lighten-3" class="rounded-xl">
@@ -101,11 +101,11 @@
                 <!-- eslint-disable-next-line vue/valid-v-slot -->
                 <template v-slot:item.actions="{ item }">
                     <v-btn class="rounded-xl" color="green darken-2" @click="editItem(item)" elevation="24">
-                        <v-icon small class="text-h5" color="white" >
+                        <v-icon small class="text-h5" color="white">
                             mdi-plus
                         </v-icon>
                     </v-btn>
-                    
+
                     <!-- <v-icon small @click="deleteItem(item)">
                         mdi-delete
                     </v-icon> -->
@@ -118,18 +118,19 @@
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
 
-                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="classSearch" label="Search Class" single-line
-                            hide-details style="max-width: 200px;" />
-                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="subjectSearch" label="Search Subject" single-line
-                            hide-details style="max-width: 200px;" />
-                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="dateSearch" label="Search Date" single-line
-                            hide-details style="max-width: 200px;" />
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="classSearch"
+                            label="Search Class" single-line hide-details style="max-width: 200px;" />
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="subjectSearch"
+                            label="Search Subject" single-line hide-details style="max-width: 200px;" />
+                        <v-text-field v-if="showder" class="me-10" append-icon="mdi-magnify" v-model="dateSearch"
+                            label="Search Date" single-line hide-details style="max-width: 200px;" />
 
-                        <v-text-field v-if="showder" class="me-10" v-model="search" append-icon="mdi-magnify" label="Search All" single-line
-                            hide-details style="max-width: 200px;"></v-text-field>
+                        <v-text-field v-if="showder" class="me-10" v-model="search" append-icon="mdi-magnify"
+                            label="Search All" single-line hide-details style="max-width: 200px;"></v-text-field>
                         <v-dialog v-model="dialog" max-width="600px">
                             <template v-slot:activator="{ on, attrs }">
-                                <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="green darken-2" class="mb-2 mt-5">
+                                <v-btn dark v-bind="attrs" v-on="on" elevation="10" color="green darken-2"
+                                    class="mb-2 mt-5">
                                     จองคิวนอกตาราง<span class="mdi mdi-plus text-h6"></span>
                                 </v-btn>
                             </template>
@@ -196,8 +197,9 @@
                                                 <v-col cols="12" sm="12">
                                                     <v-autocomplete v-model="All_data.style_subject"
                                                         :items="location_select" item-value="key" item-text="name"
-                                                        label="สถานที่สอน" :rules="[v => !!v || 'กรุณาเลือก']" 
-                                                        @input="select_class(All_data.style_subject)" required></v-autocomplete>
+                                                        label="สถานที่สอน" :rules="[v => !!v || 'กรุณาเลือก']"
+                                                        @input="select_class(All_data.style_subject)"
+                                                        required></v-autocomplete>
                                                 </v-col>
                                                 <v-col cols="12" md="6" v-if="All_data.show_time_flip">
                                                     <p>ชั่วโมง FlipClass เหลือ {{ All_data.show_time_flip }}Hr.</p>
@@ -224,11 +226,13 @@
                                                         label="เลิกเรียน" :rules="[v => !!v || 'กรุณาเลือก']"
                                                         required></v-autocomplete>
                                                 </v-col>
-                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px" v-if="status != 'user'">
+                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px"
+                                                    v-if="status != 'user'">
                                                     <v-checkbox v-model="All_data.match_test"
                                                         label="ทดลองเรียน"></v-checkbox>
                                                 </v-col>
-                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px" v-if="status != 'user'">
+                                                <v-col cols="12" sm="6" md="6" style="margin-top:-20px"
+                                                    v-if="status != 'user'">
                                                     <v-checkbox v-model="All_data.match_vip" label="กรณีพิเศษ(Private)"
                                                         @click="select_class(All_data.style_subject)"></v-checkbox>
                                                 </v-col>
@@ -265,8 +269,8 @@
                             </v-card>
                         </v-dialog>
                     </v-toolbar>
-                </template>                
-                
+                </template>
+
                 <template v-slot:no-data>
                     <v-btn color="primary" @click="initialize">
                         Reset
@@ -302,13 +306,13 @@
 
         <v-dialog v-model="dialog_load" hide-overlay persistent width="300">
             <v-overlay :value="dialog_load">
-                <v-card color="primary" dark>                
+                <v-card color="primary" dark>
                     <v-card-text>
                         Please stand by
                         <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-                    </v-card-text>                               
+                    </v-card-text>
                 </v-card>
-            </v-overlay>            
+            </v-overlay>
         </v-dialog>
 
     </div>
@@ -325,7 +329,7 @@ export default {
         dateSearch: '',
         classSearch: '',
         dialog_date: false,
-        classMatchData: ['hello','boot'],
+        classMatchData: ['hello', 'boot'],
 
         dialog_load: false,
         textError: '',
@@ -423,7 +427,7 @@ export default {
         //-----------CALENDAR------------------------------
         this.$refs.calendar.checkChange();
         //-----------CALENDAR------------------------------
-        
+
     },
     computed: {
         ...mapState(['firstName', 'status']),
@@ -432,7 +436,7 @@ export default {
             return this.editedIndex === -1 ? 'จองเวลาเรียนนอกตาราง' : 'จองเวลาเรียนในตาราง'
         },
         filteredDesserts() {
-        // ใช้ this.subjectSearch และ this.dateSearch เพื่อกรองรายการ desserts
+            // ใช้ this.subjectSearch และ this.dateSearch เพื่อกรองรายการ desserts
             return this.desserts.filter(dessert => {
                 const subjectMatch = dessert.subject.toLowerCase().includes(this.subjectSearch.toLowerCase());
                 const dateMatch = dessert.date.toLowerCase().includes(this.dateSearch.toLowerCase());
@@ -456,51 +460,51 @@ export default {
         this.LimitedClass_search();
         this.search_subject_select();
         this.search_student();
-        this.search_date_teacher();        
+        this.search_date_teacher();
     },
-    methods: { 
-        checknameLocation(item){
+    methods: {
+        checknameLocation(item) {
             let namelocation = '';
-            if (Array.isArray(item)) {                
-                for(const key in item){
-                    for(const keyloca in this.location_all){
-                        if(keyloca === item[key]){
+            if (Array.isArray(item)) {
+                for (const key in item) {
+                    for (const keyloca in this.location_all) {
+                        if (keyloca === item[key]) {
                             namelocation += this.location_all[keyloca].name;
-                            if(item.length != (parseInt(key) +1)){
+                            if (item.length != (parseInt(key) + 1)) {
                                 namelocation += ` ,`;
                             }
                         }
                     }
                 }
                 return namelocation;
-            }else{
-                for(const key in this.location_all){
-                    if(key === item){
+            } else {
+                for (const key in this.location_all) {
+                    if (key === item) {
                         return this.location_all[key].name;
                     }
                 }
                 return namelocation;
-            } 
+            }
         },
-        search_location_all(){
+        search_location_all() {
             const db = this.$fireModule.database();
             db.ref(`location/`).once("value", (snapshot) => {
                 let item = [];
                 const childData = snapshot.val();
-                for(const key in childData){
-                    let obj = {[key] : {key:key , name:childData[key].name , location:childData[key].location}}
-                    item = {...item , ...obj};
+                for (const key in childData) {
+                    let obj = { [key]: { key: key, name: childData[key].name, location: childData[key].location } }
+                    item = { ...item, ...obj };
                 }
                 this.location_all = item;
-            })            
+            })
         },
-        isMobile(){
-            if(typeof window !== 'undefined' && window.innerWidth <= 768){
+        isMobile() {
+            if (typeof window !== 'undefined' && window.innerWidth <= 768) {
                 this.showder = false;
                 // this.$router.push({ path: 'student_m/'});
-            }   
-            console.log(this.showder);         
-        },       
+            }
+            console.log(this.showder);
+        },
         switch_calendar() {
             if (this.show_date) {
                 this.show_date = false;
@@ -632,15 +636,15 @@ export default {
                         db.ref(`location/${location.classLocation[key]}`).once("value", (snapshot) => {
                             const childData = snapshot.val();
                             if (studentData.hourLeft && childData.name.includes('Flip')) {
-                                if (this.mode == 'รอยืนยัน'){
+                                if (this.mode == 'รอยืนยัน') {
                                     this.location_select.push({ name: childData.name, key: location.classLocation[key] });
-                                }                                
+                                }
                                 this.All_data.show_time_flip = studentData.hourLeft;
                             }
                             if (studentData.privateHourLeft && childData.name.includes('Private')) {
-                                if (this.mode == 'รอยืนยัน'){
+                                if (this.mode == 'รอยืนยัน') {
                                     this.location_select.push({ name: childData.name, key: location.classLocation[key] });
-                                }                                
+                                }
                                 this.All_data.show_time_private = studentData.privateHourLeft;
                             }
                         })
@@ -656,16 +660,16 @@ export default {
         },
         async search_student() {
             await this.$nextTick();
-            console.log(this.firstName ,this.status);
+            console.log(this.firstName, this.status);
             const db = this.$fireModule.database();
-            if(this.status.includes("user")){
+            if (this.status.includes("user")) {
                 db.ref(`user/${this.firstName}`).on("value", (snapshot) => {
                     const childData = snapshot.val();
                     let item = [];
-                    item.push({ key: this.firstName, name: childData.studentId + " น้อง" + childData.nickname });               
+                    item.push({ key: this.firstName, name: childData.studentId + " น้อง" + childData.nickname });
                     this.student_select = item;
                 })
-            }else{                
+            } else {
                 db.ref("user/").on("value", (snapshot) => {
                     const childData = snapshot.val();
                     let item = [];
@@ -676,7 +680,7 @@ export default {
                     }
                     this.student_select = item;
                 })
-            }            
+            }
         },
 
         search_teacher() {
@@ -792,7 +796,7 @@ export default {
             console.log(this.All_data);
             this.dialog = true;
             this.check_time_select(item);
-            this.location_select =  this.select_locatio_all_map(this.All_data.style_subject);
+            this.location_select = this.select_locatio_all_map(this.All_data.style_subject);
             // this.location_select.push({ name: this.All_data.full_location.name, key: this.All_data.full_location.key });
             this.teacher_select.push({ name: this.All_data.full_teacher.name, key: this.All_data.full_teacher.key })
             this.date = [this.All_data.date];
@@ -804,24 +808,24 @@ export default {
             }
         },
 
-        select_locatio_all_map(item){
+        select_locatio_all_map(item) {
             let namelocation = [];
-            if (Array.isArray(item)) {                
-                for(const key in item){
-                    for(const keyloca in this.location_all){
-                        if(keyloca === item[key]){
+            if (Array.isArray(item)) {
+                for (const key in item) {
+                    for (const keyloca in this.location_all) {
+                        if (keyloca === item[key]) {
                             namelocation.push(this.location_all[keyloca]);
                         }
                     }
                 }
                 return namelocation;
-            }else{
-                for(const key in this.location_all){
-                    if(key === item){
+            } else {
+                for (const key in this.location_all) {
+                    if (key === item) {
                         return this.location_all[key];
                     }
                 }
-            } 
+            }
         },
 
         check_time_select(item) {
@@ -992,7 +996,8 @@ export default {
         async save_time() {
             const db = this.$fireModule.database();
             const selectedObject = this.LimitedClass_all.find(item => item.key === this.All_data.select);
-            console.log('Selected item:', selectedObject);
+            const selectedObjectFC = this.LimitedClass_all.find(item => item.key === "-NcQsFxCcoNS-uwmKUqE");
+            console.log('Selected item:', selectedObject ,selectedObjectFC);
             const data = this.All_data;
             let isSave = 0;
             let maxKeyOut = 0;
@@ -1057,6 +1062,13 @@ export default {
                                     text = text.concat(" ", data.time_sum[key]);
                                     isSave++;
                                 }
+                                if(data.style_subject === '-Nk3w7bsmBEoOk9V0mtm' ||
+                                    data.style_subject === '-Nk3wCgpi5_m5g7DO4kJ' ||
+                                    data.style_subject === '-Nk3wFoslv3edqH8oe82' && maxKey >= selectedObjectFC.bath){
+                                        console.log("ไปๆๆ");
+                                        text = text.concat(" ", data.time_sum[key]);
+                                        isSave--;
+                                }
                                 if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
                                     this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
                                     this.dialogError = true;
@@ -1083,10 +1095,33 @@ export default {
                     console.log(this.date[keydate]);
                     for (const key in data.time_sum) {
                         const snapshot = await db.ref(`Time_teacher/${data.teacher}/${this.date[keydate]}/${data.time_sum[key]}/`).once("value");
-                        if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i') {
+                        if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i' &&
+                            data.style_subject != '-Nk3w7bsmBEoOk9V0mtm' &&
+                            data.style_subject != '-Nk3wCgpi5_m5g7DO4kJ' &&
+                            data.style_subject != '-Nk3wFoslv3edqH8oe82') {
                             for (let x = 0; x < this.LimitedClass_all[0].bath; x++) {
                                 await db.ref(`Time_teacher/${data.teacher}/${this.date[keydate]}/${data.time_sum[key]}/`).update({
                                     [x]: data.student
+                                });
+                            }
+                        } else if (selectedObject.key == '-NcQsHB9vgG53lJKPA-i' &&
+                            data.style_subject === '-Nk3w7bsmBEoOk9V0mtm' ||
+                            data.style_subject === '-Nk3wCgpi5_m5g7DO4kJ' ||
+                            data.style_subject === '-Nk3wFoslv3edqH8oe82') {
+                            if (snapshot) {
+                                let maxKey = 0;
+                                snapshot.forEach(childSnapshot => {
+                                    const childKey = parseInt(childSnapshot.key);
+                                    if (childKey >= maxKey) {
+                                        maxKey = childKey + 1;
+                                    }
+                                });
+                                await db.ref(`Time_teacher/${data.teacher}/${this.date[keydate]}/${data.time_sum[key]}/`).update({
+                                    [maxKey]: data.student
+                                });
+                            } else {
+                                await db.ref(`Time_teacher/${data.teacher}/${this.date[keydate]}/${data.time_sum[key]}/`).update({
+                                    [maxKeyOut]: data.student
                                 });
                             }
                         } else if (selectedObject.key == '-NcQsFxCcoNS-uwmKUqE') {
@@ -1369,5 +1404,4 @@ export default {
     .hide-on-desktop {
         display: none;
     }
-}
-</style>
+}</style>

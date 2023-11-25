@@ -1365,25 +1365,27 @@ export default {
                         sum += parseFloat(subject_data.bath);
 
                         sum += parseFloat(level_search.bath);
-
+                        
                         if (item_data.select_class == '-NcQsFxCcoNS-uwmKUqE') { //FlipClass
                             sum += parseFloat(typeflip_data.bath);
                         } else if (item_data.select_class == '-NcQsHB9vgG53lJKPA-i') { //PrivateClass
                             sum += parseFloat(typeprivate_data.bath);
                         }
-
+                        
                         sum += parseFloat(location_data.bath);
+                        
                         if (item_data.status_check_sheet) {
                             sum += parseFloat(item_data.status_check_sheet.bath);
                         } else {
                             console.log('ไม่มี Sheet ลา');
                         }
-
+                        
                         if (item_data.optional) {
                             sum += parseFloat(optional_data.bath);
                         }
                         
                         sum = sum * item_data.hour;
+                        
                         //-------คูณชม.----------------
 
                         if(time_tea_data && time_tea_data[0] == item_data.keyStudent){                            
@@ -1397,6 +1399,7 @@ export default {
                                 send_rate_special : rate_special_data,
                             });
                         }
+                        
                         //------Check คนแรกหรือไม่---------
 
                         if (item_data.status_study_column_tea.bath == '0') {
@@ -1406,6 +1409,7 @@ export default {
                             sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             console.log(item_data.status_study_column_tea.name)
                         }
+                        
                         //--------เช็คชื่อช้าหรือไม่-------------------
 
                         if (item_data.status_study_column && item_data.status_study_column.bath == '0') {
@@ -1415,6 +1419,7 @@ export default {
                             sum = sum - (parseFloat(item_data.status_study_column.bath) * sum / 100);
 
                         }
+                        
                         //---------น้องมาเรียนปกติไหม--------------------
 
                         if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
@@ -1424,6 +1429,7 @@ export default {
                             sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
 
                         }
+                        
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
                         del_send_percent = sum*parseFloat(percent_service_data.bath)/100
