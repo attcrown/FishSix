@@ -1062,17 +1062,18 @@ export default {
                                     text = text.concat(" ", data.time_sum[key]);
                                     isSave++;
                                 }
+                                if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
+                                    this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
+                                    this.dialogError = true;
+                                    setTimeout(() => (this.dialog_load = false), 300)
+                                }
                                 if(data.style_subject === '-Nk3w7bsmBEoOk9V0mtm' ||
                                     data.style_subject === '-Nk3wCgpi5_m5g7DO4kJ' ||
                                     data.style_subject === '-Nk3wFoslv3edqH8oe82' && maxKey >= selectedObjectFC.bath){
                                         console.log("ไปๆๆ");
                                         text = text.concat(" ", data.time_sum[key]);
                                         isSave--;
-                                }
-                                if (data.time_sum.length == parseInt(key) + 1 && text.length != 0) {
-                                    this.textError = 'เต็มแล้ว' + text + " " + this.date[keydate];
-                                    this.dialogError = true;
-                                    setTimeout(() => (this.dialog_load = false), 300)
+                                        this.dialogError = false;
                                 }
                                 if (maxKey < selectedObject.bath && data.time_sum.length == parseInt(key) + 1) {
                                     console.log('send save');
