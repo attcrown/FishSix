@@ -11,7 +11,21 @@ export const CheckStuController = new Vue();
 export default {
     data() {
         return {
-
+            time_standart: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+                , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+                , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+                , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+                , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+                , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+            time_full: ["00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00"
+                , "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30"
+                , "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00"
+                , "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30"
+                , "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+                , "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"
+                , "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"],
+            time_standart_sum: [],
         };
     },
     created() {
@@ -304,13 +318,67 @@ export default {
                                     console.log('error');
                                 }
                             }                                                        
-                        }                             
+                        }
+                        if(keystudent.status_study_column.key === "-NceLxBOS65TrhT6Dbw_"){
+                            this.validateTime(keystudent.time_learn_start ,keystudent.time_learn);
+                            this.delete_time(keystudent);
+                        }                           
                     })
             } else {
                 console.log("ไม่มีการลบ ชม.");
             }
             const result = false;
             callback(result);
+        },
+
+        validateTime(start, stop) {
+            this.time_standart_stop = [];
+            let sum = 0;
+            for (const key in this.time_standart) {
+                if (start == this.time_standart[key] || (sum != 0)) {
+                    sum++;
+                    if (sum > 1) {
+                        this.time_standart_stop.push(this.time_standart[key]);
+                    }
+                }
+            }
+            if (stop != null && start != null) {
+                this.time_standart_sum = [];
+                let sum = 0;
+                for (const key in this.time_standart) {
+                    if (stop == this.time_standart[key]) {
+                        sum = 0;
+                        break;
+                    }
+                    else if (start == this.time_standart[key] || (sum != 0)) {
+                        sum++;
+                        this.time_standart_sum.push(this.time_standart[key]);
+                    }
+                }
+            }
+            console.log(this.time_standart_sum);
+        },
+
+        delete_time(item) {
+            console.log(item);
+            let olditem = item;
+            const db = this.$fireModule.database();
+            for (const key in this.time_standart_sum) {
+                db.ref(`Time_teacher/${olditem.keyTeacher}/${olditem.date}/${this.time_standart_sum[key]}/`).orderByValue().equalTo(olditem.keyStudent).once("value")
+                    .then(snapshot => {
+                        snapshot.forEach(childSnapshot => {
+                            childSnapshot.ref.remove()
+                                .then(() => {
+                                    console.log("Data removed successfully");
+                                    this.renewDate(olditem, this.time_standart_sum[key]);
+                                })
+                                .catch(error => {
+                                    console.error("Error removing data:", error);
+                                    return;
+                                });
+                        });
+                    });
+            }
         },
     },
 }
