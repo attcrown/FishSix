@@ -1026,7 +1026,7 @@ export default {
                 }
                 acc[teacherName].push(item);
                 // เรียงข้อมูลในกลุ่มตามวันที่
-                acc[teacherName].sort((a, b) => new Date(a.date) - new Date(b.date));
+                acc[teacherName].sort((a, b) => new Date(`${a.date}T${a.time_s}`) - new Date(`${b.date}T${b.time_s}`));
                 return acc;
             }, {});
 
@@ -1043,7 +1043,7 @@ export default {
                 }
                 acc[teacherName].push(item);
                 // เรียงข้อมูลในกลุ่มตามวันที่
-                acc[teacherName].sort((a, b) => new Date(a.date) - new Date(b.date));
+                acc[teacherName].sort((a, b) => new Date(`${a.date}T${a.time_s}`) - new Date(`${b.date}T${b.time_s}`));
                 return acc;
             }, {});
 
@@ -1059,7 +1059,7 @@ export default {
                 }
                 acc[teacherName].push(item);
                 // เรียงข้อมูลในกลุ่มตามวันที่
-                acc[teacherName].sort((a, b) => new Date(a.date) - new Date(b.date));
+                acc[teacherName].sort((a, b) => new Date(`${a.date}T${a.time_s}`) - new Date(`${b.date}T${b.time_s}`));
                 return acc;
             }, {});
 
@@ -1075,7 +1075,7 @@ export default {
                 }
                 acc[teacherName].push(item);
                 // เรียงข้อมูลในกลุ่มตามวันที่
-                acc[teacherName].sort((a, b) => new Date(a.date) - new Date(b.date));
+                acc[teacherName].sort((a, b) => new Date(`${a.date}T${a.time_s}`) - new Date(`${b.date}T${b.time_s}`));
                 return acc;
             }, {});
 
