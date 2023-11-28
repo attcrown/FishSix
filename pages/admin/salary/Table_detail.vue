@@ -582,7 +582,7 @@ export default {
                 if (existingGroup) {
                     existingGroup.push(item);
                     // เรียงข้อมูลในกลุ่มตามวันที่
-                    existingGroup.sort((a, b) => new Date(a.send_plan.date_learn) - new Date(b.send_plan.date_learn));
+                    existingGroup.sort((a, b) => new Date(`${a.send_plan.date_learn}T${a.send_plan.time_learn_start}`) - new Date(`${b.send_plan.date_learn}T${b.send_plan.time_learn_start}`));
                     // console.log(existingGroup);
                 } else {
                     acc.push([item]);
