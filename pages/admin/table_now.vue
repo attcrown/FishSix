@@ -272,7 +272,7 @@
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_student"
+                                            <v-text-field label="phone number" v-if="status != 'teacher' && status != 'user'" v-model="detail_user.phone_student"
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
@@ -280,7 +280,7 @@
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="phone number" v-model="detail_user.phone_teacher"
+                                            <v-text-field label="phone number" v-if="status != 'teacher' && status != 'user'" v-model="detail_user.phone_teacher"
                                                 readonly></v-text-field>
                                         </v-col>
                                     </v-row>
