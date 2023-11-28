@@ -83,7 +83,7 @@
                                                     readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.phone_student" label="เบอร์โทรนักเรียน"
+                                                <v-text-field v-if="status != 'teacher' && status != 'user'" v-model="editedItem.phone_student" label="เบอร์โทรนักเรียน"
                                                     readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
@@ -91,7 +91,7 @@
                                                     readonly></v-text-field>
                                             </v-col>
                                             <v-col cols="12" sm="6" md="6">
-                                                <v-text-field v-model="editedItem.phone_teacher" label="เบอร์โทรคุณครู"
+                                                <v-text-field v-if="status != 'teacher' && status != 'user'" v-model="editedItem.phone_teacher" label="เบอร์โทรคุณครู"
                                                     readonly></v-text-field>
                                             </v-col>
                                         </v-row>
