@@ -739,7 +739,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()">บันทึก <span
+                        <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()" :disabled="status == 'teacher' && edited.status_development == 'Approved'">บันทึก <span
                                 class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
@@ -758,7 +758,7 @@
                             <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}
                         </p>
                         <hr style="border: 1px solid #000; background-color: #000;">
-                        <v-checkbox v-model="edited.send_line" label="ส่งพัฒนาการให้ผู้ปกครองแล้ว" color="success"
+                        <v-checkbox :disabled="status == 'teacher'" v-model="edited.send_line" label="ส่งพัฒนาการให้ผู้ปกครองแล้ว" color="success"
                             @change="check_send_stu(edited)"></v-checkbox>
                     </v-card-text>
                 </v-card>
