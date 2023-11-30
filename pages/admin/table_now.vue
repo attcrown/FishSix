@@ -521,7 +521,7 @@ export default {
                         // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
                         const datedata = keydata[date];
                         if (this.date == null) {
-                            console.log(now, new Date(date), end);
+                            // console.log(now, new Date(date), end);
                             if (end.getTime() >= new Date(date).getTime() &&
                                 new Date(date).getTime() >= now.getTime()) {
                                 for (const time in datedata) {

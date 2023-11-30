@@ -22,7 +22,7 @@
                     </v-hover>
                 </div>
                 <div class="ms-10" style="margin-top:-10px; min-width:800px">
-                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16" >
+                    <div style="background-color:#EBE4DE" class="rounded-xl elevation-16">
                         <div class="d-flex px-5 pt-5">
                             <v-autocomplete class="me-5" v-model="value_tea" :items="value_tea_all" item-text="name"
                                 item-value="key" label="เลือกครู" @change="arrayEvent_search()"></v-autocomplete>
@@ -42,8 +42,7 @@
                                     <v-btn text color="primary" @click="modal = false">
                                         Cancel
                                     </v-btn>
-                                    <v-btn text color="primary"
-                                        @click="$refs.dialog.save(date)">
+                                    <v-btn text color="primary" @click="$refs.dialog.save(date)">
                                         OK
                                     </v-btn>
                                 </v-date-picker>
@@ -52,8 +51,8 @@
                             <v-dialog ref="dialog_end" v-model="modal_day_end" :return-value.sync="date_end" persistent
                                 width="290px">
                                 <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="date_end" label="สิ้นสุดค้นหา" prepend-icon="mdi-calendar" readonly
-                                        v-bind="attrs" v-on="on"></v-text-field>
+                                    <v-text-field v-model="date_end" label="สิ้นสุดค้นหา" prepend-icon="mdi-calendar"
+                                        readonly v-bind="attrs" v-on="on"></v-text-field>
                                 </template>
                                 <v-date-picker v-model="date_end" scrollable :min="date" :events="arrayEvents"
                                     event-color="green lighten-1">
@@ -61,8 +60,7 @@
                                     <v-btn text color="primary" @click="modal_day_end = false">
                                         Cancel
                                     </v-btn>
-                                    <v-btn text color="primary"
-                                        @click="$refs.dialog_end.save(date_end)">
+                                    <v-btn text color="primary" @click="$refs.dialog_end.save(date_end)">
                                         OK
                                     </v-btn>
                                 </v-date-picker>
@@ -99,8 +97,8 @@
                                 hide-details></v-checkbox>
 
                             <v-btn elevation="10" color="#322E2B" class="mt-3 ms-2" style="color:white" type="submit"
-                                :disabled="value_tea == null || date == null || date_end == null  || searchMoney === false"
-                                @click="search_data_money(), export_menu = true ,searchMoney = false" rounded>
+                                :disabled="value_tea == null || date == null || date_end == null || searchMoney === false"
+                                @click="search_data_money(), export_menu = true, searchMoney = false" rounded>
                                 ค้นหา<span class="mdi mdi-magnify text-h6"></span>
                             </v-btn>
 
@@ -181,23 +179,24 @@
                 </v-expansion-panel-content>
                 <v-row>
                     <v-col cols="12" class="d-flex justify-end pe-10">
-                        <p class="mt-0">                            
+                        <p class="mt-0">
                             <b style="font-size:16px; color:rgb(224, 137, 7);">
-                                รวมรายได้ทั้งหมด {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class) + calculateTotalIncomeAll(teacherData.data_class)) }} บาท
+                                รวมรายได้ทั้งหมด {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class) +
+                                    calculateTotalIncomeAll(teacherData.data_class)) }} บาท
                             </b>
                             <br>
                             <b style="font-size:16px; color:rgb(128, 4, 4);">
                                 รวมหักค่าภาษี {{ formatNumber(calculateTotalIncomePersenAll(teacherData.data_class)) }} บาท
-                            </b>                            
+                            </b>
                         </p>
                     </v-col>
-                    <v-col cols="12" class="d-flex justify-end pe-10" style="margin-top:-20px">                                             
-                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-0">                           
+                    <v-col cols="12" class="d-flex justify-end pe-10" style="margin-top:-20px">
+                        <p style="font-size:20px; color:rgb(3, 153, 3);" class="mt-0">
                             <b> รวมรายได้สุทธิทั้งหมด {{
                                 formatNumber(calculateTotalIncomeAll(teacherData.data_class)) }} บาท
                             </b>
                         </p>
-                    </v-col>                    
+                    </v-col>
                 </v-row>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -317,27 +316,23 @@
                                 :value="detailData.money.optional.bath + ' บาท'"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7"
-                            v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
+                        <v-col cols="7" v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeflip.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5"
-                            v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
+                        <v-col cols="5" v-if="detailData.select_class == '-NcQsFxCcoNS-uwmKUqE' && !detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeflip.bath + ' บาท'"></v-text-field>
                         </v-col>
 
-                        <v-col cols="7"
-                            v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
+                        <v-col cols="7" v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
                             style="margin-top:-20px">
                             <v-subheader style="font-size:16px; color:rgb(3, 3, 3)">{{ detailData.money.typeprivate.name
                             }}</v-subheader>
                         </v-col>
-                        <v-col cols="5"
-                            v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
+                        <v-col cols="5" v-if="detailData.select_class != '-NcQsFxCcoNS-uwmKUqE' || detailData.match_vip"
                             style="margin-top:-30px">
                             <v-text-field readonly label="ค่าสอน"
                                 :value="detailData.money.typeprivate.bath + ' บาท'"></v-text-field>
@@ -473,10 +468,10 @@
 
                             <v-checkbox class="m-0" v-model="selectedHeaders[10]" label="วันที่สอน" :disabled="isExportAll"
                                 value="วันที่สอน"></v-checkbox>
-                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="เวลาเริ่มเรียน" :disabled="isExportAll"
-                                value="เวลาเริ่มเรียน"></v-checkbox>
-                                <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="เวลาเลิกเรียน" :disabled="isExportAll"
-                                value="เวลาเลิกเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[11]" label="เวลาเริ่มเรียน"
+                                :disabled="isExportAll" value="เวลาเริ่มเรียน"></v-checkbox>
+                            <v-checkbox class="m-0" v-model="selectedHeaders[12]" label="เวลาเลิกเรียน"
+                                :disabled="isExportAll" value="เวลาเลิกเรียน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[13]" label="สถานที่สอน" :disabled="isExportAll"
                                 value="สถานที่สอน"></v-checkbox>
                             <v-checkbox class="m-0" v-model="selectedHeaders[14]" label="รายได้ต่อวิชา"
@@ -608,13 +603,11 @@ export default {
             return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
         mapping(item, class_tea) {
+            console.log('>>>>>', item, class_tea)
             this.mapping_data = [];
             for (const id in item) {
-                // console.log('send>>>',item[id])
                 for (const key in class_tea) {
-                    // console.log('class>>>',class_tea[key]);
                     if (item[id].name === class_tea[key].name) {
-                        // console.log('true name');
                         for (const detail in class_tea[key].data_class) {
                             // console.log('data_class', class_tea[key].data_class[detail]);
                             if (item[id].send_plan.date_learn === class_tea[key].data_class[detail].name.substring(0, 10)) {
@@ -622,14 +615,16 @@ export default {
                                     class_tea[key].data_class[detail].name.substring(11, 16),
                                     class_tea[key].data_class[detail].name.substring(17, 22)
                                 )
+                                // console.log('v1',item[id]);
                                 // console.log('check date', time, item[id].send_plan);
                                 // console.log(time.includes(item[id].send_plan.time_learn_start))
                                 // console.log('location',class_tea[key].data_class[detail].item.style_subject)
                                 // console.log('location2',item[id].datematchData.style_subject)
-                                if (time.includes(item[id].send_plan.time_learn_start) && 
+                                if (time.includes(item[id].send_plan.time_learn_start) &&
                                     time.includes(item[id].send_plan.time_learn) &&
-                                    class_tea[key].data_class[detail].item.style_subject === item[id].datematchData.style_subject
-                                    ) {
+                                    class_tea[key].data_class[detail].item.style_subject.includes(item[id].datematchData.style_subject)
+                                ) {
+                                    // console.log('V2',item[id]);
                                     if (class_tea[key].data_class[detail].items == undefined) {
                                         class_tea[key].data_class[detail].items = [];
                                     }
@@ -643,12 +638,11 @@ export default {
             // เรียงข้อมูลใน plainClassTea โดยแยกแต่ละชุดข้อมูลออกมาเรียงแยกกัน
             for (const key in class_tea) {
                 class_tea[key].data_class.sort((a, b) => {
-                    const dateA = new Date(a.name.substring(0, 10));
-                    const dateB = new Date(b.name.substring(0, 10));
+                    const dateA = new Date(`${a.name.substring(0, 10)}T${a.name.substring(11, 16)}`);
+                    const dateB = new Date(`${b.name.substring(0, 10)}T${b.name.substring(11, 16)}`);
                     return dateA - dateB;
                 });
             }
-            console.log(class_tea);
             this.mapping_data = class_tea;
         },
         validateTime(start, stop) {
@@ -676,10 +670,10 @@ export default {
                     for (const key in childData) {
                         const tea = childData[key]
                         for (const id in tea) {
-                            if(tea[id].money){
+                            if (tea[id].money) {
                                 this.arrayEvents.push(tea[id].date_learn);
                                 console.log(this.arrayEvents);
-                            }                            
+                            }
                         }
                     }
 
@@ -691,10 +685,10 @@ export default {
                     console.log(childData);
                     for (const key in childData) {
                         const date = childData[key]
-                        if(date.money){
+                        if (date.money) {
                             this.arrayEvents.push(date.date_learn);
                             console.log(this.arrayEvents);
-                        }  
+                        }
                     }
 
                 })
@@ -787,7 +781,7 @@ export default {
         },
         search_class_table(id) {
             for (const key in this.class_all) {
-                console.log('>>>',id ,this.class_all);
+                console.log('>>>', id, this.class_all);
                 if (this.class_all[key].key == id) {
                     return this.class_all[key].name;
                 }

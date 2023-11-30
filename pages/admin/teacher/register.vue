@@ -41,7 +41,7 @@
                                 <v-row>
                                     <v-col class="py-0" cols="3">
                                         <v-text-field class="black-label" v-model="teacherId" :error-messages="idErrors"
-                                            counter label="รหัสครู (ไม่จำเป็นต้องกรอก)" required :rules="teacherIdRules">
+                                            counter label="รหัสครู (ไม่จำเป็นต้องกรอก)" required :rules="teacherIdRules" @input="name = teacherId">
                                             <template v-slot:append>
                                                 <v-tooltip bottom>
                                                     <template v-slot:activator="{ on }">
