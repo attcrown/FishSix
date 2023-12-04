@@ -213,7 +213,7 @@ export default {
 
         edit_save() {
             const db = this.$fireModule.database();
-            db.ref(`subject_all/${this.editedItem.key}`).set({
+            db.ref(`subject_all/${this.editedItem.key}`).update({
                 name: this.editedItem.name,
                 level: this.editedItem.level,
             });

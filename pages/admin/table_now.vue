@@ -2,7 +2,7 @@
     <div>
         <v-row>
             <v-col cols="12">
-                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="-1"
+                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="10"
                     :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
                     <template v-slot:top>
                         <!-- Toolbar section -->

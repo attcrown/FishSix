@@ -254,6 +254,7 @@ export default {
                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
+                                console.log(getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise);
                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
                                         const teacherData = teacherSnapshot.val();
@@ -284,6 +285,7 @@ export default {
                                     })
                                     .catch((error) => {
                                         alert("active เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                        // console.log(timedata.teacher ,key ,timedata.subject ,timedata.style_subject);
                                     });
                             } else if (this.status == 'teacher' && this.keyuser == timedata.teacher && timedata.status == 'พร้อมเรียน' && timedata.Idsendplan == undefined) {
                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
