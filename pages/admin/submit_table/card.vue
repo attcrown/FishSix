@@ -472,15 +472,18 @@
                                 <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
                                     <v-autocomplete label="วิชาที่เรียน" v-model="edited.subject"
                                         :items="getSubjectArray(edited.subject_all)" :item-text="item => item.name"
-                                        :item-value="item => item.value" @change="select_level(getSubjectArray(edited.subject_all))"></v-autocomplete>
+                                        :item-value="item => item.value" @change="select_level(getSubjectArray(edited.subject_all))"
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required :readonly="status === 'teacher'"></v-autocomplete>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
                                     <v-autocomplete label="ระดับชั้น" v-model="edited.level" 
-                                        :items="new_select_subject"></v-autocomplete>
+                                        :items="new_select_subject"
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required :readonly="status === 'teacher'"></v-autocomplete>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
                                     <v-autocomplete label="ชั่วโมงเรียน" v-model="edited.hour" 
-                                        :items="select_hour" item-text="name" item-value="value"></v-autocomplete>
+                                        :items="select_hour" item-text="name" item-value="value"
+                                        :rules="[v => !!v || 'กรุณาเลือก']" required :readonly="status === 'teacher'"></v-autocomplete>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
                                     <v-text-field label="ชื่อครู" v-model="edited.name" readonly></v-text-field>

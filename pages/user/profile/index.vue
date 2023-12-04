@@ -668,7 +668,7 @@
                     height: 100%;
                   ">
                   <v-icon style="text-decoration: underline" large color="#B6A7A2" class="text-h5"
-                    @click="reviewData=[], viewReview(item), dialogReview = true">
+                    @click="reviewData = [], viewReview(item), dialogReview = true">
                     mdi-message-draw
                   </v-icon>
                 </div>
@@ -1112,6 +1112,20 @@ export default {
         return `${hours} ชั่วโมง ${minutes} นาที`
       }
     },
+    formattedPrivateStudyHourOnline() {
+      if (this.privateStudyHourOnlineDisplay === null || this.privateStudyHourOnlineDisplay === undefined) {
+        return '0 ชั่วโมง';
+      }
+
+      const hours = Math.floor(this.privateStudyHourOnlineDisplay);
+      const minutes = ((this.privateStudyHourOnlineDisplay - hours) * 60).toFixed(0);
+
+      if (minutes === 0) {
+        return `${hours} ชั่วโมง`;
+      } else {
+        return `${hours} ชั่วโมง ${minutes} นาที`;
+      }
+    },
     formattedPrivateHourLeft() {
       if (
         this.privateHourLeftDisplay === null ||
@@ -1250,6 +1264,7 @@ export default {
 
         this.privateTotalHour = childData.privateTotalHour || 0
         this.privateStudyHour = childData.privateStudyHour || 0
+        this.privateStudyHourOnlineDisplay  = childData.privateStudyHourOnline || 0
         this.privateHourLeft = childData.privateHourLeft || 0
         this.privateTotalHourDisplay = childData.privateTotalHour || 0
         this.privateStudyHourDisplay = childData.privateStudyHour || 0
@@ -1413,11 +1428,11 @@ export default {
         console.log('save', this.reviewData);
         const db = this.$fireModule.database();
         db.ref(`send_plan/${this.reviewData.keyteacher}/${this.reviewData.keysendPlan}`).update({
-            Rans1: this.reviewData.Rans1,
-            Rans2: this.reviewData.Rans2,
-            Rans3: this.reviewData.Rans3,
-            rating : this.reviewData.rating,
-          })
+          Rans1: this.reviewData.Rans1,
+          Rans2: this.reviewData.Rans2,
+          Rans3: this.reviewData.Rans3,
+          rating: this.reviewData.rating,
+        })
           .then(() => {
             this.openSnackbar('success', 'บันทึกสำเร็จ')
           })
@@ -1906,10 +1921,10 @@ export default {
       const db = this.$fireModule.database();
       db.ref(`send_plan/${item.classHistory.keyTeacher}/${item.key}`).on('value', (snapshot) => {
         if (snapshot.exists()) {
-          const childData = snapshot.val(); 
-          let keyteacher =  {keyteacher:item.classHistory.keyTeacher};
-          let keysendPlan = {keysendPlan:item.key};        
-          this.reviewData = {...childData , ...keyteacher , ...keysendPlan};
+          const childData = snapshot.val();
+          let keyteacher = { keyteacher: item.classHistory.keyTeacher };
+          let keysendPlan = { keysendPlan: item.key };
+          this.reviewData = { ...childData, ...keyteacher, ...keysendPlan };
           console.log(this.reviewData);
         }
       })

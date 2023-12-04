@@ -71,7 +71,7 @@ export default {
                 if(parseFloat(item_data.hour) > parseFloat(item_data.old_hour)){
                     let hourSum = parseFloat(item_data.hour) - parseFloat(item_data.old_hour);
                     if(item_data.select_class === "-NcQsHB9vgG53lJKPA-i"){ //Private Class
-                        if(item_data.style.includes("online")){
+                        if(item_data.style.includes("Online")){
                             db.ref(`user/${item_data.keyStudent}/`).update({
                                 privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) - parseFloat(hourSum),
                                 privateStudyHourOnline : parseFloat(item_data.studentAll.privateStudyHourOnline) + parseFloat(hourSum)
@@ -83,7 +83,7 @@ export default {
                             })
                         }
                     }else if(item_data.select_class === "-NcQsFxCcoNS-uwmKUqE"){ //Flip Class
-                        if(item_data.style.includes("online")){
+                        if(item_data.style.includes("Online")){
                             db.ref(`user/${item_data.keyStudent}/`).update({
                                 hourLeft : parseFloat(item_data.studentAll.hourLeft) - parseFloat(hourSum),
                                 studyHourOnline : parseFloat(item_data.studentAll.studyHourOnline) + parseFloat(hourSum)
@@ -101,7 +101,7 @@ export default {
                 }else{
                     let hourSum = parseFloat(item_data.old_hour) - parseFloat(item_data.hour);
                     if(item_data.select_class === "-NcQsHB9vgG53lJKPA-i"){ //Private Class
-                        if(item_data.style.includes("online")){ //Online
+                        if(item_data.style.includes("Online")){ //Online
                             db.ref(`user/${item_data.keyStudent}/`).update({
                                 privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) + parseFloat(hourSum),
                                 privateStudyHourOnline : parseFloat(item_data.studentAll.privateStudyHourOnline) - parseFloat(hourSum)
@@ -113,7 +113,7 @@ export default {
                             })
                         }
                     }else if(item_data.select_class === "-NcQsFxCcoNS-uwmKUqE"){ //Flip Class
-                        if(item_data.style.includes("online")){ //Online
+                        if(item_data.style.includes("Online")){ //Online
                             db.ref(`user/${item_data.keyStudent}/`).update({
                                 hourLeft : parseFloat(item_data.studentAll.hourLeft) + parseFloat(hourSum),
                                 studyHourOnline : parseFloat(item_data.studentAll.studyHourOnline) - parseFloat(hourSum)
@@ -130,7 +130,7 @@ export default {
                     }
                 }
             }
-            
+
             const db = this.$fireModule.database();
             db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
                 status_study_column: item_data.status_study_column || null,
