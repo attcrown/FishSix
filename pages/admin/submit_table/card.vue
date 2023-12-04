@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- <loaderVue v-if="isLoading"></loaderVue> -->
         <!-- Header -->
         <v-card flat class="elevation-16 rounded-xl px-5 pt-8" style="background-color:#EBE4DE">
             <h5 class="px-4"><b>เลือกตารางเรียน</b></h5>
@@ -21,9 +22,9 @@
                         </v-btn>
                     </v-date-picker>
                 </v-menu>
-                <v-btn elevation="10" color="#322E2B" class="mt-3 ms-5" style="color:white" :disabled="search_data_btn === false"
-                     @click="search_data_btn = false ,search_date_teacher_All() " rounded>ค้นหาทั้งหมด<span
-                        class="mdi mdi-magnify text-h6"></span></v-btn>
+                <v-btn elevation="10" color="#322E2B" class="mt-3 ms-5" style="color:white"
+                    :disabled="search_data_btn === false" @click="search_data_btn = false, search_date_teacher_All()"
+                    rounded>ค้นหาทั้งหมด<span class="mdi mdi-magnify text-h6"></span></v-btn>
 
                 <v-spacer></v-spacer>
                 <v-btn elevation="10" color="#322E2B" class="me-5 mt-3" style="color:white" :disabled="!formIsValid"
@@ -391,11 +392,14 @@
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px;">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="4">
                                     <v-text-field label="ชื่อนักเรียน" v-model="edited.namestu" readonly></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6">
+                                <v-col cols="12" sm="6" md="4">
                                     <v-text-field label="วิชาที่เรียน" v-model="edited.subject" readonly></v-text-field>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-text-field label="ระดับชั้น" v-model="edited.level" readonly></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6">
                                     <v-text-field label="ชื่อครู" v-model="edited.name" readonly></v-text-field>
@@ -462,11 +466,21 @@
                                     <hr style="border: 1px solid #000; background-color: #000;">
                                     <p style="font-size: 16px;">รายระเอียดเกี่ยวกับครู/นักเรียน</p>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
+                                <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
                                     <v-text-field label="ชื่อนักเรียน" v-model="edited.namestu" readonly></v-text-field>
                                 </v-col>
-                                <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
-                                    <v-text-field label="วิชาที่เรียน" v-model="edited.subject" readonly></v-text-field>
+                                <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
+                                    <v-autocomplete label="วิชาที่เรียน" v-model="edited.subject"
+                                        :items="getSubjectArray(edited.subject_all)" :item-text="item => item.name"
+                                        :item-value="item => item.value" @change="select_level(getSubjectArray(edited.subject_all))"></v-autocomplete>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
+                                    <v-autocomplete label="ระดับชั้น" v-model="edited.level" 
+                                        :items="new_select_subject"></v-autocomplete>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="3" style="margin-top:-30px">
+                                    <v-autocomplete label="ชั่วโมงเรียน" v-model="edited.hour" 
+                                        :items="select_hour" item-text="name" item-value="value"></v-autocomplete>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="6" style="margin-top:-30px">
                                     <v-text-field label="ชื่อครู" v-model="edited.name" readonly></v-text-field>
@@ -712,8 +726,7 @@
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Optional']" label="Optional"
                                         required></v-select>
                                 </v-col>
-                                <v-col cols="12" md="6"
-                                    v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
+                                <v-col cols="12" md="6" v-if="this.status != 'teacher' && this.edited.createAt_rate_OP">
                                     <v-select v-model="edited.select_class" :items="selectClass_all" item-value="key"
                                         item-text="name" :rules="[v => !!v || 'กรุณาเลือก Class']" label="ประเภทการสอน"
                                         required></v-select>
@@ -739,7 +752,8 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()" :disabled="status == 'teacher' && edited.status_development == 'Approved'">บันทึก <span
+                        <v-btn rounded color="#29CC39" class="mt-5 mb-5" dark @click="validate_confirm()"
+                            :disabled="status == 'teacher' && edited.status_development == 'Approved'">บันทึก <span
                                 class="mdi mdi-content-save text-h6"></span></v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
@@ -758,7 +772,8 @@
                             <b>การบ้านหรือแบบฝึกหัดที่ให้กับน้องในวันนี้คือ : </b> {{ edited.homework || 'ไม่มี' }}
                         </p>
                         <hr style="border: 1px solid #000; background-color: #000;">
-                        <v-checkbox :disabled="status == 'teacher'" v-model="edited.send_line" label="ส่งพัฒนาการให้ผู้ปกครองแล้ว" color="success"
+                        <v-checkbox :disabled="status == 'teacher'" v-model="edited.send_line"
+                            label="ส่งพัฒนาการให้ผู้ปกครองแล้ว" color="success"
                             @change="check_send_stu(edited)"></v-checkbox>
                     </v-card-text>
                 </v-card>
@@ -797,7 +812,7 @@
         </v-dialog>
 
 
-        <v-dialog v-model="loadsave" hide-overlay persistent width="300">           
+        <v-dialog v-model="loadsave" hide-overlay persistent width="300">
             <v-overlay :value="loadsave">
                 <v-card color="primary" dark>
                     <v-card-text>
@@ -805,7 +820,7 @@
                         <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
                     </v-card-text>
                 </v-card>
-            </v-overlay>              
+            </v-overlay>
         </v-dialog>
 
         <v-dialog v-model="dialog_excel" max-width="600px">
@@ -905,10 +920,11 @@ import { saveAs } from 'file-saver';
 import { CheckedEventBus } from './card_controller.vue';
 import { CheckTeaController } from './checkTeaController.vue';
 import { CheckStuController } from './checkStuController.vue';
-
+import loaderVue from '~/components/loader.vue';
 export default {
     data() {
         return {
+            isLoading: true,
             search_data_btn: false,
             optional_all: [],
             selectClass_all: [],
@@ -976,6 +992,12 @@ export default {
             form: [],
             form_confirm: [],
 
+            new_select_subject:[],
+            select_hour:[{name:"0.30 ชม." ,value: 0.5},{name:"1 ชม." ,value: 1},{name:"1.30 ชม." ,value: 1.5},{name:"2 ชม." ,value: 2}
+                        ,{name:"2.30 ชม." ,value: 2.5},{name:"3 ชม." ,value: 3},{name:"3.30 ชม." ,value: 3.5},{name:"4 ชม." ,value: 4}
+                        ,{name:"4.30 ชม." ,value: 4.5},{name:"5 ชม." ,value: 5},{name:"5.30 ชม." ,value: 5.5},{name:"6 ชม." ,value: 6}
+                        ,{name:"6.30 ชม." ,value: 6.5},{name:"7 ชม." ,value: 7},{name:"7.30 ชม." ,value: 7.5},{name:"8 ชม." ,value: 8}
+                        ,{name:"8.30 ชม." ,value: 8.5},{name:"9 ชม." ,value: 9},{name:"9.30 ชม." ,value: 9.5},{name:"10 ชม." ,value: 10}],
             rules: {
                 // age: [(val) => val < 10 || `I don't believe you!`],
                 // animal: [(val) => (val || "").length > 0 || "This field is required"],
@@ -1004,6 +1026,9 @@ export default {
             send_rate_student_all: [],
             send_rate_teacher_all: [],
         }
+    },
+    components: {
+        loaderVue
     },
     mounted() {
         this.send_rate_search();
@@ -1094,6 +1119,43 @@ export default {
     },
 
     methods: {
+        select_level(item){
+            console.log(item);
+            for(const id in item){
+                if(item[id].name === this.edited.subject){
+                    this.new_select_subject = item[id].level;
+                    this.edited.keySubject = item[id].key;
+                    console.log(this.edited);
+                }
+            }
+        },
+        // getSubjectArray(subjectObj) {
+        //     // แปลง Object เป็น Array ที่มี properties 'name' และ 'value'
+        //     if(subjectObj){
+        //         return Object.values(subjectObj).map(item => ({ name: item.name, value: item.name ,level: item.level ,key:subjectObj[0]}));
+        //     }else{
+        //         return 
+        //     }
+        // },
+        getSubjectArray(subjectObj) {
+        // แปลง Object เป็น Array ที่มี properties 'name', 'value', 'level', 'key'
+            if (subjectObj) {
+                const keys = Object.keys(subjectObj);
+                const values = Object.values(subjectObj);
+                
+                // ให้ลำดับของการเรียงตามลำดับของ keys
+                const result = keys.map((key, index) => ({ 
+                name: values[index].name, 
+                value: values[index].name, 
+                level: values[index].level, 
+                key: key 
+                }));
+
+                return result;
+            } else {
+                return;
+            }
+        },
         handleCalendarResult(result) {
             // ทำอะไรกับค่าที่ถูกส่งกลับมาได้ที่นี่
             console.log('result:', result);
@@ -1114,20 +1176,20 @@ export default {
             }, 300);
         },
         check_send_stu(item) {
-            CheckedEventBus.$emit('save_send_user', item,(result) => {
+            CheckedEventBus.$emit('save_send_user', item, (result) => {
                 item.sendplanAll.send_line = result;
                 this.handleCalendarResult(result);
             });
             console.log('check_send_stu');
         },
-        checkTeaControl(item){
-            CheckTeaController.$emit('checkTeaControl', item,(result) => {
+        checkTeaControl(item) {
+            CheckTeaController.$emit('checkTeaControl', item, (result) => {
                 this.handleCheckTeaControl(result);
             });
             console.log('check_checkTeaControl');
         },
-        checkStuControl(item){            
-            CheckStuController.$emit('checkStuControl', item,(result) => {
+        checkStuControl(item) {
+            CheckStuController.$emit('checkStuControl', item, (result) => {
                 this.handleCheckStuControl(result);
             });
         },
@@ -1232,21 +1294,21 @@ export default {
                 this.edited = { ...this.edited, fileimg: this.fileToUpload };
                 this.checkTeaControl(this.edited);
                 this.dialog = false;
-            } else { 
-                console.log(this.edited, this.fileToUpload); 
+            } else {
+                console.log(this.edited, this.fileToUpload);
             }
         },
 
         validate_confirm() {
-            if (this.$refs.form_confirm.validate()) {                
+            if (this.$refs.form_confirm.validate()) {
                 this.edited = { ...this.edited, fileimg1: this.fileToUpload1 };
                 // this.dialog_confirm = false;
-                if(this.edited.status_development === "Approved"){
+                if (this.edited.status_development === "Approved") {
                     this.save_confirm(this.edited);
-                }else{
+                } else {
                     this.checkStuControl(this.edited);
                     this.loadsave = true;
-                }                
+                }
             } else {
                 console.log(this.edited);
             }
@@ -1288,6 +1350,10 @@ export default {
                     childData.createAt_rate_OP = sumx_date_stu;
                 }
                 this.edited = { ...this.edited, ...childData }; // ใช้ spread operator เพื่อรวม object this.edited และ object childData เข้าด้วยกัน
+                let subject_all = { subject_all: this.edited.teacherAll.subject_all };
+                this.edited = { ...this.edited, ...subject_all };
+                let old_hour = { old_hour: this.edited.hour };
+                this.edited = { ...this.edited, ...old_hour };
                 if (childData.check_save) {
                     this.check_time = true;
                 } else if (parseInt(new Date(this.edited.date).getTime()) >= parseInt(new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`).getTime())) {
@@ -1295,7 +1361,8 @@ export default {
                 } else {
                     this.check_time = false;
                 }
-                console.log(this.edited, this.check_time);
+                console.log('edited>>>', this.edited, this.check_time);
+                this.select_level(this.getSubjectArray(this.edited.subject_all));
             });
             this.dialog_confirm = true;
             this.send_rate_student_search();
@@ -1309,7 +1376,7 @@ export default {
             this.fileToUpload1 = null;
             this.dialog = false;
         },
-        
+
         save_confirm(item) {
             console.log('save_confirm')
             this.loadsave = true;
@@ -1329,9 +1396,9 @@ export default {
                 const getTimeTeaPromise = db.ref(`Time_teacher/${item_data.keyTeacher}/${item_data.date_learn}/${item_data.time_learn_start}`).once("value");
                 const getrate_specialPromise = db.ref(`rate_special_all/`).once("value");
                 const getpercent_servicePromise = db.ref(`percent_service_all/`).once("value");
-                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise, 
-                                getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise,
-                                getTimeTeaPromise ,getrate_specialPromise ,getpercent_servicePromise])
+                Promise.all([getsubjectPromise, getlevelPromise, gettypeflipPromise, gettypeprivatePromise,
+                    getlocationPromise, getoptionalPromise, getsend_ratePromise, getSelect_classPromise,
+                    getTimeTeaPromise, getrate_specialPromise, getpercent_servicePromise])
                     .then((snapshots) => {
                         const subject_data = snapshots[0].val();
                         const level_data = snapshots[1].val();
@@ -1344,9 +1411,9 @@ export default {
                         const time_tea_data = snapshots[8].val();
                         const rate_special_data = snapshots[9].val();
                         const percent_service_data = snapshots[10].val();
-                        console.log(subject_data, level_data, typeflip_data, typeprivate_data, 
-                                    location_data, optional_data, send_rate_data, select_class_date
-                                    ,time_tea_data ,rate_special_data ,percent_service_data);
+                        console.log(subject_data, level_data, typeflip_data, typeprivate_data,
+                            location_data, optional_data, send_rate_data, select_class_date
+                            , time_tea_data, rate_special_data, percent_service_data);
                         for (const key in level_data) {
                             console.log(level_data[key].name);
                             if (level_data[key].name.includes(item_data.level)) {
@@ -1365,41 +1432,41 @@ export default {
                         sum += parseFloat(subject_data.bath);
 
                         sum += parseFloat(level_search.bath);
-                        
+
                         if (item_data.select_class == '-NcQsFxCcoNS-uwmKUqE') { //FlipClass
                             sum += parseFloat(typeflip_data.bath);
                         } else if (item_data.select_class == '-NcQsHB9vgG53lJKPA-i') { //PrivateClass
                             sum += parseFloat(typeprivate_data.bath);
                         }
-                        
+
                         sum += parseFloat(location_data.bath);
-                        
+
                         if (item_data.status_check_sheet) {
                             sum += parseFloat(item_data.status_check_sheet.bath);
                         } else {
                             console.log('ไม่มี Sheet ลา');
                         }
-                        
+
                         if (item_data.optional) {
                             sum += parseFloat(optional_data.bath);
                         }
-                        
+
                         sum = sum * item_data.hour;
-                        
+
                         //-------คูณชม.----------------
 
-                        if(time_tea_data && time_tea_data[0] == item_data.keyStudent){                            
+                        if (time_tea_data && time_tea_data[0] == item_data.keyStudent) {
                             db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
-                                sum_seqNo : false,
+                                sum_seqNo: false,
                             });
-                        }else{
+                        } else {
                             sum = sum + 25;
                             db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/money`).update({
-                                sum_seqNo : true,
-                                send_rate_special : rate_special_data,
+                                sum_seqNo: true,
+                                send_rate_special: rate_special_data,
                             });
                         }
-                        
+
                         //------Check คนแรกหรือไม่---------
 
                         if (item_data.status_study_column_tea.bath == '0') {
@@ -1409,7 +1476,7 @@ export default {
                             sum = sum - (parseFloat(item_data.status_study_column_tea.bath) * sum / 100);
                             console.log(item_data.status_study_column_tea.name)
                         }
-                        
+
                         //--------เช็คชื่อช้าหรือไม่-------------------
 
                         if (item_data.status_study_column && item_data.status_study_column.bath == '0') {
@@ -1419,7 +1486,7 @@ export default {
                             sum = sum - (parseFloat(item_data.status_study_column.bath) * sum / 100);
 
                         }
-                        
+
                         //---------น้องมาเรียนปกติไหม--------------------
 
                         if (item_data.status_send_method && item_data.status_send_method.bath == '0') {
@@ -1429,11 +1496,11 @@ export default {
                             sum = sum - (parseFloat(item_data.status_send_method.bath) * sum / 100);
 
                         }
-                        
+
                         //--------ส่งพัฒนาการช้าหรือไม่-------------------
 
-                        del_send_percent = sum*parseFloat(percent_service_data.bath)/100
-                        sum = sum-(sum*parseFloat(percent_service_data.bath)/100) 
+                        del_send_percent = sum * parseFloat(percent_service_data.bath) / 100
+                        sum = sum - (sum * parseFloat(percent_service_data.bath) / 100)
                         //--------หักค่าประกัน--------------------
 
                         console.log(sum);
@@ -1460,7 +1527,7 @@ export default {
                             this.checkStuControl(item);
                         })
                     })
-            }            
+            }
         },
 
         sum_hour(start, end) {
@@ -1492,25 +1559,25 @@ export default {
                         for (const time in datedata) {
                             const timedata = datedata[time];
                             if (timedata.status === "พร้อมเรียน") {
-                                if(this.status === "teacher" && timedata.teacher === this.firstName){
+                                if (this.status === "teacher" && timedata.teacher === this.firstName) {
                                     this.arrayEvents.push(date);
                                 }
-                                if(this.status != "teacher"){
+                                if (this.status != "teacher") {
                                     this.arrayEvents.push(date);
                                 }
-                                
+
                             }
                         }
                     }
                 }
             })
         },
-        changDay(num){
+        changDay(num) {
             console.log(String(num).length);
             let ze = "0"
-            if(String(num).length === 1){
+            if (String(num).length === 1) {
                 return ze.concat(String(num));
-            }else{
+            } else {
                 return num;
             }
         },
@@ -1837,10 +1904,11 @@ export default {
                 this.dessertsNotData = item2;
                 this.dessertsNotapprove = item1;
                 this.dessertsApprove = item;
+                this.isLoading = false;
             })
         },
 
-        search_date_teacher_All() {            
+        search_date_teacher_All() {
             console.log(
                 this.panel,
                 this.panel1,
@@ -1863,23 +1931,23 @@ export default {
                 let item2 = [];
                 let item3 = [];
                 let month = '';
-                if(`${(new Date().getMonth() + 1)}`.length <= 1){
+                if (`${(new Date().getMonth() + 1)}`.length <= 1) {
                     month = `0${new Date().getMonth() + 1}`;
-                }else{
+                } else {
                     month = new Date().getMonth() + 1
                 }
                 let now = `${new Date().getFullYear()}-${month}-${this.changDay(new Date().getDate())}`;
-                console.log(now)
+                // console.log(now)
                 for (const key in childData) {
                     const keydata = childData[key];
                     for (const date in keydata) {
-                        console.log(date,new Date(date).getTime() , now , new Date(now).getTime());
+                        // console.log(date, new Date(date).getTime(), now, new Date(now).getTime());
                         if (new Date(date).getTime() <= new Date(now).getTime()) {
                             const datedata = keydata[date];
                             for (const time in datedata) {
                                 const timedata = datedata[time];
                                 if (this.status == "teacher" && this.keyuser == timedata.teacher) {
-                                    console.log('Doing');
+                                    // console.log('Doing');
                                     const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
                                     const getStudentPromise = db.ref(`user/${key}`).once("value");
                                     const getSubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
@@ -2025,7 +2093,7 @@ export default {
                                                     });
                                                 }
                                             }
-                                            
+
                                         })
                                 } else if (this.status == 'admin' || this.status == 'opFS' || this.status == 'opsupFS') {
                                     console.log('Doing');
@@ -2175,7 +2243,7 @@ export default {
                                                 }
                                             }
                                         })
-                                    
+
                                 }
                             }
                         }
@@ -2184,9 +2252,10 @@ export default {
                 this.dessertsNotcheck = item3;
                 this.dessertsNotData = item2;
                 this.dessertsNotapprove = item1;
-                this.dessertsApprove = item;            
-                this.search_data_btn = true;    
-                console.log(this.dessertsApprove ,this.search_data_btn);
+                this.dessertsApprove = item;
+                this.search_data_btn = true;
+                this.isLoading = false;
+                console.log(this.dessertsApprove, this.search_data_btn);
             })
         },
 

@@ -66,6 +66,71 @@ export default {
             }            
         },
         save_step(item_data, callback){
+            if(item_data.hour != item_data.old_hour){
+                const db = this.$fireModule.database();
+                if(parseFloat(item_data.hour) > parseFloat(item_data.old_hour)){
+                    let hourSum = parseFloat(item_data.hour) - parseFloat(item_data.old_hour);
+                    if(item_data.select_class === "-NcQsHB9vgG53lJKPA-i"){ //Private Class
+                        if(item_data.style.includes("online")){
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) - parseFloat(hourSum),
+                                privateStudyHourOnline : parseFloat(item_data.studentAll.privateStudyHourOnline) + parseFloat(hourSum)
+                            })
+                        }else{
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) - parseFloat(hourSum),
+                                privateStudyHour : parseFloat(item_data.studentAll.privateStudyHour) + parseFloat(hourSum)
+                            })
+                        }
+                    }else if(item_data.select_class === "-NcQsFxCcoNS-uwmKUqE"){ //Flip Class
+                        if(item_data.style.includes("online")){
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                hourLeft : parseFloat(item_data.studentAll.hourLeft) - parseFloat(hourSum),
+                                studyHourOnline : parseFloat(item_data.studentAll.studyHourOnline) + parseFloat(hourSum)
+                            })
+                        }else{
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                hourLeft : parseFloat(item_data.studentAll.hourLeft) - parseFloat(hourSum),
+                                studyHour : parseFloat(item_data.studentAll.studyHour) + parseFloat(hourSum)
+                            })
+                        }
+                    }else{
+                        console.log('Error');
+                        return;
+                    }
+                }else{
+                    let hourSum = parseFloat(item_data.old_hour) - parseFloat(item_data.hour);
+                    if(item_data.select_class === "-NcQsHB9vgG53lJKPA-i"){ //Private Class
+                        if(item_data.style.includes("online")){ //Online
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) + parseFloat(hourSum),
+                                privateStudyHourOnline : parseFloat(item_data.studentAll.privateStudyHourOnline) - parseFloat(hourSum)
+                            })
+                        }else{ // สาขา
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                privateHourLeft : parseFloat(item_data.studentAll.privateHourLeft) + parseFloat(hourSum),
+                                privateStudyHour : parseFloat(item_data.studentAll.privateStudyHour) - parseFloat(hourSum)
+                            })
+                        }
+                    }else if(item_data.select_class === "-NcQsFxCcoNS-uwmKUqE"){ //Flip Class
+                        if(item_data.style.includes("online")){ //Online
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                hourLeft : parseFloat(item_data.studentAll.hourLeft) + parseFloat(hourSum),
+                                studyHourOnline : parseFloat(item_data.studentAll.studyHourOnline) - parseFloat(hourSum)
+                            })
+                        }else{ // สาขา
+                            db.ref(`user/${item_data.keyStudent}/`).update({
+                                hourLeft : parseFloat(item_data.studentAll.hourLeft) + parseFloat(hourSum),
+                                studyHour : parseFloat(item_data.studentAll.studyHour) - parseFloat(hourSum)
+                            })
+                        }
+                    }else{
+                        console.log('Error');
+                        return;
+                    }
+                }
+            }
+            
             const db = this.$fireModule.database();
             db.ref(`send_plan/${item_data.keyTeacher}/${item_data.Idsendplan}/`).update({
                 status_study_column: item_data.status_study_column || null,
@@ -73,6 +138,9 @@ export default {
                 status_check_sheet: item_data.status_check_sheet || null,
                 status_study_column_tea: item_data.status_study_column_tea || null,
                 match_vip: item_data.match_vip || false,
+                level : item_data.level || null,
+                keysubject : item_data.keySubject || null,
+                hour: item_data.hour || null,
                 learn: item_data.learn || null,
                 understand: item_data.understand || null,
                 development: item_data.development || null,
@@ -89,6 +157,13 @@ export default {
                 createAt_rate_OP: new Date()
             }).then(() => {
                 console.log('save send_plan', item_data);
+            })
+            console.log(`data_match/${item_data.keyStudent}/${item_data.date_learn}/${item_data.time_learn}`);
+
+            db.ref(`date_match/${item_data.keyStudent}/${item_data.date_learn}/${item_data.time_learn}`).update({
+                subject : item_data.keySubject || null,
+                level : item_data.level || null,
+                hour: item_data.hour || null
             })
 
             if (!item_data.del_time || item_data.del_time == undefined) {

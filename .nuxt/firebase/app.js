@@ -1,5 +1,5 @@
 export default async function createApp(config, {res}) {
-  const firebaseModule = await import('firebase/compat/app')
+  const firebaseModule = await import(/* webpackChunkName: 'firebase-app' */'firebase/compat/app')
   const firebase = firebaseModule.default
 
   /*****************************************************
