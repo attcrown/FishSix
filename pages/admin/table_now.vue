@@ -2,7 +2,7 @@
     <div>
         <v-row>
             <v-col cols="12">
-                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="-1"
+                <v-data-table :headers="headers_student" :items="desserts_student" sort-by="date" :items-per-page="10"
                     :search="search_table_student" class="elevation-1 rounded-xl rounded-t-xl fonts300">
                     <template v-slot:top>
                         <!-- Toolbar section -->
@@ -12,8 +12,9 @@
                                 <v-menu ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date"
                                     transition="scale-transition" offset-y min-width="auto">
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-text-field v-model="date" label="วันที่เรียน" prepend-icon="mdi-calendar"
-                                            readonly v-bind="attrs" v-on="on" class="mt-10 ms-5"></v-text-field>
+                                        <v-text-field v-model="date" label="วันที่เริ่มค้นหา"
+                                            prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
+                                            class="mt-10 ms-5"></v-text-field>
                                     </template>
                                     <v-date-picker v-model="date" :events="arrayEvents" event-color="green lighten-1"
                                         no-title scrollable>
@@ -22,22 +23,51 @@
                                             Cancel
                                         </v-btn>
                                         <v-btn text color="primary"
-                                            @click="$refs.menu.save(date), search_date_student(), search_date = null, search_table_student = null">
+                                            @click="$refs.menu.save(date), search_date = null, search_table_student = null">
                                             OK
                                         </v-btn>
                                     </v-date-picker>
                                 </v-menu>
-                            </v-toolbar-title>
-                            <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
+                            </v-toolbar-title>   
+
+                            <v-toolbar-title>
+                                <v-menu ref="menu2" v-model="menu2" :close-on-content-click="false" :return-value.sync="date_end"
+                                    transition="scale-transition" offset-y min-width="auto">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <div class="d-flex">
+                                            <v-text-field v-model="date_end" label="วันที่สิ้นสุดค้นหา"
+                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"
+                                                class="mt-10 ms-5"></v-text-field>
+                                            <!-- Search Field -->
+                                            <v-text-field v-if="!showder" v-model="search_table_student" append-icon="mdi-magnify"
+                                                label="Search" class="ms-8" single-line hide-details dense style="max-width: 200px; margin-top: 46px">
+                                            </v-text-field>
+                                        </div>
+                                    </template>
+                                    <v-date-picker v-model="date_end" :events="arrayEvents" event-color="green lighten-1"
+                                        no-title scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="menu2 = false">
+                                            Cancel
+                                        </v-btn>
+                                        <v-btn text color="primary"
+                                            @click="$refs.menu2.save(date_end), search_date = null, search_table_student = null">
+                                            OK
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                            </v-toolbar-title>                             
+                                                   
+                            <!-- <v-select :items="items" v-model="search_date" label="Search Date" class="mt-10 ms-5"
                                 @input="date = null, search_table_student = null, search_date_student()"
                                 style="max-width: 250px;">
-                            </v-select>
+                            </v-select> -->
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
-                            <!-- Search Field -->
-                            <v-text-field v-if="!showder" v-model="search_table_student" append-icon="mdi-magnify" label="Search"
-                                class="mt-10" single-line hide-details dense style="max-width: 200px;">
-                            </v-text-field>
+                            <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
+                                rounded @click="search_date_student_test()" :disabled="date === null || date_end === null">
+                                    ค้นหา
+                            </v-btn>
 
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
                                 rounded @click="dialog_excel = true"
@@ -51,49 +81,56 @@
                         <v-container v-if="showder" style="background-color: #EBE4DE;">
                             <v-row justify="center" class="mt-3">
                                 <v-col cols="auto">
-                                    <v-card height="150" width="300" class="rounded-5" style="background-color: #AD382F;" elevation="16">
+                                    <v-card height="150" width="300" class="rounded-5" style="background-color: #AD382F;"
+                                        elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
-                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">
                                                 <img :src="require('~/assets/сolleagues discussing team project.png')"
-                                                    class="" height="90" style="margin-top:-10px; margin-start:10px; margin-end:50px;">
-                                                {{ dash_all }}                                                                                      
+                                                    class="" height="90"
+                                                    style="margin-top:-10px; margin-start:10px; margin-end:50px;">
+                                                {{ dash_all }}
                                             </div>
                                             <div>
-                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียนทั้งหมด</p>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">
+                                                    จำนวนคลาสเรียนทั้งหมด</p>
                                             </div>
                                         </v-row>
                                     </v-card>
                                 </v-col>
                                 <v-col cols="auto">
-                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #322E2B;" elevation="16">
+                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #322E2B;"
+                                        elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
-                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">
                                                 <img :src="require('~/assets/young woman at work with laptop writing.png')"
                                                     height="60" style="margin-top:-10px; margin-start:10px">
-                                                {{ dash_active }}                                                                                      
+                                                {{ dash_active }}
                                             </div>
                                             <div>
-                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียน<br>ที่พร้อมเรียน</p>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">
+                                                    จำนวนคลาสเรียน<br>ที่พร้อมเรียน</p>
                                             </div>
                                         </v-row>
                                     </v-card>
                                 </v-col>
                                 <v-col cols="auto">
-                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #B6A7A2;" elevation="16">
+                                    <v-card height="150" width="130" class="rounded-5" style="background-color: #B6A7A2;"
+                                        elevation="16">
                                         <v-row class="fill-height pt-3" align="center">
-                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">                                                
+                                            <div align="start" style="font-size:32px; color:rgb(255, 255, 255);">
                                                 <img :src="require('~/assets/young woman at work with laptop writing.png')"
                                                     height="60" style="margin-top:-10px; margin-start:10px">
-                                                {{ dash_notactive }}                                                                                      
+                                                {{ dash_notactive }}
                                             </div>
                                             <div>
-                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">จำนวนคลาสเรียน<br>ที่รอยืนยัน</p>
+                                                <p style="font-size: 16px; color:rgb(255, 255, 255);" class="text-center">
+                                                    จำนวนคลาสเรียน<br>ที่รอยืนยัน</p>
                                             </div>
                                         </v-row>
                                     </v-card>
-                                </v-col>                                
+                                </v-col>
                             </v-row>
-                        </v-container>                       
+                        </v-container>
 
 
                         <!-- Hover Cards -->
@@ -272,16 +309,18 @@
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="phone number" v-if="status != 'teacher' && status != 'user'" v-model="detail_user.phone_student"
-                                                readonly></v-text-field>
+                                            <v-text-field label="phone number"
+                                                v-if="status != 'teacher' && status != 'user'"
+                                                v-model="detail_user.phone_student" readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
                                             <v-text-field label="name teacher" v-model="detail_user.name"
                                                 readonly></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6">
-                                            <v-text-field label="phone number" v-if="status != 'teacher' && status != 'user'" v-model="detail_user.phone_teacher"
-                                                readonly></v-text-field>
+                                            <v-text-field label="phone number"
+                                                v-if="status != 'teacher' && status != 'user'"
+                                                v-model="detail_user.phone_teacher" readonly></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -369,7 +408,9 @@ export default {
         selectedHeaders: [],
         dialog_excel: false,
         date: null,
+        date_end: null,
         menu: false,
+        menu2: false,
         modal: false,
         menu2: false,
 
@@ -407,6 +448,8 @@ export default {
         desserts_student: [],
         editedIndex: -1,
         arrayEvents: [],
+        subject_all: [],
+        location_all: [],
     }),
 
     computed: {
@@ -425,7 +468,9 @@ export default {
     },
     mounted() {
         this.fullName();
-        this.search_date_student();
+        this.search_subject_all();
+        this.search_location_all();
+        // this.search_date_student();
     },
     created() {
         this.isMobile();
@@ -475,6 +520,101 @@ export default {
                     }
                 }
             })
+        },
+
+        search_date_student_test() {
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).on("value", (snapshot) => {
+                this.dash_all = 0;
+                this.dash_active = 0;
+                this.dash_notactive = 0;
+                this.desserts_student = [];
+                let item = [];
+                let Day_start = this.date;
+                let Day_end = this.date_end;
+                let Day_array = this.genarateDay(Day_start, Day_end);
+                snapshot.forEach((keySnapshot) => {
+                    keySnapshot.forEach((dateSnapshot) => {
+                        if (Day_array.includes(dateSnapshot.key)) {
+                            dateSnapshot.forEach((timeSnapshot) => {
+                                let timedata = timeSnapshot.val();
+                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                                const getStudentPromise = db.ref(`user/${keySnapshot.key}`).once("value");
+                                const getsubjectPromise = this.subject_all[timedata.subject];
+                                const getlocationPromise = this.location_all[timedata.style_subject];
+                                Promise.all([getTeacherPromise, getStudentPromise])
+                                    .then(([teacherSnapshot, studentSnapshot]) => {
+                                        const teacherData = teacherSnapshot.val();
+                                        const studentData = studentSnapshot.val();
+                                        const subjectData = getsubjectPromise;
+                                        const locationData = getlocationPromise;
+                                        item.push({
+                                            nametea_first: teacherData.firstName,
+                                            nametea_last: teacherData.lastName,
+                                            nickname_tea: teacherData.nickname,
+                                            namestu_first: studentData.firstName,
+                                            namestu_last: studentData.lastName,
+                                            nickname_stu: studentData.nickname,
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            teacherId: teacherData.teacherId,
+                                            studentId: studentData.studentId,
+                                            teachernickname: teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: dateSnapshot.key,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: keySnapshot.key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            // class: timedata.class,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                        })
+                                        this.dash_all += 1;
+                                        if (timedata.status === 'พร้อมเรียน') {
+                                            this.dash_active += 1;
+                                        } else if (timedata.status === 'รอยืนยัน') {
+                                            this.dash_notactive += 1;
+                                        } else {
+                                            console.log('Error', timedata.status);
+                                        }
+                                    })
+                            })
+                        }
+                    })
+                })
+                this.desserts_student = item;
+
+            })
+        },
+        search_subject_all() {
+            const db = this.$fireModule.database();
+            db.ref(`subject_all/`).on("value", (snapshot) => {
+                this.subject_all = snapshot.val();
+                console.log(this.subject_all);
+            })
+        },
+        search_location_all() {
+            const db = this.$fireModule.database();
+            db.ref(`location/`).on("value", (snapshot) => {
+                this.location_all = snapshot.val();
+                console.log(this.location_all);
+            })
+        },
+        genarateDay(dayStart, dayEnd) {
+            const dateArray = [];
+            const currentDate = new Date(dayStart);
+            while (currentDate <= new Date(dayEnd)) {
+                dateArray.push(new Date(currentDate).toISOString().slice(0, 10));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return dateArray;
         },
 
         search_date_student() {
@@ -1082,5 +1222,4 @@ export default {
     font-family: 'Prompt', sans-serif;
     /* ใช้ Roboto หรือ Font ที่ต้องการอื่นๆ ที่คุณได้ตั้งค่าใน nuxt.config.js */
     font-weight: 300;
-}
-</style>
+}</style>
