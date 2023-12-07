@@ -28,7 +28,7 @@
       </div>
       <div>
         <v-text-field label="รหัสครู" v-model="teacherIdSearch"> </v-text-field>
-        <v-btn class="text-white" color="black" @click="search_teacher">
+        <v-btn class="text-white" color="black" @click="searchTeacher">
           ค้นหาครู
         </v-btn>
       </div>
@@ -473,10 +473,11 @@ export default {
   components: {
     pageLoader,
   },
-  mounted() {
-    this.searchType();
-    this.search_teacher();
-    this.searchDisapprovedTeacher();
+  async mounted() {
+    await this.searchType();
+   
+    await this.searchDisapprovedTeacher();  
+  
   },
   methods: {
     exportDialog() {
@@ -640,14 +641,14 @@ export default {
 
     async searchType() {
       const db = this.$fireModule.database()
-      const typeAllPromise = db
+      const typeAllPromise =  db
         .ref(`type_all/`)
         .once('value')
         .then((snapshot) => {
           this.type_all = snapshot.val()
         })
 
-      const typePrivateAllPromise = db
+      const typePrivateAllPromise =  db
         .ref(`type_private_all/`)
         .once('value')
         .then((snapshot) => {
@@ -655,8 +656,9 @@ export default {
         })
 
       await Promise.all([typeAllPromise, typePrivateAllPromise])
+    
     },
-    async search_teacher() {
+    async searchTeacher() {
       const db = this.$fireModule.database()
       let item = []
       let itemundo = []
@@ -684,26 +686,10 @@ export default {
         const childData = snapshot.val()
         for (const key in childData) {
       
-            var type_allSnapshot = this.type_all[childData[key].typeflip] // เปลี่ยนตรงนี้
+            var type_allSnapshot = this.type_all[childData[key].typeflip] 
 
             var type_private_allSnapshot =
-              this.type_private_all[childData[key].typeprivate] // เปลี่ยนตรงนี้
-
-            // const type_allData = type_allSnapshot.val() // เปลี่ยนตรงนี้
-            // const type_private_allData = type_private_allSnapshot.val() // เปลี่ยนตรงนี้
-            if (type_allSnapshot == null || type_private_allSnapshot == null) {
-              const teacher = {
-                teacherId: childData[key].teacherId || null,
-                firstName: childData[key].firstName || null,
-                lastName: childData[key].lastName || null,
-                nickname: childData[key].nickname || null,
-                mobile: childData[key].mobile || null,
-                FlipClass: null,
-                PrivateClass: null,
-                university: childData[key].university || null,
-              }
-              item.push({ key: key, teacher })
-            } else {
+              this.type_private_all[childData[key].typeprivate] 
               const teacher = {
                 teacherId: childData[key].teacherId || null,
                 firstName: childData[key].firstName || null,
@@ -716,7 +702,7 @@ export default {
                 university: childData[key].university || null,
               }
               item.push({ key: key, teacher })
-            }
+           
           
         }
       } catch (error) {
@@ -748,19 +734,7 @@ export default {
 
         var type_private_allSnapshot =
           this.type_private_all[childData[key].typeprivate] // เปลี่ยนตรงนี้
-          if (type_allSnapshot == null || type_private_allSnapshot == null) {
-          const teacher = {
-            teacherId: childData[key].teacherId || null,
-            firstName: childData[key].firstName || null,
-            lastName: childData[key].lastName || null,
-            nickname: childData[key].nickname || null,
-            mobile: childData[key].mobile || null,
-            FlipClass: null,
-            PrivateClass: null,
-            university: childData[key].university || null,
-          }
-          itemundo.push({ key: key, teacher })
-        } else {
+        
           const teacher = {
             teacherId: childData[key].teacherId || null,
             firstName: childData[key].firstName || null,
@@ -773,19 +747,20 @@ export default {
             university: childData[key].university || null,
           }
           itemundo.push({ key: key, teacher })
-        }
+        
       }
+      this.isLoading = false
     },
     prev() {
       this.startAt = this.startAt - 10
       this.limitAt = this.limitAt - 10
-      this.search_teacher()
+      this.searchTeacher()
       this.page= this.page-1;
     },
     next() {
       this.startAt = this.startAt + 10
       this.limitAt = this.limitAt + 10
-      this.search_teacher();
+      this.searchTeacher();
       this.page= this.page+1;
     },
 

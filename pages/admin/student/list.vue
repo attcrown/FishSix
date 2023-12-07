@@ -34,15 +34,7 @@
         </v-btn>
       </div>
       <div class="col-sm-12">
-        <v-card-title>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="ค้นหา"
-            single-line
-            hide-details
-          ></v-text-field>
-        </v-card-title>
+       
         <v-data-table
           :headers="headers"
           :items="items"

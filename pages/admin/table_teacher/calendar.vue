@@ -109,6 +109,7 @@ export default {
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted() {
+        
         this.search_date_teacher();
         this.$refs.calendar.checkChange();
     },
@@ -117,8 +118,9 @@ export default {
         // ...
     },
     created() {
+
         CalendarEventBus.$on('call-calendar-method', () => {
-            this.search_date_teacher();
+            //this.search_date_teacher();
         });
     },
     methods: {
@@ -166,6 +168,7 @@ export default {
             const db = this.$fireModule.database();
             db.ref(`date_teacher/`).once("value", (snapshot) => {
                 const childData = snapshot.val();
+               
                 this.selectedEvent = {};
                 this.selectedElement = null;
                 this.selectedOpen = false;
@@ -229,6 +232,7 @@ export default {
                 }
             });
         },
+       
     }
 }
 </script>
