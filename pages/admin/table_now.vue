@@ -45,8 +45,8 @@
                                             </v-text-field>
                                         </div>
                                     </template>
-                                    <v-date-picker v-model="date_end" :events="arrayEvents" event-color="green lighten-1"
-                                        no-title scrollable>
+                                    <v-date-picker v-model="date_end" :min="date" :events="arrayEvents"
+                                        event-color="green lighten-1" no-title scrollable>
                                         <v-spacer></v-spacer>
                                         <v-btn text color="primary" @click="menu2 = false">
                                             Cancel
@@ -66,7 +66,8 @@
                             <v-divider class="mx-4" inset vertical></v-divider>
                             <v-spacer></v-spacer>
                             <v-btn elevation="10" color="#322E2B" class="ms-5 mt-8" style="color:white" type="submit"
-                                rounded @click="search_date_student_test(), btnSearch = null" :disabled="date === null || date_end === null || btnSearch === null">
+                                rounded @click="search_date_student_test(), btnSearch = null"
+                                :disabled="date === null || date_end === null || btnSearch === null">
                                 ค้นหา
                             </v-btn>
 
@@ -400,6 +401,7 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import loaderVue from '~/components/loader.vue';
+import { Timestamp } from "firebase/firestore";
 export default {
     data: () => ({
         btnSearch: true,
@@ -456,6 +458,8 @@ export default {
         arrayEvents: [],
         subject_all: [],
         location_all: [],
+
+        data_break: null
     }),
     components: {
         loaderVue
@@ -478,14 +482,20 @@ export default {
         this.fullName();
         this.search_subject_all();
         this.search_location_all();
-        // this.search_date_student();
-    },
-    created() {
-        this.isMobile();
         this.arrayEvent_search();
+        this.isMobile();
+        // this.search_date_student();
     },
 
     methods: {
+        timefirebase() {
+            const timestamp = Timestamp.fromDate(new Date());
+            const jsDate = timestamp.toDate();
+            const isoString = jsDate.toISOString();
+            let createdAte = isoString;
+            console.log(createdAte);
+            return createdAte;
+        },
         isMobile() {
             if (typeof window !== 'undefined' && window.innerWidth <= 768) {
                 this.showder = true;
@@ -517,185 +527,182 @@ export default {
         },
 
         arrayEvent_search() {
-            // const db = this.$fireModule.database();
-            // db.ref(`date_match/`).once("value", (snapshot) => {
-            //     this.arrayEvents = [];
-            //     const childData = snapshot.val();
-            //     if(this.status != "teacher"){
-            //         for (const key in childData) {
-            //             const keydata = childData[key];
-            //             for (const date in keydata) {
-            //                 this.arrayEvents.push(date);
-            //             }
-            //         }
-            //     }
-            //     if(this.status === "teacher"){
-            //         for (const key in childData) {
-            //             const keydata = childData[key];
-            //             for (const date in keydata) {
-            //                 const timedetail = keydata[date];
-            //                 for(const detail in timedetail){
-            //                     if(timedetail[detail].teacher === this.keyuser){
-            //                         this.arrayEvents.push(date);
-            //                     }  
-            //                 }
-                                                      
-            //             }
-            //         }
-            //     }
-            // }).then(()=>{
-            //     this.isLoading = false;
-            // })
+            const db = this.$fireModule.database();
+            db.ref(`date_match/`).once("value", (snapshot) => {
+                this.arrayEvents = [];
+                this.data_break = snapshot;
+                snapshot.forEach((keyStudent) => {
+                    keyStudent.forEach((keyDate) => {
+                        if (this.status === "user" && keyStudent.key === this.keyuser) {
+                            this.arrayEvents.push(keyDate.key);
+                        } else if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
+                            this.arrayEvents.push(keyDate.key);
+                        } else if (this.status === "teacher") {
+                            keyDate.forEach((timeDetail) => {
+                                if (timeDetail.val().teacher === this.keyuser) {
+                                    this.arrayEvents.push(keyDate.key);
+                                }
+                            })
+                        } else {
+                            console.log('status ไม่มีข้อมูล');
+                        }
+                    })
+                })
+            }).then((snapshot) => {
+                this.isLoading = false;
+                setTimeout(() => {
+                    this.search_date_student_test();
+                }, 300);
+            })
         },
 
         search_date_student_test() {
             const db = this.$fireModule.database();
-            db.ref(`date_match/`).once("value", (snapshot) => {
-                this.dash_all = 0;
-                this.dash_active = 0;
-                this.dash_notactive = 0;
-                this.desserts_student = [];
-                let item = [];
-                let Day_start = this.date;
-                let Day_end = this.date_end;
-                let Day_array = this.genarateDay(Day_start, Day_end);
-                snapshot.forEach((keySnapshot) => {
-                    keySnapshot.forEach((dateSnapshot) => {
-                        if (Day_array.includes(dateSnapshot.key)) {
-                            dateSnapshot.forEach((timeSnapshot) => {
-                                let timedata = timeSnapshot.val();
-                                const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-                                const getStudentPromise = db.ref(`user/${keySnapshot.key}`).once("value");
-                                const getsubjectPromise = this.subject_all[timedata.subject];
-                                const getlocationPromise = this.location_all[timedata.style_subject];
-                                Promise.all([getTeacherPromise, getStudentPromise])
-                                    .then(([teacherSnapshot, studentSnapshot]) => {
-                                        const teacherData = teacherSnapshot.val();
-                                        const studentData = studentSnapshot.val();
-                                        const subjectData = getsubjectPromise;
-                                        const locationData = getlocationPromise;
-                                        if (this.status === "teacher" && this.keyuser === timedata.teacher) {
-                                            item.push({
-                                                nametea_first: teacherData.firstName,
-                                                nametea_last: teacherData.lastName,
-                                                nickname_tea: teacherData.nickname,
-                                                namestu_first: studentData.firstName,
-                                                namestu_last: studentData.lastName,
-                                                nickname_stu: studentData.nickname,
-                                                name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-                                                name: teacherData.teacherId + " ครู" + teacherData.nickname,
-                                                teacherId: teacherData.teacherId,
-                                                studentId: studentData.studentId,
-                                                teachernickname: teacherData.nickname,
-                                                subject: timedata.subject,
-                                                name_subject: subjectData.name,
-                                                date: dateSnapshot.key,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: timedata.style_subject,
-                                                name_style: locationData.name,
-                                                status: timedata.status,
-                                                key_student: keySnapshot.key,
-                                                key_teacher: timedata.teacher,
-                                                phone_student: studentData.studentMobile,
-                                                phone_teacher: teacherData.mobile,
-                                                level: timedata.level,
-                                                because: timedata.because,
-                                            })
-                                            this.dash_all += 1;
-                                            if (timedata.status === 'พร้อมเรียน') {
-                                                this.dash_active += 1;
-                                            } else if (timedata.status === 'รอยืนยัน') {
-                                                this.dash_notactive += 1;
-                                            } else {
-                                                console.log('Error', timedata.status);
-                                            }
+            this.dash_all = 0;
+            this.dash_active = 0;
+            this.dash_notactive = 0;
+            this.desserts_student = [];
+            let item = [];
+            let Day_start = this.date || this.timefirebase();
+            let Day_end = this.date_end || this.timefirebase();
+            let Day_array = this.genarateDay(Day_start, Day_end);
+            this.data_break.forEach((keySnapshot) => {
+                keySnapshot.forEach((dateSnapshot) => {
+                    if (Day_array.includes(dateSnapshot.key)) {
+                        dateSnapshot.forEach((timeSnapshot) => {
+                            let timedata = timeSnapshot.val();
+                            const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
+                            const getStudentPromise = db.ref(`user/${keySnapshot.key}`).once("value");
+                            const getsubjectPromise = this.subject_all[timedata.subject];
+                            const getlocationPromise = this.location_all[timedata.style_subject];
+                            Promise.all([getTeacherPromise, getStudentPromise])
+                                .then(([teacherSnapshot, studentSnapshot]) => {
+                                    const teacherData = teacherSnapshot.val();
+                                    const studentData = studentSnapshot.val();
+                                    const subjectData = getsubjectPromise;
+                                    const locationData = getlocationPromise;
+                                    if (this.status === "teacher" && this.keyuser === timedata.teacher) {
+                                        item.push({
+                                            nametea_first: teacherData.firstName,
+                                            nametea_last: teacherData.lastName,
+                                            nickname_tea: teacherData.nickname,
+                                            namestu_first: studentData.firstName,
+                                            namestu_last: studentData.lastName,
+                                            nickname_stu: studentData.nickname,
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            teacherId: teacherData.teacherId,
+                                            studentId: studentData.studentId,
+                                            teachernickname: teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: dateSnapshot.key,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: keySnapshot.key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                        })
+                                        this.dash_all += 1;
+                                        if (timedata.status === 'พร้อมเรียน') {
+                                            this.dash_active += 1;
+                                        } else if (timedata.status === 'รอยืนยัน') {
+                                            this.dash_notactive += 1;
+                                        } else {
+                                            console.log('Error', timedata.status);
                                         }
-                                        if (this.status === "user" && this.keyuser === keySnapshot.key) {
-                                            item.push({
-                                                nametea_first: teacherData.firstName,
-                                                nametea_last: teacherData.lastName,
-                                                nickname_tea: teacherData.nickname,
-                                                namestu_first: studentData.firstName,
-                                                namestu_last: studentData.lastName,
-                                                nickname_stu: studentData.nickname,
-                                                name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-                                                name: teacherData.teacherId + " ครู" + teacherData.nickname,
-                                                teacherId: teacherData.teacherId,
-                                                studentId: studentData.studentId,
-                                                teachernickname: teacherData.nickname,
-                                                subject: timedata.subject,
-                                                name_subject: subjectData.name,
-                                                date: dateSnapshot.key,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: timedata.style_subject,
-                                                name_style: locationData.name,
-                                                status: timedata.status,
-                                                key_student: keySnapshot.key,
-                                                key_teacher: timedata.teacher,
-                                                phone_student: studentData.studentMobile,
-                                                phone_teacher: teacherData.mobile,
-                                                level: timedata.level,
-                                                because: timedata.because,
-                                            })
-                                            this.dash_all += 1;
-                                            if (timedata.status === 'พร้อมเรียน') {
-                                                this.dash_active += 1;
-                                            } else if (timedata.status === 'รอยืนยัน') {
-                                                this.dash_notactive += 1;
-                                            } else {
-                                                console.log('Error', timedata.status);
-                                            }
+                                    }
+                                    if (this.status === "user" && this.keyuser === keySnapshot.key) {
+                                        item.push({
+                                            nametea_first: teacherData.firstName,
+                                            nametea_last: teacherData.lastName,
+                                            nickname_tea: teacherData.nickname,
+                                            namestu_first: studentData.firstName,
+                                            namestu_last: studentData.lastName,
+                                            nickname_stu: studentData.nickname,
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            teacherId: teacherData.teacherId,
+                                            studentId: studentData.studentId,
+                                            teachernickname: teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: dateSnapshot.key,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: keySnapshot.key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                        })
+                                        this.dash_all += 1;
+                                        if (timedata.status === 'พร้อมเรียน') {
+                                            this.dash_active += 1;
+                                        } else if (timedata.status === 'รอยืนยัน') {
+                                            this.dash_notactive += 1;
+                                        } else {
+                                            console.log('Error', timedata.status);
                                         }
-                                        if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
-                                            item.push({
-                                                nametea_first: teacherData.firstName,
-                                                nametea_last: teacherData.lastName,
-                                                nickname_tea: teacherData.nickname,
-                                                namestu_first: studentData.firstName,
-                                                namestu_last: studentData.lastName,
-                                                nickname_stu: studentData.nickname,
-                                                name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-                                                name: teacherData.teacherId + " ครู" + teacherData.nickname,
-                                                teacherId: teacherData.teacherId,
-                                                studentId: studentData.studentId,
-                                                teachernickname: teacherData.nickname,
-                                                subject: timedata.subject,
-                                                name_subject: subjectData.name,
-                                                date: dateSnapshot.key,
-                                                time_s: timedata.start,
-                                                time_e: timedata.stop,
-                                                style: timedata.style_subject,
-                                                name_style: locationData.name,
-                                                status: timedata.status,
-                                                key_student: keySnapshot.key,
-                                                key_teacher: timedata.teacher,
-                                                phone_student: studentData.studentMobile,
-                                                phone_teacher: teacherData.mobile,
-                                                level: timedata.level,
-                                                because: timedata.because,
-                                            })
-                                            this.dash_all += 1;
-                                            if (timedata.status === 'พร้อมเรียน') {
-                                                this.dash_active += 1;
-                                            } else if (timedata.status === 'รอยืนยัน') {
-                                                this.dash_notactive += 1;
-                                            } else {
-                                                console.log('Error', timedata.status);
-                                            }
+                                    }
+                                    if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
+                                        item.push({
+                                            nametea_first: teacherData.firstName,
+                                            nametea_last: teacherData.lastName,
+                                            nickname_tea: teacherData.nickname,
+                                            namestu_first: studentData.firstName,
+                                            namestu_last: studentData.lastName,
+                                            nickname_stu: studentData.nickname,
+                                            name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
+                                            name: teacherData.teacherId + " ครู" + teacherData.nickname,
+                                            teacherId: teacherData.teacherId,
+                                            studentId: studentData.studentId,
+                                            teachernickname: teacherData.nickname,
+                                            subject: timedata.subject,
+                                            name_subject: subjectData.name,
+                                            date: dateSnapshot.key,
+                                            time_s: timedata.start,
+                                            time_e: timedata.stop,
+                                            style: timedata.style_subject,
+                                            name_style: locationData.name,
+                                            status: timedata.status,
+                                            key_student: keySnapshot.key,
+                                            key_teacher: timedata.teacher,
+                                            phone_student: studentData.studentMobile,
+                                            phone_teacher: teacherData.mobile,
+                                            level: timedata.level,
+                                            because: timedata.because,
+                                        })
+                                        this.dash_all += 1;
+                                        if (timedata.status === 'พร้อมเรียน') {
+                                            this.dash_active += 1;
+                                        } else if (timedata.status === 'รอยืนยัน') {
+                                            this.dash_notactive += 1;
+                                        } else {
+                                            console.log('Error', timedata.status);
                                         }
-                                    }).catch((error) => {
-                                        alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-                                    });
-                            })
-                        }
-                    })
+                                    }
+                                }).catch((error) => {
+                                    alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
+                                });
+                        })
+                    }
                 })
-                this.desserts_student = item;
-                this.btnSearch = true;
-                console.log('>>>>',this.btnSearch ,this.date ,this.date_end);
             })
+            this.desserts_student = item;
+            setTimeout(() => {
+                this.btnSearch = true;
+            }, 1000);
         },
         search_subject_all() {
             const db = this.$fireModule.database();
@@ -720,401 +727,6 @@ export default {
             }
             return dateArray;
         },
-
-        // search_date_student() {
-        //     const db = this.$fireModule.database();
-        //     db.ref(`date_match/`).on("value", (snapshot) => {
-        //         this.dash_all = 0;
-        //         this.dash_active = 0;
-        //         this.dash_notactive = 0;
-        //         const childData = snapshot.val();
-        //         this.desserts_student = [];
-        //         let item = [];
-        //         let now = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`);
-        //         const formattedDate = now.toISOString().split('T')[0];
-        //         let end = null;
-        //         let edit = '';
-        //         if (this.search_date == 'Day') {
-        //             end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
-        //         } else if (this.search_date == 'Week') {
-        //             if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 30) {
-        //                 edit = formattedDate.substring(0, 8) + 30;
-        //                 end = new Date(edit);
-        //             } else if ((parseInt(formattedDate.substring(8, 10)) + 7) >= 31) {
-        //                 edit = formattedDate.substring(0, 8) + 31;
-        //                 end = new Date(edit);
-        //             } else {
-        //                 edit = formattedDate.substring(0, 8) + (parseInt(formattedDate.substring(8, 10)) + 7);
-        //                 end = new Date(edit);
-        //             }
-        //         } else if (this.search_date == 'Month') {
-        //             now = new Date(formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7))) + '-01');
-        //             edit = formattedDate.substring(0, 5) + (parseInt(formattedDate.substring(5, 7)) + 1) + '-01';
-        //             end = new Date(edit);
-        //         } else if (this.search_date == 'All') {
-        //             edit = (parseInt(formattedDate.substring(0, 4)) + 5) + formattedDate.substring(4, 10);
-        //             end = new Date(edit);
-        //             now = new Date('2022-01-01');
-        //         } else {
-        //             end = new Date(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate() + 1}`);
-        //         }
-
-        //         for (const key in childData) {
-        //             const keydata = childData[key];
-        //             for (const date in keydata) {
-        //                 // เพิ่มการตรวจสอบว่ามีข้อมูลใน datedata ก่อนทำการดำเนินการต่อไป
-        //                 const datedata = keydata[date];
-        //                 if (this.date == null) {
-        //                     // console.log(now, new Date(date), end);
-        //                     if (end.getTime() >= new Date(date).getTime() &&
-        //                         new Date(date).getTime() >= now.getTime()) {
-        //                         for (const time in datedata) {
-        //                             const timedata = datedata[time];
-        //                             if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: teacherData.teacherId + " ครู" + teacherData.nickname,
-        //                                             teacherId: teacherData.teacherId,
-        //                                             studentId: studentData.studentId,
-        //                                             teachernickname: teacherData.nickname,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             } else if (this.status == 'teacher' && this.keyuser == timedata.teacher) {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: teacherData.teacherId + " ครู" + teacherData.nickname,
-        //                                             teacherId: teacherData.teacherId,
-        //                                             studentId: studentData.studentId,
-        //                                             teachernickname: teacherData.nickname,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             } else if (this.status === "user" && this.keyuser === key) {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: teacherData.teacherId + " ครู" + teacherData.nickname,
-        //                                             teacherId: teacherData.teacherId,
-        //                                             studentId: studentData.studentId,
-        //                                             teachernickname: teacherData.nickname,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             }
-        //                         }
-        //                     }
-        //                 } else {
-        //                     // console.log(new Date(date).getTime() , new Date(this.date).getTime());
-        //                     if (new Date(date).getTime() >= new Date(this.date).getTime() &&
-        //                         new Date(date).getTime() <= new Date(this.date).getTime()) {
-        //                         for (const time in datedata) {
-        //                             const timedata = datedata[time];
-        //                             if (this.status == 'admin' || this.status == 'finance' || this.status == 'opFS' || this.status == 'opsupFS') {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             } else if (this.status == 'teacher' && this.keyuser == timedata.teacher) {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: "น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: "ครู" + teacherData.nickname + " " + teacherData.teacherId,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             } else if (this.status === "user" && this.keyuser === key) {
-        //                                 const getTeacherPromise = db.ref(`user/${timedata.teacher}`).once("value");
-        //                                 const getStudentPromise = db.ref(`user/${key}`).once("value");
-        //                                 const getsubjectPromise = db.ref(`subject_all/${timedata.subject}`).once("value");
-        //                                 const getlocationPromise = db.ref(`location/${timedata.style_subject}`).once("value");
-        //                                 Promise.all([getTeacherPromise, getStudentPromise, getsubjectPromise, getlocationPromise])
-        //                                     .then(([teacherSnapshot, studentSnapshot, subjectSnapshot, locationSnapshot]) => {
-        //                                         const teacherData = teacherSnapshot.val();
-        //                                         const studentData = studentSnapshot.val();
-        //                                         const subjectData = subjectSnapshot.val();
-        //                                         const locationData = locationSnapshot.val();
-        //                                         item.push({
-        //                                             nametea_first: teacherData.firstName,
-        //                                             nametea_last: teacherData.lastName,
-        //                                             nickname_tea: teacherData.nickname,
-        //                                             namestu_first: studentData.firstName,
-        //                                             namestu_last: studentData.lastName,
-        //                                             nickname_stu: studentData.nickname,
-        //                                             name_student: studentData.studentId + " น้อง" + studentData.nickname + " " + studentData.firstName,
-        //                                             name: teacherData.teacherId + " ครู" + teacherData.nickname,
-        //                                             teacherId: teacherData.teacherId,
-        //                                             studentId: studentData.studentId,
-        //                                             teachernickname: teacherData.nickname,
-        //                                             subject: timedata.subject,
-        //                                             name_subject: subjectData.name,
-        //                                             date: date,
-        //                                             time_s: timedata.start,
-        //                                             time_e: timedata.stop,
-        //                                             style: timedata.style_subject,
-        //                                             name_style: locationData.name,
-        //                                             status: timedata.status,
-        //                                             key_student: key,
-        //                                             key_teacher: timedata.teacher,
-        //                                             phone_student: studentData.studentMobile,
-        //                                             phone_teacher: teacherData.mobile,
-        //                                             // class: timedata.class,
-        //                                             level: timedata.level,
-        //                                             because: timedata.because,
-        //                                         });
-        //                                         this.dash_all += 1;
-        //                                         if (timedata.status === 'พร้อมเรียน') {
-        //                                             this.dash_active += 1;
-        //                                         } else if (timedata.status === 'รอยืนยัน') {
-        //                                             this.dash_notactive += 1;
-        //                                         } else {
-        //                                             console.log('Error', timedata.status);
-        //                                         }
-        //                                         // ให้ตรวจสอบว่า item มีข้อมูลทั้งหมดแล้ว ถึงนำข้อมูลไปแสดงหน้า UI
-        //                                         if (item.length === Object.keys(datedata).length) {
-        //                                             this.desserts_student = item;
-        //                                         }
-        //                                     })
-        //                                     .catch((error) => {
-        //                                         alert("เกิดข้อผิดพลาดในการดึงข้อมูล");
-        //                                     });
-        //                             }
-
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //         this.desserts_student = item;
-        //         // console.log(this.desserts_student);
-        //     });
-        // },
-
 
         check_excel() {
             if (this.isExportAll) {
